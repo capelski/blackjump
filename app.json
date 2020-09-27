@@ -1,32 +1,30 @@
 {
-  "expo": {
-    "name": "BlackJump",
-    "slug": "blackjump",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "permissions": [],
-      "package": "capelski.blackjump",
-      "enableDangerousExperimentalLeanBuilds": true
-    },
-    "ios": {
-      "bundleIdentifier": "capelski.blackjump",
-      "supportsTablet": true
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "expo": {
+        "name": "BlackJump",
+        "slug": "blackjump",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "android": {
+            "permissions": [],
+            "package": "capelski.blackjump",
+            "enableDangerousExperimentalLeanBuilds": true
+        },
+        "ios": {
+            "bundleIdentifier": "capelski.blackjump",
+            "supportsTablet": true
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        }
     }
-  }
 }
