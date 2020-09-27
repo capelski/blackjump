@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextStyle } from 'react-native';
+import { getCardSet } from './src/card-set';
+import { getAllTrainingPairs, getRandomTrainingHands } from './src/training-hands';
 
 const buttonsStyle: TextStyle = {
     paddingVertical: 16,
@@ -24,14 +26,11 @@ const getCardStyles = (suit: string) => ({
     color: suit === '♦' || suit === '♥' ? 'red' : 'black'
 });
 
-export default function App() {
-    const dealerHand: Card[] = [{ suit: '♠', symbol: '9' }];
-    const playerHand: Card[] = [
-        { suit: '♦', symbol: 'A' },
-        { suit: '♣', symbol: '3' },
-        { suit: '♥', symbol: '2' }
-    ];
+const trainingPairs = getAllTrainingPairs();
+const cardSet = getCardSet();
 
+export default function App() {
+    const trainingHand = getRandomTrainingHands(trainingPairs, cardSet);
     return (
         <View style={styles.container}>
             <View
@@ -47,22 +46,32 @@ export default function App() {
                 <View style={{ width: '100%' }}>
                     <Text style={{ fontSize: 25, color: 'white' }}>Dealer</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        {dealerHand.map((card) => (
-                            <Text style={getCardStyles(card.suit)}>
+                        {trainingHand.dealerHand.cards.map((card, index) => (
+                            <Text key={index} style={getCardStyles(card.suit)}>
                                 {card.symbol + ' ' + card.suit}
                             </Text>
                         ))}
+                        <Text style={{ fontSize: 25, color: 'white' }}>
+                            {' '}
+                            {trainingHand.dealerHand.values.join(' / ')}
+                        </Text>
                     </View>
                 </View>
                 <View style={{ width: '100%', marginTop: 16 }}>
                     <Text style={{ fontSize: 25, color: 'white' }}>Player</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        {playerHand.map((card) => (
-                            <Text style={getCardStyles(card.suit)}>
-                                {card.symbol + ' ' + card.suit}
+                    {trainingHand.playerHands.map((hand) => (
+                        <View style={{ flexDirection: 'row' }}>
+                            {hand.cards.map((card, index) => (
+                                <Text key={index} style={getCardStyles(card.suit)}>
+                                    {card.symbol + ' ' + card.suit}
+                                </Text>
+                            ))}
+                            <Text style={{ fontSize: 25, color: 'white' }}>
+                                {' '}
+                                {hand.values.join(' / ')}
                             </Text>
-                        ))}
-                    </View>
+                        </View>
+                    ))}
                 </View>
             </View>
             <View
