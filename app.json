@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "webjack",
-    "slug": "webjack",
+    "name": "BlackJump",
+    "slug": "blackjump",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,13 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "permissions": [],
+      "package": "capelski.blackjump",
+      "enableDangerousExperimentalLeanBuilds": true
+    },
     "ios": {
+      "bundleIdentifier": "capelski.blackjump",
       "supportsTablet": true
     },
     "web": {
