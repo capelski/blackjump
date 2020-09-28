@@ -1,7 +1,7 @@
 import { TrainingPair, HandRepresentation, CardSet, TrainingHand } from '../types';
 import { cartesianProduct, shuffleArray } from '../utils';
 import { extractCardFromCardSet } from './card-set';
-import { getHandValues } from './hand';
+import { createHand } from './hand';
 import { allPossibleDealerHands, allPossiblePlayerHands } from './possible-hands';
 
 const figureSymbols = ['10', 'J', 'Q', 'K'];
@@ -67,15 +67,7 @@ export const getTrainingHands = (trainingPair: TrainingPair, cardSet: CardSet): 
     const dealerCards = [extractCardFromCardSet(dealerHandSymbol, cardSet)];
 
     return {
-        dealerHand: {
-            cards: dealerCards,
-            values: getHandValues(dealerCards)
-        },
-        playerHands: [
-            {
-                cards: playerCards,
-                values: getHandValues(playerCards)
-            }
-        ]
+        dealerHand: createHand(dealerCards),
+        playerHands: [createHand(playerCards)]
     };
 };

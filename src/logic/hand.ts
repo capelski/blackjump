@@ -2,6 +2,11 @@ import { Hand, Card, CardSet } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
 import { getCardValue, extractNextCard } from './card-set';
 
+export const createHand = (cards: Card[]): Hand => ({
+    cards: cards,
+    values: getHandValues(cards)
+});
+
 export const dealCard = (hand: Hand, cardSet: CardSet): Hand => {
     const nextCard = extractNextCard(cardSet);
     const nextHandCards = hand.cards.concat([nextCard]);
