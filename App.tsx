@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from './src/components/button';
 import { HandComponent } from './src/components/hand';
-import { extractNextCard, getCardSet } from './src/logic/card-set';
-import { getHandEffectiveValue, getHandValues } from './src/logic/hand';
+import { getCardSet } from './src/logic/card-set';
+import { getHandEffectiveValue, dealCard } from './src/logic/hand';
 import { getAllTrainingPairs, getTrainingHands } from './src/logic/training-hands';
 import { Hand, Phases } from './src/types';
 
@@ -16,12 +16,14 @@ export default function App() {
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHand, setPlayerHand] = useState<Hand | undefined>();
 
-    const hitHandler = () => {
-        const nextCard = extractNextCard(cardSet);
-        const nextHandCards = playerHand!.cards.concat([nextCard]);
-        const nextHand: Hand = { cards: nextHandCards, values: getHandValues(nextHandCards) };
-        setPlayerHand(nextHand);
+    const doubleHandler = () => {
+        setPlayerHand(dealCard(playerHand!, cardSet));
+        standHandler();
+    };
 
+    const hitHandler = () => {
+        const nextHand = dealCard(playerHand!, cardSet);
+        setPlayerHand(nextHand);
         if (getHandEffectiveValue(nextHand) >= 21) {
             standHandler();
         }
@@ -32,9 +34,7 @@ export default function App() {
         // TODO Add interval to deliver dealer cards gradually
         let nextHand: Hand = dealerHand!;
         while (getHandEffectiveValue(nextHand) < 17) {
-            const nextCard = extractNextCard(cardSet);
-            const nextHandCards = nextHand.cards.concat([nextCard]);
-            nextHand = { cards: nextHandCards, values: getHandValues(nextHandCards) };
+            nextHand = dealCard(nextHand, cardSet);
         }
         setDealerHand(nextHand!);
         setPhase(Phases.finished);
@@ -118,7 +118,7 @@ export default function App() {
                     >
                         <Button
                             backgroundColor="#5cb85c"
-                            // TODO Implement logic
+                            // TODO Implement validation logic
                             isEnabled={false}
                             onPress={() => {}}
                             text="Split"
@@ -126,9 +126,9 @@ export default function App() {
                         />
                         <Button
                             backgroundColor="#dc3545"
-                            // TODO Implement logic
-                            isEnabled={false}
-                            onPress={() => {}}
+                            // TODO Implement validation logic
+                            isEnabled={true}
+                            onPress={doubleHandler}
                             text="Double"
                             style={{ width: '50%' }}
                         />

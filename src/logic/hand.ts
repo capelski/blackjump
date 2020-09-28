@@ -1,6 +1,12 @@
-import { Hand, Card } from '../types';
+import { Hand, Card, CardSet } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
-import { getCardValue } from './card-set';
+import { getCardValue, extractNextCard } from './card-set';
+
+export const dealCard = (hand: Hand, cardSet: CardSet): Hand => {
+    const nextCard = extractNextCard(cardSet);
+    const nextHandCards = hand.cards.concat([nextCard]);
+    return { cards: nextHandCards, values: getHandValues(nextHandCards) };
+};
 
 export const getHandEffectiveValue = (hand: Hand) => {
     let effectiveValue = hand.values[0];
@@ -10,8 +16,8 @@ export const getHandEffectiveValue = (hand: Hand) => {
     return effectiveValue;
 };
 
-export const getHandValidValues = (hand: Hand) => {
-    return hand.values.filter((v) => v < 22);
+export const getHandValidValues = (hand: Hand): number[] => {
+    return hand.values.some((v) => v < 22) ? hand.values.filter((v) => v < 22) : [hand.values[0]];
 };
 
 export const getHandValues = (cards: Card[]) => {
