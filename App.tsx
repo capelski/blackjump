@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from './src/components/button';
 import { HandComponent } from './src/components/hand';
-import { getCardSet, collectPlayedCards } from './src/logic/card-set';
+import { getCardSet, collectPlayedCards, getCardEffectiveValue } from './src/logic/card-set';
 import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
 import { getAllTrainingPairs, getTrainingHands } from './src/logic/training-hands';
 import { Hand, Phases } from './src/types';
@@ -77,6 +77,16 @@ export default function App() {
         setPlayerHands(nextHands);
     };
 
+    const currentHand = playerHands && playerHands[playerHandIndex];
+    const isSplitEnabled =
+        currentHand !== undefined &&
+        currentHand.cards.length === 2 &&
+        getCardEffectiveValue(currentHand.cards[0]) === getCardEffectiveValue(currentHand.cards[1]);
+    const isDoubleEnabled =
+        currentHand !== undefined &&
+        currentHand.cards.length === 2 &&
+        [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1;
+
     return (
         <View
             style={{
@@ -146,16 +156,14 @@ export default function App() {
                     >
                         <Button
                             backgroundColor="#5cb85c"
-                            // TODO Implement validation logic
-                            isEnabled={true}
+                            isEnabled={isSplitEnabled}
                             onPress={splitHandler}
                             text="Split"
                             style={{ width: '50%' }}
                         />
                         <Button
                             backgroundColor="#dc3545"
-                            // TODO Implement validation logic
-                            isEnabled={true}
+                            isEnabled={isDoubleEnabled}
                             onPress={doubleHandler}
                             text="Double"
                             style={{ width: '50%' }}

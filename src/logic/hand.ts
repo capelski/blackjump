@@ -1,6 +1,6 @@
 import { Hand, Card, CardSet } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
-import { getCardValue, extractNextCard } from './card-set';
+import { getCardValues, extractNextCard } from './card-set';
 
 export const createHand = (cards: Card[]): Hand => ({
     cards: cards,
@@ -26,7 +26,7 @@ export const getHandValidValues = (hand: Hand): number[] => {
 };
 
 export const getHandValues = (cards: Card[]) => {
-    const cardsValues = cards.map((card) => getCardValue(card));
+    const cardsValues = cards.map((card) => getCardValues(card));
     const cardsAggregatedValues = cardsValues.reduce(
         (reducedValues, currentValues) =>
             cartesianProduct(reducedValues, currentValues, (x, y) => x + y),

@@ -80,4 +80,9 @@ export const getCardSet = (decksNumber = 6): CardSet => {
     };
 };
 
-export const getCardValue = (card: Card) => cardsValue[card.symbol];
+export const getCardEffectiveValue = (card: Card): number => {
+    const values = getCardValues(card);
+    return values[values.length - 1];
+};
+
+export const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
