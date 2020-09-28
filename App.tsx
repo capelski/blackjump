@@ -1,38 +1,65 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextStyle } from 'react-native';
-import { getCardSet } from './src/card-set';
-import { getAllTrainingPairs, getRandomTrainingHands } from './src/training-hands';
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
+import { Button } from './src/components/button';
+import { HandComponent } from './src/components/hand';
+import { extractNextCard, getCardSet } from './src/logic/card-set';
+import { getHandEffectiveValue, getHandValues } from './src/logic/hand';
+import { getAllTrainingPairs, getTrainingHands } from './src/logic/training-hands';
+import { Hand, Phases } from './src/types';
 
-const buttonsStyle: TextStyle = {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-    width: '100%',
-    textAlign: 'center'
-};
-
-interface Card {
-    suit: string;
-    symbol: string;
-}
-
-const getCardStyles = (suit: string) => ({
-    fontSize: 30,
-    backgroundColor: 'white',
-    padding: 8,
-    marginRight: 8,
-    color: suit === '♦' || suit === '♥' ? 'red' : 'black'
-});
-
-const trainingPairs = getAllTrainingPairs();
+const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
 
 export default function App() {
-    const trainingHand = getRandomTrainingHands(trainingPairs, cardSet);
+    const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
+    const [dealerHand, setDealerHand] = useState<Hand | undefined>();
+    const [phase, setPhase] = useState<Phases>(Phases.finished);
+    const [playerHand, setPlayerHand] = useState<Hand | undefined>();
+
+    const hitHandler = () => {
+        const nextCard = extractNextCard(cardSet);
+        const nextHandCards = playerHand!.cards.concat([nextCard]);
+        const nextHand: Hand = { cards: nextHandCards, values: getHandValues(nextHandCards) };
+        setPlayerHand(nextHand);
+
+        if (getHandEffectiveValue(nextHand) >= 21) {
+            standHandler();
+        }
+    };
+
+    const standHandler = () => {
+        setPhase(Phases.dealer);
+        // TODO Add interval to deliver dealer cards gradually
+        let nextHand: Hand = dealerHand!;
+        while (getHandEffectiveValue(nextHand) < 17) {
+            const nextCard = extractNextCard(cardSet);
+            const nextHandCards = nextHand.cards.concat([nextCard]);
+            nextHand = { cards: nextHandCards, values: getHandValues(nextHandCards) };
+        }
+        setDealerHand(nextHand!);
+        setPhase(Phases.finished);
+    };
+
+    const startNextHandler = () => {
+        setCurrentTrainingPair(currentTrainingPair + 1);
+        const nextTrainingHand = getTrainingHands(
+            allTrainingPairs[currentTrainingPair + 1],
+            cardSet
+        );
+        setDealerHand(nextTrainingHand.dealerHand);
+        setPlayerHand(nextTrainingHand.playerHands[0]);
+        setPhase(Phases.player);
+    };
+
     return (
-        <View style={styles.container}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
             <View
                 style={{
                     flex: 1,
@@ -45,74 +72,84 @@ export default function App() {
             >
                 <View style={{ width: '100%' }}>
                     <Text style={{ fontSize: 25, color: 'white' }}>Dealer</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        {trainingHand.dealerHand.cards.map((card, index) => (
-                            <Text key={index} style={getCardStyles(card.suit)}>
-                                {card.symbol + ' ' + card.suit}
-                            </Text>
-                        ))}
-                        <Text style={{ fontSize: 25, color: 'white' }}>
-                            {' '}
-                            {trainingHand.dealerHand.values.join(' / ')}
-                        </Text>
+                    {dealerHand && <HandComponent hand={dealerHand} />}
+                </View>
+                <View
+                    style={{
+                        width: '100%',
+                        marginTop: 16,
+                        flexWrap: 'wrap'
+                    }}
+                >
+                    <Text style={{ fontSize: 25, color: 'white' }}>Player</Text>
+                    {playerHand && <HandComponent hand={playerHand} />}
+                </View>
+            </View>
+            {phase === Phases.player && (
+                <View>
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around'
+                        }}
+                    >
+                        <Button
+                            backgroundColor="#428bca"
+                            isEnabled={true}
+                            onPress={hitHandler}
+                            text="Hit"
+                            style={{ width: '50%' }}
+                        />
+                        <Button
+                            backgroundColor="#46b8da"
+                            isEnabled={true}
+                            onPress={standHandler}
+                            text="Stand"
+                            style={{ width: '50%' }}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around'
+                        }}
+                    >
+                        <Button
+                            backgroundColor="#5cb85c"
+                            // TODO Implement logic
+                            isEnabled={false}
+                            onPress={() => {}}
+                            text="Split"
+                            style={{ width: '50%' }}
+                        />
+                        <Button
+                            backgroundColor="#dc3545"
+                            // TODO Implement logic
+                            isEnabled={false}
+                            onPress={() => {}}
+                            text="Double"
+                            style={{ width: '50%' }}
+                        />
                     </View>
                 </View>
-                <View style={{ width: '100%', marginTop: 16 }}>
-                    <Text style={{ fontSize: 25, color: 'white' }}>Player</Text>
-                    {trainingHand.playerHands.map((hand) => (
-                        <View style={{ flexDirection: 'row' }}>
-                            {hand.cards.map((card, index) => (
-                                <Text key={index} style={getCardStyles(card.suit)}>
-                                    {card.symbol + ' ' + card.suit}
-                                </Text>
-                            ))}
-                            <Text style={{ fontSize: 25, color: 'white' }}>
-                                {' '}
-                                {hand.values.join(' / ')}
-                            </Text>
-                        </View>
-                    ))}
+            )}
+            {phase === Phases.finished && (
+                <View
+                    style={{
+                        width: '100%'
+                    }}
+                >
+                    <Button
+                        backgroundColor="#428bca"
+                        isEnabled={true}
+                        onPress={startNextHandler}
+                        text="Next"
+                        style={{ width: '100%' }}
+                    />
                 </View>
-            </View>
-            <View
-                style={{
-                    height: 56,
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-around'
-                }}
-            >
-                <TouchableOpacity style={{ width: '50%' }}>
-                    <Text style={{ ...buttonsStyle, backgroundColor: '#428bca' }}>Hit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ width: '50%' }}>
-                    <Text style={{ ...buttonsStyle, backgroundColor: '#46b8da' }}>Stand</Text>
-                </TouchableOpacity>
-            </View>
-            <View
-                style={{
-                    height: 56,
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-around'
-                }}
-            >
-                <TouchableOpacity style={{ width: '50%' }}>
-                    <Text style={{ ...buttonsStyle, backgroundColor: '#5cb85c' }}>Split</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ width: '50%' }}>
-                    <Text style={{ ...buttonsStyle, backgroundColor: '#dc3545' }}>Double</Text>
-                </TouchableOpacity>
-            </View>
+            )}
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});

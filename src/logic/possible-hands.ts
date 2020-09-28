@@ -1,4 +1,4 @@
-import { HandRepresentation } from './types';
+import { HandRepresentation } from '../types';
 
 export const allPossibleDealerHands: HandRepresentation[] = [
     'A',

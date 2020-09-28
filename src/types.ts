@@ -9,6 +9,8 @@ export interface CardSet {
     unusedCards: Card[];
 }
 
+export type Dictionary<T> = { [key: string]: T };
+
 export interface Hand {
     cards: Card[];
     values: number[];
@@ -16,7 +18,11 @@ export interface Hand {
 
 export type HandRepresentation = string;
 
-export type Dictionary<T> = { [key: string]: T };
+export enum Phases {
+    dealer = 'dealer',
+    finished = 'finished',
+    player = 'player'
+}
 
 export interface TrainingHand {
     dealerHand: Hand;
