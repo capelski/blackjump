@@ -24,7 +24,15 @@ const suits = ['\u2663', '\u2666', '\u2665', '\u2660'];
 const createDeck = (): Card[] =>
     cartesianProduct(suits, symbols, (suit, symbol) => ({ suit, symbol }));
 
-// TODO Implement collectCards
+export const collectPlayedCards = (cardSet: CardSet) => {
+    cardSet.discardPile.push(...cardSet.beingPlayed);
+    cardSet.beingPlayed = [];
+    if (cardSet.discardPile.length > 100) {
+        cardSet.unusedCards.push(...cardSet.discardPile);
+        cardSet.discardPile = [];
+        shuffleArray(cardSet.unusedCards);
+    }
+};
 
 export const extractCardFromCardSet = (symbol: string, cardSet: CardSet): Card => {
     // We search for the cards in the discardPile first to minimize the game interfering

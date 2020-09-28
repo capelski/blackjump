@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from './src/components/button';
 import { HandComponent } from './src/components/hand';
-import { getCardSet } from './src/logic/card-set';
+import { getCardSet, collectPlayedCards } from './src/logic/card-set';
 import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
 import { getAllTrainingPairs, getTrainingHands } from './src/logic/training-hands';
 import { Hand, Phases } from './src/types';
@@ -18,7 +18,7 @@ export default function App() {
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
 
     const startNextHandler = () => {
-        // TODO Collect the cards from the cardset
+        collectPlayedCards(cardSet);
         setCurrentTrainingPair(currentTrainingPair + 1);
         const nextTrainingHand = getTrainingHands(
             allTrainingPairs[currentTrainingPair + 1],
