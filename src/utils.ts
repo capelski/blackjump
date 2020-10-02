@@ -10,6 +10,14 @@ export const cartesianProduct = <T, U, R>(
     }, [] as R[]);
 };
 
+const nNumbers = (n: number) =>
+    ' '
+        .repeat(n)
+        .split('')
+        .map((_, index) => index + 1);
+
+export const numberRange = (min: number, max: number) => nNumbers(max).filter((x) => x >= min);
+
 export const removeDuplicates = (numbers: number[]): number[] => {
     const numbersDictionary = numbers.reduce<Dictionary<number>>(
         (dictionary, next) => ({ ...dictionary, [next]: next }),

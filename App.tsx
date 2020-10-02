@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from './src/components/button';
 import { HandComponent } from './src/components/hand';
+import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards, getCardEffectiveValue } from './src/logic/card-set';
 import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
-import { getAllTrainingPairs, getTrainingHands } from './src/logic/training-hands';
-import { Hand, Phases } from './src/types';
+import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
+import { Decision, Hand, Phases } from './src/types';
 
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
@@ -20,35 +21,17 @@ export default function App() {
     const startNextHandler = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair(currentTrainingPair + 1);
-        const nextTrainingHand = getTrainingHands(
+        const nextTrainingHands = trainingPairToTrainingHands(
             allTrainingPairs[currentTrainingPair + 1],
             cardSet
         );
-        setDealerHand(nextTrainingHand.dealerHand);
-        setPlayerHands(nextTrainingHand.playerHands);
+        setDealerHand(nextTrainingHands.dealerHand);
+        setPlayerHands(nextTrainingHands.playerHands);
         setPlayerHandIndex(0);
         setPhase(Phases.player);
     };
 
-    const doubleHandler = () => {
-        const nextHands = playerHands!.map((hand, handIndex) => {
-            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
-        });
-        setPlayerHands(nextHands);
-        standHandler();
-    };
-
-    const hitHandler = () => {
-        const nextHands = playerHands!.map((hand, handIndex) => {
-            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
-        });
-        setPlayerHands(nextHands);
-        if (getHandEffectiveValue(nextHands[playerHandIndex]) >= 21) {
-            standHandler();
-        }
-    };
-
-    const standHandler = () => {
+    const finishPlayerHand = () => {
         if (playerHands!.length - 1 > playerHandIndex) {
             const nextPlayerHandIndex = playerHandIndex + 1;
             const nextHands = playerHands!.map((hand, handIndex) => {
@@ -65,10 +48,43 @@ export default function App() {
             }
             setDealerHand(nextHand!);
             setPhase(Phases.finished);
+            // TODO Display hands result (e.g. Dealer wins, Push, Player wins, etc.)
         }
     };
 
+    const evaluatePlayerDecision = (decision: Decision, hand: Hand) => {
+        const optimalDecision = getOptimalDecision(hand, dealerHand!);
+        console.log(optimalDecision.description);
+        // TODO Display an error if decision was wrong; visual confirmation if the decision was right
+    };
+
+    const doubleHandler = () => {
+        evaluatePlayerDecision('double', playerHands![playerHandIndex]);
+        const nextHands = playerHands!.map((hand, handIndex) => {
+            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
+        });
+        setPlayerHands(nextHands);
+        finishPlayerHand();
+    };
+
+    const hitHandler = () => {
+        evaluatePlayerDecision('hit', playerHands![playerHandIndex]);
+        const nextHands = playerHands!.map((hand, handIndex) => {
+            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
+        });
+        setPlayerHands(nextHands);
+        if (getHandEffectiveValue(nextHands[playerHandIndex]) >= 21) {
+            finishPlayerHand();
+        }
+    };
+
+    const standHandler = () => {
+        evaluatePlayerDecision('stand', playerHands![playerHandIndex]);
+        finishPlayerHand();
+    };
+
     const splitHandler = () => {
+        evaluatePlayerDecision('split', playerHands![playerHandIndex]);
         const currentHand = playerHands![playerHandIndex];
         const firstHand = createHand([currentHand.cards[0]]);
         const secondHand = createHand([currentHand.cards[1]]);

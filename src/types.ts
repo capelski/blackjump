@@ -9,6 +9,24 @@ export interface CardSet {
     unusedCards: Card[];
 }
 
+export type Decision = 'double' | 'hit' | 'split' | 'stand';
+
+export interface DecisionsSet {
+    [key: number]: string;
+    until: {
+        dealer: (
+            limit: number
+        ) => {
+            then: {
+                double: DecisionsSet;
+                hit: DecisionsSet;
+                split: DecisionsSet;
+                stand: DecisionsSet;
+            };
+        };
+    };
+}
+
 export type Dictionary<T> = { [key: string]: T };
 
 export interface Hand {
@@ -17,6 +35,13 @@ export interface Hand {
 }
 
 export type HandRepresentation = string;
+
+export type NumericDictionary<T> = { [key: number]: T };
+
+export interface OptimalDecision {
+    decision: string;
+    description: string;
+}
 
 export enum Phases {
     dealer = 'dealer',
