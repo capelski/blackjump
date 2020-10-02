@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button } from './src/components/button';
+import { Actions } from './src/components/actions';
+import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
 import { HandComponent } from './src/components/hand';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards, getCardEffectiveValue } from './src/logic/card-set';
 import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
-import { Decision, Hand, Phases } from './src/types';
+import { Decision, DecisionEvaluation, Hand, Phases } from './src/types';
 
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
@@ -14,11 +15,20 @@ const cardSet = getCardSet();
 export default function App() {
     const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
     const [dealerHand, setDealerHand] = useState<Hand | undefined>();
+    const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation | undefined>();
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
 
-    const startNextHandler = () => {
+    useEffect(() => {
+        if (decisionEvaluation && decisionEvaluation.hit) {
+            setTimeout(() => {
+                setDecisionEvaluation(undefined);
+            }, 1000);
+        }
+    }, [decisionEvaluation]);
+
+    const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair(currentTrainingPair + 1);
         const nextTrainingHands = trainingPairToTrainingHands(
@@ -29,12 +39,13 @@ export default function App() {
         setPlayerHands(nextTrainingHands.playerHands);
         setPlayerHandIndex(0);
         setPhase(Phases.player);
+        setDecisionEvaluation(undefined);
     };
 
-    const finishPlayerHand = () => {
-        if (playerHands!.length - 1 > playerHandIndex) {
+    const finishTrainingRound = (currentPlayerHands: Hand[]) => {
+        if (currentPlayerHands!.length - 1 > playerHandIndex) {
             const nextPlayerHandIndex = playerHandIndex + 1;
-            const nextHands = playerHands!.map((hand, handIndex) => {
+            const nextHands = currentPlayerHands!.map((hand, handIndex) => {
                 return handIndex === nextPlayerHandIndex ? dealCard(hand, cardSet) : hand;
             });
             setPlayerHands(nextHands);
@@ -54,8 +65,11 @@ export default function App() {
 
     const evaluatePlayerDecision = (decision: Decision, hand: Hand) => {
         const optimalDecision = getOptimalDecision(hand, dealerHand!);
-        console.log(optimalDecision.description);
-        // TODO Display an error if decision was wrong; visual confirmation if the decision was right
+        if (optimalDecision.decision === decision) {
+            setDecisionEvaluation({ hit: true });
+        } else {
+            setDecisionEvaluation({ hit: false, failureReason: optimalDecision.description });
+        }
     };
 
     const doubleHandler = () => {
@@ -64,7 +78,7 @@ export default function App() {
             return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
         });
         setPlayerHands(nextHands);
-        finishPlayerHand();
+        finishTrainingRound(nextHands);
     };
 
     const hitHandler = () => {
@@ -74,13 +88,13 @@ export default function App() {
         });
         setPlayerHands(nextHands);
         if (getHandEffectiveValue(nextHands[playerHandIndex]) >= 21) {
-            finishPlayerHand();
+            finishTrainingRound(nextHands);
         }
     };
 
     const standHandler = () => {
         evaluatePlayerDecision('stand', playerHands![playerHandIndex]);
-        finishPlayerHand();
+        finishTrainingRound(playerHands!);
     };
 
     const splitHandler = () => {
@@ -99,25 +113,23 @@ export default function App() {
         currentHand.cards.length === 2 &&
         getCardEffectiveValue(currentHand.cards[0]) === getCardEffectiveValue(currentHand.cards[1]);
     const isDoubleEnabled =
-        currentHand !== undefined &&
-        currentHand.cards.length === 2 &&
-        [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1;
+        currentHand !== undefined && [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1;
 
     return (
         <View
             style={{
                 flex: 1,
-                backgroundColor: '#fff',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                backgroundColor: '#088446'
             }}
         >
+            <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
             <View
                 style={{
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#088446',
                     width: '100%',
                     paddingHorizontal: 16
                 }}
@@ -139,69 +151,16 @@ export default function App() {
                     ))}
                 </View>
             </View>
-            {phase === Phases.player && (
-                <View>
-                    <View
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            justifyContent: 'space-around'
-                        }}
-                    >
-                        <Button
-                            backgroundColor="#428bca"
-                            isEnabled={true}
-                            onPress={hitHandler}
-                            text="Hit"
-                            style={{ width: '50%' }}
-                        />
-                        <Button
-                            backgroundColor="#46b8da"
-                            isEnabled={true}
-                            onPress={standHandler}
-                            text="Stand"
-                            style={{ width: '50%' }}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            justifyContent: 'space-around'
-                        }}
-                    >
-                        <Button
-                            backgroundColor="#5cb85c"
-                            isEnabled={isSplitEnabled}
-                            onPress={splitHandler}
-                            text="Split"
-                            style={{ width: '50%' }}
-                        />
-                        <Button
-                            backgroundColor="#dc3545"
-                            isEnabled={isDoubleEnabled}
-                            onPress={doubleHandler}
-                            text="Double"
-                            style={{ width: '50%' }}
-                        />
-                    </View>
-                </View>
-            )}
-            {phase === Phases.finished && (
-                <View
-                    style={{
-                        width: '100%'
-                    }}
-                >
-                    <Button
-                        backgroundColor="#428bca"
-                        isEnabled={true}
-                        onPress={startNextHandler}
-                        text="Next"
-                        style={{ width: '100%' }}
-                    />
-                </View>
-            )}
+            <Actions
+                doubleHandler={doubleHandler}
+                hitHandler={hitHandler}
+                isDoubleEnabled={isDoubleEnabled}
+                isSplitEnabled={isSplitEnabled}
+                phase={phase}
+                splitHandler={splitHandler}
+                standHandler={standHandler}
+                startTrainingRound={startTrainingRound}
+            />
         </View>
     );
 }

@@ -11,6 +11,13 @@ export interface CardSet {
 
 export type Decision = 'double' | 'hit' | 'split' | 'stand';
 
+export type DecisionEvaluation =
+    | { hit: true }
+    | {
+          hit: false;
+          failureReason: string;
+      };
+
 export interface DecisionsSet {
     [key: number]: string;
     until: {

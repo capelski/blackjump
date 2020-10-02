@@ -1,34 +1,38 @@
 import React from 'react';
-import { Text, TextStyle, TouchableOpacity, ViewStyle, StyleProp } from 'react-native';
+import { Text, TextStyle, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
     backgroundColor: string;
+    height: number;
     isEnabled: boolean;
     onPress: () => void;
-    style?: StyleProp<ViewStyle>;
     text: string;
+    width?: string;
 }
 
-const buttonsStyle: TextStyle = {
+const buttonStyle: TextStyle = {
     paddingVertical: 16,
     paddingHorizontal: 32,
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
     width: '100%',
-    textAlign: 'center'
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex'
 };
 
 export const Button: React.FC<ButtonProps> = (props) => (
-    <TouchableOpacity style={props.style} onPress={props.isEnabled ? props.onPress : undefined}>
-        <Text
-            style={{
-                ...buttonsStyle,
-                backgroundColor: props.backgroundColor,
-                opacity: props.isEnabled ? 1 : 0.4
-            }}
-        >
-            {props.text}
-        </Text>
+    <TouchableOpacity
+        style={{
+            backgroundColor: props.backgroundColor,
+            height: props.height,
+            opacity: props.isEnabled ? 1 : 0.4,
+            width: props.width || '50%'
+        }}
+        onPress={props.isEnabled ? props.onPress : undefined}
+    >
+        <Text style={buttonStyle}>{props.text}</Text>
     </TouchableOpacity>
 );
