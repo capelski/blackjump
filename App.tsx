@@ -28,6 +28,17 @@ export default function App() {
         }
     }, [decisionEvaluation]);
 
+    useEffect(() => {
+        if (phase === 'dealer' && dealerHand && getHandEffectiveValue(dealerHand) < 17) {
+            setTimeout(() => {
+                setDealerHand(dealCard(dealerHand, cardSet));
+            }, 1000);
+        } else if (phase === 'dealer') {
+            setPhase(Phases.finished);
+            // TODO Display hands result (e.g. Dealer wins, Push, Player wins, etc.)
+        }
+    }, [phase, dealerHand]);
+
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair(currentTrainingPair + 1);
@@ -52,14 +63,7 @@ export default function App() {
             setPlayerHandIndex(nextPlayerHandIndex);
         } else {
             setPhase(Phases.dealer);
-            // TODO Add interval to deliver dealer cards gradually
-            let nextHand: Hand = dealerHand!;
-            while (getHandEffectiveValue(nextHand) < 17) {
-                nextHand = dealCard(nextHand, cardSet);
-            }
-            setDealerHand(nextHand!);
-            setPhase(Phases.finished);
-            // TODO Display hands result (e.g. Dealer wins, Push, Player wins, etc.)
+            // By setting the phase to dealer, the corresponding useEffect hook will be executed
         }
     };
 
@@ -125,6 +129,7 @@ export default function App() {
             }}
         >
             <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
+            {/* TODO Improve "table" layout */}
             <View
                 style={{
                     flex: 1,

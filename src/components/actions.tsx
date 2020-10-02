@@ -14,45 +14,47 @@ interface ActionsProps {
     startTrainingRound: () => void;
 }
 
-const buttonHeight = 56;
-
 export const Actions: React.FC<ActionsProps> = (props) => (
-    <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
+    <View style={{ width: '100%', height: 112, flexDirection: 'row', flexWrap: 'wrap' }}>
         {props.phase === Phases.player && (
             <React.Fragment>
                 <Button
-                    height={buttonHeight}
+                    height="50%"
                     backgroundColor="#428bca"
                     isEnabled={true}
                     onPress={props.hitHandler}
                     text="Hit"
+                    width="50%"
                 />
                 <Button
-                    height={buttonHeight}
+                    height="50%"
                     backgroundColor="#46b8da"
                     isEnabled={true}
                     onPress={props.standHandler}
                     text="Stand"
+                    width="50%"
                 />
                 <Button
-                    height={buttonHeight}
+                    height="50%"
                     backgroundColor="#5cb85c"
                     isEnabled={props.isSplitEnabled}
                     onPress={props.splitHandler}
                     text="Split"
+                    width="50%"
                 />
                 <Button
-                    height={buttonHeight}
+                    height="50%"
                     backgroundColor="#dc3545"
                     isEnabled={props.isDoubleEnabled}
                     onPress={props.doubleHandler}
                     text="Double"
+                    width="50%"
                 />
             </React.Fragment>
         )}
         {props.phase === Phases.finished && (
             <Button
-                height={buttonHeight * 2}
+                height="100%"
                 backgroundColor="#428bca"
                 isEnabled={true}
                 onPress={props.startTrainingRound}
