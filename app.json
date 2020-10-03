@@ -15,7 +15,6 @@
         },
         "assetBundlePatterns": ["**/*"],
         "android": {
-            "enableDangerousExperimentalLeanBuilds": true,
             "package": "capelski.blackjump",
             "permissions": [],
             "versionCode": 1
