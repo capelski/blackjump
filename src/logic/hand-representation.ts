@@ -50,9 +50,12 @@ export const handRepresentationToHand = (
 };
 
 export const handToHandRepresentation = (hand: Hand): HandRepresentation => {
-    const handSymbols = hand.cards.map((c) => c.symbol);
+    const handSymbols = hand.cards.map((c) => symbolsToFigures(c.symbol));
     const handValues = getHandValidValues(hand).join('/');
     return handSymbols.length === 2 && handSymbols[0] === handSymbols[1]
         ? handSymbols.join(',')
         : handValues;
 };
+
+export const symbolsToFigures = (symbol: string) =>
+    ['10', 'J', 'Q', 'K'].indexOf(symbol) > -1 ? 'Figure' : symbol;
