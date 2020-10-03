@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { Actions } from './src/components/actions';
 import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
 import { HandComponent } from './src/components/hand';
@@ -12,19 +12,26 @@ import { Decision, DecisionEvaluation, Hand, Phases } from './src/types';
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
 
+// TODO Highlight current hand when more than one
+
 export default function App() {
     const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
     const [dealerHand, setDealerHand] = useState<Hand | undefined>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation | undefined>();
+    const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
 
     useEffect(() => {
+        if (decisionEvaluationTimeout) {
+            clearTimeout(decisionEvaluationTimeout);
+        }
         if (decisionEvaluation && decisionEvaluation.hit) {
-            setTimeout(() => {
+            const nextTimeout = setTimeout(() => {
                 setDecisionEvaluation(undefined);
             }, 1000);
+            setDecisionEvaluationTimeout(nextTimeout);
         }
     }, [decisionEvaluation]);
 
@@ -61,6 +68,9 @@ export default function App() {
             });
             setPlayerHands(nextHands);
             setPlayerHandIndex(nextPlayerHandIndex);
+            if (getHandEffectiveValue(playerHands![playerHandIndex]) === 21) {
+                setPhase(Phases.dealer);
+            }
         } else {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
@@ -109,6 +119,9 @@ export default function App() {
         const nextHands = playerHands!.map((h) => h);
         nextHands.splice(playerHandIndex, 1, dealCard(firstHand, cardSet), secondHand);
         setPlayerHands(nextHands);
+        if (getHandEffectiveValue(nextHands![playerHandIndex]) === 21) {
+            finishTrainingRound(nextHands);
+        }
     };
 
     const currentHand = playerHands && playerHands[playerHandIndex];
@@ -130,13 +143,16 @@ export default function App() {
         >
             <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
             {/* TODO Improve "table" and cards layout */}
-            <View
+            <ScrollView
                 style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
                     width: '100%',
-                    paddingHorizontal: 16
+                    paddingHorizontal: 16,
+                    marginVertical: 16
+                }}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}
             >
                 <View style={{ width: '100%' }}>
@@ -150,12 +166,12 @@ export default function App() {
                         flexWrap: 'wrap'
                     }}
                 >
-                    <Text style={{ fontSize: 25, color: 'white' }}>Player</Text>
+                    <Text style={{ fontSize: 25, color: 'white' }}>You</Text>
                     {playerHands?.map((hand, index) => (
                         <HandComponent key={index} hand={hand} />
                     ))}
                 </View>
-            </View>
+            </ScrollView>
             <Actions
                 doubleHandler={doubleHandler}
                 hitHandler={hitHandler}

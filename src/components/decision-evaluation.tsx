@@ -9,10 +9,11 @@ interface DecisionEvaluationProps {
 export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (props) => (
     <View
         style={{
-            height: 64,
+            height: 80,
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
+            paddingTop: 16,
             backgroundColor: props.decisionEvaluation
                 ? props.decisionEvaluation.hit
                     ? '#5cb85c'
