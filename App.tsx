@@ -129,7 +129,7 @@ export default function App() {
             }}
         >
             <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-            {/* TODO Improve "table" layout */}
+            {/* TODO Improve "table" and cards layout */}
             <View
                 style={{
                     flex: 1,

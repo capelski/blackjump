@@ -106,7 +106,7 @@ export const getOptimalDecision = (playerHand: Hand, dealerHand: Hand): OptimalD
             '/'
         )} (${playerHand.cards
             .map((c) => c.symbol)
-            .join(',')}) against a dealer ${getHandValidValues(playerHand).join(
+            .join(',')}) against a dealer ${getHandValidValues(dealerHand).join(
             '/'
         )} is to ${optimalDecision}`
     };
