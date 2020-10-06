@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, Text, View } from 'react-native';
@@ -46,6 +47,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 alignItems: 'center',
                 flex: 1,
                 justifyContent: 'center',
+                padding: 16,
                 width: '100%'
             }}
         >
@@ -71,11 +73,22 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 height={56}
                 backgroundColor="#428bca"
                 isEnabled={isSaveButtonEnabled}
+                marginTop={16}
                 onPress={setGameConfig}
                 text="Save"
                 width="50%"
             />
-            {/* TODO Add a link to the statistics table */}
+            <Button
+                height={56}
+                backgroundColor="#428bca"
+                isEnabled={true}
+                marginTop={64}
+                onPress={() => {
+                    Linking.openURL('https://wizardofodds.com/games/blackjack/strategy/4-decks/');
+                }}
+                text="View strategy table"
+                width="100%"
+            />
         </View>
     );
 };
