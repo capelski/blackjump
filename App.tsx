@@ -6,8 +6,16 @@ import { ConfigMenu } from './src/components/config-menu';
 import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
-import { getCardSet, collectPlayedCards, getCardEffectiveValue } from './src/logic/card-set';
-import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
+import { getCardSet, collectPlayedCards } from './src/logic/card-set';
+import {
+    canDouble,
+    canSplit,
+    createHand,
+    dealCard,
+    getHandEffectiveValue,
+    isFinished,
+    resolveHand
+} from './src/logic/hand';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import { Decision, DecisionEvaluation, GameConfig, Hand, Phases, ScreenTypes } from './src/types';
 
@@ -29,16 +37,9 @@ export default function App() {
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
 
     const currentHand = playerHands && playerHands[playerHandIndex];
-    const isSplitEnabled =
-        currentHand !== undefined &&
-        currentHand.cards.length === 2 &&
-        getCardEffectiveValue(currentHand.cards[0]) === getCardEffectiveValue(currentHand.cards[1]);
+    const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined &&
-        currentHand.cards.length === 2 &&
-        (gameConfig.canDoubleAfterSplit || playerHands!.length === 1) &&
-        (gameConfig.canDoubleOnAnyInitialHand ||
-            [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1);
+        currentHand !== undefined && canDouble(currentHand, playerHands!.length, gameConfig);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -58,8 +59,12 @@ export default function App() {
                 setDealerHand(dealCard(dealerHand, cardSet));
             }, 1000);
         } else if (phase === 'dealer') {
+            const resolvedHands = playerHands!.map<Hand>((playerHand) => {
+                resolveHand(playerHand, dealerHand!);
+                return playerHand;
+            });
+            setPlayerHands(resolvedHands);
             setPhase(Phases.finished);
-            // TODO Display hands result (e.g. Dealer wins, Push, Player wins, etc.)
         }
     }, [phase, dealerHand]);
 
@@ -85,7 +90,7 @@ export default function App() {
             });
             setPlayerHands(nextHands);
             setPlayerHandIndex(nextPlayerHandIndex);
-            if (getHandEffectiveValue(playerHands![playerHandIndex]) === 21) {
+            if (isFinished(playerHands![playerHandIndex])) {
                 setPhase(Phases.dealer);
             }
         } else {
@@ -121,7 +126,7 @@ export default function App() {
             return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
         });
         setPlayerHands(nextHands);
-        if (getHandEffectiveValue(nextHands[playerHandIndex]) >= 21) {
+        if (isFinished(nextHands[playerHandIndex])) {
             finishTrainingRound(nextHands);
         }
     };
@@ -139,7 +144,7 @@ export default function App() {
         const nextHands = playerHands!.map((h) => h);
         nextHands.splice(playerHandIndex, 1, dealCard(firstHand, cardSet), secondHand);
         setPlayerHands(nextHands);
-        if (getHandEffectiveValue(nextHands![playerHandIndex]) === 21) {
+        if (isFinished(nextHands![playerHandIndex])) {
             finishTrainingRound(nextHands);
         }
     };

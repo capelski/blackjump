@@ -58,7 +58,16 @@ export interface GameConfig {
 
 export interface Hand {
     cards: Card[];
+    outcome?: string;
     values: number[];
+}
+
+export enum HandOutcome {
+    blackjack = 'Blackjack',
+    bust = 'Bust',
+    dealerWins = 'Dealer wins',
+    playerWins = 'Player wins',
+    push = 'Push'
 }
 
 export type HandRepresentation = string;

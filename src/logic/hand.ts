@@ -1,6 +1,15 @@
-import { Hand, Card, CardSet } from '../types';
+import { Hand, Card, CardSet, HandOutcome, GameConfig } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
-import { getCardValues, extractNextCard } from './card-set';
+import { getCardValues, extractNextCard, getCardEffectiveValue } from './card-set';
+
+export const canDouble = (hand: Hand, handsNumber: number, gameConfig: GameConfig) =>
+    hand.cards.length === 2 &&
+    (gameConfig.canDoubleAfterSplit || handsNumber === 1) &&
+    (gameConfig.canDoubleOnAnyInitialHand || [9, 10, 11].indexOf(getHandEffectiveValue(hand)) > -1);
+
+export const canSplit = (hand: Hand) =>
+    hand.cards.length === 2 &&
+    getCardEffectiveValue(hand.cards[0]) === getCardEffectiveValue(hand.cards[1]);
 
 export const createHand = (cards: Card[]): Hand => ({
     cards: cards,
@@ -33,4 +42,41 @@ export const getHandValues = (cards: Card[]) => {
         [0]
     );
     return removeDuplicates(cardsAggregatedValues);
+};
+
+export const isBlackJack = (hand: Hand) => {
+    return (
+        hand.cards.length === 2 &&
+        hand.values.length === 2 &&
+        hand.values[0] === 11 &&
+        hand.values[1] === 21
+    );
+};
+
+export const isBust = (hand: Hand) => {
+    return getHandEffectiveValue(hand) > 21;
+};
+
+export const isFinished = (hand: Hand) => {
+    return getHandEffectiveValue(hand) >= 21;
+};
+
+export const resolveHand = (playerHand: Hand, dealerHand: Hand) => {
+    const playerHandValue = getHandEffectiveValue(playerHand);
+    const dealerHandValue = getHandEffectiveValue(dealerHand!);
+    playerHand.outcome = isBust(playerHand)
+        ? HandOutcome.bust
+        : isBust(dealerHand!)
+        ? HandOutcome.playerWins
+        : isBlackJack(playerHand) && isBlackJack(dealerHand!)
+        ? HandOutcome.push
+        : isBlackJack(dealerHand!)
+        ? HandOutcome.dealerWins
+        : isBlackJack(playerHand)
+        ? HandOutcome.blackjack
+        : playerHandValue > dealerHandValue
+        ? HandOutcome.playerWins
+        : playerHandValue === dealerHandValue
+        ? HandOutcome.push
+        : HandOutcome.dealerWins;
 };

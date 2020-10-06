@@ -35,5 +35,11 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => (
             {' '}
             {getHandValidValues(props.hand).join(' / ')}
         </Text>
+        {props.hand.outcome && (
+            <Text style={{ fontSize: 25, color: 'white', marginTop: 16, fontWeight: 'bold' }}>
+                {' '}
+                {props.hand.outcome}
+            </Text>
+        )}
     </View>
 );
