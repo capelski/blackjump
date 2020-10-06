@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Actions } from './src/components/actions';
+import { ConfigBar } from './src/components/config-bar';
+import { ConfigMenu } from './src/components/config-menu';
 import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
-import { HandComponent } from './src/components/hand';
+import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards, getCardEffectiveValue } from './src/logic/card-set';
 import { getHandEffectiveValue, dealCard, createHand } from './src/logic/hand';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
-import { Decision, DecisionEvaluation, Hand, Phases } from './src/types';
+import { Decision, DecisionEvaluation, GameConfig, Hand, Phases, ScreenTypes } from './src/types';
 
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
@@ -16,12 +18,29 @@ const cardSet = getCardSet();
 
 export default function App() {
     const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
+    const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
     const [dealerHand, setDealerHand] = useState<Hand | undefined>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation | undefined>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
+    const [gameConfig, setGameConfig] = useState<GameConfig>({
+        canDoubleOnAnyInitialHand: false,
+        canDoubleAfterSplit: true
+    });
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
+
+    const currentHand = playerHands && playerHands[playerHandIndex];
+    const isSplitEnabled =
+        currentHand !== undefined &&
+        currentHand.cards.length === 2 &&
+        getCardEffectiveValue(currentHand.cards[0]) === getCardEffectiveValue(currentHand.cards[1]);
+    const isDoubleEnabled =
+        currentHand !== undefined &&
+        currentHand.cards.length === 2 &&
+        (gameConfig.canDoubleAfterSplit || playerHands!.length === 1) &&
+        (gameConfig.canDoubleOnAnyInitialHand ||
+            [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -78,7 +97,10 @@ export default function App() {
     };
 
     const evaluatePlayerDecision = (decision: Decision, hand: Hand) => {
-        const optimalDecision = getOptimalDecision(hand, dealerHand!);
+        const optimalDecision = getOptimalDecision(hand, dealerHand!, {
+            canDouble: isDoubleEnabled,
+            canDoubleAfterSplit: gameConfig.canDoubleAfterSplit
+        });
         if (optimalDecision.decision === decision) {
             setDecisionEvaluation({ hit: true });
         } else {
@@ -124,13 +146,11 @@ export default function App() {
         }
     };
 
-    const currentHand = playerHands && playerHands[playerHandIndex];
-    const isSplitEnabled =
-        currentHand !== undefined &&
-        currentHand.cards.length === 2 &&
-        getCardEffectiveValue(currentHand.cards[0]) === getCardEffectiveValue(currentHand.cards[1]);
-    const isDoubleEnabled =
-        currentHand !== undefined && [9, 10, 11].indexOf(getHandEffectiveValue(currentHand)) > -1;
+    const configBarClickHandler = () => {
+        setCurrentScreen(
+            currentScreen === ScreenTypes.table ? ScreenTypes.config : ScreenTypes.table
+        );
+    };
 
     return (
         <View
@@ -141,47 +161,26 @@ export default function App() {
                 backgroundColor: '#088446'
             }}
         >
-            <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-            {/* TODO Improve "table" and cards layout */}
-            <ScrollView
-                style={{
-                    width: '100%',
-                    paddingHorizontal: 16,
-                    marginVertical: 16
-                }}
-                contentContainerStyle={{
-                    flexGrow: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
-                <View style={{ width: '100%' }}>
-                    <Text style={{ fontSize: 25, color: 'white' }}>Dealer</Text>
-                    {dealerHand && <HandComponent hand={dealerHand} />}
-                </View>
-                <View
-                    style={{
-                        width: '100%',
-                        marginTop: 16,
-                        flexWrap: 'wrap'
-                    }}
-                >
-                    <Text style={{ fontSize: 25, color: 'white' }}>You</Text>
-                    {playerHands?.map((hand, index) => (
-                        <HandComponent key={index} hand={hand} />
-                    ))}
-                </View>
-            </ScrollView>
-            <Actions
-                doubleHandler={doubleHandler}
-                hitHandler={hitHandler}
-                isDoubleEnabled={isDoubleEnabled}
-                isSplitEnabled={isSplitEnabled}
-                phase={phase}
-                splitHandler={splitHandler}
-                standHandler={standHandler}
-                startTrainingRound={startTrainingRound}
-            />
+            {currentScreen === ScreenTypes.table && (
+                <React.Fragment>
+                    <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
+                    <Table dealerHand={dealerHand} playerHands={playerHands} />
+                    <Actions
+                        doubleHandler={doubleHandler}
+                        hitHandler={hitHandler}
+                        isDoubleEnabled={isDoubleEnabled}
+                        isSplitEnabled={isSplitEnabled}
+                        phase={phase}
+                        splitHandler={splitHandler}
+                        standHandler={standHandler}
+                        startTrainingRound={startTrainingRound}
+                    />
+                </React.Fragment>
+            )}
+            {currentScreen === ScreenTypes.config && (
+                <ConfigMenu gameConfig={gameConfig} setGameConfig={setGameConfig} />
+            )}
+            <ConfigBar currentScreen={currentScreen} onConfigClick={configBarClickHandler} />
         </View>
     );
 }
