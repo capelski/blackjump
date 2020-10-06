@@ -53,6 +53,7 @@ export type Dictionary<T> = { [key: string]: T };
 export interface GameConfig {
     canDoubleOnAnyInitialHand: boolean;
     canDoubleAfterSplit: boolean;
+    // TODO Add canSurrender
 }
 
 export interface Hand {
