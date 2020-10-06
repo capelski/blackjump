@@ -5,6 +5,7 @@ import { Hand } from '../types';
 
 interface HandComponentProps {
     hand: Hand;
+    isCurrentHand: boolean;
 }
 
 const getCardStyles = (suit: string) => ({
@@ -12,12 +13,19 @@ const getCardStyles = (suit: string) => ({
     backgroundColor: 'white',
     padding: 8,
     marginRight: 8,
-    marginTop: 8,
+    marginVertical: 8,
     color: suit === '♦' || suit === '♥' ? 'red' : 'black'
 });
 
 export const HandComponent: React.FC<HandComponentProps> = (props) => (
-    <View style={{ flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap' }}>
+    <View
+        style={{
+            flexDirection: 'row',
+            maxWidth: '100%',
+            flexWrap: 'wrap',
+            backgroundColor: props.isCurrentHand ? 'rgba(255, 255, 255, 0.2)' : undefined
+        }}
+    >
         {props.hand.cards.map((card, index) => (
             <Text key={index} style={getCardStyles(card.suit)}>
                 {card.symbol + ' ' + card.suit}

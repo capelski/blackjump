@@ -14,8 +14,6 @@ import { Decision, DecisionEvaluation, GameConfig, Hand, Phases, ScreenTypes } f
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
 
-// TODO Highlight current hand when more than one
-
 export default function App() {
     const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
     const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
@@ -164,7 +162,12 @@ export default function App() {
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
                     <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-                    <Table dealerHand={dealerHand} playerHands={playerHands} />
+                    <Table
+                        dealerHand={dealerHand}
+                        phase={phase}
+                        playerHandIndex={playerHandIndex}
+                        playerHands={playerHands}
+                    />
                     <Actions
                         doubleHandler={doubleHandler}
                         hitHandler={hitHandler}

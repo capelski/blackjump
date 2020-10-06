@@ -1,10 +1,12 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { Hand } from '../types';
+import { Hand, Phases } from '../types';
 import { HandComponent } from './hand-component';
 
 interface TableProps {
     dealerHand?: Hand;
+    phase: Phases;
+    playerHandIndex: number;
     playerHands?: Hand[];
 }
 
@@ -24,7 +26,12 @@ export const Table: React.FC<TableProps> = (props) => (
     >
         <View style={{ width: '100%' }}>
             <Text style={{ fontSize: 25, color: 'white' }}>Dealer</Text>
-            {props.dealerHand && <HandComponent hand={props.dealerHand} />}
+            {props.dealerHand && (
+                <HandComponent
+                    hand={props.dealerHand}
+                    isCurrentHand={props.phase === Phases.dealer}
+                />
+            )}
         </View>
         <View
             style={{
@@ -35,7 +42,11 @@ export const Table: React.FC<TableProps> = (props) => (
         >
             <Text style={{ fontSize: 25, color: 'white' }}>You</Text>
             {props.playerHands?.map((hand, index) => (
-                <HandComponent key={index} hand={hand} />
+                <HandComponent
+                    key={index}
+                    hand={hand}
+                    isCurrentHand={props.phase === Phases.player && index === props.playerHandIndex}
+                />
             ))}
         </View>
     </ScrollView>
