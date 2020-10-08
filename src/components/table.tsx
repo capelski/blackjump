@@ -11,17 +11,14 @@ interface TableProps {
 }
 
 export const Table: React.FC<TableProps> = (props) => (
-    /* TODO Improve "table" and cards layout */
     <ScrollView
         style={{
             width: '100%',
-            paddingHorizontal: 16,
             marginVertical: 16
         }}
         contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
+            justifyContent: 'center'
         }}
     >
         {props.dealerHand && (

@@ -2,46 +2,38 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { getHandValidValues } from '../logic/hand';
 import { Hand } from '../types';
+import { CardComponent } from './card-component';
 
 interface HandComponentProps {
     hand: Hand;
     isCurrentHand: boolean;
 }
 
-const getCardStyles = (suit: string) => ({
-    fontSize: 30,
-    backgroundColor: 'white',
-    padding: 8,
-    marginRight: 8,
-    marginBottom: 8,
-    color: suit === '♦' || suit === '♥' ? 'red' : 'black'
-});
-
 export const HandComponent: React.FC<HandComponentProps> = (props) => (
     <View
         style={{
             flexDirection: 'row',
-            maxWidth: '100%',
             flexWrap: 'wrap',
+            maxWidth: '100%',
             paddingTop: 8,
             paddingHorizontal: 8,
             backgroundColor: props.isCurrentHand ? 'rgba(255, 255, 255, 0.2)' : undefined
         }}
     >
         {props.hand.cards.map((card, index) => (
-            <Text key={index} style={getCardStyles(card.suit)}>
-                {card.symbol + ' ' + card.suit}
-            </Text>
+            <CardComponent key={index} card={card} />
         ))}
-        <Text style={{ fontSize: 25, color: 'white', marginTop: 16 }}>
-            {' '}
-            {getHandValidValues(props.hand).join(' / ')}
-        </Text>
-        {props.hand.outcome && (
-            <Text style={{ fontSize: 25, color: 'white', marginTop: 16, fontWeight: 'bold' }}>
+        <View>
+            <Text style={{ fontSize: 25, color: 'white' }}>
                 {' '}
-                {props.hand.outcome}
+                {getHandValidValues(props.hand).join('/')}
             </Text>
-        )}
+            {props.hand.outcome && (
+                <Text style={{ fontSize: 25, color: 'white', fontWeight: 'bold' }}>
+                    {' '}
+                    {props.hand.outcome}
+                </Text>
+            )}
+        </View>
     </View>
 );
