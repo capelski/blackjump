@@ -186,7 +186,11 @@ export default function App() {
                 </React.Fragment>
             )}
             {currentScreen === ScreenTypes.config && (
-                <ConfigMenu gameConfig={gameConfig} setGameConfig={setGameConfig} />
+                <ConfigMenu
+                    gameConfig={gameConfig}
+                    setCurrentScreen={setCurrentScreen}
+                    setGameConfig={setGameConfig}
+                />
             )}
             <ConfigBar currentScreen={currentScreen} onConfigClick={configBarClickHandler} />
         </View>

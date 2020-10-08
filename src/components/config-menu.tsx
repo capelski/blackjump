@@ -2,18 +2,20 @@ import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, Text, View } from 'react-native';
-import { GameConfig } from '../types';
+import { GameConfig, ScreenTypes } from '../types';
 import { Button } from './button';
 
 interface ConfigMenuProps {
     gameConfig: GameConfig;
+    setCurrentScreen: (screen: ScreenTypes) => void;
     setGameConfig: (gameConfig: GameConfig) => void;
 }
 
 const checkboxStyle = {
     height: 32,
     margin: 8,
-    width: 32
+    width: 32,
+    backgroundColor: 'white'
 };
 
 const textStyle = {
@@ -30,11 +32,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         props.gameConfig.canDoubleOnAnyInitialHand
     );
 
-    const setGameConfig = () => {
+    const saveHandler = () => {
         props.setGameConfig({
             canDoubleAfterSplit,
             canDoubleOnAnyInitialHand
         });
+        props.setCurrentScreen(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
@@ -74,7 +77,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 backgroundColor="#428bca"
                 isEnabled={isSaveButtonEnabled}
                 marginTop={16}
-                onPress={setGameConfig}
+                onPress={saveHandler}
                 text="Save"
                 width="50%"
             />
