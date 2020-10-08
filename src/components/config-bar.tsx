@@ -11,7 +11,6 @@ interface ConfigBarProps {
 export const ConfigBar: React.FC<ConfigBarProps> = (props) => (
     <View
         style={{
-            // TODO Manage heights from App.tsx (to avoid scroll on all page)
             height: 48,
             width: '100%',
             backgroundColor: 'black',

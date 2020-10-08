@@ -13,7 +13,7 @@ const getCardStyles = (suit: string) => ({
     backgroundColor: 'white',
     padding: 8,
     marginRight: 8,
-    marginVertical: 8,
+    marginBottom: 8,
     color: suit === '♦' || suit === '♥' ? 'red' : 'black'
 });
 
@@ -23,6 +23,8 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => (
             flexDirection: 'row',
             maxWidth: '100%',
             flexWrap: 'wrap',
+            paddingTop: 8,
+            paddingHorizontal: 8,
             backgroundColor: props.isCurrentHand ? 'rgba(255, 255, 255, 0.2)' : undefined
         }}
     >

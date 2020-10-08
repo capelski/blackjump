@@ -24,30 +24,24 @@ export const Table: React.FC<TableProps> = (props) => (
             alignItems: 'center'
         }}
     >
-        <View style={{ width: '100%' }}>
-            <Text style={{ fontSize: 25, color: 'white' }}>Dealer</Text>
-            {props.dealerHand && (
-                <HandComponent
-                    hand={props.dealerHand}
-                    isCurrentHand={props.phase === Phases.dealer}
-                />
-            )}
-        </View>
+        {props.dealerHand && (
+            <HandComponent hand={props.dealerHand} isCurrentHand={props.phase === Phases.dealer} />
+        )}
         <View
             style={{
+                marginVertical: 16,
+                backgroundColor: 'white',
+                height: 2,
                 width: '100%',
-                marginTop: 16,
-                flexWrap: 'wrap'
+                opacity: 0.75
             }}
-        >
-            <Text style={{ fontSize: 25, color: 'white' }}>You</Text>
-            {props.playerHands?.map((hand, index) => (
-                <HandComponent
-                    key={index}
-                    hand={hand}
-                    isCurrentHand={props.phase === Phases.player && index === props.playerHandIndex}
-                />
-            ))}
-        </View>
+        ></View>
+        {props.playerHands?.map((hand, index) => (
+            <HandComponent
+                key={index}
+                hand={hand}
+                isCurrentHand={props.phase === Phases.player && index === props.playerHandIndex}
+            />
+        ))}
     </ScrollView>
 );
