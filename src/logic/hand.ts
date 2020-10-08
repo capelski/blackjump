@@ -11,6 +11,9 @@ export const canSplit = (hand: Hand) =>
     hand.cards.length === 2 &&
     getCardEffectiveValue(hand.cards[0]) === getCardEffectiveValue(hand.cards[1]);
 
+export const canSurrender = (hand: Hand, handsNumber: number, gameConfig: GameConfig) =>
+    handsNumber === 1 && hand.cards.length === 2 && gameConfig.canSurrender;
+
 export const createHand = (cards: Card[]): Hand => ({
     cards: cards,
     values: getHandValues(cards)

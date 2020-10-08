@@ -7,11 +7,13 @@ interface ActionsProps {
     phase: Phases;
     isDoubleEnabled: boolean;
     isSplitEnabled: boolean;
+    isSurrenderEnabled: boolean;
     doubleHandler: () => void;
     hitHandler: () => void;
     splitHandler: () => void;
     standHandler: () => void;
     startTrainingRound: () => void;
+    surrenderHandler: () => void;
 }
 
 export const Actions: React.FC<ActionsProps> = (props) => (
@@ -40,15 +42,23 @@ export const Actions: React.FC<ActionsProps> = (props) => (
                     isEnabled={props.isSplitEnabled}
                     onPress={props.splitHandler}
                     text="Split"
-                    width="50%"
+                    width="33%"
+                />
+                <Button
+                    height="50%"
+                    backgroundColor="#ffc107"
+                    isEnabled={props.isDoubleEnabled}
+                    onPress={props.doubleHandler}
+                    text="Double"
+                    width="34%"
                 />
                 <Button
                     height="50%"
                     backgroundColor="#dc3545"
-                    isEnabled={props.isDoubleEnabled}
-                    onPress={props.doubleHandler}
-                    text="Double"
-                    width="50%"
+                    isEnabled={props.isSurrenderEnabled}
+                    onPress={props.surrenderHandler}
+                    text="Surrender"
+                    width="33%"
                 />
             </React.Fragment>
         )}

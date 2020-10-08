@@ -27,8 +27,6 @@ export const Button: React.FC<ButtonProps> = (props) => (
                 height: '100%',
                 justifyContent: 'center',
                 opacity: props.isEnabled ? 1 : 0.4,
-                paddingVertical: 16,
-                paddingHorizontal: 32,
                 width: '100%'
             }}
         >

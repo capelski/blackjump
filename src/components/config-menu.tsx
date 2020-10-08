@@ -31,18 +31,21 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [canDoubleOnAnyInitialHand, setCanDoubleOnAnyInitialHand] = useState(
         props.gameConfig.canDoubleOnAnyInitialHand
     );
+    const [canSurrender, setCanSurrender] = useState(props.gameConfig.canSurrender);
 
     const saveHandler = () => {
         props.setGameConfig({
             canDoubleAfterSplit,
-            canDoubleOnAnyInitialHand
+            canDoubleOnAnyInitialHand,
+            canSurrender
         });
         props.setCurrentScreen(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
         props.gameConfig.canDoubleAfterSplit !== canDoubleAfterSplit ||
-        props.gameConfig.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand;
+        props.gameConfig.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand ||
+        props.gameConfig.canSurrender !== canSurrender;
 
     return (
         <View
@@ -71,6 +74,15 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     style={checkboxStyle}
                 />
                 <Text style={textStyle}>Can double on any initial hand</Text>
+            </View>
+            <View style={{ flexDirection: 'row', width: '100%' }}>
+                <CheckBox
+                    disabled={false}
+                    value={canSurrender}
+                    onValueChange={(newValue) => setCanSurrender(newValue)}
+                    style={checkboxStyle}
+                />
+                <Text style={textStyle}>Can surrender</Text>
             </View>
             <Button
                 height={56}

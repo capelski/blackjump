@@ -10,6 +10,7 @@ import { getCardSet, collectPlayedCards } from './src/logic/card-set';
 import {
     canDouble,
     canSplit,
+    canSurrender,
     createHand,
     dealCard,
     getHandEffectiveValue,
@@ -23,14 +24,15 @@ const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
 
 export default function App() {
-    const [currentTrainingPair, setCurrentTrainingPair] = useState(0);
+    const [currentTrainingPair, setCurrentTrainingPair] = useState(-1);
     const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
     const [dealerHand, setDealerHand] = useState<Hand | undefined>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation | undefined>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState<GameConfig>({
         canDoubleOnAnyInitialHand: false,
-        canDoubleAfterSplit: true
+        canDoubleAfterSplit: true,
+        canSurrender: false
     });
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
@@ -40,6 +42,8 @@ export default function App() {
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
         currentHand !== undefined && canDouble(currentHand, playerHands!.length, gameConfig);
+    const isSurrenderEnabled =
+        currentHand !== undefined && canSurrender(currentHand, playerHands!.length, gameConfig);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -70,7 +74,7 @@ export default function App() {
 
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
-        setCurrentTrainingPair(currentTrainingPair + 1);
+        setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
         const nextTrainingHands = trainingPairToTrainingHands(
             allTrainingPairs[currentTrainingPair + 1],
             cardSet
@@ -102,7 +106,8 @@ export default function App() {
     const evaluatePlayerDecision = (decision: Decision, hand: Hand) => {
         const optimalDecision = getOptimalDecision(hand, dealerHand!, {
             canDouble: isDoubleEnabled,
-            canDoubleAfterSplit: gameConfig.canDoubleAfterSplit
+            canDoubleAfterSplit: gameConfig.canDoubleAfterSplit,
+            canSurrender: isSurrenderEnabled
         });
         if (optimalDecision.decision === decision) {
             setDecisionEvaluation({ hit: true });
@@ -149,6 +154,12 @@ export default function App() {
         }
     };
 
+    const surrenderHandler = () => {
+        evaluatePlayerDecision('surrender', playerHands![playerHandIndex]);
+        setPlayerHands([]);
+        finishTrainingRound([]);
+    };
+
     const configBarClickHandler = () => {
         setCurrentScreen(
             currentScreen === ScreenTypes.table ? ScreenTypes.config : ScreenTypes.table
@@ -178,10 +189,12 @@ export default function App() {
                         hitHandler={hitHandler}
                         isDoubleEnabled={isDoubleEnabled}
                         isSplitEnabled={isSplitEnabled}
+                        isSurrenderEnabled={isSurrenderEnabled}
                         phase={phase}
                         splitHandler={splitHandler}
                         standHandler={standHandler}
                         startTrainingRound={startTrainingRound}
+                        surrenderHandler={surrenderHandler}
                     />
                 </React.Fragment>
             )}

@@ -61,7 +61,12 @@ const createDecisionsSet = (
                             limitScore + 1,
                             currentDecisionsSet
                         ),
-                        stand: createDecisionsSet('stand', limitScore + 1, currentDecisionsSet)
+                        stand: createDecisionsSet('stand', limitScore + 1, currentDecisionsSet),
+                        surrenderOtherwiseHit: createDecisionsSet(
+                            'surrenderOtherwiseHit',
+                            limitScore + 1,
+                            currentDecisionsSet
+                        )
                     }
                 };
             }
@@ -70,7 +75,6 @@ const createDecisionsSet = (
     return currentDecisionsSet;
 };
 
-const double = createDecisionsSet('double');
 const doubleOtherwiseHit = createDecisionsSet('doubleOtherwiseHit');
 const hit = createDecisionsSet('hit');
 const split = createDecisionsSet('split');
@@ -90,8 +94,9 @@ export const decisionsDictionary: Dictionary<DecisionsSet> = {
     '12': hit.until.dealer(3).then.stand.until.dealer(6).then.hit,
     '13': stand.until.dealer(6).then.hit,
     '14': stand.until.dealer(6).then.hit,
-    '15': stand.until.dealer(6).then.hit,
-    '16': stand.until.dealer(6).then.hit,
+    '15': stand.until.dealer(6).then.hit.until.dealer(9).then.surrenderOtherwiseHit.until.dealer(10)
+        .then.hit,
+    '16': stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderOtherwiseHit,
     '17': stand,
     '18': stand,
     '19': stand,
@@ -116,7 +121,7 @@ export const decisionsDictionary: Dictionary<DecisionsSet> = {
     '2,2': splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
     '3,3': splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
     '4,4': hit.until.dealer(4).then.splitIfDASOtherwiseHit.until.dealer(6).then.hit,
-    '5,5': double.until.dealer(9).then.hit, // Considered a hard 10
+    '5,5': doubleOtherwiseHit.until.dealer(9).then.hit, // Considered a hard 10
     '6,6': splitIfDASOtherwiseHit.until.dealer(2).then.split.until.dealer(6).then.hit,
     '7,7': split.until.dealer(7).then.hit,
     '8,8': split,
@@ -147,6 +152,10 @@ export const getOptimalDecision = (
             ? conditioningFactors.canDoubleAfterSplit
                 ? 'split'
                 : 'hit'
+            : optimalDecision === 'surrenderOtherwiseHit'
+            ? conditioningFactors.canSurrender
+                ? 'surrender'
+                : 'hit'
             : optimalDecision;
 
     return {
@@ -157,6 +166,6 @@ export const getOptimalDecision = (
             .map((c) => c.symbol)
             .join(',')}) against a dealer ${getHandValidValues(dealerHand).join(
             '/'
-        )} is to ${optimalDecision}`
+        )} is to ${decision}`
     };
 };

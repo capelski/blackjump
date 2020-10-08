@@ -1,6 +1,7 @@
 export interface BasicStrategyConditioningFactors {
     canDouble: boolean;
     canDoubleAfterSplit: boolean;
+    canSurrender: boolean;
 }
 
 export interface Card {
@@ -18,9 +19,10 @@ export type ConditionalDecision =
     | Decision
     | 'doubleOtherwiseHit'
     | 'doubleOtherwiseStand'
-    | 'splitIfDASOtherwiseHit';
+    | 'splitIfDASOtherwiseHit'
+    | 'surrenderOtherwiseHit';
 
-export type Decision = 'double' | 'hit' | 'split' | 'stand';
+export type Decision = 'double' | 'hit' | 'split' | 'stand' | 'surrender';
 
 export type DecisionEvaluation =
     | { hit: true }
@@ -43,6 +45,7 @@ export interface DecisionsSet {
                 split: DecisionsSet;
                 splitIfDASOtherwiseHit: DecisionsSet;
                 stand: DecisionsSet;
+                surrenderOtherwiseHit: DecisionsSet;
             };
         };
     };
@@ -53,7 +56,7 @@ export type Dictionary<T> = { [key: string]: T };
 export interface GameConfig {
     canDoubleOnAnyInitialHand: boolean;
     canDoubleAfterSplit: boolean;
-    // TODO Add canSurrender
+    canSurrender: boolean;
 }
 
 export interface Hand {
