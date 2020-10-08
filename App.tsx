@@ -37,6 +37,8 @@ export default function App() {
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
     const [playerHandIndex, setPlayerHandIndex] = useState(0);
+    const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
+    const [totalRightDecisions, setTotalRightDecisions] = useState(0);
 
     const currentHand = playerHands && playerHands[playerHandIndex];
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
@@ -109,8 +111,11 @@ export default function App() {
             canDoubleAfterSplit: gameConfig.canDoubleAfterSplit,
             canSurrender: isSurrenderEnabled
         });
+
+        setTotalAttemptedDecisions(totalAttemptedDecisions + 1);
         if (optimalDecision.decision === decision) {
             setDecisionEvaluation({ hit: true });
+            setTotalRightDecisions(totalRightDecisions + 1);
         } else {
             setDecisionEvaluation({ hit: false, failureReason: optimalDecision.description });
         }
@@ -156,6 +161,7 @@ export default function App() {
 
     const surrenderHandler = () => {
         evaluatePlayerDecision('surrender', playerHands![playerHandIndex]);
+        // TODO Bring the cards back to the cardSet!
         setPlayerHands([]);
         finishTrainingRound([]);
     };
@@ -205,7 +211,12 @@ export default function App() {
                     setGameConfig={setGameConfig}
                 />
             )}
-            <ConfigBar currentScreen={currentScreen} onConfigClick={configBarClickHandler} />
+            <ConfigBar
+                currentScreen={currentScreen}
+                onConfigClick={configBarClickHandler}
+                totalAttemptedDecisions={totalAttemptedDecisions}
+                totalRightDecisions={totalRightDecisions}
+            />
         </View>
     );
 }
