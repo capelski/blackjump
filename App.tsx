@@ -17,8 +17,17 @@ import {
     isFinished,
     resolveHand
 } from './src/logic/hand';
+import { getCurrentHand, isLastHand, startNextHand } from './src/logic/hand-set';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
-import { Decision, DecisionEvaluation, GameConfig, Hand, Phases, ScreenTypes } from './src/types';
+import {
+    Decision,
+    DecisionEvaluation,
+    GameConfig,
+    Hand,
+    HandsSet,
+    Phases,
+    ScreenTypes
+} from './src/types';
 
 const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
@@ -35,17 +44,16 @@ export default function App() {
         canSurrender: false
     });
     const [phase, setPhase] = useState<Phases>(Phases.finished);
-    const [playerHands, setPlayerHands] = useState<Hand[] | undefined>();
-    const [playerHandIndex, setPlayerHandIndex] = useState(0);
+    const [handsSet, setHandsSet] = useState<HandsSet | undefined>();
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
 
-    const currentHand = playerHands && playerHands[playerHandIndex];
+    const currentHand = handsSet && getCurrentHand(handsSet);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined && canDouble(currentHand, playerHands!.length, gameConfig);
+        currentHand !== undefined && canDouble(currentHand, handsSet!.hands.length, gameConfig);
     const isSurrenderEnabled =
-        currentHand !== undefined && canSurrender(currentHand, playerHands!.length, gameConfig);
+        currentHand !== undefined && canSurrender(currentHand, handsSet!.hands.length, gameConfig);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -65,11 +73,13 @@ export default function App() {
                 setDealerHand(dealCard(dealerHand, cardSet));
             }, 1000);
         } else if (phase === 'dealer') {
-            const resolvedHands = playerHands!.map<Hand>((playerHand) => {
-                resolveHand(playerHand, dealerHand!);
-                return playerHand;
+            setHandsSet({
+                currentHand: handsSet!.currentHand,
+                hands: handsSet!.hands.map((playerHand) => {
+                    resolveHand(playerHand, dealerHand!);
+                    return playerHand;
+                })
             });
-            setPlayerHands(resolvedHands);
             setPhase(Phases.finished);
         }
     }, [phase, dealerHand]);
@@ -83,22 +93,20 @@ export default function App() {
             cardSet
         );
         setDealerHand(nextTrainingHands.dealerHand);
-        setPlayerHands(nextTrainingHands.playerHands);
-        setPlayerHandIndex(0);
+        setHandsSet({
+            currentHand: 0,
+            hands: nextTrainingHands.playerHands
+        });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
     };
 
-    const finishTrainingRound = (currentPlayerHands: Hand[], currentPlayerHandIndex: number) => {
-        if (currentPlayerHands!.length - 1 > currentPlayerHandIndex) {
-            const nextPlayerHandIndex = currentPlayerHandIndex + 1;
-            const nextHands = currentPlayerHands!.map((hand, handIndex) => {
-                return handIndex === nextPlayerHandIndex ? dealCard(hand, cardSet) : hand;
-            });
-            setPlayerHands(nextHands);
-            setPlayerHandIndex(nextPlayerHandIndex);
-            if (isFinished(nextHands![nextPlayerHandIndex])) {
-                finishTrainingRound(nextHands, nextPlayerHandIndex);
+    const finishTrainingRound = (currentHandsSet: HandsSet) => {
+        if (!isLastHand(currentHandsSet)) {
+            const nextHandsSet = startNextHand(currentHandsSet, cardSet);
+            setHandsSet(nextHandsSet);
+            if (isFinished(getCurrentHand(nextHandsSet))) {
+                finishTrainingRound(nextHandsSet);
             }
         } else {
             setPhase(Phases.dealer);
@@ -123,48 +131,65 @@ export default function App() {
     };
 
     const doubleHandler = () => {
-        evaluatePlayerDecision('double', playerHands![playerHandIndex]);
-        const nextHands = playerHands!.map((hand, handIndex) => {
-            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
-        });
-        setPlayerHands(nextHands);
-        finishTrainingRound(nextHands, playerHandIndex);
+        evaluatePlayerDecision('double', currentHand!);
+        const nextHandsSet: HandsSet = {
+            currentHand: handsSet!.currentHand,
+            hands: handsSet!.hands.map((hand, handIndex) => {
+                return handIndex === handsSet!.currentHand ? dealCard(hand, cardSet) : hand;
+            })
+        };
+        setHandsSet(nextHandsSet);
+        finishTrainingRound(nextHandsSet);
     };
 
     const hitHandler = () => {
-        evaluatePlayerDecision('hit', playerHands![playerHandIndex]);
-        const nextHands = playerHands!.map((hand, handIndex) => {
-            return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
-        });
-        setPlayerHands(nextHands);
-        if (isFinished(nextHands[playerHandIndex])) {
-            finishTrainingRound(nextHands, playerHandIndex);
+        evaluatePlayerDecision('hit', currentHand!);
+        const nextHandsSet: HandsSet = {
+            currentHand: handsSet!.currentHand,
+            hands: handsSet!.hands.map((hand, handIndex) => {
+                return handIndex === handsSet!.currentHand ? dealCard(hand, cardSet) : hand;
+            })
+        };
+        setHandsSet(nextHandsSet);
+        if (isFinished(getCurrentHand(nextHandsSet))) {
+            finishTrainingRound(nextHandsSet);
         }
     };
 
     const standHandler = () => {
-        evaluatePlayerDecision('stand', playerHands![playerHandIndex]);
-        finishTrainingRound(playerHands!, playerHandIndex);
+        evaluatePlayerDecision('stand', currentHand!);
+        finishTrainingRound(handsSet!);
     };
 
     const splitHandler = () => {
-        evaluatePlayerDecision('split', playerHands![playerHandIndex]);
-        const currentHand = playerHands![playerHandIndex];
-        const firstHand = createHand([currentHand.cards[0]]);
-        const secondHand = createHand([currentHand.cards[1]]);
-        const nextHands = playerHands!.map((h) => h);
-        nextHands.splice(playerHandIndex, 1, dealCard(firstHand, cardSet), secondHand);
-        setPlayerHands(nextHands);
-        if (isFinished(nextHands![playerHandIndex])) {
-            finishTrainingRound(nextHands, playerHandIndex);
+        evaluatePlayerDecision('split', currentHand!);
+        const firstHand = createHand([currentHand!.cards[0]]);
+        const secondHand = createHand([currentHand!.cards[1]]);
+        const nextHandsSet: HandsSet = {
+            currentHand: handsSet!.currentHand,
+            hands: handsSet!.hands.map((h) => h)
+        };
+        nextHandsSet.hands.splice(
+            nextHandsSet.currentHand,
+            1,
+            dealCard(firstHand, cardSet),
+            secondHand
+        );
+        setHandsSet(nextHandsSet);
+        if (isFinished(getCurrentHand(nextHandsSet))) {
+            finishTrainingRound(nextHandsSet);
         }
     };
 
     const surrenderHandler = () => {
-        evaluatePlayerDecision('surrender', playerHands![playerHandIndex]);
+        evaluatePlayerDecision('surrender', currentHand!);
         // TODO Bring the cards back to the cardSet!
-        setPlayerHands([]);
-        finishTrainingRound([], 0);
+        const nextHandsSet = {
+            currentHand: 0,
+            hands: []
+        };
+        setHandsSet(nextHandsSet);
+        finishTrainingRound(nextHandsSet);
     };
 
     const configBarClickHandler = () => {
@@ -185,12 +210,7 @@ export default function App() {
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
                     <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-                    <Table
-                        dealerHand={dealerHand}
-                        phase={phase}
-                        playerHandIndex={playerHandIndex}
-                        playerHands={playerHands}
-                    />
+                    <Table dealerHand={dealerHand} handsSet={handsSet} phase={phase} />
                     <Actions
                         doubleHandler={doubleHandler}
                         hitHandler={hitHandler}

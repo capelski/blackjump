@@ -65,6 +65,11 @@ export interface Hand {
     values: number[];
 }
 
+export interface HandsSet {
+    currentHand: number;
+    hands: Hand[];
+}
+
 export enum HandOutcome {
     blackjack = 'Blackjack',
     bust = 'Bust',
