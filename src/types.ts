@@ -100,7 +100,7 @@ export enum ScreenTypes {
 
 export interface TrainingHand {
     dealerHand: Hand;
-    playerHands: Hand[];
+    playerHand: Hand;
 }
 
 export interface TrainingPair {

@@ -40,5 +40,5 @@ export const trainingPairToTrainingHands = (
     dealerHand: createHand([
         extractCardFromCardSet(figuresToSymbols(trainingPair.dealerHand), cardSet)
     ]),
-    playerHands: [handRepresentationToHand(trainingPair.playerHand, cardSet)]
+    playerHand: handRepresentationToHand(trainingPair.playerHand, cardSet)
 });

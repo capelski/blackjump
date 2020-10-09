@@ -11,13 +11,20 @@ import {
     canDouble,
     canSplit,
     canSurrender,
-    createHand,
     dealCard,
     getHandEffectiveValue,
-    isFinished,
-    resolveHand
+    isFinished
 } from './src/logic/hand';
-import { getCurrentHand, isLastHand, startNextHand } from './src/logic/hands-set';
+import {
+    createHandsSet,
+    dealToCurrentHand,
+    getCurrentHand,
+    isLastHand,
+    resolveHandsSet,
+    splitCurrentHand,
+    startNextHand,
+    surrenderCurrentHand
+} from './src/logic/hands-set';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import {
     Decision,
@@ -70,21 +77,19 @@ export default function App() {
     useEffect(() => {
         if (phase === 'dealer' && dealerHand && getHandEffectiveValue(dealerHand) < 17) {
             setTimeout(() => {
-                setDealerHand(dealCard(dealerHand, cardSet));
+                dealCard(dealerHand, cardSet);
+                setDealerHand({ ...dealerHand });
             }, 1000);
         } else if (phase === 'dealer') {
-            setHandsSet({
-                currentHand: handsSet!.currentHand,
-                hands: handsSet!.hands.map((playerHand) => {
-                    resolveHand(playerHand, dealerHand!);
-                    return playerHand;
-                })
-            });
+            resolveHandsSet(handsSet!, dealerHand!);
+
+            setHandsSet({ ...handsSet! });
             setPhase(Phases.finished);
         }
     }, [phase, dealerHand]);
 
-    // TODO Extract application logic to separate file => hands-set.ts
+    // TODO Extract application logic to separate file
+    // TODO Simplify ! on nullable state variables
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
@@ -93,24 +98,22 @@ export default function App() {
             cardSet
         );
         setDealerHand(nextTrainingHands.dealerHand);
-        setHandsSet({
-            currentHand: 0,
-            hands: nextTrainingHands.playerHands
-        });
+        setHandsSet(createHandsSet(nextTrainingHands.playerHand));
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
     };
 
-    const finishTrainingRound = (currentHandsSet: HandsSet) => {
-        if (!isLastHand(currentHandsSet)) {
-            const nextHandsSet = startNextHand(currentHandsSet, cardSet);
-            setHandsSet(nextHandsSet);
-            if (isFinished(getCurrentHand(nextHandsSet))) {
-                finishTrainingRound(nextHandsSet);
-            }
-        } else {
+    const finishCurrentHand = (currentHandsSet: HandsSet) => {
+        if (isLastHand(currentHandsSet)) {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
+        } else {
+            startNextHand(currentHandsSet, cardSet);
+            const nextHandsSet = { ...currentHandsSet! };
+            setHandsSet(nextHandsSet);
+            if (isFinished(getCurrentHand(nextHandsSet))) {
+                finishCurrentHand(nextHandsSet);
+            }
         }
     };
 
@@ -132,64 +135,46 @@ export default function App() {
 
     const doubleHandler = () => {
         evaluatePlayerDecision('double', currentHand!);
-        const nextHandsSet: HandsSet = {
-            currentHand: handsSet!.currentHand,
-            hands: handsSet!.hands.map((hand, handIndex) => {
-                return handIndex === handsSet!.currentHand ? dealCard(hand, cardSet) : hand;
-            })
-        };
+        dealToCurrentHand(handsSet!, cardSet);
+
+        const nextHandsSet = { ...handsSet! };
         setHandsSet(nextHandsSet);
-        finishTrainingRound(nextHandsSet);
+        finishCurrentHand(nextHandsSet);
     };
 
     const hitHandler = () => {
         evaluatePlayerDecision('hit', currentHand!);
-        const nextHandsSet: HandsSet = {
-            currentHand: handsSet!.currentHand,
-            hands: handsSet!.hands.map((hand, handIndex) => {
-                return handIndex === handsSet!.currentHand ? dealCard(hand, cardSet) : hand;
-            })
-        };
+        dealToCurrentHand(handsSet!, cardSet);
+
+        const nextHandsSet = { ...handsSet! };
         setHandsSet(nextHandsSet);
         if (isFinished(getCurrentHand(nextHandsSet))) {
-            finishTrainingRound(nextHandsSet);
+            finishCurrentHand(nextHandsSet);
         }
     };
 
     const standHandler = () => {
         evaluatePlayerDecision('stand', currentHand!);
-        finishTrainingRound(handsSet!);
+        finishCurrentHand(handsSet!);
     };
 
     const splitHandler = () => {
         evaluatePlayerDecision('split', currentHand!);
-        const firstHand = createHand([currentHand!.cards[0]]);
-        const secondHand = createHand([currentHand!.cards[1]]);
-        const nextHandsSet: HandsSet = {
-            currentHand: handsSet!.currentHand,
-            hands: handsSet!.hands.map((h) => h)
-        };
-        nextHandsSet.hands.splice(
-            nextHandsSet.currentHand,
-            1,
-            dealCard(firstHand, cardSet),
-            secondHand
-        );
+        splitCurrentHand(handsSet!, cardSet);
+
+        const nextHandsSet = { ...handsSet! };
         setHandsSet(nextHandsSet);
         if (isFinished(getCurrentHand(nextHandsSet))) {
-            finishTrainingRound(nextHandsSet);
+            finishCurrentHand(nextHandsSet);
         }
     };
 
     const surrenderHandler = () => {
         evaluatePlayerDecision('surrender', currentHand!);
-        // TODO Bring the cards back to the cardSet!
-        const nextHandsSet = {
-            currentHand: 0,
-            hands: []
-        };
+        surrenderCurrentHand(handsSet!);
+        const nextHandsSet = { ...handsSet! };
         setHandsSet(nextHandsSet);
-        finishTrainingRound(nextHandsSet);
+        finishCurrentHand(nextHandsSet);
     };
 
     const configBarClickHandler = () => {

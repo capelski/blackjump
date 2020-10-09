@@ -19,10 +19,10 @@ export const createHand = (cards: Card[]): Hand => ({
     values: getHandValues(cards)
 });
 
-export const dealCard = (hand: Hand, cardSet: CardSet): Hand => {
+export const dealCard = (hand: Hand, cardSet: CardSet) => {
     const nextCard = extractNextCard(cardSet);
-    const nextHandCards = hand.cards.concat([nextCard]);
-    return { cards: nextHandCards, values: getHandValues(nextHandCards) };
+    hand.cards.push(nextCard);
+    hand.values = getHandValues(hand.cards);
 };
 
 export const getHandEffectiveValue = (hand: Hand) => {
