@@ -17,7 +17,7 @@ import {
     isFinished,
     resolveHand
 } from './src/logic/hand';
-import { getCurrentHand, isLastHand, startNextHand } from './src/logic/hand-set';
+import { getCurrentHand, isLastHand, startNextHand } from './src/logic/hands-set';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import {
     Decision,
@@ -84,7 +84,7 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
-    // TODO Extract application logic to separate file
+    // TODO Extract application logic to separate file => hands-set.ts
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
