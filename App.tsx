@@ -74,6 +74,7 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
+    // TODO Extract application logic to separate file
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
@@ -88,16 +89,16 @@ export default function App() {
         setDecisionEvaluation(undefined);
     };
 
-    const finishTrainingRound = (currentPlayerHands: Hand[]) => {
-        if (currentPlayerHands!.length - 1 > playerHandIndex) {
-            const nextPlayerHandIndex = playerHandIndex + 1;
+    const finishTrainingRound = (currentPlayerHands: Hand[], currentPlayerHandIndex: number) => {
+        if (currentPlayerHands!.length - 1 > currentPlayerHandIndex) {
+            const nextPlayerHandIndex = currentPlayerHandIndex + 1;
             const nextHands = currentPlayerHands!.map((hand, handIndex) => {
                 return handIndex === nextPlayerHandIndex ? dealCard(hand, cardSet) : hand;
             });
             setPlayerHands(nextHands);
             setPlayerHandIndex(nextPlayerHandIndex);
-            if (isFinished(playerHands![playerHandIndex])) {
-                setPhase(Phases.dealer);
+            if (isFinished(nextHands![nextPlayerHandIndex])) {
+                finishTrainingRound(nextHands, nextPlayerHandIndex);
             }
         } else {
             setPhase(Phases.dealer);
@@ -127,7 +128,7 @@ export default function App() {
             return handIndex === playerHandIndex ? dealCard(hand, cardSet) : hand;
         });
         setPlayerHands(nextHands);
-        finishTrainingRound(nextHands);
+        finishTrainingRound(nextHands, playerHandIndex);
     };
 
     const hitHandler = () => {
@@ -137,13 +138,13 @@ export default function App() {
         });
         setPlayerHands(nextHands);
         if (isFinished(nextHands[playerHandIndex])) {
-            finishTrainingRound(nextHands);
+            finishTrainingRound(nextHands, playerHandIndex);
         }
     };
 
     const standHandler = () => {
         evaluatePlayerDecision('stand', playerHands![playerHandIndex]);
-        finishTrainingRound(playerHands!);
+        finishTrainingRound(playerHands!, playerHandIndex);
     };
 
     const splitHandler = () => {
@@ -155,7 +156,7 @@ export default function App() {
         nextHands.splice(playerHandIndex, 1, dealCard(firstHand, cardSet), secondHand);
         setPlayerHands(nextHands);
         if (isFinished(nextHands![playerHandIndex])) {
-            finishTrainingRound(nextHands);
+            finishTrainingRound(nextHands, playerHandIndex);
         }
     };
 
@@ -163,7 +164,7 @@ export default function App() {
         evaluatePlayerDecision('surrender', playerHands![playerHandIndex]);
         // TODO Bring the cards back to the cardSet!
         setPlayerHands([]);
-        finishTrainingRound([]);
+        finishTrainingRound([], 0);
     };
 
     const configBarClickHandler = () => {
