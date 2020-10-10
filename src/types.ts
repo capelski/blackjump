@@ -93,6 +93,11 @@ export enum Phases {
     player = 'player'
 }
 
+export interface Player {
+    cash: number;
+    handsSet?: HandsSet;
+}
+
 export enum ScreenTypes {
     table = 'table',
     config = 'config'

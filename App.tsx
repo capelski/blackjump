@@ -31,8 +31,8 @@ import {
     DecisionEvaluation,
     GameConfig,
     Hand,
-    HandsSet,
     Phases,
+    Player,
     ScreenTypes
 } from './src/types';
 
@@ -42,8 +42,8 @@ const cardSet = getCardSet();
 export default function App() {
     const [currentTrainingPair, setCurrentTrainingPair] = useState(-1);
     const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
-    const [dealerHand, setDealerHand] = useState<Hand | undefined>();
-    const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation | undefined>();
+    const [dealerHand, setDealerHand] = useState<Hand>();
+    const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState<GameConfig>({
         canDoubleOnAnyInitialHand: false,
@@ -51,16 +51,18 @@ export default function App() {
         canSurrender: false
     });
     const [phase, setPhase] = useState<Phases>(Phases.finished);
-    const [handsSet, setHandsSet] = useState<HandsSet | undefined>();
+    const [player, setPlayer] = useState<Player>({ cash: 100 });
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
 
-    const currentHand = handsSet && getCurrentHand(handsSet);
+    const currentHand = player.handsSet && getCurrentHand(player.handsSet);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined && canDouble(currentHand, handsSet!.hands.length, gameConfig);
+        currentHand !== undefined &&
+        canDouble(currentHand, player.handsSet!.hands.length, gameConfig);
     const isSurrenderEnabled =
-        currentHand !== undefined && canSurrender(currentHand, handsSet!.hands.length, gameConfig);
+        currentHand !== undefined &&
+        canSurrender(currentHand, player.handsSet!.hands.length, gameConfig);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -81,9 +83,9 @@ export default function App() {
                 setDealerHand({ ...dealerHand });
             }, 1000);
         } else if (phase === 'dealer') {
-            resolveHandsSet(handsSet!, dealerHand!);
+            resolveHandsSet(player.handsSet!, dealerHand!);
 
-            setHandsSet({ ...handsSet! });
+            setPlayer({ ...player });
             setPhase(Phases.finished);
         }
     }, [phase, dealerHand]);
@@ -98,21 +100,21 @@ export default function App() {
             cardSet
         );
         setDealerHand(nextTrainingHands.dealerHand);
-        setHandsSet(createHandsSet(nextTrainingHands.playerHand));
+        player.handsSet = createHandsSet(nextTrainingHands.playerHand);
+        setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
     };
 
-    const finishCurrentHand = (currentHandsSet: HandsSet) => {
-        if (isLastHand(currentHandsSet)) {
+    const finishCurrentHand = (player: Player) => {
+        if (isLastHand(player.handsSet!)) {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(currentHandsSet, cardSet);
-            const nextHandsSet = { ...currentHandsSet! };
-            setHandsSet(nextHandsSet);
-            if (isFinished(getCurrentHand(nextHandsSet))) {
-                finishCurrentHand(nextHandsSet);
+            startNextHand(player.handsSet!, cardSet);
+            setPlayer({ ...player });
+            if (isFinished(getCurrentHand(player.handsSet!))) {
+                finishCurrentHand(player);
             }
         }
     };
@@ -135,46 +137,42 @@ export default function App() {
 
     const doubleHandler = () => {
         evaluatePlayerDecision('double', currentHand!);
-        dealToCurrentHand(handsSet!, cardSet);
+        dealToCurrentHand(player.handsSet!, cardSet);
 
-        const nextHandsSet = { ...handsSet! };
-        setHandsSet(nextHandsSet);
-        finishCurrentHand(nextHandsSet);
+        setPlayer({ ...player });
+        finishCurrentHand(player);
     };
 
     const hitHandler = () => {
         evaluatePlayerDecision('hit', currentHand!);
-        dealToCurrentHand(handsSet!, cardSet);
+        dealToCurrentHand(player.handsSet!, cardSet);
 
-        const nextHandsSet = { ...handsSet! };
-        setHandsSet(nextHandsSet);
-        if (isFinished(getCurrentHand(nextHandsSet))) {
-            finishCurrentHand(nextHandsSet);
+        setPlayer({ ...player });
+        if (isFinished(getCurrentHand(player.handsSet!))) {
+            finishCurrentHand(player);
         }
     };
 
     const standHandler = () => {
         evaluatePlayerDecision('stand', currentHand!);
-        finishCurrentHand(handsSet!);
+        finishCurrentHand(player);
     };
 
     const splitHandler = () => {
         evaluatePlayerDecision('split', currentHand!);
-        splitCurrentHand(handsSet!, cardSet);
+        splitCurrentHand(player.handsSet!, cardSet);
 
-        const nextHandsSet = { ...handsSet! };
-        setHandsSet(nextHandsSet);
-        if (isFinished(getCurrentHand(nextHandsSet))) {
-            finishCurrentHand(nextHandsSet);
+        setPlayer({ ...player });
+        if (isFinished(getCurrentHand(player.handsSet!))) {
+            finishCurrentHand(player);
         }
     };
 
     const surrenderHandler = () => {
         evaluatePlayerDecision('surrender', currentHand!);
-        surrenderCurrentHand(handsSet!);
-        const nextHandsSet = { ...handsSet! };
-        setHandsSet(nextHandsSet);
-        finishCurrentHand(nextHandsSet);
+        surrenderCurrentHand(player.handsSet!);
+        setPlayer({ ...player });
+        finishCurrentHand(player);
     };
 
     const configBarClickHandler = () => {
@@ -195,7 +193,7 @@ export default function App() {
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
                     <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-                    <Table dealerHand={dealerHand} handsSet={handsSet} phase={phase} />
+                    <Table dealerHand={dealerHand} handsSet={player.handsSet} phase={phase} />
                     <Actions
                         doubleHandler={doubleHandler}
                         hitHandler={hitHandler}
@@ -218,6 +216,7 @@ export default function App() {
                 />
             )}
             <ConfigBar
+                playerCash={player.cash}
                 currentScreen={currentScreen}
                 onConfigClick={configBarClickHandler}
                 totalAttemptedDecisions={totalAttemptedDecisions}
