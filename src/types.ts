@@ -60,6 +60,7 @@ export interface GameConfig {
 }
 
 export interface Hand {
+    bet: number;
     cards: Card[];
     outcome?: string;
     values: number[];

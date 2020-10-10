@@ -31,6 +31,7 @@ import {
     DecisionEvaluation,
     GameConfig,
     Hand,
+    HandOutcome,
     Phases,
     Player,
     ScreenTypes
@@ -84,7 +85,18 @@ export default function App() {
             }, 1000);
         } else if (phase === 'dealer') {
             resolveHandsSet(player.handsSet!, dealerHand!);
-
+            player.cash += player.handsSet!.hands.reduce(
+                (earnings, hand) =>
+                    earnings +
+                    (hand.outcome! === HandOutcome.blackjack
+                        ? hand.bet * 2.5
+                        : hand.outcome! === HandOutcome.playerWins
+                        ? hand.bet * 2
+                        : hand.outcome! === HandOutcome.push
+                        ? hand.bet
+                        : 0),
+                0
+            );
             setPlayer({ ...player });
             setPhase(Phases.finished);
         }
@@ -101,6 +113,7 @@ export default function App() {
         );
         setDealerHand(nextTrainingHands.dealerHand);
         player.handsSet = createHandsSet(nextTrainingHands.playerHand);
+        player.cash -= player.handsSet!.hands[0].bet;
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
@@ -138,6 +151,8 @@ export default function App() {
     const doubleHandler = () => {
         evaluatePlayerDecision('double', currentHand!);
         dealToCurrentHand(player.handsSet!, cardSet);
+        player.cash -= currentHand!.bet;
+        currentHand!.bet *= 2;
 
         setPlayer({ ...player });
         finishCurrentHand(player);
@@ -161,6 +176,7 @@ export default function App() {
     const splitHandler = () => {
         evaluatePlayerDecision('split', currentHand!);
         splitCurrentHand(player.handsSet!, cardSet);
+        player.cash -= currentHand!.bet;
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player.handsSet!))) {
@@ -170,6 +186,7 @@ export default function App() {
 
     const surrenderHandler = () => {
         evaluatePlayerDecision('surrender', currentHand!);
+        player.cash += currentHand!.bet / 2;
         surrenderCurrentHand(player.handsSet!);
         setPlayer({ ...player });
         finishCurrentHand(player);

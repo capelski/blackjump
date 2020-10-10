@@ -4,7 +4,7 @@ import Svg, { G, Path } from 'react-native-svg';
 import { ScreenTypes } from '../types';
 
 interface ConfigBarProps {
-    playerCash?: number;
+    playerCash: number;
     currentScreen: ScreenTypes;
     onConfigClick: () => void;
     totalAttemptedDecisions: number;
@@ -25,7 +25,9 @@ export const ConfigBar: React.FC<ConfigBarProps> = (props) => (
         }}
     >
         <View style={{ flexDirection: 'row' }}>
-            <Text style={textStyles}>{props.playerCash || 0}</Text>
+            <Text style={{ color: props.playerCash >= 0 ? 'white' : 'red', fontSize: 20 }}>
+                {Math.abs(props.playerCash)}
+            </Text>
             <Svg
                 height={24}
                 viewBox="0 0 468 468"
@@ -34,7 +36,7 @@ export const ConfigBar: React.FC<ConfigBarProps> = (props) => (
             >
                 <G transform="translate(0,468) scale(0.078000,-0.078000)">
                     <Path
-                        fill="white"
+                        fill={props.playerCash >= 0 ? 'white' : 'red'}
                         d="M2600 5595 c0 -237 -3 -305 -12 -305 -7 0 -63 -5 -125 -10 -140 -12
                     -299 -49 -398 -91 -11 -4 -49 -20 -85 -35 -304 -124 -635 -421 -789 -706 -33
                     -63 -80 -169 -88 -202 -35 -143 -41 -258 -23 -421 37 -323 180 -591 420 -785
