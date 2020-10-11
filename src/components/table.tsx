@@ -36,7 +36,7 @@ export const Table: React.FC<TableProps> = (props) => (
             <HandComponent
                 key={index}
                 hand={hand}
-                isCurrentHand={props.phase === Phases.player && hand === props.player.currentHand}
+                isCurrentHand={props.phase === Phases.player && index === props.player.handIndex}
             />
         ))}
     </ScrollView>
