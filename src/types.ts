@@ -1,3 +1,5 @@
+// TODO Split the file into multiple
+
 export interface BasicStrategyConditioningFactors {
     canDouble: boolean;
     canDoubleAfterSplit: boolean;
@@ -66,11 +68,6 @@ export interface Hand {
     values: number[];
 }
 
-export interface HandsSet {
-    currentHand: number;
-    hands: Hand[];
-}
-
 export enum HandOutcome {
     blackjack = 'Blackjack',
     bust = 'Bust',
@@ -96,7 +93,8 @@ export enum Phases {
 
 export interface Player {
     cash: number;
-    handsSet?: HandsSet;
+    handIndex: number;
+    hands: Hand[];
 }
 
 export enum ScreenTypes {

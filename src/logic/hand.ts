@@ -65,10 +65,10 @@ export const isFinished = (hand: Hand) => {
     return getHandEffectiveValue(hand) >= 21;
 };
 
-export const resolveHand = (playerHand: Hand, dealerHand: Hand) => {
+export const resolveHand = (playerHand: Hand, dealerHand: Hand): HandOutcome => {
     const playerHandValue = getHandEffectiveValue(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand!);
-    playerHand.outcome = isBust(playerHand)
+    const handOutcome = isBust(playerHand)
         ? HandOutcome.bust
         : isBust(dealerHand!)
         ? HandOutcome.playerWins
@@ -83,4 +83,7 @@ export const resolveHand = (playerHand: Hand, dealerHand: Hand) => {
         : playerHandValue === dealerHandValue
         ? HandOutcome.push
         : HandOutcome.dealerWins;
+
+    playerHand.outcome = handOutcome;
+    return handOutcome;
 };

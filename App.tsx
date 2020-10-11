@@ -16,22 +16,23 @@ import {
     isFinished
 } from './src/logic/hand';
 import {
-    createHandsSet,
-    dealToCurrentHand,
+    createPlayer,
+    doubleCurrentHand,
+    hitCurrentHand,
     getCurrentHand,
+    initializeHands,
     isLastHand,
-    resolveHandsSet,
+    resolveHands,
     splitCurrentHand,
     startNextHand,
     surrenderCurrentHand
-} from './src/logic/hands-set';
+} from './src/logic/player';
 import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import {
     Decision,
     DecisionEvaluation,
     GameConfig,
     Hand,
-    HandOutcome,
     Phases,
     Player,
     ScreenTypes
@@ -52,19 +53,16 @@ export default function App() {
         canSurrender: false
     });
     const [phase, setPhase] = useState<Phases>(Phases.finished);
-    const [player, setPlayer] = useState<Player>({ cash: 100 });
+    const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
 
-    const currentHand = player.handsSet && getCurrentHand(player.handsSet);
+    const currentHand = getCurrentHand(player);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined &&
-        canDouble(currentHand, player.handsSet!.hands.length, gameConfig);
+        currentHand !== undefined && canDouble(currentHand, player.hands.length, gameConfig);
     const isSurrenderEnabled =
-        currentHand !== undefined &&
-        canSurrender(currentHand, player.handsSet!.hands.length, gameConfig);
-
+        currentHand !== undefined && canSurrender(currentHand, player.hands.length, gameConfig);
     useEffect(() => {
         if (decisionEvaluationTimeout) {
             clearTimeout(decisionEvaluationTimeout);
@@ -84,26 +82,13 @@ export default function App() {
                 setDealerHand({ ...dealerHand });
             }, 1000);
         } else if (phase === 'dealer') {
-            resolveHandsSet(player.handsSet!, dealerHand!);
-            player.cash += player.handsSet!.hands.reduce(
-                (earnings, hand) =>
-                    earnings +
-                    (hand.outcome! === HandOutcome.blackjack
-                        ? hand.bet * 2.5
-                        : hand.outcome! === HandOutcome.playerWins
-                        ? hand.bet * 2
-                        : hand.outcome! === HandOutcome.push
-                        ? hand.bet
-                        : 0),
-                0
-            );
+            resolveHands(player, dealerHand!);
             setPlayer({ ...player });
             setPhase(Phases.finished);
         }
     }, [phase, dealerHand]);
 
     // TODO Extract application logic to separate file
-    // TODO Simplify ! on nullable state variables
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
@@ -112,21 +97,20 @@ export default function App() {
             cardSet
         );
         setDealerHand(nextTrainingHands.dealerHand);
-        player.handsSet = createHandsSet(nextTrainingHands.playerHand);
-        player.cash -= player.handsSet!.hands[0].bet;
+        initializeHands(player, nextTrainingHands.playerHand);
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
     };
 
     const finishCurrentHand = (player: Player) => {
-        if (isLastHand(player.handsSet!)) {
+        if (isLastHand(player)) {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(player.handsSet!, cardSet);
+            startNextHand(player, cardSet);
             setPlayer({ ...player });
-            if (isFinished(getCurrentHand(player.handsSet!))) {
+            if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
             }
         }
@@ -149,45 +133,41 @@ export default function App() {
     };
 
     const doubleHandler = () => {
-        evaluatePlayerDecision('double', currentHand!);
-        dealToCurrentHand(player.handsSet!, cardSet);
-        player.cash -= currentHand!.bet;
-        currentHand!.bet *= 2;
+        evaluatePlayerDecision('double', currentHand);
+        doubleCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
         finishCurrentHand(player);
     };
 
     const hitHandler = () => {
-        evaluatePlayerDecision('hit', currentHand!);
-        dealToCurrentHand(player.handsSet!, cardSet);
+        evaluatePlayerDecision('hit', currentHand);
+        hitCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
-        if (isFinished(getCurrentHand(player.handsSet!))) {
+        if (isFinished(currentHand)) {
             finishCurrentHand(player);
         }
     };
 
     const standHandler = () => {
-        evaluatePlayerDecision('stand', currentHand!);
+        evaluatePlayerDecision('stand', currentHand);
         finishCurrentHand(player);
     };
 
     const splitHandler = () => {
-        evaluatePlayerDecision('split', currentHand!);
-        splitCurrentHand(player.handsSet!, cardSet);
-        player.cash -= currentHand!.bet;
+        evaluatePlayerDecision('split', currentHand);
+        splitCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
-        if (isFinished(getCurrentHand(player.handsSet!))) {
+        if (isFinished(getCurrentHand(player))) {
             finishCurrentHand(player);
         }
     };
 
     const surrenderHandler = () => {
-        evaluatePlayerDecision('surrender', currentHand!);
-        player.cash += currentHand!.bet / 2;
-        surrenderCurrentHand(player.handsSet!);
+        evaluatePlayerDecision('surrender', currentHand);
+        surrenderCurrentHand(player);
         setPlayer({ ...player });
         finishCurrentHand(player);
     };
@@ -210,7 +190,7 @@ export default function App() {
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
                     <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
-                    <Table dealerHand={dealerHand} handsSet={player.handsSet} phase={phase} />
+                    <Table dealerHand={dealerHand} phase={phase} player={player} />
                     <Actions
                         doubleHandler={doubleHandler}
                         hitHandler={hitHandler}

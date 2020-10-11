@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { Hand, HandsSet, Phases } from '../types';
+import { Hand, Phases, Player } from '../types';
 import { HandComponent } from './hand-component';
 
 interface TableProps {
     dealerHand?: Hand;
-    handsSet?: HandsSet;
     phase: Phases;
+    player: Player;
 }
 
 export const Table: React.FC<TableProps> = (props) => (
@@ -32,13 +32,11 @@ export const Table: React.FC<TableProps> = (props) => (
                 opacity: 0.75
             }}
         ></View>
-        {props.handsSet?.hands.map((hand, index) => (
+        {props.player.hands.map((hand, index) => (
             <HandComponent
                 key={index}
                 hand={hand}
-                isCurrentHand={
-                    props.phase === Phases.player && index === props.handsSet!.currentHand
-                }
+                isCurrentHand={props.phase === Phases.player && hand === props.player.currentHand}
             />
         ))}
     </ScrollView>
