@@ -1,7 +1,7 @@
 import { CardSet, Hand, HandOutcome, Player } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
 
-export const createPlayer = (cash = 100): Player => ({
+export const createPlayer = (cash = 0): Player => ({
     cash,
     handIndex: 0,
     hands: []

@@ -14,7 +14,7 @@ export const canSplit = (hand: Hand) =>
 export const canSurrender = (hand: Hand, handsNumber: number, gameConfig: GameConfig) =>
     handsNumber === 1 && hand.cards.length === 2 && gameConfig.canSurrender;
 
-export const createHand = (cards: Card[], bet = 10): Hand => ({
+export const createHand = (cards: Card[], bet = 1): Hand => ({
     bet,
     cards: cards,
     values: getHandValues(cards)
