@@ -1,4 +1,4 @@
-import { TrainingPair, CardSet, TrainingHand, HandRepresentation } from '../types';
+import { CardSet, GameConfig, HandRepresentation, TrainingHand, TrainingPair } from '../types';
 import { cartesianProduct, shuffleArray } from '../utils';
 import { decisionsDictionary } from './basic-strategy';
 import { extractCardFromCardSet } from './card-set';
@@ -18,12 +18,17 @@ export const allPossibleDealerHands: HandRepresentation[] = [
     'Figure'
 ];
 
-export const allPossiblePlayerHands: HandRepresentation[] = Object.keys(decisionsDictionary);
+export const getTrainingPairs = (gameConfig?: GameConfig) => {
+    const selectedTrainingHands: HandRepresentation[] = gameConfig
+        ? Object.keys(decisionsDictionary).filter((key) => {
+              const handLevel = decisionsDictionary[key].level(gameConfig);
+              return gameConfig.selectedLevels[handLevel];
+          })
+        : Object.keys(decisionsDictionary);
 
-export const getAllTrainingPairs = () => {
     const trainingPairs = cartesianProduct<string, string, TrainingPair>(
         allPossibleDealerHands,
-        allPossiblePlayerHands,
+        selectedTrainingHands,
         (dealerHand, playerHand) => ({
             dealerHand,
             playerHand

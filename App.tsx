@@ -7,6 +7,7 @@ import { DecisionEvaluationComponent } from './src/components/decision-evaluatio
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards } from './src/logic/card-set';
+import { initialGameConfig } from './src/logic/game-config';
 import {
     canDouble,
     canSplit,
@@ -27,31 +28,17 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
-import { getAllTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
-import {
-    Decision,
-    DecisionEvaluation,
-    GameConfig,
-    Hand,
-    Phases,
-    Player,
-    ScreenTypes
-} from './src/types';
+import { trainingPairToTrainingHands } from './src/logic/training-hands';
+import { Decision, DecisionEvaluation, Hand, Phases, Player, ScreenTypes } from './src/types';
 
-const allTrainingPairs = getAllTrainingPairs();
 const cardSet = getCardSet();
 
 export default function App() {
-    const [currentTrainingPair, setCurrentTrainingPair] = useState(-1);
     const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
-    const [gameConfig, setGameConfig] = useState<GameConfig>({
-        canDoubleOnAnyInitialHand: false,
-        canDoubleAfterSplit: true,
-        canSurrender: false
-    });
+    const [gameConfig, setGameConfig] = useState(initialGameConfig);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
@@ -91,13 +78,19 @@ export default function App() {
     // TODO Extract application logic to separate file
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
-        setCurrentTrainingPair((currentTrainingPair + 1) % allTrainingPairs.length);
+        const nextTrainingPair =
+            (gameConfig.currentTrainingPair + 1) % gameConfig.selectedTrainingPairs.length;
+        setGameConfig({
+            ...gameConfig,
+            currentTrainingPair: nextTrainingPair
+        });
         const nextTrainingHands = trainingPairToTrainingHands(
-            allTrainingPairs[currentTrainingPair + 1],
+            gameConfig.selectedTrainingPairs[nextTrainingPair],
             cardSet
         );
-        setDealerHand(nextTrainingHands.dealerHand);
         initializeHands(player, nextTrainingHands.playerHand);
+
+        setDealerHand(nextTrainingHands.dealerHand);
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);

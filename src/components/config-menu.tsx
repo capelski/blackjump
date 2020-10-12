@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, Text, View } from 'react-native';
+import { getTrainingPairs } from '../logic/training-hands';
 import { GameConfig, ScreenTypes } from '../types';
 import { Button } from './button';
 
@@ -32,20 +33,30 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         props.gameConfig.canDoubleOnAnyInitialHand
     );
     const [canSurrender, setCanSurrender] = useState(props.gameConfig.canSurrender);
+    const [selectedLevels, setSelectedLevels] = useState(props.gameConfig.selectedLevels);
 
     const saveHandler = () => {
-        props.setGameConfig({
+        const nextGameConfig: GameConfig = {
             canDoubleAfterSplit,
             canDoubleOnAnyInitialHand,
-            canSurrender
-        });
+            canSurrender,
+            currentTrainingPair: -1,
+            selectedLevels,
+            selectedTrainingPairs: []
+        };
+        nextGameConfig.selectedTrainingPairs = getTrainingPairs(nextGameConfig);
+        props.setGameConfig(nextGameConfig);
         props.setCurrentScreen(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
         props.gameConfig.canDoubleAfterSplit !== canDoubleAfterSplit ||
         props.gameConfig.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand ||
-        props.gameConfig.canSurrender !== canSurrender;
+        props.gameConfig.canSurrender !== canSurrender ||
+        props.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
+        props.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
+        props.gameConfig.selectedLevels[3] !== selectedLevels[3] ||
+        props.gameConfig.selectedLevels[4] !== selectedLevels[4];
 
     return (
         <View
@@ -83,6 +94,29 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     style={checkboxStyle}
                 />
                 <Text style={textStyle}>Can surrender</Text>
+            </View>
+            <View style={{ width: '100%', marginVertical: 8 }}>
+                <Text style={{ ...textStyle, marginLeft: 8 }}>
+                    Selected hand levels ({props.gameConfig.selectedTrainingPairs.length} hands):
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}>
+                    {Object.keys(props.gameConfig.selectedLevels).map((number) => (
+                        <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
+                            <CheckBox
+                                disabled={false}
+                                value={selectedLevels[(number as unknown) as number] || false}
+                                onValueChange={(newValue) =>
+                                    setSelectedLevels({
+                                        ...selectedLevels,
+                                        [number]: newValue
+                                    })
+                                }
+                                style={checkboxStyle}
+                            />
+                            <Text style={textStyle}>{number}</Text>
+                        </View>
+                    ))}
+                </View>
             </View>
             <Button
                 height={56}

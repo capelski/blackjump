@@ -59,6 +59,9 @@ export interface GameConfig {
     canDoubleOnAnyInitialHand: boolean;
     canDoubleAfterSplit: boolean;
     canSurrender: boolean;
+    currentTrainingPair: number;
+    selectedLevels: NumericDictionary<boolean>;
+    selectedTrainingPairs: TrainingPair[];
 }
 
 export interface Hand {
@@ -95,6 +98,11 @@ export interface Player {
     cash: number;
     handIndex: number;
     hands: Hand[];
+}
+
+export interface RelevantHand {
+    decisions: DecisionsSet;
+    level: (gameConfig: GameConfig) => number;
 }
 
 export enum ScreenTypes {

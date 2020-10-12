@@ -5,7 +5,8 @@ import {
     DecisionsSet,
     Dictionary,
     Hand,
-    OptimalDecision
+    OptimalDecision,
+    RelevantHand
 } from '../types';
 import { numberRange } from '../utils';
 import { getHandEffectiveValue, getHandValidValues } from './hand';
@@ -81,53 +82,98 @@ const split = createDecisionsSet('split');
 const splitIfDASOtherwiseHit = createDecisionsSet('splitIfDASOtherwiseHit');
 const stand = createDecisionsSet('stand');
 
-export const decisionsDictionary: Dictionary<DecisionsSet> = {
+export const decisionsDictionary: Dictionary<RelevantHand> = {
     // Hard hands
     // '4', -> Only possible with 2,2, already covered in splitHands
-    '5': hit,
-    '6': hit,
-    '7': hit,
-    '8': hit,
-    '9': hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '10': doubleOtherwiseHit.until.dealer(9).then.hit,
-    '11': doubleOtherwiseHit.until.dealer(10).then.hit,
-    '12': hit.until.dealer(3).then.stand.until.dealer(6).then.hit,
-    '13': stand.until.dealer(6).then.hit,
-    '14': stand.until.dealer(6).then.hit,
-    '15': stand.until.dealer(6).then.hit.until.dealer(9).then.surrenderOtherwiseHit.until.dealer(10)
-        .then.hit,
-    '16': stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderOtherwiseHit,
-    '17': stand,
-    '18': stand,
-    '19': stand,
-    '20': stand,
+    '5': { decisions: hit, level: () => 1 },
+    '6': { decisions: hit, level: () => 1 },
+    '7': { decisions: hit, level: () => 1 },
+    '8': { decisions: hit, level: () => 1 },
+    '9': {
+        decisions: hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: () => 3
+    },
+    '10': { decisions: doubleOtherwiseHit.until.dealer(9).then.hit, level: () => 2 },
+    '11': { decisions: doubleOtherwiseHit.until.dealer(10).then.hit, level: () => 2 },
+    '12': { decisions: hit.until.dealer(3).then.stand.until.dealer(6).then.hit, level: () => 3 },
+    '13': { decisions: stand.until.dealer(6).then.hit, level: () => 2 },
+    '14': { decisions: stand.until.dealer(6).then.hit, level: () => 2 },
+    '15': {
+        decisions: stand.until
+            .dealer(6)
+            .then.hit.until.dealer(9)
+            .then.surrenderOtherwiseHit.until.dealer(10).then.hit,
+        level: (gameConfig) => (gameConfig.canSurrender ? 4 : 2)
+    },
+    '16': {
+        decisions: stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderOtherwiseHit,
+        level: (gameConfig) => (gameConfig.canSurrender ? 3 : 2)
+    },
+    '17': { decisions: stand, level: () => 1 },
+    '18': { decisions: stand, level: () => 1 },
+    '19': { decisions: stand, level: () => 1 },
+    '20': { decisions: stand, level: () => 1 },
     // '21' -> Maximum score! This hand doesn't need training
 
     // Soft hands
-    '3/13': hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '4/14': hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '5/15': hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '6/16': hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '7/17': hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-    '8/18': stand.until
-        .dealer(2)
-        .then.doubleOtherwiseStand.until.dealer(6)
-        .then.stand.until.dealer(8).then.hit,
-    '9/19': stand,
-    '10/20': stand,
+    '3/13': {
+        decisions: hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '4/14': {
+        decisions: hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '5/15': {
+        decisions: hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '6/16': {
+        decisions: hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '7/17': {
+        decisions: hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '8/18': {
+        decisions: stand.until
+            .dealer(2)
+            .then.doubleOtherwiseStand.until.dealer(6)
+            .then.stand.until.dealer(8).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+    },
+    '9/19': { decisions: stand, level: () => 1 },
+    '10/20': { decisions: stand, level: () => 1 },
     // 'A,Figure' -> BlackJack! This hand doesn't need training
 
     // Split hands
-    '2,2': splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
-    '3,3': splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
-    '4,4': hit.until.dealer(4).then.splitIfDASOtherwiseHit.until.dealer(6).then.hit,
-    '5,5': doubleOtherwiseHit.until.dealer(9).then.hit, // Considered a hard 10
-    '6,6': splitIfDASOtherwiseHit.until.dealer(2).then.split.until.dealer(6).then.hit,
-    '7,7': split.until.dealer(7).then.hit,
-    '8,8': split,
-    '9,9': split.until.dealer(6).then.stand.until.dealer(7).then.split.until.dealer(9).then.stand,
-    'Figure,Figure': stand, // Considered a hard 20
-    'A,A': split
+    '2,2': {
+        decisions: splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+    },
+    '3,3': {
+        decisions: splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+    },
+    '4,4': {
+        decisions: hit.until.dealer(4).then.splitIfDASOtherwiseHit.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 3 : 1)
+    },
+    '5,5': { decisions: doubleOtherwiseHit.until.dealer(9).then.hit, level: () => 2 }, // Always considered a hard 10
+    '6,6': {
+        decisions: splitIfDASOtherwiseHit.until.dealer(2).then.split.until.dealer(6).then.hit,
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+    },
+    '7,7': { decisions: split.until.dealer(7).then.hit, level: () => 2 },
+    '8,8': { decisions: split, level: () => 1 },
+    '9,9': {
+        decisions: split.until.dealer(6).then.stand.until.dealer(7).then.split.until.dealer(9).then
+            .stand,
+        level: () => 4
+    },
+    'Figure,Figure': { decisions: stand, level: () => 1 }, // Always considered a hard 20
+    'A,A': { decisions: split, level: () => 1 }
 };
 
 export const getOptimalDecision = (
@@ -137,7 +183,7 @@ export const getOptimalDecision = (
 ): OptimalDecision => {
     const handRepresentation = handToHandRepresentation(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand);
-    const optimalDecision = decisionsDictionary[handRepresentation][dealerHandValue];
+    const optimalDecision = decisionsDictionary[handRepresentation].decisions[dealerHandValue];
 
     const decision: Decision =
         optimalDecision === 'doubleOtherwiseHit'
