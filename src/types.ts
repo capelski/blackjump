@@ -103,6 +103,7 @@ export interface Player {
 export interface RelevantHand {
     decisions: DecisionsSet;
     level: (gameConfig: GameConfig) => number;
+    name: string;
 }
 
 export enum ScreenTypes {

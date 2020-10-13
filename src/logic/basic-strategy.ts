@@ -84,96 +84,126 @@ const stand = createDecisionsSet('stand');
 
 export const decisionsDictionary: Dictionary<RelevantHand> = {
     // Hard hands
-    // '4', -> Only possible with 2,2, already covered in splitHands
-    '5': { decisions: hit, level: () => 1 },
-    '6': { decisions: hit, level: () => 1 },
-    '7': { decisions: hit, level: () => 1 },
-    '8': { decisions: hit, level: () => 1 },
+    // '4' -> Only possible with 2,2. Covered in Split hands
+    '5': { decisions: hit, level: () => 1, name: 'Hard 5' },
+    '6': { decisions: hit, level: () => 1, name: 'Hard 6' },
+    '7': { decisions: hit, level: () => 1, name: 'Hard 7' },
+    '8': { decisions: hit, level: () => 1, name: 'Hard 8' },
     '9': {
         decisions: hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: () => 3
+        level: () => 3,
+        name: 'Hard 9'
     },
-    '10': { decisions: doubleOtherwiseHit.until.dealer(9).then.hit, level: () => 2 },
-    '11': { decisions: doubleOtherwiseHit.until.dealer(10).then.hit, level: () => 2 },
-    '12': { decisions: hit.until.dealer(3).then.stand.until.dealer(6).then.hit, level: () => 3 },
-    '13': { decisions: stand.until.dealer(6).then.hit, level: () => 2 },
-    '14': { decisions: stand.until.dealer(6).then.hit, level: () => 2 },
+    '10': {
+        decisions: doubleOtherwiseHit.until.dealer(9).then.hit,
+        level: () => 2,
+        name: 'Hard 10'
+    },
+    '11': {
+        decisions: doubleOtherwiseHit.until.dealer(10).then.hit,
+        level: () => 2,
+        name: 'Hard 11'
+    },
+    '12': {
+        decisions: hit.until.dealer(3).then.stand.until.dealer(6).then.hit,
+        level: () => 3,
+        name: 'Hard 12'
+    },
+    '13': { decisions: stand.until.dealer(6).then.hit, level: () => 2, name: 'Hard 13' },
+    '14': { decisions: stand.until.dealer(6).then.hit, level: () => 2, name: 'Hard 14' },
     '15': {
         decisions: stand.until
             .dealer(6)
             .then.hit.until.dealer(9)
             .then.surrenderOtherwiseHit.until.dealer(10).then.hit,
-        level: (gameConfig) => (gameConfig.canSurrender ? 4 : 2)
+        level: (gameConfig) => (gameConfig.canSurrender ? 4 : 2),
+        name: 'Hard 15'
     },
     '16': {
         decisions: stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderOtherwiseHit,
-        level: (gameConfig) => (gameConfig.canSurrender ? 3 : 2)
+        level: (gameConfig) => (gameConfig.canSurrender ? 3 : 2),
+        name: 'Hard 16'
     },
-    '17': { decisions: stand, level: () => 1 },
-    '18': { decisions: stand, level: () => 1 },
-    '19': { decisions: stand, level: () => 1 },
-    '20': { decisions: stand, level: () => 1 },
+    '17': { decisions: stand, level: () => 1, name: 'Hard 17' },
+    '18': { decisions: stand, level: () => 1, name: 'Hard 18' },
+    '19': { decisions: stand, level: () => 1, name: 'Hard 19' },
+    '20': { decisions: stand, level: () => 1, name: 'Hard 20' },
     // '21' -> Maximum score! This hand doesn't need training
 
     // Soft hands
     '3/13': {
         decisions: hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 13'
     },
     '4/14': {
         decisions: hit.until.dealer(4).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 14'
     },
     '5/15': {
         decisions: hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 15'
     },
     '6/16': {
         decisions: hit.until.dealer(3).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 16'
     },
     '7/17': {
         decisions: hit.until.dealer(2).then.doubleOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 17'
     },
     '8/18': {
         decisions: stand.until
             .dealer(2)
             .then.doubleOtherwiseStand.until.dealer(6)
             .then.stand.until.dealer(8).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleOnAnyInitialHand ? 3 : 1),
+        name: 'Soft 18'
     },
-    '9/19': { decisions: stand, level: () => 1 },
-    '10/20': { decisions: stand, level: () => 1 },
+    '9/19': { decisions: stand, level: () => 1, name: 'Soft 19' },
+    '10/20': { decisions: stand, level: () => 1, name: 'Soft 20' },
     // 'A,Figure' -> BlackJack! This hand doesn't need training
 
     // Split hands
     '2,2': {
         decisions: splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3),
+        name: '2,2'
     },
     '3,3': {
         decisions: splitIfDASOtherwiseHit.until.dealer(3).then.split.until.dealer(7).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3),
+        name: '3,3'
     },
     '4,4': {
         decisions: hit.until.dealer(4).then.splitIfDASOtherwiseHit.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 3 : 1)
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 3 : 1),
+        name: '4,4'
     },
-    '5,5': { decisions: doubleOtherwiseHit.until.dealer(9).then.hit, level: () => 2 }, // Always considered a hard 10
+    '5,5': {
+        decisions: doubleOtherwiseHit.until.dealer(9).then.hit,
+        level: () => 2,
+        name: 'Hard 10'
+    },
     '6,6': {
         decisions: splitIfDASOtherwiseHit.until.dealer(2).then.split.until.dealer(6).then.hit,
-        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3)
+        level: (gameConfig) => (gameConfig.canDoubleAfterSplit ? 2 : 3),
+        name: '6,6'
     },
-    '7,7': { decisions: split.until.dealer(7).then.hit, level: () => 2 },
-    '8,8': { decisions: split, level: () => 1 },
+    '7,7': { decisions: split.until.dealer(7).then.hit, level: () => 2, name: '7,7' },
+    '8,8': { decisions: split, level: () => 1, name: '8,8' },
     '9,9': {
         decisions: split.until.dealer(6).then.stand.until.dealer(7).then.split.until.dealer(9).then
             .stand,
-        level: () => 4
+        level: () => 4,
+        name: '9,9'
     },
-    'Figure,Figure': { decisions: stand, level: () => 1 }, // Always considered a hard 20
-    'A,A': { decisions: split, level: () => 1 }
+    'Figure,Figure': { decisions: stand, level: () => 1, name: 'Hard 20' },
+    'A,A': { decisions: split, level: () => 1, name: 'A,A' }
 };
 
 export const getOptimalDecision = (
@@ -183,7 +213,8 @@ export const getOptimalDecision = (
 ): OptimalDecision => {
     const handRepresentation = handToHandRepresentation(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand);
-    const optimalDecision = decisionsDictionary[handRepresentation].decisions[dealerHandValue];
+    const relevantHand = decisionsDictionary[handRepresentation];
+    const optimalDecision = relevantHand.decisions[dealerHandValue];
 
     const decision: Decision =
         optimalDecision === 'doubleOtherwiseHit'
@@ -206,12 +237,6 @@ export const getOptimalDecision = (
 
     return {
         decision,
-        description: `The optimal decision for ${getHandValidValues(playerHand).join(
-            '/'
-        )} (${playerHand.cards
-            .map((c) => c.symbol)
-            .join(',')}) against a dealer ${getHandValidValues(dealerHand).join(
-            '/'
-        )} is to ${decision}`
+        description: `${relevantHand.name} must ${decision} against dealer's ${dealerHandValue}`
     };
 };
