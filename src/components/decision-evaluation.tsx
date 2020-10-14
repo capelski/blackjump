@@ -36,7 +36,7 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
                 >
                     {props.decisionEvaluation.hit
                         ? 'Well done!'
-                        : props.decisionEvaluation.failureReason + ' ➡️'}
+                        : props.decisionEvaluation.failureReason}
                 </Text>
             </TouchableOpacity>
         )}

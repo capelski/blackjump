@@ -33,7 +33,7 @@ export const getOptimalDecision = (
 
     return {
         decision: actualDecision,
-        description: `${relevantHand.name} must ${dynamicDecision} against dealer's ${dealerHandValue}`
+        description: `${relevantHand.name} must ${dynamicDecision} against dealer's ${dealerHandValue}. Show hand strategy ➡️`
     };
 };
 
