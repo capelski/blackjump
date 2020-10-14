@@ -1,12 +1,16 @@
 import {
+    BaseDecisions,
     DynamicConditions,
     DynamicDecision,
+    DynamicDecisions,
     GameSettings,
     GameSettingsDecision,
+    GameSettingsDecisions,
     GameSettingsKeys,
     Hand,
     OptimalDecision,
-    PlayerDecision
+    PlayerDecision,
+    PlayerDecisions
 } from '../types';
 import { decisionsDictionary } from './decisions-dictionary';
 import { getHandEffectiveValue } from './hand';
@@ -46,38 +50,38 @@ export const mapDynamicDecisionToPlayerDecision = (
     dynamicDecision: DynamicDecision,
     dynamicConditions: DynamicConditions
 ): PlayerDecision =>
-    dynamicDecision === 'double/hit'
+    dynamicDecision === DynamicDecisions.double_hit
         ? dynamicConditions.canDouble
-            ? 'double'
-            : 'hit'
-        : dynamicDecision === 'double/stand'
+            ? PlayerDecisions.double
+            : BaseDecisions.hit
+        : dynamicDecision === DynamicDecisions.double_stand
         ? dynamicConditions.canDouble
-            ? 'double'
-            : 'stand'
-        : dynamicDecision === 'surrender/hit'
+            ? PlayerDecisions.double
+            : BaseDecisions.stand
+        : dynamicDecision === DynamicDecisions.surrender_hit
         ? dynamicConditions.canSurrender
-            ? 'surrender'
-            : 'hit'
+            ? PlayerDecisions.surrender
+            : BaseDecisions.hit
         : dynamicDecision;
 
 export const mapGameSettingsDecisionToDynamicDecision = (
     gameSettingsDecision: GameSettingsDecision,
     gameSettings: GameSettings
 ): DynamicDecision =>
-    gameSettingsDecision === 'doubleIfAllowed/hit'
+    gameSettingsDecision === GameSettingsDecisions.doubleIfAllowed_hit
         ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
-            ? 'double/hit'
-            : 'hit'
-        : gameSettingsDecision === 'doubleIfAllowed/stand'
+            ? DynamicDecisions.double_hit
+            : BaseDecisions.hit
+        : gameSettingsDecision === GameSettingsDecisions.doubleIfAllowed_stand
         ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
-            ? 'double/stand'
-            : 'stand'
-        : gameSettingsDecision === 'splitIfDasAllowed/hit'
+            ? DynamicDecisions.double_stand
+            : BaseDecisions.stand
+        : gameSettingsDecision === GameSettingsDecisions.splitIfDasAllowed_hit
         ? gameSettings[GameSettingsKeys.canDoubleAfterSplit]
-            ? 'split'
-            : 'hit'
-        : gameSettingsDecision === 'surrenderIfAllowed/hit'
+            ? BaseDecisions.split
+            : BaseDecisions.hit
+        : gameSettingsDecision === GameSettingsDecisions.surrenderIfAllowed_hit
         ? gameSettings[GameSettingsKeys.canSurrender]
-            ? 'surrender/hit'
-            : 'hit'
+            ? DynamicDecisions.surrender_hit
+            : BaseDecisions.hit
         : gameSettingsDecision;

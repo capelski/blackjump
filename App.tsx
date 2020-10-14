@@ -31,7 +31,16 @@ import {
 } from './src/logic/player';
 import { trainingPairToTrainingHands } from './src/logic/training-hands';
 import { initialTrainingStatus } from './src/logic/training-status';
-import { DecisionEvaluation, Hand, Phases, Player, PlayerDecision, ScreenTypes } from './src/types';
+import {
+    BaseDecisions,
+    DecisionEvaluation,
+    Hand,
+    Phases,
+    Player,
+    PlayerDecision,
+    PlayerDecisions,
+    ScreenTypes
+} from './src/types';
 
 const cardSet = getCardSet();
 
@@ -130,7 +139,7 @@ export default function App() {
     };
 
     const doubleHandler = () => {
-        evaluatePlayerDecision('double', currentHand);
+        evaluatePlayerDecision(PlayerDecisions.double, currentHand);
         doubleCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
@@ -138,7 +147,7 @@ export default function App() {
     };
 
     const hitHandler = () => {
-        evaluatePlayerDecision('hit', currentHand);
+        evaluatePlayerDecision(BaseDecisions.hit, currentHand);
         hitCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
@@ -148,14 +157,14 @@ export default function App() {
     };
 
     const standHandler = () => {
-        evaluatePlayerDecision('stand', currentHand);
+        evaluatePlayerDecision(BaseDecisions.stand, currentHand);
         standCurrentHand(player);
         setPlayer({ ...player });
         finishCurrentHand(player);
     };
 
     const splitHandler = () => {
-        evaluatePlayerDecision('split', currentHand);
+        evaluatePlayerDecision(BaseDecisions.split, currentHand);
         splitCurrentHand(player, cardSet);
 
         setPlayer({ ...player });
@@ -165,7 +174,7 @@ export default function App() {
     };
 
     const surrenderHandler = () => {
-        evaluatePlayerDecision('surrender', currentHand);
+        evaluatePlayerDecision(PlayerDecisions.surrender, currentHand);
         surrenderCurrentHand(player);
         setPlayer({ ...player });
         finishCurrentHand(player);

@@ -1,6 +1,10 @@
 // TODO Split the file into multiple
 
-type BaseDecision = 'hit' | 'split' | 'stand';
+export enum BaseDecisions {
+    hit = 'Hit',
+    split = 'Split',
+    stand = 'Stand'
+}
 
 export interface Card {
     suit: string;
@@ -43,7 +47,13 @@ export interface DecisionsSet {
 
 export type Dictionary<T> = { [key: string]: T };
 
-export type DynamicDecision = BaseDecision | 'double/hit' | 'double/stand' | 'surrender/hit';
+export enum DynamicDecisions {
+    double_hit = 'Double / Hit',
+    double_stand = 'Double / Stand',
+    surrender_hit = 'Surrender / Hit'
+}
+
+export type DynamicDecision = BaseDecisions | DynamicDecisions;
 
 export interface DynamicConditions {
     canDouble: boolean;
@@ -62,12 +72,14 @@ export enum GameSettingsKeys {
     canSurrender = 'Can surrender'
 }
 
-export type GameSettingsDecision =
-    | DynamicDecision
-    | 'doubleIfAllowed/hit'
-    | 'doubleIfAllowed/stand'
-    | 'splitIfDasAllowed/hit'
-    | 'surrenderIfAllowed/hit';
+export enum GameSettingsDecisions {
+    doubleIfAllowed_hit = 'doubleIfAllowed/hit',
+    doubleIfAllowed_stand = 'doubleIfAllowed/stand',
+    splitIfDasAllowed_hit = 'splitIfDasAllowed/hit',
+    surrenderIfAllowed_hit = 'surrenderIfAllowed/hit'
+}
+
+export type GameSettingsDecision = DynamicDecision | GameSettingsDecisions;
 
 export interface Hand {
     bet: number;
@@ -106,7 +118,12 @@ export interface Player {
     lastActionHand?: Hand;
 }
 
-export type PlayerDecision = BaseDecision | 'double' | 'surrender';
+export enum PlayerDecisions {
+    double = 'Double',
+    surrender = 'Surrender'
+}
+
+export type PlayerDecision = BaseDecisions | PlayerDecisions;
 
 export interface RelevantHand {
     decisions: DecisionsSet;

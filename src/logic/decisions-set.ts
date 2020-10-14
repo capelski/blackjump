@@ -1,4 +1,10 @@
-import { DecisionsSet, GameSettingsDecision } from '../types';
+import {
+    BaseDecisions,
+    DecisionsSet,
+    DynamicDecisions,
+    GameSettingsDecision,
+    GameSettingsDecisions
+} from '../types';
 import { numberRange } from '../utils';
 
 export const extendDecisionSet = (
@@ -33,30 +39,42 @@ export const createDecisionsSet = (
                 return {
                     then: {
                         double_hit: createDecisionsSet(
-                            'double/hit',
+                            DynamicDecisions.double_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
                         doubleIfAllowed_hit: createDecisionsSet(
-                            'doubleIfAllowed/hit',
+                            GameSettingsDecisions.doubleIfAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
                         doubleIfAllowed_stand: createDecisionsSet(
-                            'doubleIfAllowed/stand',
+                            GameSettingsDecisions.doubleIfAllowed_stand,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
-                        hit: createDecisionsSet('hit', limitScore + 1, currentDecisionsSet),
-                        split: createDecisionsSet('split', limitScore + 1, currentDecisionsSet),
+                        hit: createDecisionsSet(
+                            BaseDecisions.hit,
+                            limitScore + 1,
+                            currentDecisionsSet
+                        ),
+                        split: createDecisionsSet(
+                            BaseDecisions.split,
+                            limitScore + 1,
+                            currentDecisionsSet
+                        ),
                         splitIfDasAllowed_hit: createDecisionsSet(
-                            'splitIfDasAllowed/hit',
+                            GameSettingsDecisions.splitIfDasAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
-                        stand: createDecisionsSet('stand', limitScore + 1, currentDecisionsSet),
+                        stand: createDecisionsSet(
+                            BaseDecisions.stand,
+                            limitScore + 1,
+                            currentDecisionsSet
+                        ),
                         surrenderIfAllowed_hit: createDecisionsSet(
-                            'surrenderIfAllowed/hit',
+                            GameSettingsDecisions.surrenderIfAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         )

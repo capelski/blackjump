@@ -1,11 +1,18 @@
-import { Dictionary, RelevantHand, GameSettingsKeys } from '../types';
+import {
+    Dictionary,
+    RelevantHand,
+    GameSettingsKeys,
+    DynamicDecisions,
+    BaseDecisions,
+    GameSettingsDecisions
+} from '../types';
 import { createDecisionsSet } from './decisions-set';
 
-const double_hit = createDecisionsSet('double/hit');
-const hit = createDecisionsSet('hit');
-const split = createDecisionsSet('split');
-const splitIfDas_hit = createDecisionsSet('splitIfDasAllowed/hit');
-const stand = createDecisionsSet('stand');
+const double_hit = createDecisionsSet(DynamicDecisions.double_hit);
+const hit = createDecisionsSet(BaseDecisions.hit);
+const split = createDecisionsSet(BaseDecisions.split);
+const splitIfDas_hit = createDecisionsSet(GameSettingsDecisions.splitIfDasAllowed_hit);
+const stand = createDecisionsSet(BaseDecisions.stand);
 
 export const decisionsDictionary: Dictionary<RelevantHand> = {
     // Hard hands

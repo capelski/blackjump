@@ -18,6 +18,8 @@ export const allPossibleDealerHands: HandRepresentation[] = [
     'Figure'
 ];
 
+// const devHands: TrainingPair[] = [{ dealerHand: '6', playerHand: '3/13' }];
+
 export const getTrainingPairs = (trainingStatus?: TrainingStatus) => {
     const selectedTrainingHands: HandRepresentation[] = trainingStatus
         ? Object.keys(decisionsDictionary).filter((key) => {
@@ -35,6 +37,7 @@ export const getTrainingPairs = (trainingStatus?: TrainingStatus) => {
         })
     );
     shuffleArray(trainingPairs);
+    // return devHands;
     return trainingPairs;
 };
 
