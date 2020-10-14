@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, ScrollView, Text, View } from 'react-native';
+import { colors } from '../constants';
 import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
 import { GameSettings, Hand } from '../types';
 import { numberRange } from '../utils';
@@ -17,12 +18,6 @@ const checkboxStyle = {
     backgroundColor: 'white'
 };
 
-const textStyle = {
-    color: 'white',
-    fontSize: 20,
-    paddingTop: 8
-};
-
 export const Decisions: React.FC<DecisionsProps> = (props) => {
     const [gameSettings, setGameSettings] = useState(props.gameSettings);
 
@@ -35,7 +30,6 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
         )
     }));
 
-    // TODO Improve styles
     return (
         <ScrollView
             style={{
@@ -45,16 +39,47 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
             }}
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
         >
-            <Text style={textStyle}>{relevantHand.name}</Text>
+            <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
+                {relevantHand.name}
+            </Text>
+
             {handDecisions.map((dynamicDecision) => (
                 <View key={dynamicDecision.number} style={{ flexDirection: 'row', width: '100%' }}>
-                    <Text style={textStyle}>{dynamicDecision.number}: </Text>
-                    <Text style={textStyle}>{dynamicDecision.decision}</Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            paddingTop: 12,
+                            textAlign: 'center',
+                            width: '15%'
+                        }}
+                    >
+                        {dynamicDecision.number}
+                    </Text>
+                    <Text
+                        style={{
+                            backgroundColor: colors[dynamicDecision.decision],
+                            color: 'white',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            marginTop: 8,
+                            paddingVertical: 4,
+                            paddingHorizontal: 8,
+                            textAlign: 'center',
+                            width: '85%'
+                        }}
+                    >
+                        {dynamicDecision.decision}
+                    </Text>
                 </View>
             ))}
 
             {relevantHand.dependencies.map((dependency) => (
-                <View key={dependency} style={{ flexDirection: 'row', width: '100%' }}>
+                <View
+                    key={dependency}
+                    style={{ flexDirection: 'row', width: '100%', paddingTop: 16 }}
+                >
                     <CheckBox
                         disabled={false}
                         value={gameSettings[dependency]}
@@ -63,7 +88,15 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
                         }}
                         style={checkboxStyle}
                     />
-                    <Text style={textStyle}>{dependency}</Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20,
+                            paddingTop: 8
+                        }}
+                    >
+                        {dependency}
+                    </Text>
                 </View>
             ))}
         </ScrollView>
