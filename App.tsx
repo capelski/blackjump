@@ -4,10 +4,10 @@ import { Actions } from './src/components/actions';
 import { ConfigBar } from './src/components/config-bar';
 import { ConfigMenu } from './src/components/config-menu';
 import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
+import { Decisions } from './src/components/decisions';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards } from './src/logic/card-set';
-import { initialGameConfig } from './src/logic/game-config';
 import {
     canDouble,
     canSplit,
@@ -26,10 +26,12 @@ import {
     resolveHands,
     splitCurrentHand,
     startNextHand,
-    surrenderCurrentHand
+    surrenderCurrentHand,
+    standCurrentHand
 } from './src/logic/player';
 import { trainingPairToTrainingHands } from './src/logic/training-hands';
-import { Decision, DecisionEvaluation, Hand, Phases, Player, ScreenTypes } from './src/types';
+import { initialTrainingStatus } from './src/logic/training-status';
+import { DecisionEvaluation, Hand, Phases, Player, PlayerDecision, ScreenTypes } from './src/types';
 
 const cardSet = getCardSet();
 
@@ -38,18 +40,21 @@ export default function App() {
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
-    const [gameConfig, setGameConfig] = useState(initialGameConfig);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
+    const [trainingStatus, setTrainingStatus] = useState(initialTrainingStatus);
 
     const currentHand = getCurrentHand(player);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined && canDouble(currentHand, player.hands.length, gameConfig);
+        currentHand !== undefined &&
+        canDouble(currentHand, player.hands.length, trainingStatus.gameSettings);
     const isSurrenderEnabled =
-        currentHand !== undefined && canSurrender(currentHand, player.hands.length, gameConfig);
+        currentHand !== undefined &&
+        canSurrender(currentHand, player.hands.length, trainingStatus.gameSettings);
+
     useEffect(() => {
         if (decisionEvaluationTimeout) {
             clearTimeout(decisionEvaluationTimeout);
@@ -79,13 +84,13 @@ export default function App() {
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         const nextTrainingPair =
-            (gameConfig.currentTrainingPair + 1) % gameConfig.selectedTrainingPairs.length;
-        setGameConfig({
-            ...gameConfig,
+            (trainingStatus.currentTrainingPair + 1) % trainingStatus.selectedTrainingPairs.length;
+        setTrainingStatus({
+            ...trainingStatus,
             currentTrainingPair: nextTrainingPair
         });
         const nextTrainingHands = trainingPairToTrainingHands(
-            gameConfig.selectedTrainingPairs[nextTrainingPair],
+            trainingStatus.selectedTrainingPairs[nextTrainingPair],
             cardSet
         );
         initializeHands(player, nextTrainingHands.playerHand);
@@ -109,10 +114,9 @@ export default function App() {
         }
     };
 
-    const evaluatePlayerDecision = (decision: Decision, hand: Hand) => {
-        const optimalDecision = getOptimalDecision(hand, dealerHand!, {
+    const evaluatePlayerDecision = (decision: PlayerDecision, hand: Hand) => {
+        const optimalDecision = getOptimalDecision(hand, dealerHand!, trainingStatus.gameSettings, {
             canDouble: isDoubleEnabled,
-            canDoubleAfterSplit: gameConfig.canDoubleAfterSplit,
             canSurrender: isSurrenderEnabled
         });
 
@@ -145,6 +149,8 @@ export default function App() {
 
     const standHandler = () => {
         evaluatePlayerDecision('stand', currentHand);
+        standCurrentHand(player);
+        setPlayer({ ...player });
         finishCurrentHand(player);
     };
 
@@ -171,6 +177,10 @@ export default function App() {
         );
     };
 
+    const showDecisionsHandler = () => {
+        setCurrentScreen(ScreenTypes.decisions);
+    };
+
     return (
         <View
             style={{
@@ -180,9 +190,25 @@ export default function App() {
                 backgroundColor: '#088446'
             }}
         >
+            {currentScreen === ScreenTypes.config && (
+                <ConfigMenu
+                    setCurrentScreen={setCurrentScreen}
+                    setTrainingStatus={setTrainingStatus}
+                    trainingStatus={trainingStatus}
+                />
+            )}
+            {currentScreen === ScreenTypes.decisions && (
+                <Decisions
+                    gameSettings={trainingStatus.gameSettings}
+                    playerHand={player.lastActionHand!}
+                />
+            )}
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
-                    <DecisionEvaluationComponent decisionEvaluation={decisionEvaluation} />
+                    <DecisionEvaluationComponent
+                        decisionEvaluation={decisionEvaluation}
+                        showDecisionsHandler={showDecisionsHandler}
+                    />
                     <Table dealerHand={dealerHand} phase={phase} player={player} />
                     <Actions
                         doubleHandler={doubleHandler}
@@ -197,13 +223,6 @@ export default function App() {
                         surrenderHandler={surrenderHandler}
                     />
                 </React.Fragment>
-            )}
-            {currentScreen === ScreenTypes.config && (
-                <ConfigMenu
-                    gameConfig={gameConfig}
-                    setCurrentScreen={setCurrentScreen}
-                    setGameConfig={setGameConfig}
-                />
             )}
             <ConfigBar
                 playerCash={player.cash}

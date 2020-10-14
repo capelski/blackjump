@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { DecisionEvaluation } from '../types';
 
 interface DecisionEvaluationProps {
     decisionEvaluation?: DecisionEvaluation;
+    showDecisionsHandler: () => void;
 }
 
 export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (props) => (
@@ -22,18 +23,22 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
         }}
     >
         {props.decisionEvaluation && (
-            <Text
-                style={{
-                    padding: 8,
-                    color: 'white',
-                    fontSize: 18,
-                    textAlign: 'center'
-                }}
+            <TouchableOpacity
+                onPress={props.decisionEvaluation.hit ? undefined : props.showDecisionsHandler}
             >
-                {props.decisionEvaluation.hit
-                    ? 'Well done!'
-                    : props.decisionEvaluation.failureReason}
-            </Text>
+                <Text
+                    style={{
+                        padding: 8,
+                        color: 'white',
+                        fontSize: 18,
+                        textAlign: 'center'
+                    }}
+                >
+                    {props.decisionEvaluation.hit
+                        ? 'Well done!'
+                        : props.decisionEvaluation.failureReason + ' ➡️'}
+                </Text>
+            </TouchableOpacity>
         )}
     </View>
 );

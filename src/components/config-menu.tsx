@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, Text, View } from 'react-native';
 import { getTrainingPairs } from '../logic/training-hands';
-import { GameConfig, ScreenTypes } from '../types';
+import { ScreenTypes, TrainingStatus } from '../types';
 import { Button } from './button';
 
 interface ConfigMenuProps {
-    gameConfig: GameConfig;
     setCurrentScreen: (screen: ScreenTypes) => void;
-    setGameConfig: (gameConfig: GameConfig) => void;
+    setTrainingStatus: (trainingStatus: TrainingStatus) => void;
+    trainingStatus: TrainingStatus;
 }
 
 const checkboxStyle = {
@@ -27,36 +27,36 @@ const textStyle = {
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [canDoubleAfterSplit, setCanDoubleAfterSplit] = useState(
-        props.gameConfig.canDoubleAfterSplit
+        props.trainingStatus.gameSettings.canDoubleAfterSplit
     );
     const [canDoubleOnAnyInitialHand, setCanDoubleOnAnyInitialHand] = useState(
-        props.gameConfig.canDoubleOnAnyInitialHand
+        props.trainingStatus.gameSettings.canDoubleOnAnyInitialHand
     );
-    const [canSurrender, setCanSurrender] = useState(props.gameConfig.canSurrender);
-    const [selectedLevels, setSelectedLevels] = useState(props.gameConfig.selectedLevels);
+    const [canSurrender, setCanSurrender] = useState(
+        props.trainingStatus.gameSettings.canSurrender
+    );
+    const [selectedLevels, setSelectedLevels] = useState(props.trainingStatus.selectedLevels);
 
     const saveHandler = () => {
-        const nextGameConfig: GameConfig = {
-            canDoubleAfterSplit,
-            canDoubleOnAnyInitialHand,
-            canSurrender,
+        const nextTrainingStatus: TrainingStatus = {
+            gameSettings: { canDoubleAfterSplit, canDoubleOnAnyInitialHand, canSurrender },
             currentTrainingPair: -1,
             selectedLevels,
             selectedTrainingPairs: []
         };
-        nextGameConfig.selectedTrainingPairs = getTrainingPairs(nextGameConfig);
-        props.setGameConfig(nextGameConfig);
+        nextTrainingStatus.selectedTrainingPairs = getTrainingPairs(nextTrainingStatus);
+        props.setTrainingStatus(nextTrainingStatus);
         props.setCurrentScreen(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
-        props.gameConfig.canDoubleAfterSplit !== canDoubleAfterSplit ||
-        props.gameConfig.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand ||
-        props.gameConfig.canSurrender !== canSurrender ||
-        props.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
-        props.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
-        props.gameConfig.selectedLevels[3] !== selectedLevels[3] ||
-        props.gameConfig.selectedLevels[4] !== selectedLevels[4];
+        props.trainingStatus.gameSettings.canDoubleAfterSplit !== canDoubleAfterSplit ||
+        props.trainingStatus.gameSettings.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand ||
+        props.trainingStatus.gameSettings.canSurrender !== canSurrender ||
+        props.trainingStatus.selectedLevels[1] !== selectedLevels[1] ||
+        props.trainingStatus.selectedLevels[2] !== selectedLevels[2] ||
+        props.trainingStatus.selectedLevels[3] !== selectedLevels[3] ||
+        props.trainingStatus.selectedLevels[4] !== selectedLevels[4];
 
     return (
         <View
@@ -97,10 +97,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             </View>
             <View style={{ width: '100%', marginVertical: 8 }}>
                 <Text style={{ ...textStyle, marginLeft: 8 }}>
-                    Selected hand levels ({props.gameConfig.selectedTrainingPairs.length} hands):
+                    Selected hand levels ({props.trainingStatus.selectedTrainingPairs.length}{' '}
+                    hands):
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}>
-                    {Object.keys(props.gameConfig.selectedLevels).map((number) => (
+                    {Object.keys(props.trainingStatus.selectedLevels).map((number) => (
                         <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
                             <CheckBox
                                 disabled={false}

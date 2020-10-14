@@ -1,10 +1,6 @@
 // TODO Split the file into multiple
 
-export interface BasicStrategyConditioningFactors {
-    canDouble: boolean;
-    canDoubleAfterSplit: boolean;
-    canSurrender: boolean;
-}
+type BaseDecision = 'hit' | 'split' | 'stand';
 
 export interface Card {
     suit: string;
@@ -17,15 +13,6 @@ export interface CardSet {
     unusedCards: Card[];
 }
 
-export type ConditionalDecision =
-    | Decision
-    | 'doubleOtherwiseHit'
-    | 'doubleOtherwiseStand'
-    | 'splitIfDASOtherwiseHit'
-    | 'surrenderOtherwiseHit';
-
-export type Decision = 'double' | 'hit' | 'split' | 'stand' | 'surrender';
-
 export type DecisionEvaluation =
     | { hit: true }
     | {
@@ -34,20 +21,21 @@ export type DecisionEvaluation =
       };
 
 export interface DecisionsSet {
-    [key: number]: ConditionalDecision;
+    [key: number]: GameSettingsDecision;
     until: {
         dealer: (
             limit: number
         ) => {
             then: {
-                double: DecisionsSet;
-                doubleOtherwiseHit: DecisionsSet;
-                doubleOtherwiseStand: DecisionsSet;
+                double_hit: DecisionsSet;
+                // double_stand: DecisionsSet; Not used
+                doubleIfAllowed_hit: DecisionsSet;
+                doubleIfAllowed_stand: DecisionsSet;
                 hit: DecisionsSet;
                 split: DecisionsSet;
-                splitIfDASOtherwiseHit: DecisionsSet;
+                splitIfDasAllowed_hit: DecisionsSet;
                 stand: DecisionsSet;
-                surrenderOtherwiseHit: DecisionsSet;
+                surrenderIfAllowed_hit: DecisionsSet;
             };
         };
     };
@@ -55,14 +43,32 @@ export interface DecisionsSet {
 
 export type Dictionary<T> = { [key: string]: T };
 
-export interface GameConfig {
-    canDoubleOnAnyInitialHand: boolean;
-    canDoubleAfterSplit: boolean;
+export type DynamicDecision = BaseDecision | 'double/hit' | 'double/stand' | 'surrender/hit';
+
+export interface DynamicConditions {
+    canDouble: boolean;
     canSurrender: boolean;
-    currentTrainingPair: number;
-    selectedLevels: NumericDictionary<boolean>;
-    selectedTrainingPairs: TrainingPair[];
 }
+
+export interface GameSettings {
+    [GameSettingsKeys.canDoubleOnAnyInitialHand]: boolean;
+    [GameSettingsKeys.canDoubleAfterSplit]: boolean;
+    [GameSettingsKeys.canSurrender]: boolean;
+}
+
+// TODO Use the enum values to display text in the screens
+export enum GameSettingsKeys {
+    canDoubleOnAnyInitialHand = 'canDoubleOnAnyInitialHand',
+    canDoubleAfterSplit = 'canDoubleAfterSplit',
+    canSurrender = 'canSurrender'
+}
+
+export type GameSettingsDecision =
+    | DynamicDecision
+    | 'doubleIfAllowed/hit'
+    | 'doubleIfAllowed/stand'
+    | 'splitIfDasAllowed/hit'
+    | 'surrenderIfAllowed/hit';
 
 export interface Hand {
     bet: number;
@@ -84,7 +90,7 @@ export type HandRepresentation = string;
 export type NumericDictionary<T> = { [key: number]: T };
 
 export interface OptimalDecision {
-    decision: Decision;
+    decision: PlayerDecision;
     description: string;
 }
 
@@ -98,17 +104,22 @@ export interface Player {
     cash: number;
     handIndex: number;
     hands: Hand[];
+    lastActionHand?: Hand;
 }
+
+export type PlayerDecision = BaseDecision | 'double' | 'surrender';
 
 export interface RelevantHand {
     decisions: DecisionsSet;
-    level: (gameConfig: GameConfig) => number;
+    dependencies: GameSettingsKeys[];
+    level: (gameSettings: GameSettings) => number;
     name: string;
 }
 
 export enum ScreenTypes {
-    table = 'table',
-    config = 'config'
+    config = 'config',
+    decisions = 'decisions',
+    table = 'table'
 }
 
 export interface TrainingHand {
@@ -119,4 +130,11 @@ export interface TrainingHand {
 export interface TrainingPair {
     dealerHand: HandRepresentation;
     playerHand: HandRepresentation;
+}
+
+export interface TrainingStatus {
+    currentTrainingPair: number;
+    gameSettings: GameSettings;
+    selectedLevels: NumericDictionary<boolean>;
+    selectedTrainingPairs: TrainingPair[];
 }

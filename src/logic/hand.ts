@@ -1,18 +1,19 @@
-import { Hand, Card, CardSet, HandOutcome, GameConfig } from '../types';
+import { Hand, Card, CardSet, HandOutcome, GameSettings } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
 import { getCardValues, extractNextCard, getCardEffectiveValue } from './card-set';
 
-export const canDouble = (hand: Hand, handsNumber: number, gameConfig: GameConfig) =>
+export const canDouble = (hand: Hand, handsNumber: number, gameSettings: GameSettings) =>
     hand.cards.length === 2 &&
-    (gameConfig.canDoubleAfterSplit || handsNumber === 1) &&
-    (gameConfig.canDoubleOnAnyInitialHand || [9, 10, 11].indexOf(getHandEffectiveValue(hand)) > -1);
+    (gameSettings.canDoubleAfterSplit || handsNumber === 1) &&
+    (gameSettings.canDoubleOnAnyInitialHand ||
+        [9, 10, 11].indexOf(getHandEffectiveValue(hand)) > -1);
 
 export const canSplit = (hand: Hand) =>
     hand.cards.length === 2 &&
     getCardEffectiveValue(hand.cards[0]) === getCardEffectiveValue(hand.cards[1]);
 
-export const canSurrender = (hand: Hand, handsNumber: number, gameConfig: GameConfig) =>
-    handsNumber === 1 && hand.cards.length === 2 && gameConfig.canSurrender;
+export const canSurrender = (hand: Hand, handsNumber: number, gameSettings: GameSettings) =>
+    handsNumber === 1 && hand.cards.length === 2 && gameSettings.canSurrender;
 
 export const createHand = (cards: Card[], bet = 1): Hand => ({
     bet,

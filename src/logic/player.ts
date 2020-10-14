@@ -4,15 +4,19 @@ import { createHand, dealCard, resolveHand } from './hand';
 export const createPlayer = (cash = 0): Player => ({
     cash,
     handIndex: 0,
-    hands: []
+    hands: [],
+    lastActionHand: undefined
 });
 
 export const hitCurrentHand = (player: Player, cardSet: CardSet) => {
-    dealCard(player.hands[player.handIndex], cardSet);
+    const currentHand = getCurrentHand(player);
+    player.lastActionHand = { ...currentHand };
+    dealCard(currentHand, cardSet);
 };
 
 export const doubleCurrentHand = (player: Player, cardSet: CardSet) => {
-    const currentHand = player.hands[player.handIndex];
+    const currentHand = getCurrentHand(player);
+    player.lastActionHand = { ...currentHand };
     hitCurrentHand(player, cardSet);
     player.cash -= currentHand.bet;
     currentHand.bet *= 2;
@@ -24,6 +28,7 @@ export const initializeHands = (player: Player, initialHand: Hand) => {
     player.cash -= initialHand.bet;
     player.hands = [initialHand];
     player.handIndex = 0;
+    player.lastActionHand = undefined;
 };
 
 export const isLastHand = (player: Player) => player.hands.length - 1 <= player.handIndex;
@@ -46,8 +51,10 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
 };
 
 export const splitCurrentHand = (player: Player, cardSet: CardSet) => {
-    const firstHand = createHand([player.hands[player.handIndex].cards[0]]);
-    const secondHand = createHand([player.hands[player.handIndex].cards[1]]);
+    const currentHand = getCurrentHand(player);
+    player.lastActionHand = currentHand;
+    const firstHand = createHand([currentHand.cards[0]]);
+    const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
     dealCard(firstHand, cardSet);
     player.hands.splice(player.handIndex, 1, firstHand, secondHand);
@@ -58,7 +65,14 @@ export const startNextHand = (player: Player, cardSet: CardSet) => {
     dealCard(player.hands[player.handIndex], cardSet);
 };
 
+export const standCurrentHand = (player: Player) => {
+    const currentHand = getCurrentHand(player);
+    player.lastActionHand = currentHand;
+};
+
 export const surrenderCurrentHand = (player: Player) => {
-    player.cash += player.hands[player.handIndex].bet / 2;
+    const currentHand = getCurrentHand(player);
+    player.lastActionHand = currentHand;
+    player.cash += currentHand.bet / 2;
     player.hands.splice(player.handIndex, 1);
 };
