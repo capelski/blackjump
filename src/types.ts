@@ -57,8 +57,8 @@ export interface GameSettings {
 }
 
 export enum GameSettingsKeys {
-    canDoubleOnAnyInitialHand = 'Can double on any initial hand',
     canDoubleAfterSplit = 'Can double after split',
+    canDoubleOnAnyInitialHand = 'Can double on any initial hand',
     canSurrender = 'Can surrender'
 }
 
