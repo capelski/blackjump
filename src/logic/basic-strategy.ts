@@ -3,6 +3,7 @@ import {
     DynamicDecision,
     GameSettings,
     GameSettingsDecision,
+    GameSettingsKeys,
     Hand,
     OptimalDecision,
     PlayerDecision
@@ -64,19 +65,19 @@ export const mapGameSettingsDecisionToDynamicDecision = (
     gameSettings: GameSettings
 ): DynamicDecision =>
     gameSettingsDecision === 'doubleIfAllowed/hit'
-        ? gameSettings.canDoubleOnAnyInitialHand
+        ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
             ? 'double/hit'
             : 'hit'
         : gameSettingsDecision === 'doubleIfAllowed/stand'
-        ? gameSettings.canDoubleOnAnyInitialHand
+        ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
             ? 'double/stand'
             : 'stand'
         : gameSettingsDecision === 'splitIfDasAllowed/hit'
-        ? gameSettings.canDoubleAfterSplit
+        ? gameSettings[GameSettingsKeys.canDoubleAfterSplit]
             ? 'split'
             : 'hit'
         : gameSettingsDecision === 'surrenderIfAllowed/hit'
-        ? gameSettings.canSurrender
+        ? gameSettings[GameSettingsKeys.canSurrender]
             ? 'surrender/hit'
             : 'hit'
         : gameSettingsDecision;

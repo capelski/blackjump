@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // TODO Replace deprecated CheckBox component
 import { CheckBox, Text, View } from 'react-native';
 import { getTrainingPairs } from '../logic/training-hands';
-import { ScreenTypes, TrainingStatus } from '../types';
+import { GameSettingsKeys, ScreenTypes, TrainingStatus } from '../types';
 import { Button } from './button';
 
 interface ConfigMenuProps {
@@ -27,19 +27,23 @@ const textStyle = {
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [canDoubleAfterSplit, setCanDoubleAfterSplit] = useState(
-        props.trainingStatus.gameSettings.canDoubleAfterSplit
+        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleAfterSplit]
     );
     const [canDoubleOnAnyInitialHand, setCanDoubleOnAnyInitialHand] = useState(
-        props.trainingStatus.gameSettings.canDoubleOnAnyInitialHand
+        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
     );
     const [canSurrender, setCanSurrender] = useState(
-        props.trainingStatus.gameSettings.canSurrender
+        props.trainingStatus.gameSettings[GameSettingsKeys.canSurrender]
     );
     const [selectedLevels, setSelectedLevels] = useState(props.trainingStatus.selectedLevels);
 
     const saveHandler = () => {
         const nextTrainingStatus: TrainingStatus = {
-            gameSettings: { canDoubleAfterSplit, canDoubleOnAnyInitialHand, canSurrender },
+            gameSettings: {
+                [GameSettingsKeys.canDoubleAfterSplit]: canDoubleAfterSplit,
+                [GameSettingsKeys.canDoubleOnAnyInitialHand]: canDoubleOnAnyInitialHand,
+                [GameSettingsKeys.canSurrender]: canSurrender
+            },
             currentTrainingPair: -1,
             selectedLevels,
             selectedTrainingPairs: []
@@ -50,9 +54,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const isSaveButtonEnabled =
-        props.trainingStatus.gameSettings.canDoubleAfterSplit !== canDoubleAfterSplit ||
-        props.trainingStatus.gameSettings.canDoubleOnAnyInitialHand !== canDoubleOnAnyInitialHand ||
-        props.trainingStatus.gameSettings.canSurrender !== canSurrender ||
+        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleAfterSplit] !==
+            canDoubleAfterSplit ||
+        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
+            canDoubleOnAnyInitialHand ||
+        props.trainingStatus.gameSettings[GameSettingsKeys.canSurrender] !== canSurrender ||
         props.trainingStatus.selectedLevels[1] !== selectedLevels[1] ||
         props.trainingStatus.selectedLevels[2] !== selectedLevels[2] ||
         props.trainingStatus.selectedLevels[3] !== selectedLevels[3] ||
@@ -75,7 +81,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     onValueChange={(newValue) => setCanDoubleAfterSplit(newValue)}
                     style={checkboxStyle}
                 />
-                <Text style={textStyle}>Can double after split</Text>
+                <Text style={textStyle}>{GameSettingsKeys.canDoubleAfterSplit}</Text>
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
                 <CheckBox
@@ -84,7 +90,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     onValueChange={(newValue) => setCanDoubleOnAnyInitialHand(newValue)}
                     style={checkboxStyle}
                 />
-                <Text style={textStyle}>Can double on any initial hand</Text>
+                <Text style={textStyle}>{GameSettingsKeys.canDoubleOnAnyInitialHand}</Text>
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
                 <CheckBox
@@ -93,7 +99,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     onValueChange={(newValue) => setCanSurrender(newValue)}
                     style={checkboxStyle}
                 />
-                <Text style={textStyle}>Can surrender</Text>
+                <Text style={textStyle}>{GameSettingsKeys.canSurrender}</Text>
             </View>
             <View style={{ width: '100%', marginVertical: 8 }}>
                 <Text style={{ ...textStyle, marginLeft: 8 }}>

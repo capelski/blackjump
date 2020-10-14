@@ -1,12 +1,12 @@
-import { TrainingStatus } from '../types';
+import { GameSettingsKeys, TrainingStatus } from '../types';
 import { getTrainingPairs } from './training-hands';
 
 export const initialTrainingStatus: TrainingStatus = {
     currentTrainingPair: -1,
     gameSettings: {
-        canDoubleOnAnyInitialHand: false,
-        canDoubleAfterSplit: true,
-        canSurrender: false
+        [GameSettingsKeys.canDoubleOnAnyInitialHand]: false,
+        [GameSettingsKeys.canDoubleAfterSplit]: true,
+        [GameSettingsKeys.canSurrender]: false
     },
     selectedLevels: {
         1: true,

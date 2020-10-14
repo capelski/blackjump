@@ -56,11 +56,10 @@ export interface GameSettings {
     [GameSettingsKeys.canSurrender]: boolean;
 }
 
-// TODO Use the enum values to display text in the screens
 export enum GameSettingsKeys {
-    canDoubleOnAnyInitialHand = 'canDoubleOnAnyInitialHand',
-    canDoubleAfterSplit = 'canDoubleAfterSplit',
-    canSurrender = 'canSurrender'
+    canDoubleOnAnyInitialHand = 'Can double on any initial hand',
+    canDoubleAfterSplit = 'Can double after split',
+    canSurrender = 'Can surrender'
 }
 
 export type GameSettingsDecision =
