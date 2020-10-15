@@ -1,6 +1,12 @@
 import { CardSet, Hand, HandOutcome, Player } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
 
+const cloneHand = (hand: Hand): Hand => ({
+    bet: hand.bet,
+    cards: [...hand.cards],
+    values: [...hand.values]
+});
+
 export const createPlayer = (cash = 0): Player => ({
     cash,
     handIndex: 0,
@@ -10,13 +16,13 @@ export const createPlayer = (cash = 0): Player => ({
 
 export const hitCurrentHand = (player: Player, cardSet: CardSet) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = { ...currentHand };
+    player.lastActionHand = cloneHand(currentHand);
     dealCard(currentHand, cardSet);
 };
 
 export const doubleCurrentHand = (player: Player, cardSet: CardSet) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = { ...currentHand };
+    player.lastActionHand = cloneHand(currentHand);
     hitCurrentHand(player, cardSet);
     player.cash -= currentHand.bet;
     currentHand.bet *= 2;
@@ -52,7 +58,7 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
 
 export const splitCurrentHand = (player: Player, cardSet: CardSet) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = currentHand;
+    player.lastActionHand = cloneHand(currentHand);
     const firstHand = createHand([currentHand.cards[0]]);
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
@@ -67,12 +73,12 @@ export const startNextHand = (player: Player, cardSet: CardSet) => {
 
 export const standCurrentHand = (player: Player) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = currentHand;
+    player.lastActionHand = cloneHand(currentHand);
 };
 
 export const surrenderCurrentHand = (player: Player) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = currentHand;
+    player.lastActionHand = cloneHand(currentHand);
     player.cash += currentHand.bet / 2;
     player.hands.splice(player.handIndex, 1);
 };
