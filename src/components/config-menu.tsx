@@ -28,30 +28,32 @@ const textStyle = {
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [gameSettings, setGameSettings] = useState(props.trainingStatus.gameSettings);
     const [selectedLevels, setSelectedLevels] = useState(props.trainingStatus.selectedLevels);
+    const [selectedTrainingPairs, setSelectedTrainingPairs] = useState(
+        props.trainingStatus.selectedTrainingPairs
+    );
 
     const saveHandler = () => {
-        const nextTrainingStatus: TrainingStatus = {
+        props.setTrainingStatus({
             gameSettings,
             currentTrainingPair: -1,
             selectedLevels,
-            selectedTrainingPairs: []
-        };
-        nextTrainingStatus.selectedTrainingPairs = getTrainingPairs(nextTrainingStatus);
-        props.setTrainingStatus(nextTrainingStatus);
+            selectedTrainingPairs
+        });
         props.setCurrentScreen(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
-        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleAfterSplit] !==
+        (props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleAfterSplit] !==
             gameSettings[GameSettingsKeys.canDoubleAfterSplit] ||
-        props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
-            gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ||
-        props.trainingStatus.gameSettings[GameSettingsKeys.canSurrender] !==
-            gameSettings[GameSettingsKeys.canSurrender] ||
-        props.trainingStatus.selectedLevels[1] !== selectedLevels[1] ||
-        props.trainingStatus.selectedLevels[2] !== selectedLevels[2] ||
-        props.trainingStatus.selectedLevels[3] !== selectedLevels[3] ||
-        props.trainingStatus.selectedLevels[4] !== selectedLevels[4];
+            props.trainingStatus.gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
+                gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ||
+            props.trainingStatus.gameSettings[GameSettingsKeys.canSurrender] !==
+                gameSettings[GameSettingsKeys.canSurrender] ||
+            props.trainingStatus.selectedLevels[1] !== selectedLevels[1] ||
+            props.trainingStatus.selectedLevels[2] !== selectedLevels[2] ||
+            props.trainingStatus.selectedLevels[3] !== selectedLevels[3] ||
+            props.trainingStatus.selectedLevels[4] !== selectedLevels[4]) &&
+        (selectedLevels[1] || selectedLevels[2] || selectedLevels[3] || selectedLevels[4]);
 
     return (
         <View
@@ -69,7 +71,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         disabled={false}
                         value={gameSettings[setting]}
                         onValueChange={(newValue) => {
-                            setGameSettings({ ...gameSettings, [setting]: newValue });
+                            const nextGameSettings = { ...gameSettings, [setting]: newValue };
+                            setGameSettings(nextGameSettings);
+                            setSelectedTrainingPairs(
+                                getTrainingPairs(nextGameSettings, selectedLevels)
+                            );
                         }}
                         style={checkboxStyle}
                     />
@@ -79,8 +85,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
             <View style={{ width: '100%', marginVertical: 8 }}>
                 <Text style={{ ...textStyle, marginLeft: 8 }}>
-                    Selected hand levels ({props.trainingStatus.selectedTrainingPairs.length}{' '}
-                    hands):
+                    Selected hand levels ({selectedTrainingPairs.length} hands):
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}>
                     {Object.keys(props.trainingStatus.selectedLevels).map((number) => (
@@ -88,12 +93,16 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             <CheckBox
                                 disabled={false}
                                 value={selectedLevels[(number as unknown) as number] || false}
-                                onValueChange={(newValue) =>
-                                    setSelectedLevels({
+                                onValueChange={(newValue) => {
+                                    const nextSelectedLevels = {
                                         ...selectedLevels,
                                         [number]: newValue
-                                    })
-                                }
+                                    };
+                                    setSelectedLevels(nextSelectedLevels);
+                                    setSelectedTrainingPairs(
+                                        getTrainingPairs(gameSettings, nextSelectedLevels)
+                                    );
+                                }}
                                 style={checkboxStyle}
                             />
                             <Text style={textStyle}>{number}</Text>

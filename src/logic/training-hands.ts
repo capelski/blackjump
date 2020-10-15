@@ -1,4 +1,11 @@
-import { CardSet, HandRepresentation, TrainingHand, TrainingPair, TrainingStatus } from '../types';
+import {
+    CardSet,
+    GameSettings,
+    HandRepresentation,
+    NumericDictionary,
+    TrainingHand,
+    TrainingPair
+} from '../types';
 import { cartesianProduct, shuffleArray } from '../utils';
 import { extractCardFromCardSet } from './card-set';
 import { decisionsDictionary } from './decisions-dictionary';
@@ -20,13 +27,16 @@ export const allPossibleDealerHands: HandRepresentation[] = [
 
 // const devHands: TrainingPair[] = [{ dealerHand: '6', playerHand: '3/13' }];
 
-export const getTrainingPairs = (trainingStatus?: TrainingStatus) => {
-    const selectedTrainingHands: HandRepresentation[] = trainingStatus
-        ? Object.keys(decisionsDictionary).filter((key) => {
-              const handLevel = decisionsDictionary[key].level(trainingStatus.gameSettings);
-              return trainingStatus.selectedLevels[handLevel];
-          })
-        : Object.keys(decisionsDictionary);
+export const getTrainingPairs = (
+    gameSettings: GameSettings,
+    selectedLevels: NumericDictionary<boolean>
+) => {
+    const selectedTrainingHands: HandRepresentation[] = Object.keys(decisionsDictionary).filter(
+        (key) => {
+            const handLevel = decisionsDictionary[key].level(gameSettings);
+            return selectedLevels[handLevel];
+        }
+    );
 
     const trainingPairs = cartesianProduct<string, string, TrainingPair>(
         allPossibleDealerHands,
