@@ -30,14 +30,14 @@ export const Table: React.FC<TableProps> = (props) => (
             )}
         </View>
         <View style={{ height: tableCenterHeight, justifyContent: 'center', width: '100%' }}>
+            <Divider />
             {props.decisionEvaluation ? (
                 <DecisionEvaluationComponent
                     decisionEvaluation={props.decisionEvaluation}
                     showDecisionsHandler={props.showDecisionsHandler}
                 />
             ) : (
-                <React.Fragment>
-                    <Divider />
+                <View style={{ flex: 1, justifyContent: 'center' }}>
                     <Text
                         style={{
                             color: 'white',
@@ -60,9 +60,9 @@ export const Table: React.FC<TableProps> = (props) => (
                     >
                         and stand on all 17s
                     </Text>
-                    <Divider />
-                </React.Fragment>
+                </View>
             )}
+            <Divider />
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-evenly' }}>
             {props.player.hands.map((hand, index) => (
