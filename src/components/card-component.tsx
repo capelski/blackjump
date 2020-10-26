@@ -11,11 +11,12 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
     return (
         <View
             style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
                 alignItems: 'center',
-                marginRight: 8,
+                backgroundColor: 'white',
+                borderRadius: 8,
+                flexDirection: 'row',
                 marginBottom: 8,
+                marginRight: 8,
                 padding: 8
             }}
         >

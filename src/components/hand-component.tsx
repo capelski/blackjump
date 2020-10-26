@@ -20,18 +20,19 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
     return (
         <View
             style={{
+                backgroundColor: props.isCurrentHand ? 'rgba(255, 255, 255, 0.2)' : undefined,
                 flexDirection: 'row',
                 flexWrap: 'wrap',
+                justifyContent: 'center',
                 maxWidth: '100%',
                 paddingTop: 8,
-                paddingHorizontal: 8,
-                backgroundColor: props.isCurrentHand ? 'rgba(255, 255, 255, 0.2)' : undefined
+                paddingHorizontal: 8
             }}
         >
             {props.hand.cards.map((card, index) => (
                 <CardComponent key={index} card={card} />
             ))}
-            <View>
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
                 <Text style={{ fontSize: 25, color: 'white' }}> {displayValues}</Text>
                 {props.hand.outcome && (
                     <Text style={{ fontSize: 25, color: 'white', fontWeight: 'bold' }}>

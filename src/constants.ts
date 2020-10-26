@@ -1,5 +1,7 @@
 import { BaseDecisions, DynamicDecisions, PlayerDecisions } from './types';
 
+export const actionsHeight = 112;
+
 export const colors = {
     [BaseDecisions.hit]: '#428bca',
     [BaseDecisions.split]: '#5cb85c',
@@ -10,3 +12,7 @@ export const colors = {
     [PlayerDecisions.double]: '#ffc107',
     [PlayerDecisions.surrender]: '#dc3545'
 };
+
+export const configBarHeight = 48;
+
+export const tableCenterHeight = 80;

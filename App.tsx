@@ -1,9 +1,9 @@
+import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Actions } from './src/components/actions';
 import { ConfigBar } from './src/components/config-bar';
 import { ConfigMenu } from './src/components/config-menu';
-import { DecisionEvaluationComponent } from './src/components/decision-evaluation';
 import { Decisions } from './src/components/decisions';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
@@ -199,6 +199,14 @@ export default function App() {
                 backgroundColor: '#088446'
             }}
         >
+            <StatusBar hidden={true} />
+            <ConfigBar
+                playerCash={player.cash}
+                currentScreen={currentScreen}
+                onConfigClick={configBarClickHandler}
+                totalAttemptedDecisions={totalAttemptedDecisions}
+                totalRightDecisions={totalRightDecisions}
+            />
             {currentScreen === ScreenTypes.config && (
                 <ConfigMenu
                     setCurrentScreen={setCurrentScreen}
@@ -214,11 +222,13 @@ export default function App() {
             )}
             {currentScreen === ScreenTypes.table && (
                 <React.Fragment>
-                    <DecisionEvaluationComponent
+                    <Table
+                        dealerHand={dealerHand}
                         decisionEvaluation={decisionEvaluation}
+                        phase={phase}
+                        player={player}
                         showDecisionsHandler={showDecisionsHandler}
                     />
-                    <Table dealerHand={dealerHand} phase={phase} player={player} />
                     <Actions
                         doubleHandler={doubleHandler}
                         hitHandler={hitHandler}
@@ -233,13 +243,6 @@ export default function App() {
                     />
                 </React.Fragment>
             )}
-            <ConfigBar
-                playerCash={player.cash}
-                currentScreen={currentScreen}
-                onConfigClick={configBarClickHandler}
-                totalAttemptedDecisions={totalAttemptedDecisions}
-                totalRightDecisions={totalRightDecisions}
-            />
         </View>
     );
 }

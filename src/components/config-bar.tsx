@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
+import { configBarHeight } from '../constants';
 import { ScreenTypes } from '../types';
 
 interface ConfigBarProps {
@@ -19,12 +20,12 @@ export const ConfigBar: React.FC<ConfigBarProps> = (props) => {
     return (
         <View
             style={{
-                flexDirection: 'row',
-                height: 48,
-                width: '100%',
+                alignItems: 'center',
                 backgroundColor: 'black',
+                flexDirection: 'row',
+                height: configBarHeight,
                 justifyContent: 'space-around',
-                alignItems: 'center'
+                width: '100%'
             }}
         >
             <View style={{ flexDirection: 'row' }}>
