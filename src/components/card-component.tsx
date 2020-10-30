@@ -23,7 +23,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
             <Text
                 style={{
                     color: cardColor,
-                    fontSize: 14,
+                    fontSize: 16,
                     position: 'absolute',
                     right: 4,
                     top: 4
