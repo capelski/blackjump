@@ -15,7 +15,7 @@ export {
 } from './decisions';
 export { Dictionary, NumericDictionary } from './dictionary';
 export { GameSettings, GameSettingsKeys } from './game-settings';
-export { Hand } from './hand';
+export { Hand, HandOutcome, HandRepresentation } from './hand';
 export { Phases } from './phases';
 export { Player } from './player';
 export { ScreenTypes } from './screen-types';
