@@ -11,31 +11,36 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
     return (
         <View
             style={{
-                alignItems: 'center',
                 backgroundColor: 'white',
                 borderRadius: 8,
-                flexDirection: 'row',
+                height: 66,
                 marginBottom: 8,
                 marginRight: 8,
-                padding: 8
+                position: 'relative',
+                width: 56
             }}
         >
             <Text
                 style={{
-                    fontSize: 35,
-                    color: cardColor
-                }}
-            >
-                {props.card.symbol}
-            </Text>
-            <Text
-                style={{
-                    fontSize: 18,
-                    paddingLeft: 3,
-                    color: cardColor
+                    color: cardColor,
+                    fontSize: 14,
+                    position: 'absolute',
+                    right: 4,
+                    top: 4
                 }}
             >
                 {props.card.suit}
+            </Text>
+            <Text
+                style={{
+                    color: cardColor,
+                    fontSize: 40,
+                    marginRight: props.card.symbol === '10' ? 0 : 8,
+                    marginTop: 12,
+                    textAlign: 'center'
+                }}
+            >
+                {props.card.symbol}
             </Text>
         </View>
     );
