@@ -1,7 +1,6 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
-// TODO Replace deprecated CheckBox component
-import { CheckBox, Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { getTrainingPairs } from '../logic/training-hands';
 import { GameSettingsKeys, ScreenTypes, TrainingStatus } from '../types';
 import { Button } from './button';
@@ -12,17 +11,9 @@ interface ConfigMenuProps {
     trainingStatus: TrainingStatus;
 }
 
-const checkboxStyle = {
-    height: 32,
-    margin: 8,
-    width: 32,
-    backgroundColor: 'white'
-};
-
 const textStyle = {
-    color: 'white',
-    fontSize: 20,
-    paddingTop: 8
+    color: 'black',
+    fontSize: 20
 };
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
@@ -59,6 +50,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         <View
             style={{
                 alignItems: 'center',
+                backgroundColor: 'white',
                 flex: 1,
                 justifyContent: 'center',
                 padding: 16,
@@ -66,8 +58,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             }}
         >
             {Object.values(GameSettingsKeys).map((setting) => (
-                <View key={setting} style={{ flexDirection: 'row', width: '100%' }}>
-                    <CheckBox
+                <View key={setting} style={{ flexDirection: 'row', marginTop: 16, width: '100%' }}>
+                    <Switch
                         disabled={false}
                         value={gameSettings[setting]}
                         onValueChange={(newValue) => {
@@ -77,20 +69,22 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 getTrainingPairs(nextGameSettings, selectedLevels)
                             );
                         }}
-                        style={checkboxStyle}
+                        style={{ marginRight: 8 }}
                     />
                     <Text style={textStyle}>{setting}</Text>
                 </View>
             ))}
 
-            <View style={{ width: '100%', marginVertical: 8 }}>
+            <View style={{ width: '100%', marginTop: 24 }}>
                 <Text style={{ ...textStyle, marginLeft: 8 }}>
                     Selected hand levels ({selectedTrainingPairs.length} hands):
                 </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}>
+                <View
+                    style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 8, width: '100%' }}
+                >
                     {Object.keys(props.trainingStatus.selectedLevels).map((number) => (
                         <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
-                            <CheckBox
+                            <Switch
                                 disabled={false}
                                 value={selectedLevels[(number as unknown) as number] || false}
                                 onValueChange={(newValue) => {
@@ -103,7 +97,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                         getTrainingPairs(gameSettings, nextSelectedLevels)
                                     );
                                 }}
-                                style={checkboxStyle}
                             />
                             <Text style={textStyle}>{number}</Text>
                         </View>
@@ -114,7 +107,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 height={56}
                 backgroundColor="#428bca"
                 isEnabled={isSaveButtonEnabled}
-                marginTop={16}
+                marginTop={32}
                 onPress={saveHandler}
                 text="Save"
                 width="50%"

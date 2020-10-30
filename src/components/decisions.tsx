@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// TODO Replace deprecated CheckBox component
-import { CheckBox, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 import { colors } from '../constants';
 import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
 import { GameSettings, Hand } from '../types';
@@ -10,13 +9,6 @@ interface DecisionsProps {
     gameSettings: GameSettings;
     playerHand: Hand;
 }
-
-const checkboxStyle = {
-    height: 32,
-    margin: 8,
-    width: 32,
-    backgroundColor: 'white'
-};
 
 export const Decisions: React.FC<DecisionsProps> = (props) => {
     const [gameSettings, setGameSettings] = useState(props.gameSettings);
@@ -33,13 +25,14 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
     return (
         <ScrollView
             style={{
+                backgroundColor: 'white',
                 flex: 1,
                 padding: 16,
                 width: '100%'
             }}
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
         >
-            <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
+            <Text style={{ color: 'black', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
                 {relevantHand.name}
             </Text>
 
@@ -47,7 +40,7 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
                 <View key={dynamicDecision.number} style={{ flexDirection: 'row', width: '100%' }}>
                     <Text
                         style={{
-                            color: 'white',
+                            color: 'black',
                             fontSize: 20,
                             fontWeight: 'bold',
                             paddingTop: 12,
@@ -80,19 +73,18 @@ export const Decisions: React.FC<DecisionsProps> = (props) => {
                     key={dependency}
                     style={{ flexDirection: 'row', width: '100%', paddingTop: 16 }}
                 >
-                    <CheckBox
+                    <Switch
                         disabled={false}
                         value={gameSettings[dependency]}
                         onValueChange={(newValue) => {
                             setGameSettings({ ...gameSettings, [dependency]: newValue });
                         }}
-                        style={checkboxStyle}
+                        style={{ marginRight: 8 }}
                     />
                     <Text
                         style={{
-                            color: 'white',
-                            fontSize: 20,
-                            paddingTop: 8
+                            color: 'black',
+                            fontSize: 20
                         }}
                     >
                         {dependency}
