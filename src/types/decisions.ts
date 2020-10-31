@@ -2,7 +2,7 @@ import { GameSettings } from './game-settings';
 import { Hand } from './hand';
 
 export interface BadDecision {
-    description: string;
+    dealerHandValue: number;
     gameSettings: GameSettings;
     playerHand: Hand;
     takenAction: PlayerDecision;

@@ -5,6 +5,7 @@ import { tableCenterHeight } from '../constants';
 import { DecisionEvaluation, Hand, Phases, Player, ScreenTypes } from '../types';
 import { Actions, ActionsProps } from './actions';
 import { DecisionEvaluationComponent } from './decision-evaluation';
+import { DecisionsParams } from './decisions';
 import { Divider } from './divider';
 import { HandComponent } from './hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
@@ -46,7 +47,10 @@ export const Table: React.FC<{
                     <DecisionEvaluationComponent
                         decisionEvaluation={screenProps.decisionEvaluation}
                         showDecisionsHandler={() => {
-                            navigation.navigate(ScreenTypes.decisions);
+                            navigation.navigate<DecisionsParams>(ScreenTypes.decisions, {
+                                hand: screenProps.player.lastActionHand!,
+                                previousRoute: ScreenTypes.table
+                            });
                         }}
                     />
                 ) : (

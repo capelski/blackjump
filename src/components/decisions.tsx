@@ -3,22 +3,26 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { colors } from '../constants';
 import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
-import { GameSettings, Player } from '../types';
+import { GameSettings, Hand } from '../types';
 import { numberRange } from '../utils';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
+import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface DecisionsProps {
     gameSettings: GameSettings;
-    player: Player;
+}
+
+export interface DecisionsParams extends WithNavBarParams {
+    hand: Hand;
 }
 
 export const Decisions: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
+    navigation: NavigationScreenProp<{ routeName: string }, DecisionsParams>;
     screenProps: DecisionsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [gameSettings, setGameSettings] = useState(screenProps.gameSettings);
 
-    const relevantHand = getRelevantHand(screenProps.player.lastActionHand!);
+    const hand = navigation.getParam('hand');
+    const relevantHand = getRelevantHand(hand);
     const handDecisions = numberRange(2, 11).map((number) => ({
         number,
         decision: mapGameSettingsDecisionToDynamicDecision(
@@ -81,6 +85,7 @@ export const Decisions: React.FC<{
                     </View>
                 ))}
 
+                {/* TODO Extract duplicated settings code */}
                 {relevantHand.dependencies.map((dependency) => (
                     <View
                         key={dependency}

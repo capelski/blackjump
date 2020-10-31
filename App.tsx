@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { BadDecisions } from './src/components/bad-decisions';
 import { ConfigMenu } from './src/components/config-menu';
 import { Decisions } from './src/components/decisions';
 import { HandsLevelInfo } from './src/components/hands-level-info';
@@ -50,6 +51,7 @@ const cardSet = getCardSet();
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
+            [ScreenTypes.badDecisions]: { screen: BadDecisions },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
             [ScreenTypes.decisions]: { screen: Decisions },
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
@@ -170,7 +172,7 @@ export default function App() {
             setBadDecisions(
                 badDecisions.concat([
                     {
-                        description: optimalDecision.description,
+                        dealerHandValue: getHandEffectiveValue(dealerHand!),
                         gameSettings: trainingStatus.gameSettings,
                         playerHand: cloneHand(hand),
                         takenAction: decision
@@ -235,6 +237,7 @@ export default function App() {
             <AppContainer
                 // TODO Find a more elegant way to pass the props to components
                 screenProps={{
+                    badDecisions,
                     dealerHand,
                     decisionEvaluation,
                     gameSettings: trainingStatus.gameSettings,
