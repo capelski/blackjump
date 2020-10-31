@@ -4,7 +4,7 @@ import { actionsHeight, colors } from '../constants';
 import { BaseDecisions, Phases, PlayerDecisions } from '../types';
 import { Button } from './button';
 
-interface ActionsProps {
+export interface ActionsProps {
     phase: Phases;
     isDoubleEnabled: boolean;
     isSplitEnabled: boolean;

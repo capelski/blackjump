@@ -1,5 +1,5 @@
 export enum ScreenTypes {
-    config = 'config',
+    configMenu = 'configMenu',
     decisions = 'decisions',
     table = 'table'
 }

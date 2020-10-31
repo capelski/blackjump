@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { Actions } from './src/components/actions';
-import { ConfigBar } from './src/components/config-bar';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { ConfigMenu } from './src/components/config-menu';
 import { Decisions } from './src/components/decisions';
 import { Table } from './src/components/table';
@@ -44,8 +43,20 @@ import {
 
 const cardSet = getCardSet();
 
+const AppContainer = createAppContainer(
+    createSwitchNavigator(
+        {
+            [ScreenTypes.configMenu]: { screen: ConfigMenu },
+            [ScreenTypes.decisions]: { screen: Decisions },
+            [ScreenTypes.table]: { screen: Table }
+        },
+        {
+            initialRouteName: ScreenTypes.table
+        }
+    )
+);
+
 export default function App() {
-    const [currentScreen, setCurrentScreen] = useState<ScreenTypes>(ScreenTypes.table);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
@@ -89,7 +100,6 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
-    // TODO Extract application logic to separate file
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
         const nextTrainingPair =
@@ -180,16 +190,6 @@ export default function App() {
         finishCurrentHand(player);
     };
 
-    const configBarClickHandler = () => {
-        setCurrentScreen(
-            currentScreen === ScreenTypes.table ? ScreenTypes.config : ScreenTypes.table
-        );
-    };
-
-    const showDecisionsHandler = () => {
-        setCurrentScreen(ScreenTypes.decisions);
-    };
-
     return (
         <View
             style={{
@@ -200,49 +200,29 @@ export default function App() {
             }}
         >
             <StatusBar hidden={true} />
-            <ConfigBar
-                playerCash={player.cash}
-                currentScreen={currentScreen}
-                onConfigClick={configBarClickHandler}
-                totalAttemptedDecisions={totalAttemptedDecisions}
-                totalRightDecisions={totalRightDecisions}
+            <AppContainer
+                // TODO Find a more elegant way to pass the props to components
+                screenProps={{
+                    dealerHand,
+                    decisionEvaluation,
+                    doubleHandler,
+                    gameSettings: trainingStatus.gameSettings,
+                    hitHandler,
+                    isDoubleEnabled,
+                    isSplitEnabled,
+                    isSurrenderEnabled,
+                    player,
+                    phase,
+                    setTrainingStatus,
+                    splitHandler,
+                    standHandler,
+                    startTrainingRound,
+                    surrenderHandler,
+                    totalAttemptedDecisions,
+                    totalRightDecisions,
+                    trainingStatus
+                }}
             />
-            {currentScreen === ScreenTypes.config && (
-                <ConfigMenu
-                    setCurrentScreen={setCurrentScreen}
-                    setTrainingStatus={setTrainingStatus}
-                    trainingStatus={trainingStatus}
-                />
-            )}
-            {currentScreen === ScreenTypes.decisions && (
-                <Decisions
-                    gameSettings={trainingStatus.gameSettings}
-                    playerHand={player.lastActionHand!}
-                />
-            )}
-            {currentScreen === ScreenTypes.table && (
-                <React.Fragment>
-                    <Table
-                        dealerHand={dealerHand}
-                        decisionEvaluation={decisionEvaluation}
-                        phase={phase}
-                        player={player}
-                        showDecisionsHandler={showDecisionsHandler}
-                    />
-                    <Actions
-                        doubleHandler={doubleHandler}
-                        hitHandler={hitHandler}
-                        isDoubleEnabled={isDoubleEnabled}
-                        isSplitEnabled={isSplitEnabled}
-                        isSurrenderEnabled={isSurrenderEnabled}
-                        phase={phase}
-                        splitHandler={splitHandler}
-                        standHandler={standHandler}
-                        startTrainingRound={startTrainingRound}
-                        surrenderHandler={surrenderHandler}
-                    />
-                </React.Fragment>
-            )}
         </View>
     );
 }
