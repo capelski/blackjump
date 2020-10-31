@@ -1,13 +1,13 @@
-import { GameSettingsKeys, TrainingStatus } from '../types';
+import { GameSettings, GameSettingsKeys, NumericDictionary, TrainingStatus } from '../types';
 import { getTrainingPairs } from './training-hands';
 
-const initialGameSettings = {
+const initialGameSettings: GameSettings = {
     [GameSettingsKeys.canDoubleOnAnyInitialHand]: false,
     [GameSettingsKeys.canDoubleAfterSplit]: true,
     [GameSettingsKeys.canSurrender]: false
 };
 
-const initialSelectedLevels = {
+const initialSelectedLevels: NumericDictionary<boolean> = {
     1: true,
     2: true,
     3: true,

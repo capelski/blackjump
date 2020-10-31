@@ -28,8 +28,9 @@ import {
     surrenderCurrentHand,
     standCurrentHand
 } from './src/logic/player';
-import { trainingPairToTrainingHands } from './src/logic/training-hands';
+import { getTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import { initialTrainingStatus } from './src/logic/training-status';
+import { getPersistedSettings } from './src/persisted-settings';
 import {
     BaseDecisions,
     DecisionEvaluation,
@@ -65,6 +66,22 @@ export default function App() {
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
     const [trainingStatus, setTrainingStatus] = useState(initialTrainingStatus);
+
+    useEffect(() => {
+        getPersistedSettings().then((settings) => {
+            if (settings) {
+                setTrainingStatus({
+                    currentTrainingPair: -1,
+                    gameSettings: settings.gameSettings,
+                    selectedLevels: settings.selectedLevels,
+                    selectedTrainingPairs: getTrainingPairs(
+                        settings.gameSettings,
+                        settings.selectedLevels
+                    )
+                });
+            }
+        });
+    }, []);
 
     const currentHand = getCurrentHand(player);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);

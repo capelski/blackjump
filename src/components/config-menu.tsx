@@ -1,8 +1,10 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { getTrainingPairs } from '../logic/training-hands';
+import { updatePersistedSettings } from '../persisted-settings';
 import { GameSettingsKeys, ScreenTypes, TrainingStatus } from '../types';
 import { Button } from './button';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
@@ -35,6 +37,7 @@ export const ConfigMenu: React.FC<{
             selectedTrainingPairs
         });
         navigation.navigate(ScreenTypes.table);
+        updatePersistedSettings({ gameSettings, selectedLevels });
     };
 
     const isSaveButtonEnabled =
