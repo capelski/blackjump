@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { ConfigMenu } from './src/components/config-menu';
 import { Decisions } from './src/components/decisions';
+import { HandsLevelInfo } from './src/components/hands-level-info';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getCardSet, collectPlayedCards } from './src/logic/card-set';
@@ -49,6 +50,7 @@ const AppContainer = createAppContainer(
         {
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
             [ScreenTypes.decisions]: { screen: Decisions },
+            [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
             [ScreenTypes.table]: { screen: Table }
         },
         {

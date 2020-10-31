@@ -112,6 +112,8 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                         const nextRoute =
                             props.navigation.state.routeName === ScreenTypes.table
                                 ? ScreenTypes.configMenu
+                                : props.navigation.state.routeName === ScreenTypes.handsLevelInfo
+                                ? ScreenTypes.configMenu
                                 : ScreenTypes.table;
                         props.navigation.navigate(nextRoute);
                     }}

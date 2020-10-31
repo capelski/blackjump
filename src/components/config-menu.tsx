@@ -1,7 +1,6 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { getTrainingPairs } from '../logic/training-hands';
 import { updatePersistedSettings } from '../persisted-settings';
@@ -92,14 +91,36 @@ export const ConfigMenu: React.FC<{
                 ))}
 
                 <View style={{ width: '100%', marginTop: 24 }}>
-                    <Text style={{ ...textStyle, marginLeft: 8 }}>
-                        Selected hand levels ({selectedTrainingPairs.length} hands):
-                    </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ ...textStyle, marginLeft: 8 }}>Active hand levels</Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate(ScreenTypes.handsLevelInfo);
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    backgroundColor: '#428bca',
+                                    borderRadius: 12,
+                                    color: 'white',
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    paddingHorizontal: 8,
+                                    marginLeft: 8
+                                }}
+                            >
+                                ?
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={{ ...textStyle, marginLeft: 8 }}>
+                            ({selectedTrainingPairs.length} hands)
+                        </Text>
+                    </View>
                     <View
                         style={{
                             flexDirection: 'row',
                             flexWrap: 'wrap',
-                            marginTop: 8,
+                            marginTop: 16,
                             width: '100%'
                         }}
                     >
