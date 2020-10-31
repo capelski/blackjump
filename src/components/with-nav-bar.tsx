@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { NavigationScreenProp } from 'react-navigation';
 import { configBarHeight } from '../constants';

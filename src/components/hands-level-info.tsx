@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { HandComponent } from './hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
@@ -14,12 +14,14 @@ export const HandsLevelInfo: React.FC<{
         totalAttemptedDecisions={screenProps.totalAttemptedDecisions}
         totalRightDecisions={screenProps.totalRightDecisions}
     >
-        <View
+        <ScrollView
             style={{
+                margin: 16,
+                overflow: 'scroll'
+            }}
+            contentContainerStyle={{
                 alignItems: 'center',
-                flex: 1,
-                justifyContent: 'center',
-                padding: 16
+                justifyContent: 'center'
             }}
         >
             <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
@@ -54,11 +56,16 @@ export const HandsLevelInfo: React.FC<{
                 }}
                 isCurrentHand={false}
             ></HandComponent>
-            <Text style={{ color: 'white', fontSize: 20 }}>
+            <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                 The optimal decisions for a 9,9 are to Split from 2 to 6, Stand on 7, Split from 8
                 to 9 and Stand from 10 to A. A total of 4 groups of actions, thus the hand level is
                 4.
             </Text>
-        </View>
+
+            <Text style={{ color: 'white', fontSize: 20 }}>
+                Keep in mind that the game settings affect the level of some hands (e.g. Hard 16 is
+                level 2, but becomes level 3 when Surrender action is enabled).
+            </Text>
+        </ScrollView>
     </WithNavBar>
 );
