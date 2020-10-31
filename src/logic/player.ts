@@ -1,7 +1,7 @@
 import { CardSet, Hand, HandOutcome, Player } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
 
-const cloneHand = (hand: Hand): Hand => ({
+export const cloneHand = (hand: Hand): Hand => ({
     bet: hand.bet,
     cards: [...hand.cards],
     values: [...hand.values]

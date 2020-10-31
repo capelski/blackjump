@@ -46,6 +46,8 @@ export const getTrainingPairs = (
             playerHand
         })
     );
+    // TODO Instead of shuffling hands, return array sorted and use random indexes to get hands.
+    // Store already used random indexes in async storage
     shuffleArray(trainingPairs);
     // return devHands;
     return trainingPairs;

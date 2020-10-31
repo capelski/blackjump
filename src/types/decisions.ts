@@ -1,3 +1,13 @@
+import { GameSettings } from './game-settings';
+import { Hand } from './hand';
+
+export interface BadDecision {
+    description: string;
+    gameSettings: GameSettings;
+    playerHand: Hand;
+    takenAction: PlayerDecision;
+}
+
 export enum BaseDecisions {
     hit = 'Hit',
     split = 'Split',

@@ -17,22 +17,24 @@ import {
     isFinished
 } from './src/logic/hand';
 import {
+    cloneHand,
     createPlayer,
     doubleCurrentHand,
-    hitCurrentHand,
     getCurrentHand,
+    hitCurrentHand,
     initializeHands,
     isLastHand,
     resolveHands,
     splitCurrentHand,
+    standCurrentHand,
     startNextHand,
-    surrenderCurrentHand,
-    standCurrentHand
+    surrenderCurrentHand
 } from './src/logic/player';
 import { getTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
 import { initialTrainingStatus } from './src/logic/training-status';
 import { getPersistedSettings } from './src/persisted-settings';
 import {
+    BadDecision,
     BaseDecisions,
     DecisionEvaluation,
     Hand,
@@ -63,6 +65,7 @@ export default function App() {
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
+    const [badDecisions, setBadDecisions] = useState<BadDecision[]>([]);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
@@ -164,6 +167,16 @@ export default function App() {
             setTotalRightDecisions(totalRightDecisions + 1);
         } else {
             setDecisionEvaluation({ hit: false, failureReason: optimalDecision.description });
+            setBadDecisions(
+                badDecisions.concat([
+                    {
+                        description: optimalDecision.description,
+                        gameSettings: trainingStatus.gameSettings,
+                        playerHand: cloneHand(hand),
+                        takenAction: decision
+                    }
+                ])
+            );
         }
     };
 
