@@ -91,16 +91,12 @@ export const Table: React.FC<{
             </ScrollView>
         </View>
         <Actions
-            doubleHandler={screenProps.doubleHandler}
-            hitHandler={screenProps.hitHandler}
+            handlers={screenProps.handlers}
             isDoubleEnabled={screenProps.isDoubleEnabled}
             isSplitEnabled={screenProps.isSplitEnabled}
             isSurrenderEnabled={screenProps.isSurrenderEnabled}
             phase={screenProps.phase}
-            splitHandler={screenProps.splitHandler}
-            standHandler={screenProps.standHandler}
             startTrainingRound={screenProps.startTrainingRound}
-            surrenderHandler={screenProps.surrenderHandler}
         />
     </WithNavBar>
 );

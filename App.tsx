@@ -205,19 +205,21 @@ export default function App() {
                 screenProps={{
                     dealerHand,
                     decisionEvaluation,
-                    doubleHandler,
                     gameSettings: trainingStatus.gameSettings,
-                    hitHandler,
+                    handlers: {
+                        double: doubleHandler,
+                        hit: hitHandler,
+                        split: splitHandler,
+                        stand: standHandler,
+                        surrender: surrenderHandler
+                    },
                     isDoubleEnabled,
                     isSplitEnabled,
                     isSurrenderEnabled,
                     player,
                     phase,
                     setTrainingStatus,
-                    splitHandler,
-                    standHandler,
                     startTrainingRound,
-                    surrenderHandler,
                     totalAttemptedDecisions,
                     totalRightDecisions,
                     trainingStatus

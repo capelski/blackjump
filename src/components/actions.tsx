@@ -5,16 +5,18 @@ import { BaseDecisions, Phases, PlayerDecisions } from '../types';
 import { Button } from './button';
 
 export interface ActionsProps {
-    phase: Phases;
+    handlers: {
+        double: () => void;
+        hit: () => void;
+        split: () => void;
+        stand: () => void;
+        surrender: () => void;
+    };
     isDoubleEnabled: boolean;
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
-    doubleHandler: () => void;
-    hitHandler: () => void;
-    splitHandler: () => void;
-    standHandler: () => void;
+    phase: Phases;
     startTrainingRound: () => void;
-    surrenderHandler: () => void;
 }
 
 export const Actions: React.FC<ActionsProps> = (props) => {
@@ -39,7 +41,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         height="50%"
                         backgroundColor={colors[BaseDecisions.hit]}
                         isEnabled={isPlayerTurn}
-                        onPress={props.hitHandler}
+                        onPress={props.handlers.hit}
                         text={BaseDecisions.hit}
                         width="50%"
                     />
@@ -47,7 +49,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         height="50%"
                         backgroundColor={colors[BaseDecisions.stand]}
                         isEnabled={isPlayerTurn}
-                        onPress={props.standHandler}
+                        onPress={props.handlers.stand}
                         text={BaseDecisions.stand}
                         width="50%"
                     />
@@ -55,7 +57,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         height="50%"
                         backgroundColor={colors[BaseDecisions.split]}
                         isEnabled={isPlayerTurn && props.isSplitEnabled}
-                        onPress={props.splitHandler}
+                        onPress={props.handlers.split}
                         text={BaseDecisions.split}
                         width="33%"
                     />
@@ -63,7 +65,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         height="50%"
                         backgroundColor={colors[PlayerDecisions.double]}
                         isEnabled={isPlayerTurn && props.isDoubleEnabled}
-                        onPress={props.doubleHandler}
+                        onPress={props.handlers.double}
                         text={PlayerDecisions.double}
                         width="34%"
                     />
@@ -71,7 +73,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         height="50%"
                         backgroundColor={colors[PlayerDecisions.surrender]}
                         isEnabled={isPlayerTurn && props.isSurrenderEnabled}
-                        onPress={props.surrenderHandler}
+                        onPress={props.handlers.surrender}
                         text={PlayerDecisions.surrender}
                         width="33%"
                     />
