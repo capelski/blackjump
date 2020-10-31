@@ -7,17 +7,17 @@ import { GameSettings, Hand } from '../types';
 import { numberRange } from '../utils';
 import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
-interface DecisionsProps {
+interface HandDecisionsProps {
     gameSettings: GameSettings;
 }
 
-export interface DecisionsParams extends WithNavBarParams {
+export interface HandDecisionsParams extends WithNavBarParams {
     hand: Hand;
 }
 
-export const Decisions: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }, DecisionsParams>;
-    screenProps: DecisionsProps & WithNavBarPropsFromScreenProps;
+export const HandDecisions: React.FC<{
+    navigation: NavigationScreenProp<{ routeName: string }, HandDecisionsParams>;
+    screenProps: HandDecisionsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [gameSettings, setGameSettings] = useState(screenProps.gameSettings);
 

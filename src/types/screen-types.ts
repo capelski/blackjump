@@ -1,7 +1,7 @@
 export enum ScreenTypes {
     badDecisions = 'badDecisions',
     configMenu = 'configMenu',
-    decisions = 'decisions',
+    handDecisions = 'decisions',
     handsLevelInfo = 'handsLevelInfo',
     table = 'table'
 }

@@ -3,8 +3,8 @@ import { ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { getRelevantHand } from '../logic/basic-strategy';
 import { BadDecision, ScreenTypes } from '../types';
-import { DecisionsParams } from './decisions';
 import { Divider } from './divider';
+import { HandDecisionsParams } from './hand-decisions';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface BadDecisionsProps {
@@ -44,10 +44,13 @@ export const BadDecisions: React.FC<{
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => {
-                                    navigation.navigate<DecisionsParams>(ScreenTypes.decisions, {
-                                        hand: badDecision.playerHand,
-                                        previousRoute: ScreenTypes.badDecisions
-                                    });
+                                    navigation.navigate<HandDecisionsParams>(
+                                        ScreenTypes.handDecisions,
+                                        {
+                                            hand: badDecision.playerHand,
+                                            previousRoute: ScreenTypes.badDecisions
+                                        }
+                                    );
                                 }}
                                 style={{ marginBottom: 16 }}
                             >

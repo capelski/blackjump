@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { BadDecisions } from './src/components/bad-decisions';
 import { ConfigMenu } from './src/components/config-menu';
-import { Decisions } from './src/components/decisions';
+import { HandDecisions } from './src/components/hand-decisions';
 import { HandsLevelInfo } from './src/components/hands-level-info';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
@@ -53,7 +53,7 @@ const AppContainer = createAppContainer(
         {
             [ScreenTypes.badDecisions]: { screen: BadDecisions },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
-            [ScreenTypes.decisions]: { screen: Decisions },
+            [ScreenTypes.handDecisions]: { screen: HandDecisions },
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
             [ScreenTypes.table]: { screen: Table }
         },
