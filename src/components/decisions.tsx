@@ -36,14 +36,13 @@ export const Decisions: React.FC<{
         >
             <ScrollView
                 style={{
-                    backgroundColor: 'white',
                     flex: 1,
                     padding: 16,
                     width: '100%'
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                <Text style={{ color: 'black', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
+                <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
                     {relevantHand.name}
                 </Text>
 
@@ -54,7 +53,7 @@ export const Decisions: React.FC<{
                     >
                         <Text
                             style={{
-                                color: 'black',
+                                color: 'white',
                                 fontSize: 20,
                                 fontWeight: 'bold',
                                 paddingTop: 12,
@@ -89,15 +88,16 @@ export const Decisions: React.FC<{
                     >
                         <Switch
                             disabled={false}
-                            value={gameSettings[dependency]}
                             onValueChange={(newValue) => {
                                 setGameSettings({ ...gameSettings, [dependency]: newValue });
                             }}
                             style={{ marginRight: 8 }}
+                            trackColor={{ true: '#428bca', false: 'white' }}
+                            value={gameSettings[dependency]}
                         />
                         <Text
                             style={{
-                                color: 'black',
+                                color: 'white',
                                 fontSize: 20
                             }}
                         >

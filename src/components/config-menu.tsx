@@ -15,7 +15,7 @@ interface ConfigMenuProps {
 }
 
 const textStyle = {
-    color: 'black',
+    color: 'white',
     fontSize: 20
 };
 
@@ -63,7 +63,6 @@ export const ConfigMenu: React.FC<{
             <View
                 style={{
                     alignItems: 'center',
-                    backgroundColor: 'white',
                     flex: 1,
                     justifyContent: 'center',
                     padding: 16,
@@ -77,7 +76,6 @@ export const ConfigMenu: React.FC<{
                     >
                         <Switch
                             disabled={false}
-                            value={gameSettings[setting]}
                             onValueChange={(newValue) => {
                                 const nextGameSettings = { ...gameSettings, [setting]: newValue };
                                 setGameSettings(nextGameSettings);
@@ -86,6 +84,8 @@ export const ConfigMenu: React.FC<{
                                 );
                             }}
                             style={{ marginRight: 8 }}
+                            trackColor={{ true: '#428bca', false: 'white' }}
+                            value={gameSettings[setting]}
                         />
                         <Text style={textStyle}>{setting}</Text>
                     </View>
@@ -107,7 +107,6 @@ export const ConfigMenu: React.FC<{
                             <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
                                 <Switch
                                     disabled={false}
-                                    value={selectedLevels[(number as unknown) as number] || false}
                                     onValueChange={(newValue) => {
                                         const nextSelectedLevels = {
                                             ...selectedLevels,
@@ -118,6 +117,9 @@ export const ConfigMenu: React.FC<{
                                             getTrainingPairs(gameSettings, nextSelectedLevels)
                                         );
                                     }}
+                                    style={{ marginRight: 8 }}
+                                    trackColor={{ true: '#428bca', false: 'white' }}
+                                    value={selectedLevels[(number as unknown) as number] || false}
                                 />
                                 <Text style={textStyle}>{number}</Text>
                             </View>
