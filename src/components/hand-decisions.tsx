@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ScrollView, Switch, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { colors } from '../constants';
 import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
 import { GameSettings, Hand } from '../types';
 import { numberRange } from '../utils';
+import { GameSettingSwitch } from './game-setting-switch';
 import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface HandDecisionsProps {
@@ -85,30 +86,15 @@ export const HandDecisions: React.FC<{
                     </View>
                 ))}
 
-                {/* TODO Extract duplicated settings code */}
                 {relevantHand.dependencies.map((dependency) => (
-                    <View
+                    <GameSettingSwitch
+                        gameSetting={dependency}
                         key={dependency}
-                        style={{ flexDirection: 'row', width: '100%', paddingTop: 16 }}
-                    >
-                        <Switch
-                            disabled={false}
-                            onValueChange={(newValue) => {
-                                setGameSettings({ ...gameSettings, [dependency]: newValue });
-                            }}
-                            style={{ marginRight: 8 }}
-                            trackColor={{ true: '#428bca', false: 'white' }}
-                            value={gameSettings[dependency]}
-                        />
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontSize: 20
-                            }}
-                        >
-                            {dependency}
-                        </Text>
-                    </View>
+                        onValueChange={(newValue) => {
+                            setGameSettings({ ...gameSettings, [dependency]: newValue });
+                        }}
+                        value={gameSettings[dependency]}
+                    />
                 ))}
             </ScrollView>
         </WithNavBar>

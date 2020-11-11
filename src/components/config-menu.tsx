@@ -6,6 +6,7 @@ import { getTrainingPairs } from '../logic/training-hands';
 import { updatePersistedSettings } from '../persisted-settings';
 import { GameSettingsKeys, ScreenTypes, TrainingStatus } from '../types';
 import { Button } from './button';
+import { GameSettingSwitch } from './game-setting-switch';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface ConfigMenuProps {
@@ -69,25 +70,18 @@ export const ConfigMenu: React.FC<{
                 }}
             >
                 {Object.values(GameSettingsKeys).map((setting) => (
-                    <View
+                    <GameSettingSwitch
+                        gameSetting={setting}
                         key={setting}
-                        style={{ flexDirection: 'row', marginTop: 16, width: '100%' }}
-                    >
-                        <Switch
-                            disabled={false}
-                            onValueChange={(newValue) => {
-                                const nextGameSettings = { ...gameSettings, [setting]: newValue };
-                                setGameSettings(nextGameSettings);
-                                setSelectedTrainingPairs(
-                                    getTrainingPairs(nextGameSettings, selectedLevels)
-                                );
-                            }}
-                            style={{ marginRight: 8 }}
-                            trackColor={{ true: '#428bca', false: 'white' }}
-                            value={gameSettings[setting]}
-                        />
-                        <Text style={textStyle}>{setting}</Text>
-                    </View>
+                        onValueChange={(newValue) => {
+                            const nextGameSettings = { ...gameSettings, [setting]: newValue };
+                            setGameSettings(nextGameSettings);
+                            setSelectedTrainingPairs(
+                                getTrainingPairs(nextGameSettings, selectedLevels)
+                            );
+                        }}
+                        value={gameSettings[setting]}
+                    />
                 ))}
 
                 <View style={{ width: '100%', marginTop: 24 }}>
