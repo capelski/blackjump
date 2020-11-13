@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Card } from '../types';
+import { Card, SimpleCardSymbol } from '../types';
 
 interface CardComponentProps {
     card: Card;
@@ -35,7 +35,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 style={{
                     color: cardColor,
                     fontSize: 40,
-                    marginRight: props.card.symbol === '10' ? 0 : 8,
+                    marginRight: props.card.symbol === SimpleCardSymbol.Ten ? 0 : 8,
                     marginTop: 12,
                     textAlign: 'center'
                 }}

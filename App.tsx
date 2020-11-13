@@ -2,13 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
 import { BadDecisions } from './src/components/bad-decisions';
 import { ConfigMenu } from './src/components/config-menu';
 import { HandDecisions } from './src/components/hand-decisions';
 import { HandsLevelInfo } from './src/components/hands-level-info';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
+import { symbolToSimpleSymbol } from './src/logic/card';
 import { getCardSet, collectPlayedCards } from './src/logic/card-set';
+import { getDefaultGameConfig } from './src/logic/game-config';
 import {
     canDouble,
     canSplit,
@@ -17,6 +20,7 @@ import {
     getHandEffectiveValue,
     isFinished
 } from './src/logic/hand';
+import { handToHandRepresentation } from './src/logic/hand-representation';
 import {
     cloneHand,
     createPlayer,
@@ -31,9 +35,8 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
-import { getTrainingPairs, trainingPairToTrainingHands } from './src/logic/training-hands';
-import { initialTrainingStatus } from './src/logic/training-status';
-import { getPersistedSettings } from './src/persisted-settings';
+import { getEmptyTrainedHands } from './src/logic/trained-hands';
+import { getRandomTrainingPair } from './src/logic/training-pairs';
 import {
     BadDecision,
     BaseDecisions,
@@ -43,8 +46,13 @@ import {
     Player,
     PlayerDecision,
     PlayerDecisions,
-    ScreenTypes
+    ScreenTypes,
+    TrainedHands
 } from './src/types';
+
+// TODO Remove card-set and deal specific cards. Will need to compute which other hands are
+// reachable from the current hand. E.g. After hitting a hard 13 against dealer 5, check
+// which other hard hands are pending against a dealer 5
 
 const cardSet = getCardSet();
 
@@ -64,28 +72,26 @@ const AppContainer = createAppContainer(
 );
 
 export default function App() {
+    const [badDecisions, setBadDecisions] = useState<BadDecision[]>([]);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
-    const [badDecisions, setBadDecisions] = useState<BadDecision[]>([]);
+    const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
-    const [trainingStatus, setTrainingStatus] = useState(initialTrainingStatus);
+    const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
 
     useEffect(() => {
-        getPersistedSettings().then((settings) => {
-            if (settings) {
-                setTrainingStatus({
-                    currentTrainingPair: -1,
-                    gameSettings: settings.gameSettings,
-                    selectedLevels: settings.selectedLevels,
-                    selectedTrainingPairs: getTrainingPairs(
-                        settings.gameSettings,
-                        settings.selectedLevels
-                    )
-                });
+        getGameConfig().then((gameConfig) => {
+            if (gameConfig) {
+                setGameConfig(gameConfig);
+            }
+        });
+        getTrainedHands().then((trainedHands) => {
+            if (trainedHands) {
+                setTrainedHands(trainedHands);
             }
         });
     }, []);
@@ -94,10 +100,10 @@ export default function App() {
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
         currentHand !== undefined &&
-        canDouble(currentHand, player.hands.length, trainingStatus.gameSettings);
+        canDouble(currentHand, player.hands.length, gameConfig.settings);
     const isSurrenderEnabled =
         currentHand !== undefined &&
-        canSurrender(currentHand, player.hands.length, trainingStatus.gameSettings);
+        canSurrender(currentHand, player.hands.length, gameConfig.settings);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -126,19 +132,12 @@ export default function App() {
 
     const startTrainingRound = () => {
         collectPlayedCards(cardSet);
-        const nextTrainingPair =
-            (trainingStatus.currentTrainingPair + 1) % trainingStatus.selectedTrainingPairs.length;
-        setTrainingStatus({
-            ...trainingStatus,
-            currentTrainingPair: nextTrainingPair
-        });
-        const nextTrainingHands = trainingPairToTrainingHands(
-            trainingStatus.selectedTrainingPairs[nextTrainingPair],
-            cardSet
-        );
-        initializeHands(player, nextTrainingHands.playerHand);
 
-        setDealerHand(nextTrainingHands.dealerHand);
+        const nextTrainingPair = getRandomTrainingPair(gameConfig, trainedHands, cardSet);
+
+        initializeHands(player, nextTrainingPair.player);
+
+        setDealerHand(nextTrainingPair.dealer);
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
@@ -158,7 +157,17 @@ export default function App() {
     };
 
     const evaluatePlayerDecision = (decision: PlayerDecision, hand: Hand) => {
-        const optimalDecision = getOptimalDecision(hand, dealerHand!, trainingStatus.gameSettings, {
+        const nextTrainedHands: TrainedHands = {
+            ...trainedHands,
+            [handToHandRepresentation(currentHand)]: {
+                ...trainedHands[handToHandRepresentation(currentHand)],
+                [symbolToSimpleSymbol(dealerHand!.cards[0].symbol)]: true
+            }
+        };
+        setTrainedHands(nextTrainedHands);
+        updateTrainedHands(nextTrainedHands);
+
+        const optimalDecision = getOptimalDecision(hand, dealerHand!, gameConfig.settings, {
             canDouble: isDoubleEnabled,
             canSurrender: isSurrenderEnabled
         });
@@ -173,7 +182,7 @@ export default function App() {
                 badDecisions.concat([
                     {
                         dealerHandValue: getHandEffectiveValue(dealerHand!),
-                        gameSettings: trainingStatus.gameSettings,
+                        gameSettings: gameConfig.settings,
                         playerHand: cloneHand(hand),
                         takenAction: decision
                     }
@@ -240,7 +249,7 @@ export default function App() {
                     badDecisions,
                     dealerHand,
                     decisionEvaluation,
-                    gameSettings: trainingStatus.gameSettings,
+                    gameConfig,
                     handlers: {
                         double: doubleHandler,
                         hit: hitHandler,
@@ -253,11 +262,10 @@ export default function App() {
                     isSurrenderEnabled,
                     player,
                     phase,
-                    setTrainingStatus,
+                    setGameConfig,
                     startTrainingRound,
                     totalAttemptedDecisions,
-                    totalRightDecisions,
-                    trainingStatus
+                    totalRightDecisions
                 }}
             />
         </View>

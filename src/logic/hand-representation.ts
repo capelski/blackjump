@@ -1,21 +1,11 @@
-import { CardSet, Hand, HandRepresentation } from '../types';
+import { CardSet, CardSymbol, Hand, HandRepresentation, SimpleCardSymbol } from '../types';
+import { valueToSymbol, symbolToSimpleSymbol, simpleSymbolToSymbol } from './card';
 import { extractCardFromCardSet } from './card-set';
 import { createHand, getHandValidValues } from './hand';
 
-const figureSymbols = ['10', 'J', 'Q', 'K'];
+const getHardHandSymbols = (handRepresentation: HandRepresentation): CardSymbol[] => {
+    const value = parseInt(handRepresentation, 10);
 
-const cardValueToCardSymbol = (number: number) =>
-    number === 10 ? getFigureSymbol() : String(number);
-
-export const figuresToSymbols = (handRepresentation: HandRepresentation) =>
-    handRepresentation.replace(/Figure/, getFigureSymbol()).replace(/Figure/, getFigureSymbol());
-
-const getFigureSymbol = (): string => {
-    const randomIndex = Math.floor(Math.random() * 3);
-    return figureSymbols[randomIndex];
-};
-
-const getHardHandSymbols = (value: number): string[] => {
     const minValue = Math.max(2, value - 10);
     const maxValue = Math.min(value - minValue, 10);
 
@@ -29,7 +19,22 @@ const getHardHandSymbols = (value: number): string[] => {
         secondValue--;
     }
 
-    return [cardValueToCardSymbol(firstValue), cardValueToCardSymbol(secondValue)];
+    return [valueToSymbol(firstValue), valueToSymbol(secondValue)];
+};
+
+const getSoftHandSymbols = (handRepresentation: HandRepresentation): CardSymbol[] => {
+    const handValues = handRepresentation.split('/').map((s) => parseInt(s, 10));
+    const complementarySymbol = valueToSymbol(handValues[0] - 1);
+
+    // Make Ace the second card sometimes by randomly reversing the symbols
+    return Math.floor(Math.random() * 100) % 2
+        ? [complementarySymbol, SimpleCardSymbol.Ace]
+        : [SimpleCardSymbol.Ace, complementarySymbol];
+};
+
+const getSplitHandSymbols = (handRepresentation: HandRepresentation): CardSymbol[] => {
+    const splitSymbols = handRepresentation.split(',') as SimpleCardSymbol[];
+    return splitSymbols.map(simpleSymbolToSymbol);
 };
 
 export const handRepresentationToHand = (
@@ -37,25 +42,19 @@ export const handRepresentationToHand = (
     cardSet: CardSet
 ): Hand => {
     const handSymbols = handRepresentation.includes(',')
-        ? figuresToSymbols(handRepresentation).split(',') // Split hand
+        ? getSplitHandSymbols(handRepresentation)
         : handRepresentation.includes('/')
-        ? ['A', cardValueToCardSymbol(parseInt(handRepresentation.split('/')[0], 10) - 1)] // Soft hand
-        : getHardHandSymbols(parseInt(handRepresentation, 10)); // Hard hand
+        ? getSoftHandSymbols(handRepresentation)
+        : getHardHandSymbols(handRepresentation);
 
-    // In order for soft hands to sometimes have the A in second place,
-    // we reverse the symbols 50% of the times
-    const binaryRandom = Math.floor(Math.random() * 100) % 2;
-    const cardSymbols = binaryRandom ? handSymbols.reverse() : handSymbols;
-    return createHand(cardSymbols.map((symbol) => extractCardFromCardSet(symbol, cardSet)));
+    return createHand(handSymbols.map((symbol) => extractCardFromCardSet(symbol, cardSet)));
 };
 
 export const handToHandRepresentation = (hand: Hand): HandRepresentation => {
-    const handSymbols = hand.cards.map((c) => symbolsToFigures(c.symbol));
-    const handValues = getHandValidValues(hand).join('/');
-    return handSymbols.length === 2 && handSymbols[0] === handSymbols[1]
-        ? handSymbols.join(',')
-        : handValues;
-};
+    const handSymbols = hand.cards.map((c) => symbolToSimpleSymbol(c.symbol));
+    const isSplitHand = handSymbols.length === 2 && handSymbols[0] === handSymbols[1];
 
-export const symbolsToFigures = (symbol: string) =>
-    ['10', 'J', 'Q', 'K'].indexOf(symbol) > -1 ? 'Figure' : symbol;
+    return isSplitHand
+        ? (handSymbols.join(',') as HandRepresentation)
+        : (getHandValidValues(hand).join('/') as HandRepresentation);
+};

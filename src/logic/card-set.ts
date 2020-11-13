@@ -1,28 +1,6 @@
-import { CardSet, Dictionary, Card } from '../types';
-import { shuffleArray, cartesianProduct } from '../utils';
-
-const cardsValue: Dictionary<number[]> = {
-    A: [1, 11],
-    '2': [2],
-    '3': [3],
-    '4': [4],
-    '5': [5],
-    '6': [6],
-    '7': [7],
-    '8': [8],
-    '9': [9],
-    '10': [10],
-    J: [10],
-    Q: [10],
-    K: [10]
-};
-
-const symbols = Object.keys(cardsValue);
-
-const suits = ['\u2663', '\u2666', '\u2665', '\u2660'];
-
-const createDeck = (): Card[] =>
-    cartesianProduct(suits, symbols, (suit, symbol) => ({ suit, symbol }));
+import { Card, CardSet, CardSymbol } from '../types';
+import { shuffleArray } from '../utils';
+import { createDeck } from './card';
 
 export const collectPlayedCards = (cardSet: CardSet) => {
     cardSet.discardPile.push(...cardSet.beingPlayed);
@@ -34,7 +12,7 @@ export const collectPlayedCards = (cardSet: CardSet) => {
     }
 };
 
-export const extractCardFromCardSet = (symbol: string, cardSet: CardSet): Card => {
+export const extractCardFromCardSet = (symbol: CardSymbol, cardSet: CardSet): Card => {
     // We search for the cards in the discardPile first to minimize the game interfering
     let card = extractCardFromCollection(symbol, cardSet.discardPile);
     if (!card) {
@@ -44,7 +22,7 @@ export const extractCardFromCardSet = (symbol: string, cardSet: CardSet): Card =
     return card!;
 };
 
-const extractCardFromCollection = (symbol: string, cards: Card[]): Card | undefined => {
+const extractCardFromCollection = (symbol: CardSymbol, cards: Card[]): Card | undefined => {
     let targetCard: Card | undefined;
     // We iterate the cards set from end to beginning to minimize the game interfering
     for (let i = cards.length - 1; i >= 0; --i) {
@@ -79,10 +57,3 @@ export const getCardSet = (decksNumber = 6): CardSet => {
         unusedCards: cards
     };
 };
-
-export const getCardEffectiveValue = (card: Card): number => {
-    const values = getCardValues(card);
-    return values[values.length - 1];
-};
-
-export const getCardValues = (card: Card): number[] => cardsValue[card.symbol];

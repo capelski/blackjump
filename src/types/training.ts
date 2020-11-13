@@ -1,5 +1,6 @@
+import { SimpleCardSymbol } from './card';
 import { DecisionsSet } from './decisions';
-import { NumericDictionary } from './dictionary';
+import { Dictionary } from './dictionary';
 import { GameSettingsKeys, GameSettings } from './game-settings';
 import { Hand, HandRepresentation } from './hand';
 
@@ -10,19 +11,17 @@ export interface RelevantHand {
     name: string;
 }
 
-export interface TrainingHand {
-    dealerHand: Hand;
-    playerHand: Hand;
-}
+export type TrainedHands = Dictionary<Dictionary<boolean, SimpleCardSymbol>, HandRepresentation>;
 
 export interface TrainingPair {
-    dealerHand: HandRepresentation;
-    playerHand: HandRepresentation;
+    dealer: Hand;
+    player: Hand;
 }
 
-export interface TrainingStatus {
-    currentTrainingPair: number;
-    gameSettings: GameSettings;
-    selectedLevels: NumericDictionary<boolean>;
-    selectedTrainingPairs: TrainingPair[];
+export interface TrainingSet {
+    dealerHands: SimpleCardSymbol[];
+    playerHand: {
+        data: RelevantHand;
+        representation: HandRepresentation;
+    };
 }

@@ -1,6 +1,7 @@
 import { Hand, Card, CardSet, HandOutcome, GameSettings, GameSettingsKeys } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
-import { getCardValues, extractNextCard, getCardEffectiveValue } from './card-set';
+import { getCardEffectiveValue, getCardValues } from './card';
+import { extractNextCard } from './card-set';
 
 export const canDouble = (hand: Hand, handsNumber: number, gameSettings: GameSettings) =>
     hand.cards.length === 2 &&

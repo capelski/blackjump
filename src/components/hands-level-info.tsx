@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { CardSuit, SimpleCardSymbol } from '../types';
 import { HandComponent } from './hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
@@ -33,8 +34,8 @@ export const HandsLevelInfo: React.FC<{
                 hand={{
                     bet: 1,
                     cards: [
-                        { suit: '\u2663', symbol: '5' },
-                        { suit: '\u2665', symbol: '3' }
+                        { suit: CardSuit.clubs, symbol: SimpleCardSymbol.Five },
+                        { suit: CardSuit.hearts, symbol: SimpleCardSymbol.Three }
                     ],
                     values: [8]
                 }}
@@ -49,8 +50,8 @@ export const HandsLevelInfo: React.FC<{
                 hand={{
                     bet: 1,
                     cards: [
-                        { suit: '\u2660', symbol: '9' },
-                        { suit: '\u2666', symbol: '9' }
+                        { suit: CardSuit.spades, symbol: SimpleCardSymbol.Nine },
+                        { suit: CardSuit.diamonds, symbol: SimpleCardSymbol.Nine }
                     ],
                     values: [18]
                 }}

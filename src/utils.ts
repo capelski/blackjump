@@ -10,6 +10,9 @@ export const cartesianProduct = <T, U, R>(
     }, [] as R[]);
 };
 
+export const getRandomItem = <T>(items: T[]) =>
+    items[Math.round(Math.random() * (items.length - 1))];
+
 const nNumbers = (n: number) =>
     ' '
         .repeat(n)

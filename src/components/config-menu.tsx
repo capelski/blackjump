@@ -2,16 +2,16 @@ import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { getTrainingPairs } from '../logic/training-hands';
-import { updatePersistedSettings } from '../persisted-settings';
-import { GameSettingsKeys, ScreenTypes, TrainingStatus } from '../types';
+import { updateGameConfig } from '../async-storage';
+import { getTrainingPairsNumber } from '../logic/training-pairs';
+import { GameConfig, GameSettingsKeys, ScreenTypes } from '../types';
 import { Button } from './button';
 import { GameSettingSwitch } from './game-setting-switch';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface ConfigMenuProps {
-    setTrainingStatus: (trainingStatus: TrainingStatus) => void;
-    trainingStatus: TrainingStatus;
+    gameConfig: GameConfig;
+    setGameConfig: (gameConfig: GameConfig) => void;
 }
 
 const textStyle = {
@@ -23,34 +23,35 @@ export const ConfigMenu: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }>;
     screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
-    const [gameSettings, setGameSettings] = useState(screenProps.trainingStatus.gameSettings);
-    const [selectedLevels, setSelectedLevels] = useState(screenProps.trainingStatus.selectedLevels);
-    const [selectedTrainingPairs, setSelectedTrainingPairs] = useState(
-        screenProps.trainingStatus.selectedTrainingPairs
+    const [gameSettings, setGameSettings] = useState(screenProps.gameConfig.settings);
+    const [selectedHandsNumber, setSelectedHandsNumber] = useState(
+        getTrainingPairsNumber(
+            screenProps.gameConfig.settings,
+            screenProps.gameConfig.selectedLevels
+        )
     );
+    const [selectedLevels, setSelectedLevels] = useState(screenProps.gameConfig.selectedLevels);
 
     const saveHandler = () => {
-        screenProps.setTrainingStatus({
-            gameSettings,
-            currentTrainingPair: -1,
-            selectedLevels,
-            selectedTrainingPairs
+        screenProps.setGameConfig({
+            settings: gameSettings,
+            selectedLevels
         });
         navigation.navigate(ScreenTypes.table);
-        updatePersistedSettings({ gameSettings, selectedLevels });
+        updateGameConfig({ settings: gameSettings, selectedLevels });
     };
 
     const isSaveButtonEnabled =
-        (screenProps.trainingStatus.gameSettings[GameSettingsKeys.canDoubleAfterSplit] !==
+        (screenProps.gameConfig.settings[GameSettingsKeys.canDoubleAfterSplit] !==
             gameSettings[GameSettingsKeys.canDoubleAfterSplit] ||
-            screenProps.trainingStatus.gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
+            screenProps.gameConfig.settings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
                 gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ||
-            screenProps.trainingStatus.gameSettings[GameSettingsKeys.canSurrender] !==
+            screenProps.gameConfig.settings[GameSettingsKeys.canSurrender] !==
                 gameSettings[GameSettingsKeys.canSurrender] ||
-            screenProps.trainingStatus.selectedLevels[1] !== selectedLevels[1] ||
-            screenProps.trainingStatus.selectedLevels[2] !== selectedLevels[2] ||
-            screenProps.trainingStatus.selectedLevels[3] !== selectedLevels[3] ||
-            screenProps.trainingStatus.selectedLevels[4] !== selectedLevels[4]) &&
+            screenProps.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
+            screenProps.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
+            screenProps.gameConfig.selectedLevels[3] !== selectedLevels[3] ||
+            screenProps.gameConfig.selectedLevels[4] !== selectedLevels[4]) &&
         (selectedLevels[1] || selectedLevels[2] || selectedLevels[3] || selectedLevels[4]);
 
     return (
@@ -76,8 +77,8 @@ export const ConfigMenu: React.FC<{
                         onValueChange={(newValue) => {
                             const nextGameSettings = { ...gameSettings, [setting]: newValue };
                             setGameSettings(nextGameSettings);
-                            setSelectedTrainingPairs(
-                                getTrainingPairs(nextGameSettings, selectedLevels)
+                            setSelectedHandsNumber(
+                                getTrainingPairsNumber(nextGameSettings, selectedLevels)
                             );
                         }}
                         value={gameSettings[setting]}
@@ -107,7 +108,7 @@ export const ConfigMenu: React.FC<{
                             </Text>
                         </TouchableOpacity>
                         <Text style={{ ...textStyle, marginLeft: 8 }}>
-                            ({selectedTrainingPairs.length} hands)
+                            ({selectedHandsNumber} hands)
                         </Text>
                     </View>
                     <View
@@ -118,7 +119,7 @@ export const ConfigMenu: React.FC<{
                             width: '100%'
                         }}
                     >
-                        {Object.keys(screenProps.trainingStatus.selectedLevels).map((number) => (
+                        {Object.keys(screenProps.gameConfig.selectedLevels).map((number) => (
                             <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
                                 <Switch
                                     disabled={false}
@@ -128,8 +129,8 @@ export const ConfigMenu: React.FC<{
                                             [number]: newValue
                                         };
                                         setSelectedLevels(nextSelectedLevels);
-                                        setSelectedTrainingPairs(
-                                            getTrainingPairs(gameSettings, nextSelectedLevels)
+                                        setSelectedHandsNumber(
+                                            getTrainingPairsNumber(gameSettings, nextSelectedLevels)
                                         );
                                     }}
                                     style={{ marginRight: 8 }}

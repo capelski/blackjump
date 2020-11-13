@@ -3,13 +3,13 @@ import { ScrollView, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { colors } from '../constants';
 import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
-import { GameSettings, Hand } from '../types';
+import { GameConfig, Hand } from '../types';
 import { numberRange } from '../utils';
 import { GameSettingSwitch } from './game-setting-switch';
 import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface HandDecisionsProps {
-    gameSettings: GameSettings;
+    gameConfig: GameConfig;
 }
 
 export interface HandDecisionsParams extends WithNavBarParams {
@@ -20,7 +20,7 @@ export const HandDecisions: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }, HandDecisionsParams>;
     screenProps: HandDecisionsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
-    const [gameSettings, setGameSettings] = useState(screenProps.gameSettings);
+    const [gameSettings, setGameSettings] = useState(screenProps.gameConfig.settings);
 
     const hand = navigation.getParam('hand');
     const relevantHand = getRelevantHand(hand);
