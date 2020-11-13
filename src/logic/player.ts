@@ -1,4 +1,4 @@
-import { CardSet, Hand, HandOutcome, Player } from '../types';
+import { Card, Hand, HandOutcome, Player } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
 
 export const cloneHand = (hand: Hand): Hand => ({
@@ -14,16 +14,16 @@ export const createPlayer = (cash = 0): Player => ({
     lastActionHand: undefined
 });
 
-export const hitCurrentHand = (player: Player, cardSet: CardSet) => {
+export const hitCurrentHand = (player: Player, card: Card) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
-    dealCard(currentHand, cardSet);
+    dealCard(currentHand, card);
 };
 
-export const doubleCurrentHand = (player: Player, cardSet: CardSet) => {
+export const doubleCurrentHand = (player: Player, card: Card) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
-    hitCurrentHand(player, cardSet);
+    hitCurrentHand(player, card);
     player.cash -= currentHand.bet;
     currentHand.bet *= 2;
 };
@@ -56,19 +56,19 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
     player.cash += earnings;
 };
 
-export const splitCurrentHand = (player: Player, cardSet: CardSet) => {
+export const splitCurrentHand = (player: Player, card: Card) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
     const firstHand = createHand([currentHand.cards[0]]);
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
-    dealCard(firstHand, cardSet);
+    dealCard(firstHand, card);
     player.hands.splice(player.handIndex, 1, firstHand, secondHand);
 };
 
-export const startNextHand = (player: Player, cardSet: CardSet) => {
+export const startNextHand = (player: Player, card: Card) => {
     player.handIndex++;
-    dealCard(player.hands[player.handIndex], cardSet);
+    dealCard(player.hands[player.handIndex], card);
 };
 
 export const standCurrentHand = (player: Player) => {

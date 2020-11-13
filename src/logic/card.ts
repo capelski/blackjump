@@ -29,8 +29,7 @@ const suits = [CardSuit.clubs, CardSuit.diamonds, CardSuit.hearts, CardSuit.spad
 
 const symbols = Object.keys(cardsValue) as CardSymbol[];
 
-export const createDeck = (): Card[] =>
-    cartesianProduct(suits, symbols, (suit, symbol) => ({ suit, symbol }));
+const deck = cartesianProduct(suits, symbols, (suit, symbol) => ({ suit, symbol }));
 
 export const getCardEffectiveValue = (card: Card): number => {
     const values = getCardValues(card);
@@ -38,6 +37,10 @@ export const getCardEffectiveValue = (card: Card): number => {
 };
 
 export const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
+
+export const getRandomCard = () => getRandomItem(deck);
+
+export const getRandomSuit = () => getRandomItem(suits);
 
 export const simpleSymbolToSymbol = (simpleSymbol: SimpleCardSymbol): CardSymbol =>
     simpleSymbol === SimpleCardSymbol.Ten ? getRandomItem(tenPointsSymbols) : simpleSymbol;

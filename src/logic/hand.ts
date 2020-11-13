@@ -1,7 +1,6 @@
-import { Hand, Card, CardSet, HandOutcome, GameSettings, GameSettingsKeys } from '../types';
+import { Hand, Card, HandOutcome, GameSettings, GameSettingsKeys } from '../types';
 import { cartesianProduct, removeDuplicates } from '../utils';
 import { getCardEffectiveValue, getCardValues } from './card';
-import { extractNextCard } from './card-set';
 
 export const canDouble = (hand: Hand, handsNumber: number, gameSettings: GameSettings) =>
     hand.cards.length === 2 &&
@@ -22,9 +21,8 @@ export const createHand = (cards: Card[], bet = 1): Hand => ({
     values: getHandValues(cards)
 });
 
-export const dealCard = (hand: Hand, cardSet: CardSet) => {
-    const nextCard = extractNextCard(cardSet);
-    hand.cards.push(nextCard);
+export const dealCard = (hand: Hand, card: Card) => {
+    hand.cards.push(card);
     hand.values = getHandValues(hand.cards);
 };
 

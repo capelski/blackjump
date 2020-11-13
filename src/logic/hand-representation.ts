@@ -1,6 +1,5 @@
-import { CardSet, CardSymbol, Hand, HandRepresentation, SimpleCardSymbol } from '../types';
-import { valueToSymbol, symbolToSimpleSymbol, simpleSymbolToSymbol } from './card';
-import { extractCardFromCardSet } from './card-set';
+import { Card, CardSymbol, Hand, HandRepresentation, SimpleCardSymbol } from '../types';
+import { valueToSymbol, symbolToSimpleSymbol, simpleSymbolToSymbol, getRandomSuit } from './card';
 import { createHand, getHandValidValues } from './hand';
 
 const getHardHandSymbols = (handRepresentation: HandRepresentation): CardSymbol[] => {
@@ -37,17 +36,22 @@ const getSplitHandSymbols = (handRepresentation: HandRepresentation): CardSymbol
     return splitSymbols.map(simpleSymbolToSymbol);
 };
 
-export const handRepresentationToHand = (
-    handRepresentation: HandRepresentation,
-    cardSet: CardSet
-): Hand => {
+export const handRepresentationToHand = (handRepresentation: HandRepresentation): Hand => {
     const handSymbols = handRepresentation.includes(',')
         ? getSplitHandSymbols(handRepresentation)
         : handRepresentation.includes('/')
         ? getSoftHandSymbols(handRepresentation)
         : getHardHandSymbols(handRepresentation);
 
-    return createHand(handSymbols.map((symbol) => extractCardFromCardSet(symbol, cardSet)));
+    return createHand(
+        handSymbols.map(
+            (symbol) =>
+                ({
+                    suit: getRandomSuit(),
+                    symbol
+                } as Card)
+        )
+    );
 };
 
 export const handToHandRepresentation = (hand: Hand): HandRepresentation => {

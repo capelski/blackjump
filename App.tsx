@@ -9,8 +9,7 @@ import { HandDecisions } from './src/components/hand-decisions';
 import { HandsLevelInfo } from './src/components/hands-level-info';
 import { Table } from './src/components/table';
 import { getOptimalDecision } from './src/logic/basic-strategy';
-import { symbolToSimpleSymbol } from './src/logic/card';
-import { getCardSet, collectPlayedCards } from './src/logic/card-set';
+import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
 import {
     canDouble,
@@ -53,8 +52,6 @@ import {
 // TODO Remove card-set and deal specific cards. Will need to compute which other hands are
 // reachable from the current hand. E.g. After hitting a hard 13 against dealer 5, check
 // which other hard hands are pending against a dealer 5
-
-const cardSet = getCardSet();
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
@@ -120,7 +117,7 @@ export default function App() {
     useEffect(() => {
         if (phase === 'dealer' && dealerHand && getHandEffectiveValue(dealerHand) < 17) {
             setTimeout(() => {
-                dealCard(dealerHand, cardSet);
+                dealCard(dealerHand, getRandomCard());
                 setDealerHand({ ...dealerHand });
             }, 1000);
         } else if (phase === 'dealer') {
@@ -131,9 +128,7 @@ export default function App() {
     }, [phase, dealerHand]);
 
     const startTrainingRound = () => {
-        collectPlayedCards(cardSet);
-
-        const nextTrainingPair = getRandomTrainingPair(gameConfig, trainedHands, cardSet);
+        const nextTrainingPair = getRandomTrainingPair(gameConfig, trainedHands);
 
         initializeHands(player, nextTrainingPair.player);
 
@@ -148,7 +143,8 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(player, cardSet);
+            // TODO Compute next card based on trainedHands
+            startNextHand(player, getRandomCard());
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
@@ -193,7 +189,7 @@ export default function App() {
 
     const doubleHandler = () => {
         evaluatePlayerDecision(PlayerDecisions.double, currentHand);
-        doubleCurrentHand(player, cardSet);
+        doubleCurrentHand(player, getRandomCard());
 
         setPlayer({ ...player });
         finishCurrentHand(player);
@@ -201,7 +197,8 @@ export default function App() {
 
     const hitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
-        hitCurrentHand(player, cardSet);
+        // TODO Compute next card based on trainedHands
+        hitCurrentHand(player, getRandomCard());
 
         setPlayer({ ...player });
         if (isFinished(currentHand)) {
@@ -218,7 +215,8 @@ export default function App() {
 
     const splitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
-        splitCurrentHand(player, cardSet);
+        // TODO Compute next card based on trainedHands
+        splitCurrentHand(player, getRandomCard());
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player))) {

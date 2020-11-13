@@ -1,22 +1,13 @@
-import {
-    CardSet,
-    GameConfig,
-    GameSettings,
-    NumericDictionary,
-    TrainedHands,
-    TrainingPair
-} from '../types';
+import { GameConfig, GameSettings, NumericDictionary, TrainedHands, TrainingPair } from '../types';
 import { getRandomItem } from '../utils';
-import { simpleSymbolToSymbol } from './card';
-import { extractCardFromCardSet } from './card-set';
+import { getRandomSuit, simpleSymbolToSymbol } from './card';
 import { createHand } from './hand';
 import { handRepresentationToHand } from './hand-representation';
 import { allPossibleDealerCards, trainingSets } from './training-sets';
 
 export const getRandomTrainingPair = (
     gameConfig: GameConfig,
-    trainedHands: TrainedHands,
-    cardSet: CardSet
+    trainedHands: TrainedHands
 ): TrainingPair => {
     const filteredTrainingSets = trainingSets.filter((trainingSet) => {
         const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.settings);
@@ -39,9 +30,9 @@ export const getRandomTrainingPair = (
 
     return {
         dealer: createHand([
-            extractCardFromCardSet(simpleSymbolToSymbol(randomDealerHand), cardSet)
+            { suit: getRandomSuit(), symbol: simpleSymbolToSymbol(randomDealerHand) }
         ]),
-        player: handRepresentationToHand(randomTrainingSet.playerHand.representation, cardSet)
+        player: handRepresentationToHand(randomTrainingSet.playerHand.representation)
     };
 };
 

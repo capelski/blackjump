@@ -6,7 +6,6 @@ export {
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from './card';
-export { CardSet } from './card-set';
 export {
     BadDecision,
     BaseDecisions,

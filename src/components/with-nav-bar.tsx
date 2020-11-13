@@ -79,6 +79,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     </Svg>
                 </View>
 
+                {/* TODO On Click, show all the trained hands */}
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={textStyles}>{props.totalAttemptedDecisions}</Text>
                     <Svg height={28} viewBox="0 0 1000 1000" width={28} style={{ marginLeft: 4 }}>
