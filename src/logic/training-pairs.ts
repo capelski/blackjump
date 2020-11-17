@@ -51,10 +51,10 @@ export const getCardForUntrainedHand = (
                 const softDifference = currentHandMinValue - playerHandValues[0];
 
                 if (isPlayerHandSoft) {
-                    // E.g. Player hand = 3/13. Can reach 7/17 but not 2/12
+                    // E.g. Player hand = 3/13. Can reach 4/14+ but not 3/13- (equal or lower)
                     valueToReachThisHand = softDifference > 0 ? softDifference : -1;
                 } else {
-                    // E.g. Player hand = 8. Can reach 9/19 but not 10/20
+                    // E.g. Player hand = 8. Can only 9/19 (soft hand)
                     valueToReachThisHand = softDifference === 1 ? softDifference : -1;
                 }
             } else {
@@ -62,16 +62,22 @@ export const getCardForUntrainedHand = (
                 const hardDifference = currentHandHardValue - playerHandValues[0];
 
                 if (isPlayerHandSoft) {
-                    // E.g. Player hand = 5/15. Can reach 12 but not 11 or lower (would be 11/21; soft hand)
+                    // E.g. Player hand = 5/15. Can reach 12-15 but not 11- (soft hand) neither
+                    // 16+ (soft hand)
                     const makesSoftHand = playerHandValues[1] + hardDifference <= 21;
                     valueToReachThisHand =
                         !makesSoftHand && hardDifference > 1 && hardDifference <= 10
                             ? hardDifference
                             : -1;
                 } else {
-                    // E.g. Player hand = 7. Can reach 16 but not 6, 8 or 19
+                    // E.g. Player hand = 7. Can reach 9-17 but not 7- (equal or lower),
+                    // 8 (soft hand), 14 (split hand) neither 18+ (out of scope)
                     valueToReachThisHand =
-                        hardDifference > 1 && hardDifference <= 10 ? hardDifference : -1;
+                        hardDifference > 1 && // Lower & Soft hand
+                        hardDifference <= 10 && // Out of scope
+                        hardDifference !== playerHandValues[0] // Split hand
+                            ? hardDifference
+                            : -1;
                 }
             }
 
