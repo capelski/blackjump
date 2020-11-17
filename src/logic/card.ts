@@ -56,4 +56,8 @@ const tenPointsSymbols: TenPointsCardSymbol[] = [
 ];
 
 export const valueToSymbol = (number: number): CardSymbol =>
-    number === 10 ? getRandomItem(tenPointsSymbols) : (String(number) as CardSymbol);
+    number === 10
+        ? getRandomItem(tenPointsSymbols)
+        : number === 1
+        ? SimpleCardSymbol.Ace
+        : (String(number) as CardSymbol);

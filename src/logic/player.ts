@@ -1,5 +1,6 @@
-import { Card, Hand, HandOutcome, Player } from '../types';
+import { Card, Hand, HandOutcome, Player, SimpleCardSymbol, TrainedHands } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
+import { getCardForUntrainedHand } from './training-pairs';
 
 export const cloneHand = (hand: Hand): Hand => ({
     bet: hand.bet,
@@ -14,16 +15,20 @@ export const createPlayer = (cash = 0): Player => ({
     lastActionHand: undefined
 });
 
-export const hitCurrentHand = (player: Player, card: Card) => {
+export const hitCurrentHand = (
+    player: Player,
+    dealerSymbol: SimpleCardSymbol,
+    trainedHands: TrainedHands
+) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
-    dealCard(currentHand, card);
+    dealCard(currentHand, getCardForUntrainedHand(currentHand, dealerSymbol, trainedHands));
 };
 
 export const doubleCurrentHand = (player: Player, card: Card) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
-    hitCurrentHand(player, card);
+    dealCard(currentHand, card);
     player.cash -= currentHand.bet;
     currentHand.bet *= 2;
 };
@@ -56,19 +61,28 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
     player.cash += earnings;
 };
 
-export const splitCurrentHand = (player: Player, card: Card) => {
+export const splitCurrentHand = (
+    player: Player,
+    dealerSymbol: SimpleCardSymbol,
+    trainedHands: TrainedHands
+) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = cloneHand(currentHand);
     const firstHand = createHand([currentHand.cards[0]]);
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
-    dealCard(firstHand, card);
+    dealCard(firstHand, getCardForUntrainedHand(firstHand, dealerSymbol, trainedHands));
     player.hands.splice(player.handIndex, 1, firstHand, secondHand);
 };
 
-export const startNextHand = (player: Player, card: Card) => {
+export const startNextHand = (
+    player: Player,
+    dealerSymbol: SimpleCardSymbol,
+    trainedHands: TrainedHands
+) => {
     player.handIndex++;
-    dealCard(player.hands[player.handIndex], card);
+    const nextHand = player.hands[player.handIndex];
+    dealCard(nextHand, getCardForUntrainedHand(nextHand, dealerSymbol, trainedHands));
 };
 
 export const standCurrentHand = (player: Player) => {

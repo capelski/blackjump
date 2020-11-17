@@ -37,9 +37,9 @@ const getSplitHandSymbols = (handRepresentation: HandRepresentation): CardSymbol
 };
 
 export const handRepresentationToHand = (handRepresentation: HandRepresentation): Hand => {
-    const handSymbols = handRepresentation.includes(',')
+    const handSymbols = isSplitHandRepresentation(handRepresentation)
         ? getSplitHandSymbols(handRepresentation)
-        : handRepresentation.includes('/')
+        : isSoftHandRepresentation(handRepresentation)
         ? getSoftHandSymbols(handRepresentation)
         : getHardHandSymbols(handRepresentation);
 
@@ -62,3 +62,9 @@ export const handToHandRepresentation = (hand: Hand): HandRepresentation => {
         ? (handSymbols.join(',') as HandRepresentation)
         : (getHandValidValues(hand).join('/') as HandRepresentation);
 };
+
+export const isSoftHandRepresentation = (handRepresentation: HandRepresentation) =>
+    handRepresentation.includes('/');
+
+export const isSplitHandRepresentation = (handRepresentation: HandRepresentation) =>
+    handRepresentation.includes(',');

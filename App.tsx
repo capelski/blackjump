@@ -49,10 +49,6 @@ import {
     TrainedHands
 } from './src/types';
 
-// TODO Remove card-set and deal specific cards. Will need to compute which other hands are
-// reachable from the current hand. E.g. After hitting a hard 13 against dealer 5, check
-// which other hard hands are pending against a dealer 5
-
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
@@ -143,8 +139,7 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            // TODO Compute next card based on trainedHands
-            startNextHand(player, getRandomCard());
+            startNextHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
@@ -197,8 +192,7 @@ export default function App() {
 
     const hitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
-        // TODO Compute next card based on trainedHands
-        hitCurrentHand(player, getRandomCard());
+        hitCurrentHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
 
         setPlayer({ ...player });
         if (isFinished(currentHand)) {
@@ -215,8 +209,7 @@ export default function App() {
 
     const splitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
-        // TODO Compute next card based on trainedHands
-        splitCurrentHand(player, getRandomCard());
+        splitCurrentHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player))) {

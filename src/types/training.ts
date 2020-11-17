@@ -11,7 +11,7 @@ export interface RelevantHand {
     name: string;
 }
 
-export type TrainedHands = Dictionary<Dictionary<boolean, SimpleCardSymbol>, HandRepresentation>;
+export type TrainedHands = Dictionary<Dictionary<boolean>>;
 
 export interface TrainingPair {
     dealer: Hand;
