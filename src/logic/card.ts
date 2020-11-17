@@ -46,7 +46,9 @@ export const simpleSymbolToSymbol = (simpleSymbol: SimpleCardSymbol): CardSymbol
     simpleSymbol === SimpleCardSymbol.Ten ? getRandomItem(tenPointsSymbols) : simpleSymbol;
 
 export const symbolToSimpleSymbol = (symbol: CardSymbol): SimpleCardSymbol =>
-    symbol in SpecialCardSymbol ? SimpleCardSymbol.Ten : (symbol as SimpleCardSymbol);
+    tenPointsSymbols.indexOf(symbol as SpecialCardSymbol) > -1
+        ? SimpleCardSymbol.Ten
+        : (symbol as SimpleCardSymbol);
 
 const tenPointsSymbols: TenPointsCardSymbol[] = [
     SimpleCardSymbol.Ten,

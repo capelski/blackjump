@@ -100,6 +100,7 @@ export const TrainedHandsComponent: React.FC<{
 
                                                 return (
                                                     <TouchableOpacity
+                                                        key={dealerIndex}
                                                         onPress={() => {
                                                             if (
                                                                 screenProps.phase ===
@@ -126,7 +127,6 @@ export const TrainedHandsComponent: React.FC<{
                                                         }}
                                                     >
                                                         <Text
-                                                            key={dealerIndex}
                                                             style={{
                                                                 color: 'white',
                                                                 fontSize: 20,
