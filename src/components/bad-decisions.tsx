@@ -22,6 +22,17 @@ export const BadDecisions: React.FC<{
             totalAttemptedDecisions={screenProps.totalAttemptedDecisions}
             totalRightDecisions={screenProps.totalRightDecisions}
         >
+            <Text
+                style={{
+                    color: 'white',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    paddingVertical: 16,
+                    textAlign: 'center'
+                }}
+            >
+                Bad decisions
+            </Text>
             <ScrollView
                 style={{
                     flex: 1,
@@ -30,9 +41,6 @@ export const BadDecisions: React.FC<{
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                <Text style={{ color: 'white', fontSize: 24, paddingBottom: 16 }}>
-                    Bad decisions
-                </Text>
                 {screenProps.badDecisions.length === 0 ? (
                     <Text style={{ color: 'white', fontSize: 20 }}>
                         No bad decision taken so far
@@ -52,7 +60,7 @@ export const BadDecisions: React.FC<{
                                         }
                                     );
                                 }}
-                                style={{ marginBottom: 16 }}
+                                style={{ marginBottom: 16, width: '100%' }}
                             >
                                 <Text
                                     style={{

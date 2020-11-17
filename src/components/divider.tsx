@@ -8,5 +8,5 @@ export const Divider: React.FC = () => (
             height: 2,
             width: '100%'
         }}
-    ></View>
+    />
 );
