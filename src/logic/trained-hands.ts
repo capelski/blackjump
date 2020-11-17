@@ -1,16 +1,22 @@
-import { TrainedHands } from '../types';
+import { Dictionary, HandRepresentation, SimpleCardSymbol, TrainedHands } from '../types';
+import { TrainedHandStatus } from '../types/training';
 import { decisionsDictionary } from './decisions-dictionary';
 import { allPossibleDealerCards } from './training-sets';
 
 export const getEmptyTrainedHands = (): TrainedHands =>
-    Object.keys(decisionsDictionary)
+    (Object.keys(decisionsDictionary) as HandRepresentation[])
         .map((playerHand) => ({
-            [playerHand]: allPossibleDealerCards.reduce(
+            [playerHand]: allPossibleDealerCards.reduce<
+                Dictionary<TrainedHandStatus, SimpleCardSymbol>
+            >(
                 (reducedDealerHands, dealerHand) => ({
                     ...reducedDealerHands,
-                    [dealerHand]: false
+                    [dealerHand]: TrainedHandStatus.untrained
                 }),
-                {}
+                {} as Dictionary<TrainedHandStatus, SimpleCardSymbol>
             )
         }))
-        .reduce((reducedPlayerHands, playerHand) => ({ ...reducedPlayerHands, ...playerHand }), {});
+        .reduce<TrainedHands>(
+            (reducedPlayerHands, playerHand) => ({ ...reducedPlayerHands, ...playerHand }),
+            {} as TrainedHands
+        );

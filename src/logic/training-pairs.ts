@@ -3,11 +3,13 @@ import {
     GameConfig,
     GameSettings,
     Hand,
+    HandRepresentation,
     NumericDictionary,
     SimpleCardSymbol,
     TrainedHands,
     TrainingPair
 } from '../types';
+import { TrainedHandStatus } from '../types/training';
 import { getRandomItem } from '../utils';
 import { getRandomCard, getRandomSuit, simpleSymbolToSymbol, valueToSymbol } from './card';
 import { createHand, getHandValues } from './hand';
@@ -32,9 +34,9 @@ export const getCardForUntrainedHand = (
 
     const valuesToUntrainedHands = trainingSets
         .map((trainingSet) => {
-            const isHandUntrainedForDealerCard = !trainedHands[
-                trainingSet.playerHand.representation
-            ][dealerSymbol];
+            const isHandUntrainedForDealerCard =
+                trainedHands[trainingSet.playerHand.representation][dealerSymbol] ===
+                TrainedHandStatus.untrained;
 
             let valueToReachThisHand: number;
 
@@ -100,24 +102,42 @@ export const getRandomTrainingPair = (
 
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
         const doesHaveUntrainedDealerHands = Object.values(trainedDealerHands).some(
-            (isHandCovered) => !isHandCovered
+            (status) => status === TrainedHandStatus.untrained
         );
 
         return isTrainingSetLevelSelected && doesHaveUntrainedDealerHands;
     });
-    const randomTrainingSet = getRandomItem(filteredTrainingSets);
+
+    const randomTrainingSet =
+        filteredTrainingSets.length > 0
+            ? getRandomItem(filteredTrainingSets)
+            : getRandomItem(trainingSets); // In case all hands have been trained
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
-        (hand) => !dealerHandsDictionary[hand]
+        (hand) => dealerHandsDictionary[hand] === TrainedHandStatus.untrained
     );
-    const randomDealerHand = getRandomItem(untrainedDealerHands);
+
+    const randomDealerHand =
+        untrainedDealerHands.length > 0
+            ? getRandomItem(untrainedDealerHands)
+            : getRandomItem(randomTrainingSet.dealerHands); // In case all hands have been trained
 
     return {
         dealer: createHand([
             { suit: getRandomSuit(), symbol: simpleSymbolToSymbol(randomDealerHand) }
         ]),
         player: handRepresentationToHand(randomTrainingSet.playerHand.representation)
+    };
+};
+
+export const getSpecificTrainingPair = (
+    handRepresentation: HandRepresentation,
+    dealerSymbol: SimpleCardSymbol
+): TrainingPair => {
+    return {
+        dealer: createHand([{ suit: getRandomSuit(), symbol: simpleSymbolToSymbol(dealerSymbol) }]),
+        player: handRepresentationToHand(handRepresentation)
     };
 };
 

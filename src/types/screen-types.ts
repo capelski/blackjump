@@ -3,5 +3,6 @@ export enum ScreenTypes {
     configMenu = 'configMenu',
     handDecisions = 'decisions',
     handsLevelInfo = 'handsLevelInfo',
-    table = 'table'
+    table = 'table',
+    trainedHands = 'trainedHands'
 }

@@ -1,10 +1,19 @@
 import React from 'react';
 import { View } from 'react-native';
 import { actionsHeight, colors } from '../constants';
-import { BaseDecisions, Phases, PlayerDecisions } from '../types';
+import { getRandomTrainingPair } from '../logic/training-pairs';
+import {
+    BaseDecisions,
+    GameConfig,
+    Phases,
+    PlayerDecisions,
+    TrainedHands,
+    TrainingPair
+} from '../types';
 import { Button } from './button';
 
 export interface ActionsProps {
+    gameConfig: GameConfig;
     handlers: {
         double: () => void;
         hit: () => void;
@@ -16,7 +25,8 @@ export interface ActionsProps {
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
     phase: Phases;
-    startTrainingRound: () => void;
+    startTrainingRound: (trainingPair: TrainingPair) => void;
+    trainedHands: TrainedHands;
 }
 
 export const Actions: React.FC<ActionsProps> = (props) => {
@@ -31,7 +41,11 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     height="100%"
                     backgroundColor={colors[BaseDecisions.hit]}
                     isEnabled={true}
-                    onPress={props.startTrainingRound}
+                    onPress={() =>
+                        props.startTrainingRound(
+                            getRandomTrainingPair(props.gameConfig, props.trainedHands)
+                        )
+                    }
                     text="Next"
                     width="100%"
                 />

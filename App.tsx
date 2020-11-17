@@ -8,6 +8,7 @@ import { ConfigMenu } from './src/components/config-menu';
 import { HandDecisions } from './src/components/hand-decisions';
 import { HandsLevelInfo } from './src/components/hands-level-info';
 import { Table } from './src/components/table';
+import { TrainedHandsComponent } from './src/components/trained-hands-component';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -35,7 +36,6 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getEmptyTrainedHands } from './src/logic/trained-hands';
-import { getRandomTrainingPair } from './src/logic/training-pairs';
 import {
     BadDecision,
     BaseDecisions,
@@ -48,6 +48,7 @@ import {
     ScreenTypes,
     TrainedHands
 } from './src/types';
+import { TrainedHandStatus, TrainingPair } from './src/types/training';
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
@@ -56,7 +57,8 @@ const AppContainer = createAppContainer(
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
-            [ScreenTypes.table]: { screen: Table }
+            [ScreenTypes.table]: { screen: Table },
+            [ScreenTypes.trainedHands]: { screen: TrainedHandsComponent }
         },
         {
             initialRouteName: ScreenTypes.table
@@ -123,12 +125,9 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
-    const startTrainingRound = () => {
-        const nextTrainingPair = getRandomTrainingPair(gameConfig, trainedHands);
-
-        initializeHands(player, nextTrainingPair.player);
-
-        setDealerHand(nextTrainingPair.dealer);
+    const startTrainingRound = (trainingPair: TrainingPair) => {
+        initializeHands(player, trainingPair.player);
+        setDealerHand(trainingPair.dealer);
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
@@ -148,20 +147,21 @@ export default function App() {
     };
 
     const evaluatePlayerDecision = (decision: PlayerDecision, hand: Hand) => {
-        const nextTrainedHands: TrainedHands = {
-            ...trainedHands,
-            [handToHandRepresentation(currentHand)]: {
-                ...trainedHands[handToHandRepresentation(currentHand)],
-                [symbolToSimpleSymbol(dealerHand!.cards[0].symbol)]: true
-            }
-        };
-        setTrainedHands(nextTrainedHands);
-        updateTrainedHands(nextTrainedHands);
-
         const optimalDecision = getOptimalDecision(hand, dealerHand!, gameConfig.settings, {
             canDouble: isDoubleEnabled,
             canSurrender: isSurrenderEnabled
         });
+
+        const nextTrainedHands: TrainedHands = { ...trainedHands };
+        nextTrainedHands[handToHandRepresentation(currentHand)][
+            symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
+        ] =
+            optimalDecision.decision === decision
+                ? TrainedHandStatus.passed
+                : TrainedHandStatus.failed;
+
+        setTrainedHands(nextTrainedHands);
+        updateTrainedHands(nextTrainedHands);
 
         setTotalAttemptedDecisions(totalAttemptedDecisions + 1);
         if (optimalDecision.decision === decision) {
@@ -256,7 +256,8 @@ export default function App() {
                     setGameConfig,
                     startTrainingRound,
                     totalAttemptedDecisions,
-                    totalRightDecisions
+                    totalRightDecisions,
+                    trainedHands
                 }}
             />
         </View>
