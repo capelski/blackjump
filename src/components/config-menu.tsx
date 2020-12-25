@@ -88,6 +88,9 @@ export const ConfigMenu: React.FC<{
                 <View style={{ width: '100%', marginTop: 24 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ ...textStyle, marginLeft: 8 }}>Active hand levels</Text>
+                        <Text style={{ ...textStyle, marginLeft: 8 }}>
+                            ({selectedHandsNumber} hands)
+                        </Text>
                         <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate(ScreenTypes.handsLevelInfo);
@@ -107,9 +110,6 @@ export const ConfigMenu: React.FC<{
                                 ?
                             </Text>
                         </TouchableOpacity>
-                        <Text style={{ ...textStyle, marginLeft: 8 }}>
-                            ({selectedHandsNumber} hands)
-                        </Text>
                     </View>
                     <View
                         style={{
