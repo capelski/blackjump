@@ -102,22 +102,22 @@ export const getRandomTrainingPair = (
     gameConfig: GameConfig,
     trainedHands: TrainedHands
 ): TrainingPair => {
-    const filteredTrainingSets = trainingSets.filter((trainingSet) => {
+    const selectedTrainingSets = trainingSets.filter((trainingSet) => {
         const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.settings);
-        const isTrainingSetLevelSelected = gameConfig.selectedLevels[trainingSetLevel];
+        return gameConfig.selectedLevels[trainingSetLevel];
+    });
 
+    const untrainedTrainingSets = selectedTrainingSets.filter((trainingSet) => {
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
-        const doesHaveUntrainedDealerHands = Object.values(trainedDealerHands).some(
+        return Object.values(trainedDealerHands).some(
             (status) => status === TrainedHandStatus.untrained
         );
-
-        return isTrainingSetLevelSelected && doesHaveUntrainedDealerHands;
     });
 
     const randomTrainingSet =
-        filteredTrainingSets.length > 0
-            ? getRandomItem(filteredTrainingSets)
-            : getRandomItem(trainingSets); // In case all hands have been trained
+        untrainedTrainingSets.length > 0
+            ? getRandomItem(untrainedTrainingSets)
+            : getRandomItem(selectedTrainingSets); // In case all hands have been trained
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
