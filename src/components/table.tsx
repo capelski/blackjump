@@ -48,7 +48,7 @@ export const Table: React.FC<{
                         decisionEvaluation={screenProps.decisionEvaluation}
                         showDecisionsHandler={() => {
                             navigation.navigate<HandDecisionsParams>(ScreenTypes.handDecisions, {
-                                hand: screenProps.player.lastActionHand!,
+                                handRepresentation: screenProps.player.lastActionHand!,
                                 previousRoute: ScreenTypes.table
                             });
                         }}

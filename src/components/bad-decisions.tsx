@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { getRelevantHand } from '../logic/basic-strategy';
+import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { BadDecision, ScreenTypes } from '../types';
 import { Divider } from './divider';
 import { HandDecisionsParams } from './hand-decisions';
@@ -47,7 +47,9 @@ export const BadDecisions: React.FC<{
                     </Text>
                 ) : (
                     screenProps.badDecisions.map((badDecision, index) => {
-                        const relevantHand = getRelevantHand(badDecision.playerHand);
+                        const relevantHand = handRepresentationToRelevantHand(
+                            badDecision.handRepresentation
+                        );
                         return (
                             <TouchableOpacity
                                 key={index}
@@ -55,7 +57,7 @@ export const BadDecisions: React.FC<{
                                     navigation.navigate<HandDecisionsParams>(
                                         ScreenTypes.handDecisions,
                                         {
-                                            hand: badDecision.playerHand,
+                                            handRepresentation: badDecision.handRepresentation,
                                             previousRoute: ScreenTypes.badDecisions
                                         }
                                     );

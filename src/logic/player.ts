@@ -1,12 +1,7 @@
 import { Card, Hand, HandOutcome, Player, SimpleCardSymbol, TrainedHands } from '../types';
 import { createHand, dealCard, resolveHand } from './hand';
+import { handToHandRepresentation } from './hand-representation';
 import { getCardForUntrainedHand } from './training-pairs';
-
-export const cloneHand = (hand: Hand): Hand => ({
-    bet: hand.bet,
-    cards: [...hand.cards],
-    values: [...hand.values]
-});
 
 export const createPlayer = (cash = 0): Player => ({
     cash,
@@ -21,13 +16,13 @@ export const hitCurrentHand = (
     trainedHands: TrainedHands
 ) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = cloneHand(currentHand);
+    player.lastActionHand = handToHandRepresentation(currentHand);
     dealCard(currentHand, getCardForUntrainedHand(currentHand, dealerSymbol, trainedHands));
 };
 
 export const doubleCurrentHand = (player: Player, card: Card) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = cloneHand(currentHand);
+    player.lastActionHand = handToHandRepresentation(currentHand);
     dealCard(currentHand, card);
     player.cash -= currentHand.bet;
     currentHand.bet *= 2;
@@ -67,7 +62,7 @@ export const splitCurrentHand = (
     trainedHands: TrainedHands
 ) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = cloneHand(currentHand);
+    player.lastActionHand = handToHandRepresentation(currentHand);
     const firstHand = createHand([currentHand.cards[0]]);
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
@@ -87,12 +82,12 @@ export const startNextHand = (
 
 export const standCurrentHand = (player: Player) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = cloneHand(currentHand);
+    player.lastActionHand = handToHandRepresentation(currentHand);
 };
 
 export const surrenderCurrentHand = (player: Player) => {
     const currentHand = getCurrentHand(player);
-    player.lastActionHand = cloneHand(currentHand);
+    player.lastActionHand = handToHandRepresentation(currentHand);
     player.cash += currentHand.bet / 2;
     player.hands.splice(player.handIndex, 1);
 };

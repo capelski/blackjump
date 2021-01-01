@@ -8,6 +8,7 @@ import {
     GameSettingsDecisions,
     GameSettingsKeys,
     Hand,
+    HandRepresentation,
     OptimalDecision,
     PlayerDecision,
     PlayerDecisions
@@ -22,7 +23,7 @@ export const getOptimalDecision = (
     gameSettings: GameSettings,
     dynamicConditions: DynamicConditions
 ): OptimalDecision => {
-    const relevantHand = getRelevantHand(playerHand);
+    const relevantHand = handToRelevantHand(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand);
 
     const gameSettingsDecision = relevantHand.decisions[dealerHandValue];
@@ -41,7 +42,11 @@ export const getOptimalDecision = (
     };
 };
 
-export const getRelevantHand = (playerHand: Hand) => {
+export const handRepresentationToRelevantHand = (handRepresentation: HandRepresentation) => {
+    return decisionsDictionary[handRepresentation];
+};
+
+export const handToRelevantHand = (playerHand: Hand) => {
     const handRepresentation = handToHandRepresentation(playerHand);
     return decisionsDictionary[handRepresentation];
 };

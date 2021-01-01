@@ -22,7 +22,6 @@ import {
 } from './src/logic/hand';
 import { handToHandRepresentation } from './src/logic/hand-representation';
 import {
-    cloneHand,
     createPlayer,
     doubleCurrentHand,
     getCurrentHand,
@@ -174,7 +173,7 @@ export default function App() {
                     {
                         dealerHandValue: getHandEffectiveValue(dealerHand!),
                         gameSettings: gameConfig.settings,
-                        playerHand: cloneHand(hand),
+                        handRepresentation: handToHandRepresentation(hand),
                         takenAction: decision
                     }
                 ])

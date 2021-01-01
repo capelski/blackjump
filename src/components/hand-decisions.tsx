@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { colors } from '../constants';
-import { getRelevantHand, mapGameSettingsDecisionToDynamicDecision } from '../logic/basic-strategy';
-import { GameConfig, Hand } from '../types';
+import {
+    handRepresentationToRelevantHand,
+    mapGameSettingsDecisionToDynamicDecision
+} from '../logic/basic-strategy';
+import { GameConfig, HandRepresentation } from '../types';
 import { numberRange } from '../utils';
 import { GameSettingSwitch } from './game-setting-switch';
 import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
@@ -13,7 +16,7 @@ interface HandDecisionsProps {
 }
 
 export interface HandDecisionsParams extends WithNavBarParams {
-    hand: Hand;
+    handRepresentation: HandRepresentation;
 }
 
 export const HandDecisions: React.FC<{
@@ -22,8 +25,8 @@ export const HandDecisions: React.FC<{
 }> = ({ navigation, screenProps }) => {
     const [gameSettings, setGameSettings] = useState(screenProps.gameConfig.settings);
 
-    const hand = navigation.getParam('hand');
-    const relevantHand = getRelevantHand(hand);
+    const handRepresentation = navigation.getParam('handRepresentation');
+    const relevantHand = handRepresentationToRelevantHand(handRepresentation);
     const handDecisions = numberRange(2, 11).map((number) => ({
         number,
         decision: mapGameSettingsDecisionToDynamicDecision(

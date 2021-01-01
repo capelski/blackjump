@@ -1,10 +1,10 @@
 import { GameSettings } from './game-settings';
-import { Hand } from './hand';
+import { HandRepresentation } from './hand';
 
 export interface BadDecision {
     dealerHandValue: number;
     gameSettings: GameSettings;
-    playerHand: Hand;
+    handRepresentation: HandRepresentation;
     takenAction: PlayerDecision;
 }
 

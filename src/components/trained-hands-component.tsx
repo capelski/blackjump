@@ -12,6 +12,7 @@ import {
     TrainingPair
 } from '../types';
 import { Divider } from './divider';
+import { HandDecisionsParams } from './hand-decisions';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface TrainedHandsComponentProps {
@@ -53,7 +54,6 @@ export const TrainedHandsComponent: React.FC<{
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                {/* TODO Somehow, a Q symbol is making it to trained hands */}
                 {(Object.keys(screenProps.trainedHands) as HandRepresentation[]).map(
                     (handRepresentation, index) => {
                         const handRelevantData = decisionsDictionary[handRepresentation];
@@ -140,6 +140,28 @@ export const TrainedHandsComponent: React.FC<{
                                                 );
                                             }
                                         )}
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                navigation.navigate<HandDecisionsParams>(
+                                                    ScreenTypes.handDecisions,
+                                                    {
+                                                        handRepresentation,
+                                                        previousRoute: ScreenTypes.trainedHands
+                                                    }
+                                                );
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: 20,
+                                                    marginVertical: 16,
+                                                    textAlign: 'center'
+                                                }}
+                                            >
+                                                See hand strategy ➡️
+                                            </Text>
+                                        </TouchableOpacity>
                                     </View>
                                 )}
                                 <Divider />
