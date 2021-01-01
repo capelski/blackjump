@@ -75,7 +75,8 @@ export const TrainedHandsComponent: React.FC<{
                                         style={{
                                             color: 'white',
                                             fontSize: 20,
-                                            marginBottom: 16
+                                            marginBottom: 16,
+                                            textAlign: 'center'
                                         }}
                                     >
                                         {handRelevantData.name}
