@@ -1,7 +1,7 @@
 import {
     Card,
+    CasinoRules,
     GameConfig,
-    GameSettings,
     Hand,
     HandRepresentation,
     NumericDictionary,
@@ -103,7 +103,7 @@ export const getRandomTrainingPair = (
     trainedHands: TrainedHands
 ): TrainingPair => {
     const selectedTrainingSets = trainingSets.filter((trainingSet) => {
-        const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.settings);
+        const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.casinoRules);
         return gameConfig.selectedLevels[trainingSetLevel];
     });
 
@@ -148,8 +148,8 @@ export const getSpecificTrainingPair = (
 };
 
 export const getTrainingPairsNumber = (
-    gameSettings: GameSettings,
+    casinoRules: CasinoRules,
     selectedLevels: NumericDictionary<boolean>
 ) =>
     allPossibleDealerCards.length *
-    trainingSets.filter((ts) => selectedLevels[ts.playerHand.data.level(gameSettings)]).length;
+    trainingSets.filter((ts) => selectedLevels[ts.playerHand.data.level(casinoRules)]).length;

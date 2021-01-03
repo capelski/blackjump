@@ -1,9 +1,9 @@
-import { GameSettings } from './game-settings';
+import { CasinoRules } from './casino-rules';
 import { HandRepresentation } from './hand';
 
 export interface BadDecision {
     dealerHandValue: number;
-    gameSettings: GameSettings;
+    casinoRules: CasinoRules;
     handRepresentation: HandRepresentation;
     takenAction: PlayerDecision;
 }
@@ -14,6 +14,15 @@ export enum BaseDecisions {
     stand = 'Stand'
 }
 
+export type CasinoRulesDecision = DynamicDecision | CasinoRulesDecisions;
+
+export enum CasinoRulesDecisions {
+    doubleIfAllowed_hit = 'doubleIfAllowed/hit',
+    doubleIfAllowed_stand = 'doubleIfAllowed/stand',
+    splitIfDasAllowed_hit = 'splitIfDasAllowed/hit',
+    surrenderIfAllowed_hit = 'surrenderIfAllowed/hit'
+}
+
 export type DecisionEvaluation =
     | { hit: true }
     | {
@@ -22,7 +31,7 @@ export type DecisionEvaluation =
       };
 
 export interface DecisionsSet {
-    [key: number]: GameSettingsDecision;
+    [key: number]: CasinoRulesDecision;
     until: {
         dealer: (
             limit: number
@@ -47,31 +56,22 @@ export interface DynamicConditions {
     canSurrender: boolean;
 }
 
+export type DynamicDecision = BaseDecisions | DynamicDecisions;
+
 export enum DynamicDecisions {
     double_hit = 'Double / Hit',
     double_stand = 'Double / Stand',
     surrender_hit = 'Surrender / Hit'
 }
 
-export type DynamicDecision = BaseDecisions | DynamicDecisions;
-
-export enum GameSettingsDecisions {
-    doubleIfAllowed_hit = 'doubleIfAllowed/hit',
-    doubleIfAllowed_stand = 'doubleIfAllowed/stand',
-    splitIfDasAllowed_hit = 'splitIfDasAllowed/hit',
-    surrenderIfAllowed_hit = 'surrenderIfAllowed/hit'
-}
-
-export type GameSettingsDecision = DynamicDecision | GameSettingsDecisions;
-
 export interface OptimalDecision {
     decision: PlayerDecision;
     description: string;
 }
 
+export type PlayerDecision = BaseDecisions | PlayerDecisions;
+
 export enum PlayerDecisions {
     double = 'Double',
     surrender = 'Surrender'
 }
-
-export type PlayerDecision = BaseDecisions | PlayerDecisions;

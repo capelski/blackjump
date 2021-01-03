@@ -1,10 +1,10 @@
-import { GameConfig, GameSettingsKeys } from '../types';
+import { CasinoRulesKeys, GameConfig } from '../types';
 
 export const getDefaultGameConfig = (): GameConfig => ({
-    settings: {
-        [GameSettingsKeys.canDoubleOnAnyInitialHand]: false,
-        [GameSettingsKeys.canDoubleAfterSplit]: true,
-        [GameSettingsKeys.canSurrender]: false
+    casinoRules: {
+        [CasinoRulesKeys.canDoubleAfterSplit]: true,
+        [CasinoRulesKeys.canDoubleOnAnyInitialHand]: false,
+        [CasinoRulesKeys.canSurrender]: false
     },
     selectedLevels: {
         1: true,

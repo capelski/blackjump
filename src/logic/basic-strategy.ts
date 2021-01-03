@@ -1,12 +1,12 @@
 import {
     BaseDecisions,
+    CasinoRules,
+    CasinoRulesDecision,
+    CasinoRulesDecisions,
+    CasinoRulesKeys,
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
-    GameSettings,
-    GameSettingsDecision,
-    GameSettingsDecisions,
-    GameSettingsKeys,
     Hand,
     HandRepresentation,
     OptimalDecision,
@@ -20,16 +20,16 @@ import { handToHandRepresentation } from './hand-representation';
 export const getOptimalDecision = (
     playerHand: Hand,
     dealerHand: Hand,
-    gameSettings: GameSettings,
+    casinoRules: CasinoRules,
     dynamicConditions: DynamicConditions
 ): OptimalDecision => {
     const relevantHand = handToRelevantHand(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand);
 
-    const gameSettingsDecision = relevantHand.decisions[dealerHandValue];
-    const dynamicDecision = mapGameSettingsDecisionToDynamicDecision(
-        gameSettingsDecision,
-        gameSettings
+    const casinoRulesDecision = relevantHand.decisions[dealerHandValue];
+    const dynamicDecision = mapCasinoRulesDecisionToDynamicDecision(
+        casinoRulesDecision,
+        casinoRules
     );
     const actualDecision: PlayerDecision = mapDynamicDecisionToPlayerDecision(
         dynamicDecision,
@@ -69,24 +69,24 @@ export const mapDynamicDecisionToPlayerDecision = (
             : BaseDecisions.hit
         : dynamicDecision;
 
-export const mapGameSettingsDecisionToDynamicDecision = (
-    gameSettingsDecision: GameSettingsDecision,
-    gameSettings: GameSettings
+export const mapCasinoRulesDecisionToDynamicDecision = (
+    casinoRulesDecision: CasinoRulesDecision,
+    casinoRules: CasinoRules
 ): DynamicDecision =>
-    gameSettingsDecision === GameSettingsDecisions.doubleIfAllowed_hit
-        ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
+    casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_hit
+        ? casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand]
             ? DynamicDecisions.double_hit
             : BaseDecisions.hit
-        : gameSettingsDecision === GameSettingsDecisions.doubleIfAllowed_stand
-        ? gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand]
+        : casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_stand
+        ? casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand]
             ? DynamicDecisions.double_stand
             : BaseDecisions.stand
-        : gameSettingsDecision === GameSettingsDecisions.splitIfDasAllowed_hit
-        ? gameSettings[GameSettingsKeys.canDoubleAfterSplit]
+        : casinoRulesDecision === CasinoRulesDecisions.splitIfDasAllowed_hit
+        ? casinoRules[CasinoRulesKeys.canDoubleAfterSplit]
             ? BaseDecisions.split
             : BaseDecisions.hit
-        : gameSettingsDecision === GameSettingsDecisions.surrenderIfAllowed_hit
-        ? gameSettings[GameSettingsKeys.canSurrender]
+        : casinoRulesDecision === CasinoRulesDecisions.surrenderIfAllowed_hit
+        ? casinoRules[CasinoRulesKeys.canSurrender]
             ? DynamicDecisions.surrender_hit
             : BaseDecisions.hit
-        : gameSettingsDecision;
+        : casinoRulesDecision;

@@ -6,23 +6,23 @@ export {
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from './card';
+export { CasinoRules, CasinoRulesKeys } from './casino-rules';
 export {
     BadDecision,
     BaseDecisions,
+    CasinoRulesDecision,
+    CasinoRulesDecisions,
     DecisionEvaluation,
     DecisionsSet,
     DynamicConditions,
-    DynamicDecisions,
     DynamicDecision,
-    GameSettingsDecisions,
-    GameSettingsDecision,
+    DynamicDecisions,
     OptimalDecision,
-    PlayerDecisions,
-    PlayerDecision
+    PlayerDecision,
+    PlayerDecisions
 } from './decisions';
 export { Dictionary, NumericDictionary } from './dictionary';
 export { GameConfig } from './game-config';
-export { GameSettings, GameSettingsKeys } from './game-settings';
 export { Hand, HandOutcome, HandRepresentation } from './hand';
 export { Phases } from './phases';
 export { Player } from './player';

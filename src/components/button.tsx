@@ -5,6 +5,7 @@ interface ButtonProps {
     backgroundColor: string;
     height: number | string;
     isEnabled: boolean;
+    marginBottom?: number;
     marginTop?: number;
     onPress: () => void;
     text: string;
@@ -15,6 +16,7 @@ export const Button: React.FC<ButtonProps> = (props) => (
     <TouchableOpacity
         style={{
             height: props.height,
+            marginBottom: props.marginBottom,
             marginTop: props.marginTop,
             width: props.width
         }}

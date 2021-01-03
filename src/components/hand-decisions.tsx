@@ -4,11 +4,11 @@ import { NavigationScreenProp } from 'react-navigation';
 import { colors } from '../constants';
 import {
     handRepresentationToRelevantHand,
-    mapGameSettingsDecisionToDynamicDecision
+    mapCasinoRulesDecisionToDynamicDecision
 } from '../logic/basic-strategy';
 import { GameConfig, HandRepresentation } from '../types';
 import { numberRange } from '../utils';
-import { GameSettingSwitch } from './game-setting-switch';
+import { CasinoRuleSwitch } from './casino-rule-switch';
 import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface HandDecisionsProps {
@@ -23,15 +23,15 @@ export const HandDecisions: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }, HandDecisionsParams>;
     screenProps: HandDecisionsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
-    const [gameSettings, setGameSettings] = useState(screenProps.gameConfig.settings);
+    const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
 
     const handRepresentation = navigation.getParam('handRepresentation');
     const relevantHand = handRepresentationToRelevantHand(handRepresentation);
     const handDecisions = numberRange(2, 11).map((number) => ({
         number,
-        decision: mapGameSettingsDecisionToDynamicDecision(
+        decision: mapCasinoRulesDecisionToDynamicDecision(
             relevantHand.decisions[number],
-            gameSettings
+            casinoRules
         )
     }));
 
@@ -90,13 +90,13 @@ export const HandDecisions: React.FC<{
                 ))}
 
                 {relevantHand.dependencies.map((dependency) => (
-                    <GameSettingSwitch
-                        gameSetting={dependency}
+                    <CasinoRuleSwitch
+                        casinoRule={dependency}
                         key={dependency}
                         onValueChange={(newValue) => {
-                            setGameSettings({ ...gameSettings, [dependency]: newValue });
+                            setCasinoRules({ ...casinoRules, [dependency]: newValue });
                         }}
-                        value={gameSettings[dependency]}
+                        value={casinoRules[dependency]}
                     />
                 ))}
             </ScrollView>

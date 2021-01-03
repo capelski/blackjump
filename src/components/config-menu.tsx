@@ -4,9 +4,9 @@ import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { updateGameConfig } from '../async-storage';
 import { getTrainingPairsNumber } from '../logic/training-pairs';
-import { GameConfig, GameSettingsKeys, ScreenTypes } from '../types';
+import { CasinoRulesKeys, GameConfig, ScreenTypes } from '../types';
 import { Button } from './button';
-import { GameSettingSwitch } from './game-setting-switch';
+import { CasinoRuleSwitch } from './casino-rule-switch';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface ConfigMenuProps {
@@ -23,10 +23,10 @@ export const ConfigMenu: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }>;
     screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
-    const [gameSettings, setGameSettings] = useState(screenProps.gameConfig.settings);
+    const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
     const [selectedHandsNumber, setSelectedHandsNumber] = useState(
         getTrainingPairsNumber(
-            screenProps.gameConfig.settings,
+            screenProps.gameConfig.casinoRules,
             screenProps.gameConfig.selectedLevels
         )
     );
@@ -34,20 +34,20 @@ export const ConfigMenu: React.FC<{
 
     const saveHandler = () => {
         screenProps.setGameConfig({
-            settings: gameSettings,
+            casinoRules,
             selectedLevels
         });
         navigation.navigate(ScreenTypes.table);
-        updateGameConfig({ settings: gameSettings, selectedLevels });
+        updateGameConfig({ casinoRules, selectedLevels });
     };
 
     const isSaveButtonEnabled =
-        (screenProps.gameConfig.settings[GameSettingsKeys.canDoubleAfterSplit] !==
-            gameSettings[GameSettingsKeys.canDoubleAfterSplit] ||
-            screenProps.gameConfig.settings[GameSettingsKeys.canDoubleOnAnyInitialHand] !==
-                gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ||
-            screenProps.gameConfig.settings[GameSettingsKeys.canSurrender] !==
-                gameSettings[GameSettingsKeys.canSurrender] ||
+        (screenProps.gameConfig.casinoRules[CasinoRulesKeys.canDoubleAfterSplit] !==
+            casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ||
+            screenProps.gameConfig.casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] !==
+                casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
+            screenProps.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
+                casinoRules[CasinoRulesKeys.canSurrender] ||
             screenProps.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
             screenProps.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
             screenProps.gameConfig.selectedLevels[3] !== selectedLevels[3] ||
@@ -70,18 +70,18 @@ export const ConfigMenu: React.FC<{
                     width: '100%'
                 }}
             >
-                {Object.values(GameSettingsKeys).map((setting) => (
-                    <GameSettingSwitch
-                        gameSetting={setting}
-                        key={setting}
+                {Object.values(CasinoRulesKeys).map((casinoRule) => (
+                    <CasinoRuleSwitch
+                        casinoRule={casinoRule}
+                        key={casinoRule}
                         onValueChange={(newValue) => {
-                            const nextGameSettings = { ...gameSettings, [setting]: newValue };
-                            setGameSettings(nextGameSettings);
+                            const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
+                            setCasinoRules(nextCasinoRules);
                             setSelectedHandsNumber(
-                                getTrainingPairsNumber(nextGameSettings, selectedLevels)
+                                getTrainingPairsNumber(nextCasinoRules, selectedLevels)
                             );
                         }}
-                        value={gameSettings[setting]}
+                        value={casinoRules[casinoRule]}
                     />
                 ))}
 
@@ -130,7 +130,7 @@ export const ConfigMenu: React.FC<{
                                         };
                                         setSelectedLevels(nextSelectedLevels);
                                         setSelectedHandsNumber(
-                                            getTrainingPairsNumber(gameSettings, nextSelectedLevels)
+                                            getTrainingPairsNumber(casinoRules, nextSelectedLevels)
                                         );
                                     }}
                                     style={{ marginRight: 8 }}

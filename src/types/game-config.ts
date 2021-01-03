@@ -1,7 +1,7 @@
+import { CasinoRules } from './casino-rules';
 import { NumericDictionary } from './dictionary';
-import { GameSettings } from './game-settings';
 
 export interface GameConfig {
-    settings: GameSettings;
+    casinoRules: CasinoRules;
     selectedLevels: NumericDictionary<boolean>;
 }

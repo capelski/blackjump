@@ -1,9 +1,9 @@
 import {
     BaseDecisions,
+    CasinoRulesDecisions,
+    CasinoRulesKeys,
     Dictionary,
     DynamicDecisions,
-    GameSettingsDecisions,
-    GameSettingsKeys,
     HandRepresentation,
     RelevantHand
 } from '../types';
@@ -12,7 +12,7 @@ import { createDecisionsSet } from './decisions-set';
 const double_hit = createDecisionsSet(DynamicDecisions.double_hit);
 const hit = createDecisionsSet(BaseDecisions.hit);
 const split = createDecisionsSet(BaseDecisions.split);
-const splitIfDas_hit = createDecisionsSet(GameSettingsDecisions.splitIfDasAllowed_hit);
+const splitIfDas_hit = createDecisionsSet(CasinoRulesDecisions.splitIfDasAllowed_hit);
 const stand = createDecisionsSet(BaseDecisions.stand);
 
 export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> = {
@@ -83,14 +83,14 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
             .dealer(6)
             .then.hit.until.dealer(9)
             .then.surrenderIfAllowed_hit.until.dealer(10).then.hit,
-        dependencies: [GameSettingsKeys.canSurrender],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canSurrender] ? 4 : 2),
+        dependencies: [CasinoRulesKeys.canSurrender],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canSurrender] ? 4 : 2),
         name: 'Hard 15'
     },
     [HandRepresentation.Hard16]: {
         decisions: stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderIfAllowed_hit,
-        dependencies: [GameSettingsKeys.canSurrender],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canSurrender] ? 3 : 2),
+        dependencies: [CasinoRulesKeys.canSurrender],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canSurrender] ? 3 : 2),
         name: 'Hard 16'
     },
     [HandRepresentation.Hard17]: {
@@ -122,32 +122,32 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
     // Soft hands
     [HandRepresentation.Soft13]: {
         decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 13'
     },
     [HandRepresentation.Soft14]: {
         decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 14'
     },
     [HandRepresentation.Soft15]: {
         decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 15'
     },
     [HandRepresentation.Soft16]: {
         decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 16'
     },
     [HandRepresentation.Soft17]: {
         decisions: hit.until.dealer(2).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 17'
     },
     [HandRepresentation.Soft18]: {
@@ -155,8 +155,8 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
             .dealer(2)
             .then.doubleIfAllowed_stand.until.dealer(6)
             .then.stand.until.dealer(8).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleOnAnyInitialHand],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
         name: 'Soft 18'
     },
     [HandRepresentation.Soft19]: {
@@ -176,20 +176,20 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
     // Split hands
     [HandRepresentation.Split2s]: {
         decisions: splitIfDas_hit.until.dealer(3).then.split.until.dealer(7).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleAfterSplit],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleAfterSplit] ? 2 : 3),
+        dependencies: [CasinoRulesKeys.canDoubleAfterSplit],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ? 2 : 3),
         name: '2,2'
     },
     [HandRepresentation.Split3s]: {
         decisions: splitIfDas_hit.until.dealer(3).then.split.until.dealer(7).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleAfterSplit],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleAfterSplit] ? 2 : 3),
+        dependencies: [CasinoRulesKeys.canDoubleAfterSplit],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ? 2 : 3),
         name: '3,3'
     },
     [HandRepresentation.Split4s]: {
         decisions: hit.until.dealer(4).then.splitIfDasAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleAfterSplit],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleAfterSplit] ? 3 : 1),
+        dependencies: [CasinoRulesKeys.canDoubleAfterSplit],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ? 3 : 1),
         name: '4,4'
     },
     [HandRepresentation.Split5s]: {
@@ -200,8 +200,8 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
     },
     [HandRepresentation.Split6s]: {
         decisions: splitIfDas_hit.until.dealer(2).then.split.until.dealer(6).then.hit,
-        dependencies: [GameSettingsKeys.canDoubleAfterSplit],
-        level: (gameSettings) => (gameSettings[GameSettingsKeys.canDoubleAfterSplit] ? 2 : 3),
+        dependencies: [CasinoRulesKeys.canDoubleAfterSplit],
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ? 2 : 3),
         name: '6,6'
     },
     [HandRepresentation.Split7s]: {

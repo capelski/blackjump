@@ -1,15 +1,15 @@
 import {
     BaseDecisions,
+    CasinoRulesDecision,
+    CasinoRulesDecisions,
     DecisionsSet,
-    DynamicDecisions,
-    GameSettingsDecision,
-    GameSettingsDecisions
+    DynamicDecisions
 } from '../types';
 import { numberRange } from '../utils';
 
 export const extendDecisionSet = (
     previousDecisionSet: DecisionsSet,
-    decision: GameSettingsDecision,
+    decision: CasinoRulesDecision,
     startScore: number,
     endScore: number
 ) => {
@@ -23,7 +23,7 @@ export const extendDecisionSet = (
 };
 
 export const createDecisionsSet = (
-    decision: GameSettingsDecision,
+    decision: CasinoRulesDecision,
     startScore?: number,
     previousDecisionSet?: DecisionsSet
 ): DecisionsSet => {
@@ -44,12 +44,12 @@ export const createDecisionsSet = (
                             currentDecisionsSet
                         ),
                         doubleIfAllowed_hit: createDecisionsSet(
-                            GameSettingsDecisions.doubleIfAllowed_hit,
+                            CasinoRulesDecisions.doubleIfAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
                         doubleIfAllowed_stand: createDecisionsSet(
-                            GameSettingsDecisions.doubleIfAllowed_stand,
+                            CasinoRulesDecisions.doubleIfAllowed_stand,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
@@ -64,7 +64,7 @@ export const createDecisionsSet = (
                             currentDecisionsSet
                         ),
                         splitIfDasAllowed_hit: createDecisionsSet(
-                            GameSettingsDecisions.splitIfDasAllowed_hit,
+                            CasinoRulesDecisions.splitIfDasAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         ),
@@ -74,7 +74,7 @@ export const createDecisionsSet = (
                             currentDecisionsSet
                         ),
                         surrenderIfAllowed_hit: createDecisionsSet(
-                            GameSettingsDecisions.surrenderIfAllowed_hit,
+                            CasinoRulesDecisions.surrenderIfAllowed_hit,
                             limitScore + 1,
                             currentDecisionsSet
                         )

@@ -94,10 +94,10 @@ export default function App() {
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
         currentHand !== undefined &&
-        canDouble(currentHand, player.hands.length, gameConfig.settings);
+        canDouble(currentHand, player.hands.length, gameConfig.casinoRules);
     const isSurrenderEnabled =
         currentHand !== undefined &&
-        canSurrender(currentHand, player.hands.length, gameConfig.settings);
+        canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -146,7 +146,7 @@ export default function App() {
     };
 
     const evaluatePlayerDecision = (decision: PlayerDecision, hand: Hand) => {
-        const optimalDecision = getOptimalDecision(hand, dealerHand!, gameConfig.settings, {
+        const optimalDecision = getOptimalDecision(hand, dealerHand!, gameConfig.casinoRules, {
             canDouble: isDoubleEnabled,
             canSurrender: isSurrenderEnabled
         });
@@ -172,7 +172,7 @@ export default function App() {
                 badDecisions.concat([
                     {
                         dealerHandValue: getHandEffectiveValue(dealerHand!),
-                        gameSettings: gameConfig.settings,
+                        casinoRules: gameConfig.casinoRules,
                         handRepresentation: handToHandRepresentation(hand),
                         takenAction: decision
                     }
