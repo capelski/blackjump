@@ -1,12 +1,24 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { GameConfig, TrainedHands } from './types';
 
-export const getGameConfig = () =>
+export const getGameConfig = (currentGameConfig: GameConfig) =>
     AsyncStorage.getItem('gameConfig')
-        .then((value) => (value ? (JSON.parse(value) as GameConfig) : undefined))
+        .then(
+            (value): GameConfig => {
+                const storedGameConfig = value && (JSON.parse(value) as GameConfig);
+                return {
+                    casinoRules:
+                        (storedGameConfig && storedGameConfig.casinoRules) ||
+                        currentGameConfig.casinoRules,
+                    selectedLevels:
+                        (storedGameConfig && storedGameConfig.selectedLevels) ||
+                        currentGameConfig.selectedLevels
+                };
+            }
+        )
         .catch((error) => {
             console.log(error);
-            return undefined;
+            return currentGameConfig;
         });
 
 export const getTrainedHands = () =>

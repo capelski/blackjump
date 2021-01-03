@@ -78,11 +78,7 @@ export default function App() {
     const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
 
     useEffect(() => {
-        getGameConfig().then((gameConfig) => {
-            if (gameConfig) {
-                setGameConfig(gameConfig);
-            }
-        });
+        getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
         getTrainedHands().then((trainedHands) => {
             if (trainedHands) {
                 setTrainedHands(trainedHands);
