@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
-import { ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { updateGameConfig } from '../async-storage';
 import { getTrainingPairsNumber } from '../logic/training-pairs';
@@ -8,6 +8,7 @@ import { CasinoRulesKeys, GameConfig, ScreenTypes } from '../types';
 import { Button } from './button';
 import { CasinoRuleSwitch } from './casino-rule-switch';
 import { Divider } from './divider';
+import { HelpIcon } from './help-icon';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface ConfigMenuProps {
@@ -149,26 +150,11 @@ export const ConfigMenu: React.FC<{
                     >
                         Deal untrained hands
                     </Text>
-                    <TouchableOpacity
+                    <HelpIcon
                         onPress={() => {
-                            // TODO
-                            // navigation.navigate(ScreenTypes.handsLevelInfo);
+                            // TODO navigation.navigate(ScreenTypes.dealUntrainedHandsInfo);
                         }}
-                    >
-                        <Text
-                            style={{
-                                backgroundColor: '#428bca',
-                                borderRadius: 12,
-                                color: 'white',
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                paddingHorizontal: 8,
-                                marginLeft: 8
-                            }}
-                        >
-                            ?
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 </View>
 
                 {/* TODO Levels don't apply if deal untrained hands is disabled */}
@@ -177,25 +163,11 @@ export const ConfigMenu: React.FC<{
                         <Text style={{ ...textStyle, marginLeft: 8 }}>
                             Active hand levels ({selectedHandsNumber} hands)
                         </Text>
-                        <TouchableOpacity
+                        <HelpIcon
                             onPress={() => {
                                 navigation.navigate(ScreenTypes.handsLevelInfo);
                             }}
-                        >
-                            <Text
-                                style={{
-                                    backgroundColor: '#428bca',
-                                    borderRadius: 12,
-                                    color: 'white',
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    paddingHorizontal: 8,
-                                    marginLeft: 8
-                                }}
-                            >
-                                ?
-                            </Text>
-                        </TouchableOpacity>
+                        />
                     </View>
                     <View
                         style={{
@@ -246,26 +218,11 @@ export const ConfigMenu: React.FC<{
                     >
                         Reach untrained hands
                     </Text>
-                    {/* TODO Create help icon component */}
-                    <TouchableOpacity
+                    <HelpIcon
                         onPress={() => {
                             // TODO navigation.navigate(ScreenTypes.reachUntrainedHandsInfo);
                         }}
-                    >
-                        <Text
-                            style={{
-                                backgroundColor: '#428bca',
-                                borderRadius: 12,
-                                color: 'white',
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                paddingHorizontal: 8,
-                                marginLeft: 8
-                            }}
-                        >
-                            ?
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 </View>
 
                 <Button
