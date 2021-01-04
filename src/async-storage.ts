@@ -10,6 +10,9 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                     casinoRules:
                         (storedGameConfig && storedGameConfig.casinoRules) ||
                         currentGameConfig.casinoRules,
+                    reachUntrainedHands:
+                        (storedGameConfig && storedGameConfig.reachUntrainedHands) ||
+                        currentGameConfig.reachUntrainedHands,
                     selectedLevels:
                         (storedGameConfig && storedGameConfig.selectedLevels) ||
                         currentGameConfig.selectedLevels

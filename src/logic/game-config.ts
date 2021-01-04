@@ -6,6 +6,7 @@ export const getDefaultGameConfig = (): GameConfig => ({
         [CasinoRulesKeys.canDoubleOnAnyInitialHand]: false,
         [CasinoRulesKeys.canSurrender]: false
     },
+    reachUntrainedHands: true,
     selectedLevels: {
         1: true,
         2: true,

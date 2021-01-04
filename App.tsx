@@ -133,7 +133,12 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
+            startNextHand(
+                player,
+                gameConfig.reachUntrainedHands,
+                symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
+                trainedHands
+            );
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
@@ -187,7 +192,12 @@ export default function App() {
 
     const hitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
-        hitCurrentHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
+        hitCurrentHand(
+            player,
+            gameConfig.reachUntrainedHands,
+            symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
+            trainedHands
+        );
 
         setPlayer({ ...player });
         if (isFinished(currentHand)) {
@@ -204,7 +214,12 @@ export default function App() {
 
     const splitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
-        splitCurrentHand(player, symbolToSimpleSymbol(dealerHand!.cards[0].symbol), trainedHands);
+        splitCurrentHand(
+            player,
+            gameConfig.reachUntrainedHands,
+            symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
+            trainedHands
+        );
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player))) {
