@@ -157,8 +157,13 @@ export const ConfigMenu: React.FC<{
                     />
                 </View>
 
-                {/* TODO Levels don't apply if deal untrained hands is disabled */}
-                <View style={{ width: '100%', marginTop: 16 }}>
+                <View
+                    style={{
+                        marginTop: 16,
+                        opacity: dealUntrainedHands ? undefined : 0.3,
+                        width: '100%'
+                    }}
+                >
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ ...textStyle, marginLeft: 8 }}>
                             Active hand levels ({selectedHandsNumber} hands)
@@ -177,10 +182,10 @@ export const ConfigMenu: React.FC<{
                             width: '100%'
                         }}
                     >
-                        {Object.keys(screenProps.gameConfig.selectedLevels).map((number) => (
+                        {Object.keys(selectedLevels).map((number) => (
                             <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
                                 <Switch
-                                    disabled={false}
+                                    disabled={!dealUntrainedHands}
                                     onValueChange={(newValue) => {
                                         const nextSelectedLevels = {
                                             ...selectedLevels,
