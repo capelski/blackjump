@@ -1,15 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import { actionsHeight, colors } from '../constants';
+import { getRandomCard } from '../logic/card';
+import { createHand } from '../logic/hand';
 import { getRandomTrainingPair } from '../logic/training-pairs';
-import {
-    BaseDecisions,
-    GameConfig,
-    Phases,
-    PlayerDecisions,
-    TrainedHands,
-    TrainingPair
-} from '../types';
+import { BaseDecisions, GameConfig, Hand, Phases, PlayerDecisions, TrainedHands } from '../types';
 import { Button } from './button';
 
 export interface ActionsProps {
@@ -25,7 +20,7 @@ export interface ActionsProps {
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
     phase: Phases;
-    startTrainingRound: (trainingPair: TrainingPair) => void;
+    startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
 }
 
@@ -41,11 +36,20 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     height="100%"
                     backgroundColor={colors[BaseDecisions.hit]}
                     isEnabled={true}
-                    onPress={() =>
-                        props.startTrainingRound(
-                            getRandomTrainingPair(props.gameConfig, props.trainedHands)
-                        )
-                    }
+                    onPress={() => {
+                        const trainingPair =
+                            props.gameConfig.dealUntrainedHands &&
+                            getRandomTrainingPair(props.gameConfig, props.trainedHands);
+
+                        const playerHand = trainingPair
+                            ? trainingPair.player
+                            : createHand([getRandomCard(), getRandomCard()]);
+                        const dealerHand = trainingPair
+                            ? trainingPair.dealer
+                            : createHand([getRandomCard()]);
+
+                        props.startTrainingRound(playerHand, dealerHand);
+                    }}
                     text="Next"
                     width="100%"
                 />

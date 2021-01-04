@@ -120,9 +120,9 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
-    const startTrainingRound = (trainingPair: TrainingPair) => {
-        initializeHands(player, trainingPair.player);
-        setDealerHand(trainingPair.dealer);
+    const startTrainingRound = (playerHand: Hand, dealerHand: Hand) => {
+        initializeHands(player, playerHand);
+        setDealerHand(dealerHand);
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);

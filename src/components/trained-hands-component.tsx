@@ -4,12 +4,12 @@ import { NavigationScreenProp } from 'react-navigation';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
+    Hand,
     HandRepresentation,
     Phases,
     ScreenTypes,
     SimpleCardSymbol,
-    TrainedHands,
-    TrainingPair
+    TrainedHands
 } from '../types';
 import { Divider } from './divider';
 import { HandDecisionsParams } from './hand-decisions';
@@ -17,7 +17,7 @@ import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface TrainedHandsComponentProps {
     phase: Phases;
-    startTrainingRound: (trainingPair: TrainingPair) => void;
+    startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
 }
 
@@ -107,11 +107,13 @@ export const TrainedHandsComponent: React.FC<{
                                                                 screenProps.phase ===
                                                                 Phases.finished
                                                             ) {
+                                                                const trainingPair = getSpecificTrainingPair(
+                                                                    handRepresentation,
+                                                                    dealerSymbol
+                                                                );
                                                                 screenProps.startTrainingRound(
-                                                                    getSpecificTrainingPair(
-                                                                        handRepresentation,
-                                                                        dealerSymbol
-                                                                    )
+                                                                    trainingPair.player,
+                                                                    trainingPair.dealer
                                                                 );
                                                                 navigation.navigate(
                                                                     ScreenTypes.table

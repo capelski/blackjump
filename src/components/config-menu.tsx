@@ -25,6 +25,9 @@ export const ConfigMenu: React.FC<{
     screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
+    const [dealUntrainedHands, setDealUntrainedHands] = useState(
+        screenProps.gameConfig.dealUntrainedHands
+    );
     const [reachUntrainedHands, setReachUntrainedHands] = useState(
         screenProps.gameConfig.reachUntrainedHands
     );
@@ -39,11 +42,12 @@ export const ConfigMenu: React.FC<{
     const saveHandler = () => {
         screenProps.setGameConfig({
             casinoRules,
+            dealUntrainedHands,
             reachUntrainedHands,
             selectedLevels
         });
         navigation.navigate(ScreenTypes.table);
-        updateGameConfig({ casinoRules, reachUntrainedHands, selectedLevels });
+        updateGameConfig({ casinoRules, dealUntrainedHands, reachUntrainedHands, selectedLevels });
     };
 
     const isSaveButtonEnabled =
@@ -53,6 +57,7 @@ export const ConfigMenu: React.FC<{
                 casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
             screenProps.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
                 casinoRules[CasinoRulesKeys.canSurrender] ||
+            screenProps.gameConfig.dealUntrainedHands !== dealUntrainedHands ||
             screenProps.gameConfig.reachUntrainedHands !== reachUntrainedHands ||
             screenProps.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
             screenProps.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
@@ -127,7 +132,46 @@ export const ConfigMenu: React.FC<{
                     App settings
                 </Text>
                 <Divider />
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={(value) => {
+                            setDealUntrainedHands(value);
+                        }}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: '#428bca', false: 'white' }}
+                        value={dealUntrainedHands}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
+                        }}
+                    >
+                        Deal untrained hands
+                    </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            // TODO
+                            // navigation.navigate(ScreenTypes.handsLevelInfo);
+                        }}
+                    >
+                        <Text
+                            style={{
+                                backgroundColor: '#428bca',
+                                borderRadius: 12,
+                                color: 'white',
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                                paddingHorizontal: 8,
+                                marginLeft: 8
+                            }}
+                        >
+                            ?
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
+                {/* TODO Levels don't apply if deal untrained hands is disabled */}
                 <View style={{ width: '100%', marginTop: 16 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ ...textStyle, marginLeft: 8 }}>
