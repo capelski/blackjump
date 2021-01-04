@@ -8,17 +8,21 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                 const storedGameConfig = value && (JSON.parse(value) as GameConfig);
                 return {
                     casinoRules:
-                        (storedGameConfig && storedGameConfig.casinoRules) ||
-                        currentGameConfig.casinoRules,
+                        storedGameConfig && storedGameConfig.casinoRules !== undefined
+                            ? storedGameConfig.casinoRules
+                            : currentGameConfig.casinoRules,
                     dealUntrainedHands:
-                        (storedGameConfig && storedGameConfig.dealUntrainedHands) ||
-                        currentGameConfig.dealUntrainedHands,
+                        storedGameConfig && storedGameConfig.dealUntrainedHands !== undefined
+                            ? storedGameConfig.dealUntrainedHands
+                            : currentGameConfig.dealUntrainedHands,
                     reachUntrainedHands:
-                        (storedGameConfig && storedGameConfig.reachUntrainedHands) ||
-                        currentGameConfig.reachUntrainedHands,
+                        storedGameConfig && storedGameConfig.reachUntrainedHands !== undefined
+                            ? storedGameConfig.reachUntrainedHands
+                            : currentGameConfig.reachUntrainedHands,
                     selectedLevels:
-                        (storedGameConfig && storedGameConfig.selectedLevels) ||
-                        currentGameConfig.selectedLevels
+                        storedGameConfig && storedGameConfig.selectedLevels !== undefined
+                            ? storedGameConfig.selectedLevels
+                            : currentGameConfig.selectedLevels
                 };
             }
         )
