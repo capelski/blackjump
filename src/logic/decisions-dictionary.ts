@@ -156,7 +156,7 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
             .then.doubleIfAllowed_stand.until.dealer(6)
             .then.stand.until.dealer(8).then.hit,
         dependencies: [CasinoRulesKeys.canDoubleOnAnyInitialHand],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 3 : 1),
+        level: (casinoRules) => (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ? 4 : 2),
         name: 'Soft 18'
     },
     [HandRepresentation.Soft19]: {
@@ -196,7 +196,7 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
         decisions: double_hit.until.dealer(9).then.hit,
         dependencies: [],
         level: () => 2,
-        name: '5,5 (Hard 10)'
+        name: '5,5'
     },
     [HandRepresentation.Split6s]: {
         decisions: splitIfDas_hit.until.dealer(2).then.split.until.dealer(6).then.hit,
@@ -227,7 +227,7 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
         decisions: stand,
         dependencies: [],
         level: () => 1,
-        name: '10,10 (Hard 20)'
+        name: '10,10'
     },
     [HandRepresentation.SplitAs]: {
         decisions: split,
