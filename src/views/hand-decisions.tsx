@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import {
+    WithNavBar,
+    WithNavBarParams,
+    WithNavBarPropsFromScreenProps
+} from '../components/with-nav-bar';
 import { colors } from '../constants';
 import {
     handRepresentationToRelevantHand,
@@ -8,8 +14,6 @@ import {
 } from '../logic/basic-strategy';
 import { GameConfig, HandRepresentation } from '../types';
 import { numberRange } from '../utils';
-import { CasinoRuleSwitch } from './casino-rule-switch';
-import { WithNavBar, WithNavBarParams, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface HandDecisionsProps {
     gameConfig: GameConfig;

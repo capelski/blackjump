@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { Divider } from '../components/divider';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { BadDecision, ScreenTypes } from '../types';
-import { Divider } from './divider';
 import { HandDecisionsParams } from './hand-decisions';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface BadDecisionsProps {
     badDecisions: BadDecision[];

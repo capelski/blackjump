@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { updateGameConfig } from '../async-storage';
+import { Button } from '../components/button';
+import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import { Divider } from '../components/divider';
+import { HelpIcon } from '../components/help-icon';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { getTrainingPairsNumber } from '../logic/training-pairs';
 import { CasinoRulesKeys, GameConfig, ScreenTypes } from '../types';
-import { Button } from './button';
-import { CasinoRuleSwitch } from './casino-rule-switch';
-import { Divider } from './divider';
-import { HelpIcon } from './help-icon';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface ConfigMenuProps {
     gameConfig: GameConfig;

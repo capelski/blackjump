@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { HandComponent } from '../components/hand-component';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { CardSuit, SimpleCardSymbol } from '../types';
-import { HandComponent } from './hand-component';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 export const HandsLevelInfo: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }>;

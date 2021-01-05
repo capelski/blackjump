@@ -3,12 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
-import { BadDecisions } from './src/components/bad-decisions';
-import { ConfigMenu } from './src/components/config-menu';
-import { HandDecisions } from './src/components/hand-decisions';
-import { HandsLevelInfo } from './src/components/hands-level-info';
-import { Table } from './src/components/table';
-import { TrainedHandsComponent } from './src/components/trained-hands-component';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -45,9 +39,15 @@ import {
     PlayerDecision,
     PlayerDecisions,
     ScreenTypes,
-    TrainedHands
+    TrainedHands as ITrainedHands,
+    TrainedHandStatus
 } from './src/types';
-import { TrainedHandStatus, TrainingPair } from './src/types/training';
+import { BadDecisions } from './src/views/bad-decisions';
+import { ConfigMenu } from './src/views/config-menu';
+import { HandDecisions } from './src/views/hand-decisions';
+import { HandsLevelInfo } from './src/views/hands-level-info';
+import { Table } from './src/views/table';
+import { TrainedHands } from './src/views/trained-hands';
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
@@ -57,7 +57,7 @@ const AppContainer = createAppContainer(
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
             [ScreenTypes.table]: { screen: Table },
-            [ScreenTypes.trainedHands]: { screen: TrainedHandsComponent }
+            [ScreenTypes.trainedHands]: { screen: TrainedHands }
         },
         {
             initialRouteName: ScreenTypes.table
@@ -75,7 +75,7 @@ export default function App() {
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
-    const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
+    const [trainedHands, setTrainedHands] = useState<ITrainedHands>(getEmptyTrainedHands());
 
     useEffect(() => {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
@@ -152,7 +152,7 @@ export default function App() {
             canSurrender: isSurrenderEnabled
         });
 
-        const nextTrainedHands: TrainedHands = { ...trainedHands };
+        const nextTrainedHands: ITrainedHands = { ...trainedHands };
         nextTrainedHands[handToHandRepresentation(currentHand)][
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
         ] =

@@ -27,4 +27,10 @@ export { Hand, HandOutcome, HandRepresentation } from './hand';
 export { Phases } from './phases';
 export { Player } from './player';
 export { ScreenTypes } from './screen-types';
-export { RelevantHand, TrainedHands, TrainingPair, TrainingSet } from './training';
+export {
+    RelevantHand,
+    TrainedHands,
+    TrainedHandStatus,
+    TrainingPair,
+    TrainingSet
+} from './training';

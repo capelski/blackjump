@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { Divider } from '../components/divider';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
@@ -9,21 +11,19 @@ import {
     Phases,
     ScreenTypes,
     SimpleCardSymbol,
-    TrainedHands
+    TrainedHands as ITrainedHands
 } from '../types';
-import { Divider } from './divider';
 import { HandDecisionsParams } from './hand-decisions';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
-interface TrainedHandsComponentProps {
+interface TrainedHandsProps {
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-    trainedHands: TrainedHands;
+    trainedHands: ITrainedHands;
 }
 
-export const TrainedHandsComponent: React.FC<{
+export const TrainedHands: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: TrainedHandsComponentProps & WithNavBarPropsFromScreenProps;
+    screenProps: TrainedHandsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation>();
 

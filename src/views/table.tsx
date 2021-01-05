@@ -1,14 +1,14 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { Actions, ActionsProps } from '../components/actions';
+import { DecisionEvaluationComponent } from '../components/decision-evaluation';
+import { Divider } from '../components/divider';
+import { HandComponent } from '../components/hand-component';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { tableCenterHeight } from '../constants';
 import { DecisionEvaluation, Hand, Phases, Player, ScreenTypes } from '../types';
-import { Actions, ActionsProps } from './actions';
-import { DecisionEvaluationComponent } from './decision-evaluation';
-import { Divider } from './divider';
-import { HandComponent } from './hand-component';
 import { HandDecisionsParams } from './hand-decisions';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from './with-nav-bar';
 
 interface TableProps {
     dealerHand?: Hand;
