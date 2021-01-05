@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import { HandDecisionsTable } from '../components/hand-decisions-table';
 import {
     WithNavBar,
     WithNavBarParams,
     WithNavBarPropsFromScreenProps
 } from '../components/with-nav-bar';
-import { colors } from '../constants';
-import {
-    handRepresentationToRelevantHand,
-    mapCasinoRulesDecisionToDynamicDecision
-} from '../logic/basic-strategy';
+import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { GameConfig, HandRepresentation } from '../types';
-import { numberRange } from '../utils';
 
 interface HandDecisionsProps {
     gameConfig: GameConfig;
@@ -31,13 +27,6 @@ export const HandDecisions: React.FC<{
 
     const handRepresentation = navigation.getParam('handRepresentation');
     const relevantHand = handRepresentationToRelevantHand(handRepresentation);
-    const handDecisions = numberRange(2, 11).map((number) => ({
-        number,
-        decision: mapCasinoRulesDecisionToDynamicDecision(
-            relevantHand.decisions[number],
-            casinoRules
-        )
-    }));
 
     return (
         <WithNavBar
@@ -58,40 +47,7 @@ export const HandDecisions: React.FC<{
                     {relevantHand.name}
                 </Text>
 
-                {handDecisions.map((dynamicDecision) => (
-                    <View
-                        key={dynamicDecision.number}
-                        style={{ flexDirection: 'row', width: '100%' }}
-                    >
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                paddingTop: 12,
-                                textAlign: 'center',
-                                width: '15%'
-                            }}
-                        >
-                            {dynamicDecision.number}
-                        </Text>
-                        <Text
-                            style={{
-                                backgroundColor: colors[dynamicDecision.decision],
-                                color: 'white',
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                marginTop: 8,
-                                paddingVertical: 4,
-                                paddingHorizontal: 8,
-                                textAlign: 'center',
-                                width: '85%'
-                            }}
-                        >
-                            {dynamicDecision.decision}
-                        </Text>
-                    </View>
-                ))}
+                <HandDecisionsTable casinoRules={casinoRules} relevantHand={relevantHand} />
 
                 {relevantHand.dependencies.map((dependency) => (
                     <CasinoRuleSwitch
