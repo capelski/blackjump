@@ -26,8 +26,8 @@ export const ConfigMenu: React.FC<{
     screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
-    const [dealUntrainedHands, setDealUntrainedHands] = useState(
-        screenProps.gameConfig.dealUntrainedHands
+    const [dealTrainingHands, setDealTrainingHands] = useState(
+        screenProps.gameConfig.dealTrainingHands
     );
     const [reachUntrainedHands, setReachUntrainedHands] = useState(
         screenProps.gameConfig.reachUntrainedHands
@@ -43,12 +43,12 @@ export const ConfigMenu: React.FC<{
     const saveHandler = () => {
         screenProps.setGameConfig({
             casinoRules,
-            dealUntrainedHands,
+            dealTrainingHands,
             reachUntrainedHands,
             selectedLevels
         });
         navigation.navigate(ScreenTypes.table);
-        updateGameConfig({ casinoRules, dealUntrainedHands, reachUntrainedHands, selectedLevels });
+        updateGameConfig({ casinoRules, dealTrainingHands, reachUntrainedHands, selectedLevels });
     };
 
     const isSaveButtonEnabled =
@@ -58,7 +58,7 @@ export const ConfigMenu: React.FC<{
                 casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
             screenProps.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
                 casinoRules[CasinoRulesKeys.canSurrender] ||
-            screenProps.gameConfig.dealUntrainedHands !== dealUntrainedHands ||
+            screenProps.gameConfig.dealTrainingHands !== dealTrainingHands ||
             screenProps.gameConfig.reachUntrainedHands !== reachUntrainedHands ||
             screenProps.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
             screenProps.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
@@ -136,11 +136,11 @@ export const ConfigMenu: React.FC<{
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
                         onValueChange={(value) => {
-                            setDealUntrainedHands(value);
+                            setDealTrainingHands(value);
                         }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: '#428bca', false: 'white' }}
-                        value={dealUntrainedHands}
+                        value={dealTrainingHands}
                     />
                     <Text
                         style={{
@@ -152,7 +152,7 @@ export const ConfigMenu: React.FC<{
                     </Text>
                     <HelpIcon
                         onPress={() => {
-                            // TODO navigation.navigate(ScreenTypes.dealUntrainedHandsInfo);
+                            // TODO navigation.navigate(ScreenTypes.dealTrainingHandsInfo);
                         }}
                     />
                 </View>
@@ -160,7 +160,7 @@ export const ConfigMenu: React.FC<{
                 <View
                     style={{
                         marginTop: 16,
-                        opacity: dealUntrainedHands ? undefined : 0.3,
+                        opacity: dealTrainingHands ? undefined : 0.3,
                         width: '100%'
                     }}
                 >
@@ -185,7 +185,7 @@ export const ConfigMenu: React.FC<{
                         {Object.keys(selectedLevels).map((number) => (
                             <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
                                 <Switch
-                                    disabled={!dealUntrainedHands}
+                                    disabled={!dealTrainingHands}
                                     onValueChange={(newValue) => {
                                         const nextSelectedLevels = {
                                             ...selectedLevels,

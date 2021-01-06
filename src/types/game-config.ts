@@ -3,7 +3,7 @@ import { NumericDictionary } from './dictionary';
 
 export interface GameConfig {
     casinoRules: CasinoRules;
-    dealUntrainedHands: boolean;
+    dealTrainingHands: boolean;
     reachUntrainedHands: boolean;
     selectedLevels: NumericDictionary<boolean>;
 }

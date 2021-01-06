@@ -11,10 +11,10 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                         storedGameConfig && storedGameConfig.casinoRules !== undefined
                             ? storedGameConfig.casinoRules
                             : currentGameConfig.casinoRules,
-                    dealUntrainedHands:
-                        storedGameConfig && storedGameConfig.dealUntrainedHands !== undefined
-                            ? storedGameConfig.dealUntrainedHands
-                            : currentGameConfig.dealUntrainedHands,
+                    dealTrainingHands:
+                        storedGameConfig && storedGameConfig.dealTrainingHands !== undefined
+                            ? storedGameConfig.dealTrainingHands
+                            : currentGameConfig.dealTrainingHands,
                     reachUntrainedHands:
                         storedGameConfig && storedGameConfig.reachUntrainedHands !== undefined
                             ? storedGameConfig.reachUntrainedHands
