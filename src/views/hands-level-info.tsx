@@ -68,13 +68,13 @@ export const HandsLevelInfo: React.FC<{
                 }}
             >
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    A hand level tells how many different actions there are for that hand depending
-                    on the dealer's up card.
+                    A hand level tells how many different groups of optimal actions there are for
+                    that hand depending on the dealer's up card.
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    For example, a Hard 8 is level 1 because the optimal action is always Hit, no
-                    matter the dealer's up card.
+                    For example, the optimal action for a Hard 8 is to always Hit, no matter the
+                    dealer's up card, thus it's level 1 (only one group of optimal actions).
                 </Text>
 
                 <HandComponent hand={hardEight} isCurrentHand={false} />
@@ -84,9 +84,9 @@ export const HandsLevelInfo: React.FC<{
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
-                    A 9,9 however is level 4 because it has 4 groups of optimal actions depending on
-                    the dealer's up card: Split (dealer's 2 to 6), Stand (dealer's 7), Split
-                    (dealer's 8 and 9) and Stand (dealer's 10 and A).
+                    A 9,9 however has 4 groups of optimal actions depending on the dealer's up card:
+                    Split (dealer's 2 to 6), Stand (dealer's 7), Split (dealer's 8 and 9) and Stand
+                    (dealer's 10 and A), so it's level 4.
                 </Text>
 
                 <HandComponent hand={splitNine} isCurrentHand={false} />
