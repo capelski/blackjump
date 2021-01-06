@@ -148,11 +148,11 @@ export const ConfigMenu: React.FC<{
                             fontSize: 20
                         }}
                     >
-                        Deal untrained hands
+                        Deal training hands
                     </Text>
                     <HelpIcon
                         onPress={() => {
-                            // TODO navigation.navigate(ScreenTypes.dealTrainingHandsInfo);
+                            navigation.navigate(ScreenTypes.dealTrainingHandsInfo);
                         }}
                     />
                 </View>
@@ -225,7 +225,7 @@ export const ConfigMenu: React.FC<{
                     </Text>
                     <HelpIcon
                         onPress={() => {
-                            // TODO navigation.navigate(ScreenTypes.reachUntrainedHandsInfo);
+                            navigation.navigate(ScreenTypes.reachUntrainedHandsInfo);
                         }}
                     />
                 </View>

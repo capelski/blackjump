@@ -44,8 +44,10 @@ import {
 } from './src/types';
 import { BadDecisions } from './src/views/bad-decisions';
 import { ConfigMenu } from './src/views/config-menu';
+import { DealTrainingHandsInfo } from './src/views/deal-training-hands-info';
 import { HandDecisions } from './src/views/hand-decisions';
 import { HandsLevelInfo } from './src/views/hands-level-info';
+import { ReachUntrainedHandsInfo } from './src/views/reach-untrained-hands-info';
 import { Table } from './src/views/table';
 import { TrainedHands } from './src/views/trained-hands';
 
@@ -54,8 +56,10 @@ const AppContainer = createAppContainer(
         {
             [ScreenTypes.badDecisions]: { screen: BadDecisions },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
+            [ScreenTypes.dealTrainingHandsInfo]: { screen: DealTrainingHandsInfo },
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
+            [ScreenTypes.reachUntrainedHandsInfo]: { screen: ReachUntrainedHandsInfo },
             [ScreenTypes.table]: { screen: Table },
             [ScreenTypes.trainedHands]: { screen: TrainedHands }
         },
