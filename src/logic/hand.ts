@@ -70,14 +70,14 @@ export const resolveHand = (playerHand: Hand, dealerHand: Hand): HandOutcome => 
     const dealerHandValue = getHandEffectiveValue(dealerHand!);
     const handOutcome = isBust(playerHand)
         ? HandOutcome.bust
-        : isBust(dealerHand!)
-        ? HandOutcome.playerWins
         : isBlackJack(playerHand) && isBlackJack(dealerHand!)
         ? HandOutcome.push
-        : isBlackJack(dealerHand!)
-        ? HandOutcome.dealerWins
         : isBlackJack(playerHand)
         ? HandOutcome.blackjack
+        : isBlackJack(dealerHand!)
+        ? HandOutcome.dealerWins
+        : isBust(dealerHand!)
+        ? HandOutcome.playerWins
         : playerHandValue > dealerHandValue
         ? HandOutcome.playerWins
         : playerHandValue === dealerHandValue
