@@ -130,6 +130,9 @@ export default function App() {
         setPlayer({ ...player });
         setPhase(Phases.player);
         setDecisionEvaluation(undefined);
+        if (isFinished(getCurrentHand(player))) {
+            finishCurrentHand(player);
+        }
     };
 
     const finishCurrentHand = (player: Player) => {
