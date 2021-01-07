@@ -67,7 +67,11 @@ export const HandsLevelInfo: React.FC<{
                     justifyContent: 'center'
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 24, marginBottom: 16 }}>Hands level</Text>
+                <Text
+                    style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
+                >
+                    Hands level
+                </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     A hand level tells how many different groups of optimal actions there are for

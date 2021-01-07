@@ -44,7 +44,9 @@ export const ReachUntrainedHandsInfo: React.FC<{
                     justifyContent: 'center'
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 24, marginBottom: 16 }}>
+                <Text
+                    style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
+                >
                     Reach untrained hands
                 </Text>
 
