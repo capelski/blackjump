@@ -30,6 +30,7 @@ export { ScreenTypes } from './screen-types';
 export {
     RelevantHand,
     TrainedHands,
+    TrainedHandsStats,
     TrainedHandStatus,
     TrainingPair,
     TrainingSet

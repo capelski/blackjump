@@ -20,6 +20,8 @@ import {
 } from './hand-representation';
 import { allPossibleDealerCards, trainingSets } from './training-sets';
 
+export const allTrainingPairsNumber = allPossibleDealerCards.length * trainingSets.length;
+
 // Called after player hitting, splitting or starting a split hand. It returns a card that
 // turns the current player hand into another untrained hand (against the current dealer card).
 // If there are no untrained hands (against the current dealer card) or no untrained hands can

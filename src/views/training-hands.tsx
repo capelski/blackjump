@@ -31,8 +31,7 @@ export const TrainingHands: React.FC<{
         <WithNavBar
             navigation={navigation}
             player={screenProps.player}
-            totalAttemptedDecisions={screenProps.totalAttemptedDecisions}
-            totalRightDecisions={screenProps.totalRightDecisions}
+            trainedHandsStats={screenProps.trainedHandsStats}
         >
             <Text
                 style={{

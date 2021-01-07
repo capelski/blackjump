@@ -11,16 +11,21 @@ export interface RelevantHand {
     name: string;
 }
 
+export type TrainedHands = Dictionary<
+    Dictionary<TrainedHandStatus, SimpleCardSymbol>,
+    HandRepresentation
+>;
+
+export type TrainedHandsStats = {
+    passed: number;
+    trained: number;
+};
+
 export enum TrainedHandStatus {
     untrained = 0,
     passed = 1,
     failed = 2
 }
-
-export type TrainedHands = Dictionary<
-    Dictionary<TrainedHandStatus, SimpleCardSymbol>,
-    HandRepresentation
->;
 
 export interface TrainingPair {
     dealer: Hand;

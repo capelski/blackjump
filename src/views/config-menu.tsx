@@ -70,8 +70,7 @@ export const ConfigMenu: React.FC<{
         <WithNavBar
             navigation={navigation}
             player={screenProps.player}
-            totalAttemptedDecisions={screenProps.totalAttemptedDecisions}
-            totalRightDecisions={screenProps.totalRightDecisions}
+            trainedHandsStats={screenProps.trainedHandsStats}
         >
             <ScrollView
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}

@@ -40,6 +40,7 @@ import {
     PlayerDecisions,
     ScreenTypes,
     TrainedHands,
+    TrainedHandsStats,
     TrainedHandStatus
 } from './src/types';
 import { BadDecisions } from './src/views/bad-decisions';
@@ -54,6 +55,7 @@ import { TrainingHands } from './src/views/training-hands';
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
+            // TODO Extract the navigation bar and wrap the AppContainer
             [ScreenTypes.badDecisions]: { screen: BadDecisions },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
             [ScreenTypes.dealTrainingHandsInfo]: { screen: DealTrainingHandsInfo },
@@ -77,15 +79,35 @@ export default function App() {
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
-    const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
-    const [totalRightDecisions, setTotalRightDecisions] = useState(0);
     const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
+    const [trainedHandsStats, setTrainedHandsStats] = useState<TrainedHandsStats>({
+        passed: 0,
+        trained: 0
+    });
 
     useEffect(() => {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
         getTrainedHands().then((trainedHands) => {
             if (trainedHands) {
                 setTrainedHands(trainedHands);
+                const _trainedHandsStats = Object.values(trainedHands).reduce(
+                    (reduced, trainedHand) => {
+                        return Object.values(trainedHand).reduce((handReduced, handStatus) => {
+                            return {
+                                passed:
+                                    handReduced.passed +
+                                    (handStatus === TrainedHandStatus.passed ? 1 : 0),
+                                trained:
+                                    handReduced.trained +
+                                    (handStatus !== TrainedHandStatus.untrained ? 1 : 0)
+                            };
+                        }, reduced);
+                    },
+                    { passed: 0, trained: 0 }
+                );
+                setTrainedHandsStats(_trainedHandsStats);
+
+                // TODO Fill the bad decisions too
             }
         });
     }, []);
@@ -160,6 +182,26 @@ export default function App() {
         });
 
         const nextTrainedHands: TrainedHands = { ...trainedHands };
+        const currentTrainedHandStatus =
+            nextTrainedHands[handToHandRepresentation(currentHand)][
+                symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
+            ];
+
+        setTrainedHandsStats({
+            passed:
+                trainedHandsStats.passed +
+                (currentTrainedHandStatus !== TrainedHandStatus.passed &&
+                optimalDecision.decision === decision
+                    ? 1
+                    : currentTrainedHandStatus === TrainedHandStatus.passed &&
+                      optimalDecision.decision !== decision
+                    ? -1
+                    : 0),
+            trained:
+                trainedHandsStats.trained +
+                (currentTrainedHandStatus === TrainedHandStatus.untrained ? 1 : 0)
+        });
+
         nextTrainedHands[handToHandRepresentation(currentHand)][
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
         ] =
@@ -170,10 +212,8 @@ export default function App() {
         setTrainedHands(nextTrainedHands);
         updateTrainedHands(nextTrainedHands);
 
-        setTotalAttemptedDecisions(totalAttemptedDecisions + 1);
         if (optimalDecision.decision === decision) {
             setDecisionEvaluation({ hit: true });
-            setTotalRightDecisions(totalRightDecisions + 1);
         } else {
             setDecisionEvaluation({ hit: false, failureReason: optimalDecision.description });
             setBadDecisions(
@@ -272,9 +312,8 @@ export default function App() {
                     phase,
                     setGameConfig,
                     startTrainingRound,
-                    totalAttemptedDecisions,
-                    totalRightDecisions,
-                    trainedHands
+                    trainedHands,
+                    trainedHandsStats
                 }}
             />
         </View>

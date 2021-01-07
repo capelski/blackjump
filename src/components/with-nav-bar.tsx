@@ -3,12 +3,12 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { NavigationScreenProp } from 'react-navigation';
 import { configBarHeight } from '../constants';
-import { Player, ScreenTypes } from '../types';
+import { allTrainingPairsNumber } from '../logic/training-pairs';
+import { Player, ScreenTypes, TrainedHandsStats } from '../types';
 
 export interface WithNavBarPropsFromScreenProps {
     player: Player;
-    totalAttemptedDecisions: number;
-    totalRightDecisions: number;
+    trainedHandsStats: TrainedHandsStats;
 }
 
 export interface WithNavBarParams {
@@ -42,12 +42,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     <Text style={{ color: earningsColor, fontSize: 20 }}>
                         {`${props.player.cash > 0 ? '+' : ''}${props.player.cash}`}
                     </Text>
-                    <Svg
-                        height={24}
-                        viewBox="0 0 468 468"
-                        width={24}
-                        style={{ marginLeft: 4, marginTop: 2 }}
-                    >
+                    <Svg height={24} viewBox="0 0 468 468" width={24} style={{ marginTop: 2 }}>
                         <G transform="translate(0,468) scale(0.078000,-0.078000)">
                             <Path
                                 fill={earningsColor}
@@ -83,10 +78,15 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     onPress={() => {
                         props.navigation.navigate(ScreenTypes.trainingHands);
                     }}
-                    style={{ alignItems: 'center', width: '25%' }}
+                    style={{ alignItems: 'center', width: '30%' }}
                 >
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={textStyles}>{props.totalAttemptedDecisions}</Text>
+                        <Text style={textStyles}>
+                            {Math.floor(
+                                (props.trainedHandsStats.trained * 1000) / allTrainingPairsNumber
+                            ) / 10}
+                            %
+                        </Text>
                         <Svg
                             height={28}
                             viewBox="0 0 1000 1000"
@@ -105,15 +105,17 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     onPress={() => {
                         props.navigation.navigate(ScreenTypes.badDecisions);
                     }}
-                    style={{ alignItems: 'center', width: '25%' }}
+                    style={{ alignItems: 'center', width: '30%' }}
                 >
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={textStyles}>
-                            {props.totalAttemptedDecisions &&
+                            {(props.trainedHandsStats.trained &&
                                 Math.floor(
-                                    (props.totalRightDecisions * 1000) /
-                                        props.totalAttemptedDecisions
-                                ) / 10}
+                                    (props.trainedHandsStats.passed * 1000) /
+                                        props.trainedHandsStats.trained
+                                ) / 10) ||
+                                0}
+                            %
                         </Text>
                         <Svg
                             height={28}
@@ -157,7 +159,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                             props.navigation.navigate(nextRoute);
                         }
                     }}
-                    style={{ alignItems: 'center', width: '25%' }}
+                    style={{ alignItems: 'center', width: '15%' }}
                 >
                     {props.navigation.state.routeName === ScreenTypes.table ? (
                         <Svg height={24} viewBox="340 140 280 279.416" width={24}>
