@@ -83,65 +83,71 @@ export const TrainingHands: React.FC<{
                                     </Text>
                                 </TouchableOpacity>
                                 {unfoldedHand && unfoldedHand === handRepresentation && (
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            flexWrap: 'wrap',
-                                            justifyContent: 'space-around'
-                                        }}
-                                    >
-                                        {(Object.keys(dealerHands) as SimpleCardSymbol[]).map(
-                                            (dealerSymbol, dealerIndex) => {
-                                                const backgroundColor =
-                                                    dealerHands[dealerSymbol] === 0
-                                                        ? '#333'
-                                                        : dealerHands[dealerSymbol] === 1
-                                                        ? 'lightgreen'
-                                                        : 'lightcoral';
+                                    <React.Fragment>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                flexWrap: 'wrap',
+                                                justifyContent: 'space-around',
+                                                opacity:
+                                                    screenProps.phase === Phases.finished
+                                                        ? undefined
+                                                        : 0.3
+                                            }}
+                                        >
+                                            {(Object.keys(dealerHands) as SimpleCardSymbol[]).map(
+                                                (dealerSymbol, dealerIndex) => {
+                                                    const backgroundColor =
+                                                        dealerHands[dealerSymbol] === 0
+                                                            ? '#333'
+                                                            : dealerHands[dealerSymbol] === 1
+                                                            ? 'lightgreen'
+                                                            : 'lightcoral';
 
-                                                return (
-                                                    <TouchableOpacity
-                                                        key={dealerIndex}
-                                                        onPress={() => {
-                                                            if (
-                                                                screenProps.phase ===
-                                                                Phases.finished
-                                                            ) {
-                                                                const trainingPair = getSpecificTrainingPair(
-                                                                    handRepresentation,
-                                                                    dealerSymbol
-                                                                );
-                                                                screenProps.startTrainingRound(
-                                                                    trainingPair.player,
-                                                                    trainingPair.dealer
-                                                                );
-                                                                navigation.navigate(
-                                                                    ScreenTypes.table
-                                                                );
-                                                            }
-                                                        }}
-                                                        style={{
-                                                            alignItems: 'center',
-                                                            backgroundColor: backgroundColor,
-                                                            borderRadius: 8,
-                                                            marginBottom: 8,
-                                                            paddingVertical: 4,
-                                                            width: '18%'
-                                                        }}
-                                                    >
-                                                        <Text
+                                                    return (
+                                                        <TouchableOpacity
+                                                            key={dealerIndex}
+                                                            onPress={() => {
+                                                                if (
+                                                                    screenProps.phase ===
+                                                                    Phases.finished
+                                                                ) {
+                                                                    const trainingPair = getSpecificTrainingPair(
+                                                                        handRepresentation,
+                                                                        dealerSymbol
+                                                                    );
+                                                                    screenProps.startTrainingRound(
+                                                                        trainingPair.player,
+                                                                        trainingPair.dealer
+                                                                    );
+                                                                    navigation.navigate(
+                                                                        ScreenTypes.table
+                                                                    );
+                                                                }
+                                                            }}
                                                             style={{
-                                                                color: 'white',
-                                                                fontSize: 20,
-                                                                fontWeight: 'bold'
+                                                                alignItems: 'center',
+                                                                backgroundColor: backgroundColor,
+                                                                borderRadius: 8,
+                                                                marginBottom: 8,
+                                                                paddingVertical: 4,
+                                                                width: '18%'
                                                             }}
                                                         >
-                                                            {dealerSymbol}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                );
-                                            }
-                                        )}
+                                                            <Text
+                                                                style={{
+                                                                    color: 'white',
+                                                                    fontSize: 20,
+                                                                    fontWeight: 'bold'
+                                                                }}
+                                                            >
+                                                                {dealerSymbol}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    );
+                                                }
+                                            )}
+                                        </View>
                                         <TouchableOpacity
                                             onPress={() => {
                                                 navigation.navigate<HandDecisionsParams>(
@@ -164,7 +170,7 @@ export const TrainingHands: React.FC<{
                                                 See hand strategy ➡️
                                             </Text>
                                         </TouchableOpacity>
-                                    </View>
+                                    </React.Fragment>
                                 )}
                                 <Divider />
                             </View>
