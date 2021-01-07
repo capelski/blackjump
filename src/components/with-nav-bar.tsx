@@ -38,7 +38,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     width: '100%'
                 }}
             >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', width: '25%' }}>
                     <Text style={{ color: earningsColor, fontSize: 20 }}>
                         {`${props.player.cash > 0 ? '+' : ''}${props.player.cash}`}
                     </Text>
@@ -83,6 +83,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     onPress={() => {
                         props.navigation.navigate(ScreenTypes.trainingHands);
                     }}
+                    style={{ alignItems: 'center', width: '25%' }}
                 >
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={textStyles}>{props.totalAttemptedDecisions}</Text>
@@ -104,6 +105,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     onPress={() => {
                         props.navigation.navigate(ScreenTypes.badDecisions);
                     }}
+                    style={{ alignItems: 'center', width: '25%' }}
                 >
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={textStyles}>
@@ -155,6 +157,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                             props.navigation.navigate(nextRoute);
                         }
                     }}
+                    style={{ alignItems: 'center', width: '25%' }}
                 >
                     {props.navigation.state.routeName === ScreenTypes.table ? (
                         <Svg height={24} viewBox="340 140 280 279.416" width={24}>
