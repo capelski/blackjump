@@ -6,5 +6,5 @@ export enum ScreenTypes {
     handsLevelInfo = 'handsLevelInfo',
     reachUntrainedHandsInfo = 'reachUntrainedHandsInfo',
     table = 'table',
-    trainedHands = 'trainedHands'
+    trainingHands = 'trainingHands'
 }

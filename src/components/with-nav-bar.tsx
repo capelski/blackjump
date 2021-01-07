@@ -81,7 +81,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        props.navigation.navigate(ScreenTypes.trainedHands);
+                        props.navigation.navigate(ScreenTypes.trainingHands);
                     }}
                 >
                     <View style={{ flexDirection: 'row' }}>

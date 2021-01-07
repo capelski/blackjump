@@ -11,19 +11,19 @@ import {
     Phases,
     ScreenTypes,
     SimpleCardSymbol,
-    TrainedHands as ITrainedHands
+    TrainedHands
 } from '../types';
 import { HandDecisionsParams } from './hand-decisions';
 
-interface TrainedHandsProps {
+interface TrainingHandsProps {
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-    trainedHands: ITrainedHands;
+    trainedHands: TrainedHands;
 }
 
-export const TrainedHands: React.FC<{
+export const TrainingHands: React.FC<{
     navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: TrainedHandsProps & WithNavBarPropsFromScreenProps;
+    screenProps: TrainingHandsProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation>();
 
@@ -43,7 +43,7 @@ export const TrainedHands: React.FC<{
                     textAlign: 'center'
                 }}
             >
-                Trained hands
+                Training hands
             </Text>
             <ScrollView
                 style={{
@@ -148,7 +148,7 @@ export const TrainedHands: React.FC<{
                                                     ScreenTypes.handDecisions,
                                                     {
                                                         handRepresentation,
-                                                        previousRoute: ScreenTypes.trainedHands
+                                                        previousRoute: ScreenTypes.trainingHands
                                                     }
                                                 );
                                             }}

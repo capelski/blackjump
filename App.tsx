@@ -39,7 +39,7 @@ import {
     PlayerDecision,
     PlayerDecisions,
     ScreenTypes,
-    TrainedHands as ITrainedHands,
+    TrainedHands,
     TrainedHandStatus
 } from './src/types';
 import { BadDecisions } from './src/views/bad-decisions';
@@ -49,7 +49,7 @@ import { HandDecisions } from './src/views/hand-decisions';
 import { HandsLevelInfo } from './src/views/hands-level-info';
 import { ReachUntrainedHandsInfo } from './src/views/reach-untrained-hands-info';
 import { Table } from './src/views/table';
-import { TrainedHands } from './src/views/trained-hands';
+import { TrainingHands } from './src/views/training-hands';
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
@@ -61,7 +61,7 @@ const AppContainer = createAppContainer(
             [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
             [ScreenTypes.reachUntrainedHandsInfo]: { screen: ReachUntrainedHandsInfo },
             [ScreenTypes.table]: { screen: Table },
-            [ScreenTypes.trainedHands]: { screen: TrainedHands }
+            [ScreenTypes.trainingHands]: { screen: TrainingHands }
         },
         {
             initialRouteName: ScreenTypes.table
@@ -79,7 +79,7 @@ export default function App() {
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [totalAttemptedDecisions, setTotalAttemptedDecisions] = useState(0);
     const [totalRightDecisions, setTotalRightDecisions] = useState(0);
-    const [trainedHands, setTrainedHands] = useState<ITrainedHands>(getEmptyTrainedHands());
+    const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
 
     useEffect(() => {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
@@ -159,7 +159,7 @@ export default function App() {
             canSurrender: isSurrenderEnabled
         });
 
-        const nextTrainedHands: ITrainedHands = { ...trainedHands };
+        const nextTrainedHands: TrainedHands = { ...trainedHands };
         nextTrainedHands[handToHandRepresentation(currentHand)][
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
         ] =
