@@ -52,7 +52,8 @@ export const ReachUntrainedHandsInfo: React.FC<{
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     When this option is enabled, each time you Hit or Split a hand, instead of being
                     a dealt a random card, you will be dealt a card that turns your current hand
-                    into a hand you haven't trained yet against the dealer's up card.
+                    into a hand you haven't trained yet (or a hand you didn't get right) against the
+                    dealer's up card.
                 </Text>
 
                 <HandComponent hand={hardFourteen} isCurrentHand={false} />

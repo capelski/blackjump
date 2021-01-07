@@ -34,7 +34,7 @@ export const DealTrainingHandsInfo: React.FC<{
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     When this option is enabled you will be dealt specific initial hands,
-                    prioritizing those you haven't trained yet.
+                    prioritizing those you haven't trained yet and those which you didn't get right.
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>

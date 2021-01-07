@@ -112,24 +112,24 @@ export const getRandomTrainingPair = (
     const untrainedTrainingSets = selectedTrainingSets.filter((trainingSet) => {
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
         return Object.values(trainedDealerHands).some(
-            (status) => status === TrainedHandStatus.untrained
+            (status) => status !== TrainedHandStatus.passed
         );
     });
 
     const randomTrainingSet =
         untrainedTrainingSets.length > 0
             ? getRandomItem(untrainedTrainingSets)
-            : getRandomItem(selectedTrainingSets); // In case all hands have been trained
+            : getRandomItem(selectedTrainingSets); // In case all hands have been passed
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
-        (hand) => dealerHandsDictionary[hand] === TrainedHandStatus.untrained
+        (hand) => dealerHandsDictionary[hand] !== TrainedHandStatus.passed
     );
 
     const randomDealerHand =
         untrainedDealerHands.length > 0
             ? getRandomItem(untrainedDealerHands)
-            : getRandomItem(randomTrainingSet.dealerHands); // In case all hands have been trained
+            : getRandomItem(randomTrainingSet.dealerHands); // In case all hands have been passed
 
     return {
         dealer: createHand([
