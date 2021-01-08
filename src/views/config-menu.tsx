@@ -8,6 +8,7 @@ import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
+import { hitColor } from '../constants';
 import { getTrainingPairsNumber } from '../logic/training-pairs';
 import { CasinoRulesKeys, GameConfig, ScreenTypes } from '../types';
 
@@ -83,7 +84,7 @@ export const ConfigMenu: React.FC<{
             >
                 <Button
                     height={56}
-                    backgroundColor="#428bca"
+                    backgroundColor={hitColor}
                     isEnabled={true}
                     marginBottom={24}
                     marginTop={16}
@@ -138,7 +139,7 @@ export const ConfigMenu: React.FC<{
                             setDealTrainingHands(value);
                         }}
                         style={{ marginRight: 8 }}
-                        trackColor={{ true: '#428bca', false: 'white' }}
+                        trackColor={{ true: hitColor, false: 'white' }}
                         value={dealTrainingHands}
                     />
                     <Text
@@ -196,7 +197,7 @@ export const ConfigMenu: React.FC<{
                                         );
                                     }}
                                     style={{ marginRight: 8 }}
-                                    trackColor={{ true: '#428bca', false: 'white' }}
+                                    trackColor={{ true: hitColor, false: 'white' }}
                                     value={selectedLevels[(number as unknown) as number] || false}
                                 />
                                 <Text style={textStyle}>{number}</Text>
@@ -211,7 +212,7 @@ export const ConfigMenu: React.FC<{
                             setReachUntrainedHands(value);
                         }}
                         style={{ marginRight: 8 }}
-                        trackColor={{ true: '#428bca', false: 'white' }}
+                        trackColor={{ true: hitColor, false: 'white' }}
                         value={reachUntrainedHands}
                     />
                     <Text
@@ -231,7 +232,7 @@ export const ConfigMenu: React.FC<{
 
                 <Button
                     height={56}
-                    backgroundColor="#428bca"
+                    backgroundColor={hitColor}
                     isEnabled={isSaveButtonEnabled}
                     marginBottom={40}
                     marginTop={32}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { splitColor, surrenderColor } from '../constants';
 import { DecisionEvaluation } from '../types';
 
 interface DecisionEvaluationProps {
@@ -11,7 +12,7 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
     <View
         style={{
             alignItems: 'center',
-            backgroundColor: props.decisionEvaluation.hit ? '#5cb85c' : '#dc3545',
+            backgroundColor: props.decisionEvaluation.hit ? splitColor : surrenderColor,
             flex: 1,
             justifyContent: 'center',
             width: '100%'

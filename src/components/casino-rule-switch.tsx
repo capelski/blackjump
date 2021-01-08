@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Text, View } from 'react-native';
+import { hitColor } from '../constants';
 import { CasinoRulesKeys } from '../types';
 
 interface CasinoRuleSwitchProps {
@@ -13,7 +14,7 @@ export const CasinoRuleSwitch: React.FC<CasinoRuleSwitchProps> = (props) => (
         <Switch
             onValueChange={props.onValueChange}
             style={{ marginRight: 8 }}
-            trackColor={{ true: '#428bca', false: 'white' }}
+            trackColor={{ true: hitColor, false: 'white' }}
             value={props.value}
         />
         <Text

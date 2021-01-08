@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { NavigationScreenProp } from 'react-navigation';
-import { configBarHeight } from '../constants';
+import { configBarHeight, splitColor, surrenderColor } from '../constants';
 import { allTrainingPairsNumber } from '../logic/training-pairs';
 import { Player, ScreenTypes, TrainedHandsStats } from '../types';
 
@@ -23,7 +23,7 @@ const textStyles = { color: 'white', fontSize: 20 };
 
 export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
     const earningsColor =
-        props.player.cash > 0 ? '#5cb85c' : props.player.cash < 0 ? '#dc3545' : 'white';
+        props.player.cash > 0 ? splitColor : props.player.cash < 0 ? surrenderColor : 'white';
     const previousRoute = props.navigation.getParam('previousRoute');
 
     return (

@@ -4,6 +4,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import { Button } from '../components/button';
 import { HandComponent } from '../components/hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
+import { hitColor } from '../constants';
 import { CardSuit, ScreenTypes, SimpleCardSymbol, SpecialCardSymbol } from '../types';
 
 export const DealTrainingHandsInfo: React.FC<{
@@ -79,7 +80,7 @@ export const DealTrainingHandsInfo: React.FC<{
 
                 <Button
                     height={56}
-                    backgroundColor="#428bca"
+                    backgroundColor={hitColor}
                     isEnabled={true}
                     marginBottom={24}
                     marginTop={16}
