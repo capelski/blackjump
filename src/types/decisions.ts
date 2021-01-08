@@ -1,13 +1,3 @@
-import { CasinoRules } from './casino-rules';
-import { HandRepresentation } from './hand';
-
-export interface BadDecision {
-    dealerHandValue: number;
-    casinoRules: CasinoRules;
-    handRepresentation: HandRepresentation;
-    takenAction: PlayerDecision;
-}
-
 export enum BaseDecisions {
     hit = 'Hit',
     split = 'Split',

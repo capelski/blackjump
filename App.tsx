@@ -30,7 +30,6 @@ import {
 } from './src/logic/player';
 import { getEmptyTrainedHands } from './src/logic/trained-hands';
 import {
-    BadDecision,
     BaseDecisions,
     DecisionEvaluation,
     Hand,
@@ -43,7 +42,6 @@ import {
     TrainedHandsStats,
     TrainedHandStatus
 } from './src/types';
-import { BadDecisions } from './src/views/bad-decisions';
 import { ConfigMenu } from './src/views/config-menu';
 import { DealTrainingHandsInfo } from './src/views/deal-training-hands-info';
 import { HandDecisions } from './src/views/hand-decisions';
@@ -52,11 +50,12 @@ import { ReachUntrainedHandsInfo } from './src/views/reach-untrained-hands-info'
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
 
+// TODO Add Reset stats button
+
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
             // TODO Extract the navigation bar and wrap the AppContainer
-            [ScreenTypes.badDecisions]: { screen: BadDecisions },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
             [ScreenTypes.dealTrainingHandsInfo]: { screen: DealTrainingHandsInfo },
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
@@ -72,7 +71,6 @@ const AppContainer = createAppContainer(
 );
 
 export default function App() {
-    const [badDecisions, setBadDecisions] = useState<BadDecision[]>([]);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
@@ -106,8 +104,6 @@ export default function App() {
                     { passed: 0, trained: 0 }
                 );
                 setTrainedHandsStats(_trainedHandsStats);
-
-                // TODO Fill the bad decisions too
             }
         });
     }, []);
@@ -180,6 +176,8 @@ export default function App() {
             canDouble: isDoubleEnabled,
             canSurrender: isSurrenderEnabled
         });
+        const isHit = optimalDecision.decision === decision;
+        setDecisionEvaluation({ hit: isHit, failureReason: optimalDecision.description });
 
         const nextTrainedHands: TrainedHands = { ...trainedHands };
         const currentTrainedHandStatus =
@@ -190,8 +188,7 @@ export default function App() {
         setTrainedHandsStats({
             passed:
                 trainedHandsStats.passed +
-                (currentTrainedHandStatus !== TrainedHandStatus.passed &&
-                optimalDecision.decision === decision
+                (currentTrainedHandStatus !== TrainedHandStatus.passed && isHit
                     ? 1
                     : currentTrainedHandStatus === TrainedHandStatus.passed &&
                       optimalDecision.decision !== decision
@@ -204,29 +201,10 @@ export default function App() {
 
         nextTrainedHands[handToHandRepresentation(currentHand)][
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
-        ] =
-            optimalDecision.decision === decision
-                ? TrainedHandStatus.passed
-                : TrainedHandStatus.failed;
+        ] = isHit ? TrainedHandStatus.passed : TrainedHandStatus.failed;
 
         setTrainedHands(nextTrainedHands);
         updateTrainedHands(nextTrainedHands);
-
-        if (optimalDecision.decision === decision) {
-            setDecisionEvaluation({ hit: true });
-        } else {
-            setDecisionEvaluation({ hit: false, failureReason: optimalDecision.description });
-            setBadDecisions(
-                badDecisions.concat([
-                    {
-                        dealerHandValue: getHandEffectiveValue(dealerHand!),
-                        casinoRules: gameConfig.casinoRules,
-                        handRepresentation: handToHandRepresentation(hand),
-                        takenAction: decision
-                    }
-                ])
-            );
-        }
     };
 
     const doubleHandler = () => {
@@ -294,7 +272,6 @@ export default function App() {
             <AppContainer
                 // TODO Find a more elegant way to pass the props to components
                 screenProps={{
-                    badDecisions,
                     dealerHand,
                     decisionEvaluation,
                     gameConfig,

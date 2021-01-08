@@ -8,7 +8,6 @@ export {
 } from './card';
 export { CasinoRules, CasinoRulesKeys } from './casino-rules';
 export {
-    BadDecision,
     BaseDecisions,
     CasinoRulesDecision,
     CasinoRulesDecisions,

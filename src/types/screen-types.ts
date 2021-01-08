@@ -1,5 +1,4 @@
 export enum ScreenTypes {
-    badDecisions = 'badDecisions',
     configMenu = 'configMenu',
     dealTrainingHandsInfo = 'dealTrainingHandsInfo',
     handDecisions = 'decisions',
