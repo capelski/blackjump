@@ -1,20 +1,29 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
-import { ScrollView, Switch, Text, View } from 'react-native';
+import { Alert, ScrollView, Switch, Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { updateGameConfig } from '../async-storage';
+import { updateGameConfig, updateTrainedHands } from '../async-storage';
 import { Button } from '../components/button';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
-import { hitColor } from '../constants';
+import { hitColor, surrenderColor } from '../constants';
+import { getEmptyTrainedHands } from '../logic/trained-hands';
 import { getTrainingPairsNumber } from '../logic/training-pairs';
-import { CasinoRulesKeys, GameConfig, ScreenTypes } from '../types';
+import {
+    CasinoRulesKeys,
+    GameConfig,
+    ScreenTypes,
+    TrainedHands,
+    TrainedHandsStats
+} from '../types';
 
 interface ConfigMenuProps {
     gameConfig: GameConfig;
     setGameConfig: (gameConfig: GameConfig) => void;
+    setTrainedHands: (trainedHands: TrainedHands) => void;
+    setTrainedHandsStats: (trainedHandsStats: TrainedHandsStats) => void;
 }
 
 const textStyle = {
@@ -234,11 +243,42 @@ export const ConfigMenu: React.FC<{
                     height={56}
                     backgroundColor={hitColor}
                     isEnabled={isSaveButtonEnabled}
-                    marginBottom={40}
-                    marginTop={32}
+                    marginTop={40}
                     onPress={saveHandler}
                     text="Save"
-                    width="50%"
+                    width="75%"
+                />
+                <Button
+                    height={56}
+                    backgroundColor={surrenderColor}
+                    isEnabled={true}
+                    marginBottom={40}
+                    marginTop={24}
+                    onPress={() => {
+                        Alert.alert(
+                            'Reset training',
+                            'If you reset the training all training hands will be marked as ' +
+                                'untrained, setting the progress and precision indicators to 0%.' +
+                                'Are you sure you want to reset the training?',
+                            [
+                                {
+                                    text: 'Cancel',
+                                    style: 'cancel'
+                                },
+                                {
+                                    text: 'Reset',
+                                    onPress: () => {
+                                        const nextTrainedHands = getEmptyTrainedHands();
+                                        screenProps.setTrainedHands(nextTrainedHands);
+                                        updateTrainedHands(nextTrainedHands);
+                                        screenProps.setTrainedHandsStats({ passed: 0, trained: 0 });
+                                    }
+                                }
+                            ]
+                        );
+                    }}
+                    text="Reset training"
+                    width="75%"
                 />
             </ScrollView>
         </WithNavBar>

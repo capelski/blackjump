@@ -50,8 +50,6 @@ import { ReachUntrainedHandsInfo } from './src/views/reach-untrained-hands-info'
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
 
-// TODO Add Reset stats button
-
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
@@ -288,6 +286,8 @@ export default function App() {
                     player,
                     phase,
                     setGameConfig,
+                    setTrainedHands,
+                    setTrainedHandsStats,
                     startTrainingRound,
                     trainedHands,
                     trainedHandsStats
