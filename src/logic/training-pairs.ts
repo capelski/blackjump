@@ -108,16 +108,23 @@ export const getCardForUntrainedHand = (
     return nextCard;
 };
 
+export const getGoldHandsNumber = (
+    casinoRules: CasinoRules,
+    goldHandsLevels: NumericDictionary<boolean>
+) =>
+    allPossibleDealerCards.length *
+    trainingSets.filter((ts) => goldHandsLevels[ts.playerHand.data.level(casinoRules)]).length;
+
 export const getRandomTrainingPair = (
     gameConfig: GameConfig,
     trainedHands: TrainedHands
 ): TrainingPair => {
-    const selectedTrainingSets = trainingSets.filter((trainingSet) => {
+    const activeTrainingSets = trainingSets.filter((trainingSet) => {
         const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.casinoRules);
-        return gameConfig.selectedLevels[trainingSetLevel];
+        return gameConfig.goldHandsLevels[trainingSetLevel];
     });
 
-    const untrainedTrainingSets = selectedTrainingSets.filter((trainingSet) => {
+    const untrainedTrainingSets = activeTrainingSets.filter((trainingSet) => {
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
         return Object.values(trainedDealerHands).some(
             (status) => status !== TrainedHandStatus.passed
@@ -127,7 +134,7 @@ export const getRandomTrainingPair = (
     const randomTrainingSet =
         untrainedTrainingSets.length > 0
             ? getRandomItem(untrainedTrainingSets)
-            : getRandomItem(selectedTrainingSets); // In case all hands have been passed
+            : getRandomItem(activeTrainingSets); // In case all hands have been passed
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
@@ -168,10 +175,3 @@ export const getSpecificTrainingPair = (
         player: handRepresentationToHand(handRepresentation)
     };
 };
-
-export const getTrainingPairsNumber = (
-    casinoRules: CasinoRules,
-    selectedLevels: NumericDictionary<boolean>
-) =>
-    allPossibleDealerCards.length *
-    trainingSets.filter((ts) => selectedLevels[ts.playerHand.data.level(casinoRules)]).length;

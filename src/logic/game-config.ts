@@ -6,12 +6,12 @@ export const getDefaultGameConfig = (): GameConfig => ({
         [CasinoRulesKeys.canDoubleOnAnyInitialHand]: false,
         [CasinoRulesKeys.canSurrender]: false
     },
-    dealTrainingHands: true,
-    reachUntrainedHands: true,
-    selectedLevels: {
+    goldHandsLevels: {
         1: true,
         2: true,
         3: true,
         4: true
-    }
+    },
+    useBlueCards: false,
+    useGoldHands: false
 });

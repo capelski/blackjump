@@ -38,13 +38,13 @@ export const GoldHandsLevelsInfo: React.FC<{
         cards: [
             {
                 isBlueCard: false,
-                isGoldCard: true,
+                isGoldCard: false,
                 suit: CardSuit.clubs,
                 symbol: SimpleCardSymbol.Five
             },
             {
                 isBlueCard: false,
-                isGoldCard: true,
+                isGoldCard: false,
                 suit: CardSuit.hearts,
                 symbol: SimpleCardSymbol.Three
             }
@@ -56,13 +56,13 @@ export const GoldHandsLevelsInfo: React.FC<{
         cards: [
             {
                 isBlueCard: false,
-                isGoldCard: true,
+                isGoldCard: false,
                 suit: CardSuit.spades,
                 symbol: SimpleCardSymbol.Nine
             },
             {
                 isBlueCard: false,
-                isGoldCard: true,
+                isGoldCard: false,
                 suit: CardSuit.diamonds,
                 symbol: SimpleCardSymbol.Nine
             }
@@ -89,12 +89,12 @@ export const GoldHandsLevelsInfo: React.FC<{
                 <Text
                     style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
                 >
-                    Gold hands levels
+                    Hand levels
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    A hand level tells how many different actions must be memorized for that hand
-                    depending on the dealer's up card.
+                    The level of a hand tells how many different actions must be memorized for that
+                    hand depending on the dealer's up card.
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
@@ -122,7 +122,7 @@ export const GoldHandsLevelsInfo: React.FC<{
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
                     When disabling a level, the hands on that level will never be dealt as initial
-                    hands if Gold cards are enabled. For example, disabling level 1 will prevent
+                    hands if Gold hands are enabled. For example, disabling level 1 will prevent
                     Hard 8 from being dealt as initial hand while disabling level 4 will prevent
                     9,9.
                 </Text>
@@ -134,7 +134,7 @@ export const GoldHandsLevelsInfo: React.FC<{
                 </Text>
 
                 <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-                    {Object.keys(screenProps.gameConfig.selectedLevels).map((level) => (
+                    {Object.keys(screenProps.gameConfig.goldHandsLevels).map((level) => (
                         <View
                             key={level}
                             style={{

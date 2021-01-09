@@ -11,18 +11,18 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                         storedGameConfig && storedGameConfig.casinoRules !== undefined
                             ? storedGameConfig.casinoRules
                             : currentGameConfig.casinoRules,
-                    dealTrainingHands:
-                        storedGameConfig && storedGameConfig.dealTrainingHands !== undefined
-                            ? storedGameConfig.dealTrainingHands
-                            : currentGameConfig.dealTrainingHands,
-                    reachUntrainedHands:
-                        storedGameConfig && storedGameConfig.reachUntrainedHands !== undefined
-                            ? storedGameConfig.reachUntrainedHands
-                            : currentGameConfig.reachUntrainedHands,
-                    selectedLevels:
-                        storedGameConfig && storedGameConfig.selectedLevels !== undefined
-                            ? storedGameConfig.selectedLevels
-                            : currentGameConfig.selectedLevels
+                    goldHandsLevels:
+                        storedGameConfig && storedGameConfig.goldHandsLevels !== undefined
+                            ? storedGameConfig.goldHandsLevels
+                            : currentGameConfig.goldHandsLevels,
+                    useBlueCards:
+                        storedGameConfig && storedGameConfig.useBlueCards !== undefined
+                            ? storedGameConfig.useBlueCards
+                            : currentGameConfig.useBlueCards,
+                    useGoldHands:
+                        storedGameConfig && storedGameConfig.useGoldHands !== undefined
+                            ? storedGameConfig.useGoldHands
+                            : currentGameConfig.useGoldHands
                 };
             }
         )

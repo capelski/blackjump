@@ -44,7 +44,7 @@ import {
 } from './src/types';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
-import { GoldCardsInfo } from './src/views/gold-cards-info';
+import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
@@ -56,7 +56,7 @@ const AppContainer = createAppContainer(
             // TODO Extract the navigation bar and wrap the AppContainer
             [ScreenTypes.blueCardsInfo]: { screen: BlueCardsInfo },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
-            [ScreenTypes.goldCardsInfo]: { screen: GoldCardsInfo },
+            [ScreenTypes.goldHandsInfo]: { screen: GoldHandsInfo },
             [ScreenTypes.goldHandsLevelsInfo]: { screen: GoldHandsLevelsInfo },
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
             [ScreenTypes.table]: { screen: Table },
@@ -158,7 +158,7 @@ export default function App() {
         } else {
             startNextHand(
                 player,
-                gameConfig.reachUntrainedHands,
+                gameConfig.useBlueCards,
                 symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
                 trainedHands
             );
@@ -217,7 +217,7 @@ export default function App() {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
         hitCurrentHand(
             player,
-            gameConfig.reachUntrainedHands,
+            gameConfig.useBlueCards,
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
             trainedHands
         );
@@ -239,7 +239,7 @@ export default function App() {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
         splitCurrentHand(
             player,
-            gameConfig.reachUntrainedHands,
+            gameConfig.useBlueCards,
             symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
             trainedHands
         );

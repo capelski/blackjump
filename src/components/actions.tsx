@@ -38,7 +38,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     isEnabled={true}
                     onPress={() => {
                         const trainingPair =
-                            props.gameConfig.dealTrainingHands &&
+                            props.gameConfig.useGoldHands &&
                             getRandomTrainingPair(props.gameConfig, props.trainedHands);
 
                         const playerHand = trainingPair

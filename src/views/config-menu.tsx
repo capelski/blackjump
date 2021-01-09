@@ -10,7 +10,7 @@ import { HelpIcon } from '../components/help-icon';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { hitColor, surrenderColor } from '../constants';
 import { getEmptyTrainedHands } from '../logic/trained-hands';
-import { getTrainingPairsNumber } from '../logic/training-pairs';
+import { getGoldHandsNumber } from '../logic/training-pairs';
 import {
     CasinoRulesKeys,
     GameConfig,
@@ -36,29 +36,26 @@ export const ConfigMenu: React.FC<{
     screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
 }> = ({ navigation, screenProps }) => {
     const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
-    const [dealTrainingHands, setDealTrainingHands] = useState(
-        screenProps.gameConfig.dealTrainingHands
-    );
-    const [reachUntrainedHands, setReachUntrainedHands] = useState(
-        screenProps.gameConfig.reachUntrainedHands
-    );
-    const [selectedHandsNumber, setSelectedHandsNumber] = useState(
-        getTrainingPairsNumber(
+    const [goldHandsLevels, setGoldHandsLevels] = useState(screenProps.gameConfig.goldHandsLevels);
+    const [goldHandsNumber, setGoldHandsNumber] = useState(
+        getGoldHandsNumber(
             screenProps.gameConfig.casinoRules,
-            screenProps.gameConfig.selectedLevels
+            screenProps.gameConfig.goldHandsLevels
         )
     );
-    const [selectedLevels, setSelectedLevels] = useState(screenProps.gameConfig.selectedLevels);
+    const [useBlueCards, setUseBlueCards] = useState(screenProps.gameConfig.useBlueCards);
+    const [useGoldHands, setUseGoldHands] = useState(screenProps.gameConfig.useGoldHands);
 
     const saveHandler = () => {
-        screenProps.setGameConfig({
+        const nextGameConfig: GameConfig = {
             casinoRules,
-            dealTrainingHands,
-            reachUntrainedHands,
-            selectedLevels
-        });
+            goldHandsLevels,
+            useBlueCards,
+            useGoldHands
+        };
+        screenProps.setGameConfig(nextGameConfig);
+        updateGameConfig(nextGameConfig);
         navigation.navigate(ScreenTypes.table);
-        updateGameConfig({ casinoRules, dealTrainingHands, reachUntrainedHands, selectedLevels });
     };
 
     const isSaveButtonEnabled =
@@ -68,13 +65,13 @@ export const ConfigMenu: React.FC<{
                 casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
             screenProps.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
                 casinoRules[CasinoRulesKeys.canSurrender] ||
-            screenProps.gameConfig.dealTrainingHands !== dealTrainingHands ||
-            screenProps.gameConfig.reachUntrainedHands !== reachUntrainedHands ||
-            screenProps.gameConfig.selectedLevels[1] !== selectedLevels[1] ||
-            screenProps.gameConfig.selectedLevels[2] !== selectedLevels[2] ||
-            screenProps.gameConfig.selectedLevels[3] !== selectedLevels[3] ||
-            screenProps.gameConfig.selectedLevels[4] !== selectedLevels[4]) &&
-        (selectedLevels[1] || selectedLevels[2] || selectedLevels[3] || selectedLevels[4]);
+            screenProps.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
+            screenProps.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
+            screenProps.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
+            screenProps.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
+            screenProps.gameConfig.useBlueCards !== useBlueCards ||
+            screenProps.gameConfig.useGoldHands !== useGoldHands) &&
+        (goldHandsLevels[1] || goldHandsLevels[2] || goldHandsLevels[3] || goldHandsLevels[4]);
 
     return (
         <WithNavBar
@@ -126,8 +123,8 @@ export const ConfigMenu: React.FC<{
                         onValueChange={(newValue) => {
                             const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
                             setCasinoRules(nextCasinoRules);
-                            setSelectedHandsNumber(
-                                getTrainingPairsNumber(nextCasinoRules, selectedLevels)
+                            setGoldHandsNumber(
+                                getGoldHandsNumber(nextCasinoRules, goldHandsLevels)
                             );
                         }}
                         value={casinoRules[casinoRule]}
@@ -151,11 +148,11 @@ export const ConfigMenu: React.FC<{
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
                         onValueChange={(value) => {
-                            setReachUntrainedHands(value);
+                            setUseBlueCards(value);
                         }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
-                        value={reachUntrainedHands}
+                        value={useBlueCards}
                     />
                     <Text
                         style={{
@@ -182,11 +179,11 @@ export const ConfigMenu: React.FC<{
                 >
                     <Switch
                         onValueChange={(value) => {
-                            setDealTrainingHands(value);
+                            setUseGoldHands(value);
                         }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
-                        value={dealTrainingHands}
+                        value={useGoldHands}
                     />
 
                     <View>
@@ -197,11 +194,11 @@ export const ConfigMenu: React.FC<{
                                     fontSize: 20
                                 }}
                             >
-                                Gold cards
+                                Gold hands
                             </Text>
                             <HelpIcon
                                 onPress={() => {
-                                    navigation.navigate(ScreenTypes.goldCardsInfo);
+                                    navigation.navigate(ScreenTypes.goldHandsInfo);
                                 }}
                             />
                         </View>
@@ -209,11 +206,11 @@ export const ConfigMenu: React.FC<{
                         <View
                             style={{
                                 marginTop: 16,
-                                opacity: dealTrainingHands ? undefined : 0.3
+                                opacity: useGoldHands ? undefined : 0.3
                             }}
                         >
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ ...textStyle }}>Gold hands levels</Text>
+                                <Text style={{ ...textStyle }}>Hand levels</Text>
                                 <HelpIcon
                                     onPress={() => {
                                         navigation.navigate(ScreenTypes.goldHandsLevelsInfo);
@@ -227,27 +224,23 @@ export const ConfigMenu: React.FC<{
                                     flexWrap: 'wrap'
                                 }}
                             >
-                                {Object.keys(selectedLevels).map((number) => (
-                                    <React.Fragment>
+                                {Object.keys(goldHandsLevels).map((number) => (
+                                    <React.Fragment key={number}>
                                         <Switch
-                                            disabled={!dealTrainingHands}
-                                            key={number}
+                                            disabled={!useGoldHands}
                                             onValueChange={(newValue) => {
-                                                const nextSelectedLevels = {
-                                                    ...selectedLevels,
+                                                const nextGoldHands = {
+                                                    ...goldHandsLevels,
                                                     [number]: newValue
                                                 };
-                                                setSelectedLevels(nextSelectedLevels);
-                                                setSelectedHandsNumber(
-                                                    getTrainingPairsNumber(
-                                                        casinoRules,
-                                                        nextSelectedLevels
-                                                    )
+                                                setGoldHandsLevels(nextGoldHands);
+                                                setGoldHandsNumber(
+                                                    getGoldHandsNumber(casinoRules, nextGoldHands)
                                                 );
                                             }}
                                             style={{ marginTop: 16 }}
                                             trackColor={{ true: hitColor, false: 'white' }}
-                                            value={selectedLevels[parseInt(number)] || false}
+                                            value={goldHandsLevels[parseInt(number)] || false}
                                         />
                                         <Text
                                             style={{ ...textStyle, marginTop: 16, paddingLeft: 4 }}
@@ -258,7 +251,7 @@ export const ConfigMenu: React.FC<{
                                 ))}
                             </View>
                             <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
-                                ({selectedHandsNumber} gold hands)
+                                ({goldHandsNumber} gold hands)
                             </Text>
                         </View>
                     </View>
