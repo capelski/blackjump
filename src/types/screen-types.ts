@@ -1,9 +1,9 @@
 export enum ScreenTypes {
+    blueCardsInfo = 'blueCardsInfo',
     configMenu = 'configMenu',
-    dealTrainingHandsInfo = 'dealTrainingHandsInfo',
+    goldCardsInfo = 'goldCardsInfo',
+    goldHandsLevelsInfo = 'goldHandsLevelsInfo',
     handDecisions = 'decisions',
-    handsLevelInfo = 'handsLevelInfo',
-    reachUntrainedHandsInfo = 'reachUntrainedHandsInfo',
     table = 'table',
     trainingHands = 'trainingHands'
 }

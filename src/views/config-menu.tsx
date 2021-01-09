@@ -105,6 +105,7 @@ export const ConfigMenu: React.FC<{
                     text="View strategy table"
                     width="100%"
                 />
+
                 <Text
                     style={{
                         color: 'white',
@@ -115,7 +116,9 @@ export const ConfigMenu: React.FC<{
                 >
                     Casino rules
                 </Text>
+
                 <Divider />
+
                 {Object.values(CasinoRulesKeys).map((casinoRule) => (
                     <CasinoRuleSwitch
                         casinoRule={casinoRule}
@@ -130,6 +133,7 @@ export const ConfigMenu: React.FC<{
                         value={casinoRules[casinoRule]}
                     />
                 ))}
+
                 <Text
                     style={{
                         color: 'white',
@@ -141,79 +145,8 @@ export const ConfigMenu: React.FC<{
                 >
                     App settings
                 </Text>
-                <Divider />
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={(value) => {
-                            setDealTrainingHands(value);
-                        }}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={dealTrainingHands}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Deal training hands
-                    </Text>
-                    <HelpIcon
-                        onPress={() => {
-                            navigation.navigate(ScreenTypes.dealTrainingHandsInfo);
-                        }}
-                    />
-                </View>
 
-                <View
-                    style={{
-                        marginTop: 16,
-                        opacity: dealTrainingHands ? undefined : 0.3,
-                        width: '100%'
-                    }}
-                >
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ ...textStyle, marginLeft: 8 }}>
-                            Active hand levels ({selectedHandsNumber} hands)
-                        </Text>
-                        <HelpIcon
-                            onPress={() => {
-                                navigation.navigate(ScreenTypes.handsLevelInfo);
-                            }}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            marginTop: 16,
-                            width: '100%'
-                        }}
-                    >
-                        {Object.keys(selectedLevels).map((number) => (
-                            <View key={number} style={{ flexDirection: 'row', marginRight: 8 }}>
-                                <Switch
-                                    disabled={!dealTrainingHands}
-                                    onValueChange={(newValue) => {
-                                        const nextSelectedLevels = {
-                                            ...selectedLevels,
-                                            [number]: newValue
-                                        };
-                                        setSelectedLevels(nextSelectedLevels);
-                                        setSelectedHandsNumber(
-                                            getTrainingPairsNumber(casinoRules, nextSelectedLevels)
-                                        );
-                                    }}
-                                    style={{ marginRight: 8 }}
-                                    trackColor={{ true: hitColor, false: 'white' }}
-                                    value={selectedLevels[parseInt(number)] || false}
-                                />
-                                <Text style={textStyle}>{number}</Text>
-                            </View>
-                        ))}
-                    </View>
-                </View>
+                <Divider />
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -230,13 +163,105 @@ export const ConfigMenu: React.FC<{
                             fontSize: 20
                         }}
                     >
-                        Reach untrained hands
+                        Blue cards
                     </Text>
                     <HelpIcon
                         onPress={() => {
-                            navigation.navigate(ScreenTypes.reachUntrainedHandsInfo);
+                            navigation.navigate(ScreenTypes.blueCardsInfo);
                         }}
                     />
+                </View>
+
+                <View
+                    style={{
+                        alignItems: 'flex-start',
+                        flexDirection: 'row',
+                        paddingTop: 16,
+                        width: '100%'
+                    }}
+                >
+                    <Switch
+                        onValueChange={(value) => {
+                            setDealTrainingHands(value);
+                        }}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={dealTrainingHands}
+                    />
+
+                    <View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                Gold cards
+                            </Text>
+                            <HelpIcon
+                                onPress={() => {
+                                    navigation.navigate(ScreenTypes.goldCardsInfo);
+                                }}
+                            />
+                        </View>
+
+                        <View
+                            style={{
+                                marginTop: 16,
+                                opacity: dealTrainingHands ? undefined : 0.3
+                            }}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ ...textStyle }}>Gold hands levels</Text>
+                                <HelpIcon
+                                    onPress={() => {
+                                        navigation.navigate(ScreenTypes.goldHandsLevelsInfo);
+                                    }}
+                                />
+                            </View>
+
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap'
+                                }}
+                            >
+                                {Object.keys(selectedLevels).map((number) => (
+                                    <React.Fragment>
+                                        <Switch
+                                            disabled={!dealTrainingHands}
+                                            key={number}
+                                            onValueChange={(newValue) => {
+                                                const nextSelectedLevels = {
+                                                    ...selectedLevels,
+                                                    [number]: newValue
+                                                };
+                                                setSelectedLevels(nextSelectedLevels);
+                                                setSelectedHandsNumber(
+                                                    getTrainingPairsNumber(
+                                                        casinoRules,
+                                                        nextSelectedLevels
+                                                    )
+                                                );
+                                            }}
+                                            style={{ marginTop: 16 }}
+                                            trackColor={{ true: hitColor, false: 'white' }}
+                                            value={selectedLevels[parseInt(number)] || false}
+                                        />
+                                        <Text
+                                            style={{ ...textStyle, marginTop: 16, paddingLeft: 4 }}
+                                        >
+                                            {number}
+                                        </Text>
+                                    </React.Fragment>
+                                ))}
+                            </View>
+                            <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
+                                ({selectedHandsNumber} gold hands)
+                            </Text>
+                        </View>
+                    </View>
                 </View>
 
                 <Button

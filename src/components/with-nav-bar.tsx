@@ -136,11 +136,11 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                                 props.navigation.state.routeName === ScreenTypes.table
                                     ? ScreenTypes.configMenu
                                     : props.navigation.state.routeName ===
-                                          ScreenTypes.dealTrainingHandsInfo ||
+                                          ScreenTypes.blueCardsInfo ||
                                       props.navigation.state.routeName ===
-                                          ScreenTypes.handsLevelInfo ||
+                                          ScreenTypes.goldCardsInfo ||
                                       props.navigation.state.routeName ===
-                                          ScreenTypes.reachUntrainedHandsInfo
+                                          ScreenTypes.goldHandsLevelsInfo
                                     ? ScreenTypes.configMenu
                                     : ScreenTypes.table;
 

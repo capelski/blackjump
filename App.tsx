@@ -42,11 +42,11 @@ import {
     TrainedHandsStats,
     TrainedHandStatus
 } from './src/types';
+import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
-import { DealTrainingHandsInfo } from './src/views/deal-training-hands-info';
+import { GoldCardsInfo } from './src/views/gold-cards-info';
+import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
-import { HandsLevelInfo } from './src/views/hands-level-info';
-import { ReachUntrainedHandsInfo } from './src/views/reach-untrained-hands-info';
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
 
@@ -54,11 +54,11 @@ const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
             // TODO Extract the navigation bar and wrap the AppContainer
+            [ScreenTypes.blueCardsInfo]: { screen: BlueCardsInfo },
             [ScreenTypes.configMenu]: { screen: ConfigMenu },
-            [ScreenTypes.dealTrainingHandsInfo]: { screen: DealTrainingHandsInfo },
+            [ScreenTypes.goldCardsInfo]: { screen: GoldCardsInfo },
+            [ScreenTypes.goldHandsLevelsInfo]: { screen: GoldHandsLevelsInfo },
             [ScreenTypes.handDecisions]: { screen: HandDecisions },
-            [ScreenTypes.handsLevelInfo]: { screen: HandsLevelInfo },
-            [ScreenTypes.reachUntrainedHandsInfo]: { screen: ReachUntrainedHandsInfo },
             [ScreenTypes.table]: { screen: Table },
             [ScreenTypes.trainingHands]: { screen: TrainingHands }
         },
