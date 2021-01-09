@@ -5,9 +5,9 @@ export const cartesianProduct = <T, U, R>(
     secondArray: U[],
     elementBuilder: (t: T, u: U) => R
 ): R[] => {
-    return firstArray.reduce((product, x) => {
+    return firstArray.reduce<R[]>((product, x) => {
         return product.concat(secondArray.map((y) => elementBuilder(x, y)));
-    }, [] as R[]);
+    }, []);
 };
 
 export const getRandomItem = <T>(items: T[]) =>

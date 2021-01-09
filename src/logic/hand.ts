@@ -1,6 +1,5 @@
 import { Card, CasinoRules, CasinoRulesKeys, Hand, HandOutcome } from '../types';
-import { cartesianProduct, removeDuplicates } from '../utils';
-import { getCardEffectiveValue, getCardValues } from './card';
+import { getCardEffectiveValue, getCardsValues } from './card';
 
 export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     hand.cards.length === 2 &&
@@ -18,12 +17,12 @@ export const canSurrender = (hand: Hand, handsNumber: number, casinoRules: Casin
 export const createHand = (cards: Card[], bet = 1): Hand => ({
     bet,
     cards: cards,
-    values: getHandValues(cards)
+    values: getCardsValues(cards)
 });
 
 export const dealCard = (hand: Hand, card: Card) => {
     hand.cards.push(card);
-    hand.values = getHandValues(hand.cards);
+    hand.values = getCardsValues(hand.cards);
 };
 
 export const getHandEffectiveValue = (hand: Hand) => {
@@ -36,16 +35,6 @@ export const getHandEffectiveValue = (hand: Hand) => {
 
 export const getHandValidValues = (hand: Hand): number[] => {
     return hand.values.some((v) => v < 22) ? hand.values.filter((v) => v < 22) : [hand.values[0]];
-};
-
-export const getHandValues = (cards: Card[]) => {
-    const cardsValues = cards.map((card) => getCardValues(card));
-    const cardsAggregatedValues = cardsValues.reduce(
-        (reducedValues, currentValues) =>
-            cartesianProduct(reducedValues, currentValues, (x, y) => x + y),
-        [0]
-    );
-    return removeDuplicates(cardsAggregatedValues);
 };
 
 export const isBlackJack = (hand: Hand) => {

@@ -11,8 +11,14 @@ import {
 } from '../types';
 import { TrainedHandStatus } from '../types/training';
 import { getRandomItem } from '../utils';
-import { getRandomCard, getRandomSuit, simpleSymbolToSymbol, valueToSymbol } from './card';
-import { createHand, getHandValues } from './hand';
+import {
+    getCardsValues,
+    getRandomCard,
+    getRandomSuit,
+    simpleSymbolToSymbol,
+    valueToSymbol
+} from './card';
+import { createHand } from './hand';
 import {
     handRepresentationToHand,
     isSoftHandRepresentation,
@@ -32,7 +38,7 @@ export const getCardForUntrainedHand = (
     trainedHands: TrainedHands
 ): Card => {
     const isPlayerHandSoft = playerHand.values.length > 1;
-    const playerHandValues = getHandValues(playerHand.cards);
+    const playerHandValues = getCardsValues(playerHand.cards);
 
     const valuesToUntrainedHands = trainingSets
         .map((trainingSet) => {

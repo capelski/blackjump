@@ -207,7 +207,7 @@ export const ConfigMenu: React.FC<{
                                     }}
                                     style={{ marginRight: 8 }}
                                     trackColor={{ true: hitColor, false: 'white' }}
-                                    value={selectedLevels[(number as unknown) as number] || false}
+                                    value={selectedLevels[parseInt(number)] || false}
                                 />
                                 <Text style={textStyle}>{number}</Text>
                             </View>

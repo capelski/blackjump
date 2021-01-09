@@ -7,7 +7,7 @@ import {
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from '../types';
-import { cartesianProduct, getRandomItem } from '../utils';
+import { cartesianProduct, getRandomItem, removeDuplicates } from '../utils';
 
 const cardsValue: Dictionary<number[], CardSymbol> = {
     [SimpleCardSymbol.Ace]: [1, 11],
@@ -40,7 +40,17 @@ export const getCardEffectiveValue = (card: Card): number => {
     return values[values.length - 1];
 };
 
-export const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
+export const getCardsValues = (cards: Card[]) => {
+    const cardsValues = cards.map((card) => getCardValues(card));
+    const cardsAggregatedValues = cardsValues.reduce(
+        (reducedValues, currentValues) =>
+            cartesianProduct(reducedValues, currentValues, (x, y) => x + y),
+        [0]
+    );
+    return removeDuplicates(cardsAggregatedValues);
+};
+
+const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
 
 export const getRandomCard = () => getRandomItem(deck);
 
