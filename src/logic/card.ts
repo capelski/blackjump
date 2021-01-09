@@ -29,7 +29,11 @@ const suits = [CardSuit.clubs, CardSuit.diamonds, CardSuit.hearts, CardSuit.spad
 
 const symbols = Object.keys(cardsValue) as CardSymbol[];
 
-const deck = cartesianProduct(suits, symbols, (suit, symbol) => ({ suit, symbol }));
+const deck = cartesianProduct(
+    suits,
+    symbols,
+    (suit, symbol): Card => ({ isBlueCard: false, isGoldCard: false, suit, symbol })
+);
 
 export const getCardEffectiveValue = (card: Card): number => {
     const values = getCardValues(card);

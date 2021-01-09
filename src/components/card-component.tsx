@@ -11,7 +11,11 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
     return (
         <View
             style={{
-                backgroundColor: 'white',
+                backgroundColor: props.card.isBlueCard
+                    ? '#2e618d'
+                    : props.card.isGoldCard
+                    ? 'gold'
+                    : 'white',
                 borderRadius: 8,
                 height: 66,
                 marginBottom: 8,

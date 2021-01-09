@@ -45,11 +45,12 @@ export const handRepresentationToHand = (handRepresentation: HandRepresentation)
 
     return createHand(
         handSymbols.map(
-            (symbol) =>
-                ({
-                    suit: getRandomSuit(),
-                    symbol
-                } as Card)
+            (symbol): Card => ({
+                isBlueCard: false,
+                isGoldCard: true,
+                suit: getRandomSuit(),
+                symbol
+            })
         )
     );
 };

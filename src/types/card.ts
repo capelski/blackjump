@@ -1,4 +1,6 @@
 export interface Card {
+    isBlueCard: boolean;
+    isGoldCard: boolean;
     suit: CardSuit;
     symbol: CardSymbol;
 }

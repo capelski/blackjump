@@ -92,6 +92,8 @@ export const getCardForUntrainedHand = (
     const nextCard: Card =
         valuesToUntrainedHands.length > 0
             ? {
+                  isBlueCard: true,
+                  isGoldCard: false,
                   suit: getRandomSuit(),
                   symbol: valueToSymbol(getRandomItem(valuesToUntrainedHands))
               }
@@ -133,7 +135,12 @@ export const getRandomTrainingPair = (
 
     return {
         dealer: createHand([
-            { suit: getRandomSuit(), symbol: simpleSymbolToSymbol(randomDealerHand) }
+            {
+                isBlueCard: false,
+                isGoldCard: true,
+                suit: getRandomSuit(),
+                symbol: simpleSymbolToSymbol(randomDealerHand)
+            }
         ]),
         player: handRepresentationToHand(randomTrainingSet.playerHand.representation)
     };
@@ -144,7 +151,14 @@ export const getSpecificTrainingPair = (
     dealerSymbol: SimpleCardSymbol
 ): TrainingPair => {
     return {
-        dealer: createHand([{ suit: getRandomSuit(), symbol: simpleSymbolToSymbol(dealerSymbol) }]),
+        dealer: createHand([
+            {
+                isBlueCard: false,
+                isGoldCard: true,
+                suit: getRandomSuit(),
+                symbol: simpleSymbolToSymbol(dealerSymbol)
+            }
+        ]),
         player: handRepresentationToHand(handRepresentation)
     };
 };
