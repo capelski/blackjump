@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
@@ -13,12 +12,15 @@ import {
     Dictionary,
     GameConfig,
     Hand,
+    NavigationProps,
+    ScreenTypes,
     SimpleCardSymbol
 } from '../types';
 
-interface GoldHandsLevelsInfoProps extends WithNavBarPropsFromScreenProps {
-    gameConfig: GameConfig;
-}
+type GoldHandsLevelsInfoProps = NavigationProps<ScreenTypes.goldHandsLevelsInfo> &
+    WithNavBarPropsFromScreenProps & {
+        gameConfig: GameConfig;
+    };
 
 const levelsColor: Dictionary<string, number> = {
     1: '#a0c5e4',
@@ -27,11 +29,8 @@ const levelsColor: Dictionary<string, number> = {
     4: '#1a3750'
 };
 
-export const GoldHandsLevelsInfo: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: GoldHandsLevelsInfoProps;
-}> = ({ navigation, screenProps }) => {
-    const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
+export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) => {
+    const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
 
     const hardEight: Hand = {
         bet: 1,
@@ -72,9 +71,10 @@ export const GoldHandsLevelsInfo: React.FC<{
 
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <ScrollView
                 style={{
@@ -104,7 +104,7 @@ export const GoldHandsLevelsInfo: React.FC<{
 
                 <HandComponent hand={hardEight} isCurrentHand={false} />
                 <HandDecisionsTable
-                    casinoRules={screenProps.gameConfig.casinoRules}
+                    casinoRules={props.gameConfig.casinoRules}
                     relevantHand={handToRelevantHand(hardEight)}
                 />
 
@@ -116,7 +116,7 @@ export const GoldHandsLevelsInfo: React.FC<{
 
                 <HandComponent hand={splitNine} isCurrentHand={false} />
                 <HandDecisionsTable
-                    casinoRules={screenProps.gameConfig.casinoRules}
+                    casinoRules={props.gameConfig.casinoRules}
                     relevantHand={handToRelevantHand(splitNine)}
                 />
 
@@ -134,7 +134,7 @@ export const GoldHandsLevelsInfo: React.FC<{
                 </Text>
 
                 <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-                    {Object.keys(screenProps.gameConfig.goldHandsLevels).map((level) => (
+                    {Object.keys(props.gameConfig.goldHandsLevels).map((level) => (
                         <View
                             key={level}
                             style={{

@@ -1,7 +1,7 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
@@ -37,6 +37,7 @@ import {
     Player,
     PlayerDecision,
     PlayerDecisions,
+    RouteParams,
     ScreenTypes,
     TrainedHands,
     TrainedHandsStats,
@@ -50,23 +51,7 @@ import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
 
-const AppContainer = createAppContainer(
-    createSwitchNavigator(
-        {
-            // TODO Extract the navigation bar and wrap the AppContainer
-            [ScreenTypes.blueCardsInfo]: { screen: BlueCardsInfo },
-            [ScreenTypes.configMenu]: { screen: ConfigMenu },
-            [ScreenTypes.goldHandsInfo]: { screen: GoldHandsInfo },
-            [ScreenTypes.goldHandsLevelsInfo]: { screen: GoldHandsLevelsInfo },
-            [ScreenTypes.handDecisions]: { screen: HandDecisions },
-            [ScreenTypes.table]: { screen: Table },
-            [ScreenTypes.trainingHands]: { screen: TrainingHands }
-        },
-        {
-            initialRouteName: ScreenTypes.table
-        }
-    )
-);
+const Stack = createStackNavigator<RouteParams>();
 
 export default function App() {
     const [dealerHand, setDealerHand] = useState<Hand>();
@@ -258,41 +243,103 @@ export default function App() {
     };
 
     return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#088446'
-            }}
-        >
+        <NavigationContainer>
             <StatusBar hidden={true} />
-            <AppContainer
-                // TODO Find a more elegant way to pass the props to components
-                screenProps={{
-                    dealerHand,
-                    decisionEvaluation,
-                    gameConfig,
-                    handlers: {
-                        double: doubleHandler,
-                        hit: hitHandler,
-                        split: splitHandler,
-                        stand: standHandler,
-                        surrender: surrenderHandler
-                    },
-                    isDoubleEnabled,
-                    isSplitEnabled,
-                    isSurrenderEnabled,
-                    player,
-                    phase,
-                    setGameConfig,
-                    setTrainedHands,
-                    setTrainedHandsStats,
-                    startTrainingRound,
-                    trainedHands,
-                    trainedHandsStats
+            <Stack.Navigator
+                initialRouteName={ScreenTypes.table}
+                screenOptions={{
+                    headerShown: false
                 }}
-            />
-        </View>
+            >
+                <Stack.Screen name={ScreenTypes.blueCardsInfo}>
+                    {(props) => (
+                        <BlueCardsInfo
+                            {...props}
+                            player={player}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.configMenu}>
+                    {(props) => (
+                        <ConfigMenu
+                            {...props}
+                            gameConfig={gameConfig}
+                            player={player}
+                            setGameConfig={setGameConfig}
+                            setTrainedHands={setTrainedHands}
+                            setTrainedHandsStats={setTrainedHandsStats}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.goldHandsInfo}>
+                    {(props) => (
+                        <GoldHandsInfo
+                            {...props}
+                            player={player}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.goldHandsLevelsInfo}>
+                    {(props) => (
+                        <GoldHandsLevelsInfo
+                            {...props}
+                            gameConfig={gameConfig}
+                            player={player}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.handDecisions}>
+                    {(props) => (
+                        <HandDecisions
+                            {...props}
+                            gameConfig={gameConfig}
+                            player={player}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.table}>
+                    {(props) => (
+                        <Table
+                            {...props}
+                            dealerHand={dealerHand}
+                            decisionEvaluation={decisionEvaluation}
+                            gameConfig={gameConfig}
+                            handlers={{
+                                double: doubleHandler,
+                                hit: hitHandler,
+                                split: splitHandler,
+                                stand: standHandler,
+                                surrender: surrenderHandler
+                            }}
+                            isDoubleEnabled={isDoubleEnabled}
+                            isSplitEnabled={isSplitEnabled}
+                            isSurrenderEnabled={isSurrenderEnabled}
+                            player={player}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                            trainedHands={trainedHands}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={ScreenTypes.trainingHands}>
+                    {(props) => (
+                        <TrainingHands
+                            {...props}
+                            player={player}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                            trainedHands={trainedHands}
+                            trainedHandsStats={trainedHandsStats}
+                        />
+                    )}
+                </Stack.Screen>
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }

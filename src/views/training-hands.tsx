@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { Divider } from '../components/divider';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
@@ -8,30 +7,29 @@ import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
     Hand,
     HandRepresentation,
+    NavigationProps,
     Phases,
     ScreenTypes,
     SimpleCardSymbol,
     TrainedHands
 } from '../types';
-import { HandDecisionsParams } from './hand-decisions';
 
-interface TrainingHandsProps {
-    phase: Phases;
-    startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-    trainedHands: TrainedHands;
-}
+type TrainingHandsProps = NavigationProps<ScreenTypes.trainingHands> &
+    WithNavBarPropsFromScreenProps & {
+        phase: Phases;
+        startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
+        trainedHands: TrainedHands;
+    };
 
-export const TrainingHands: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: TrainingHandsProps & WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => {
+export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
     const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation>();
 
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <Text
                 style={{
@@ -53,10 +51,10 @@ export const TrainingHands: React.FC<{
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                {(Object.keys(screenProps.trainedHands) as HandRepresentation[]).map(
+                {(Object.keys(props.trainedHands) as HandRepresentation[]).map(
                     (handRepresentation, index) => {
                         const handRelevantData = decisionsDictionary[handRepresentation];
-                        const dealerHands = screenProps.trainedHands[handRepresentation];
+                        const dealerHands = props.trainedHands[handRepresentation];
 
                         return (
                             <View key={index} style={{ marginBottom: 16, width: '100%' }}>
@@ -89,7 +87,7 @@ export const TrainingHands: React.FC<{
                                                 flexWrap: 'wrap',
                                                 justifyContent: 'space-around',
                                                 opacity:
-                                                    screenProps.phase === Phases.finished
+                                                    props.phase === Phases.finished
                                                         ? undefined
                                                         : 0.3
                                             }}
@@ -108,18 +106,17 @@ export const TrainingHands: React.FC<{
                                                             key={dealerIndex}
                                                             onPress={() => {
                                                                 if (
-                                                                    screenProps.phase ===
-                                                                    Phases.finished
+                                                                    props.phase === Phases.finished
                                                                 ) {
                                                                     const trainingPair = getSpecificTrainingPair(
                                                                         handRepresentation,
                                                                         dealerSymbol
                                                                     );
-                                                                    screenProps.startTrainingRound(
+                                                                    props.startTrainingRound(
                                                                         trainingPair.player,
                                                                         trainingPair.dealer
                                                                     );
-                                                                    navigation.navigate(
+                                                                    props.navigation.navigate(
                                                                         ScreenTypes.table
                                                                     );
                                                                 }
@@ -149,11 +146,10 @@ export const TrainingHands: React.FC<{
                                         </View>
                                         <TouchableOpacity
                                             onPress={() => {
-                                                navigation.navigate<HandDecisionsParams>(
+                                                props.navigation.navigate(
                                                     ScreenTypes.handDecisions,
                                                     {
-                                                        handRepresentation,
-                                                        previousRoute: ScreenTypes.trainingHands
+                                                        handRepresentation
                                                     }
                                                 );
                                             }}

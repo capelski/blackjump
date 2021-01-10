@@ -1,7 +1,6 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { updateGameConfig, updateTrainedHands } from '../async-storage';
 import { Button } from '../components/button';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
@@ -14,37 +13,33 @@ import { getGoldHandsNumber } from '../logic/training-pairs';
 import {
     CasinoRulesKeys,
     GameConfig,
+    NavigationProps,
     ScreenTypes,
     TrainedHands,
     TrainedHandsStats
 } from '../types';
 
-interface ConfigMenuProps {
-    gameConfig: GameConfig;
-    setGameConfig: (gameConfig: GameConfig) => void;
-    setTrainedHands: (trainedHands: TrainedHands) => void;
-    setTrainedHandsStats: (trainedHandsStats: TrainedHandsStats) => void;
-}
+type ConfigMenuProps = NavigationProps<ScreenTypes.configMenu> &
+    WithNavBarPropsFromScreenProps & {
+        gameConfig: GameConfig;
+        setGameConfig: (gameConfig: GameConfig) => void;
+        setTrainedHands: (trainedHands: TrainedHands) => void;
+        setTrainedHandsStats: (trainedHandsStats: TrainedHandsStats) => void;
+    };
 
 const textStyle = {
     color: 'white',
     fontSize: 20
 };
 
-export const ConfigMenu: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: ConfigMenuProps & WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => {
-    const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
-    const [goldHandsLevels, setGoldHandsLevels] = useState(screenProps.gameConfig.goldHandsLevels);
+export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
+    const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
+    const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
     const [goldHandsNumber, setGoldHandsNumber] = useState(
-        getGoldHandsNumber(
-            screenProps.gameConfig.casinoRules,
-            screenProps.gameConfig.goldHandsLevels
-        )
+        getGoldHandsNumber(props.gameConfig.casinoRules, props.gameConfig.goldHandsLevels)
     );
-    const [useBlueCards, setUseBlueCards] = useState(screenProps.gameConfig.useBlueCards);
-    const [useGoldHands, setUseGoldHands] = useState(screenProps.gameConfig.useGoldHands);
+    const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
+    const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
     const saveHandler = () => {
         const nextGameConfig: GameConfig = {
@@ -53,31 +48,32 @@ export const ConfigMenu: React.FC<{
             useBlueCards,
             useGoldHands
         };
-        screenProps.setGameConfig(nextGameConfig);
+        props.setGameConfig(nextGameConfig);
         updateGameConfig(nextGameConfig);
-        navigation.navigate(ScreenTypes.table);
+        props.navigation.navigate(ScreenTypes.table);
     };
 
     const isSaveButtonEnabled =
-        (screenProps.gameConfig.casinoRules[CasinoRulesKeys.canDoubleAfterSplit] !==
+        (props.gameConfig.casinoRules[CasinoRulesKeys.canDoubleAfterSplit] !==
             casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ||
-            screenProps.gameConfig.casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] !==
+            props.gameConfig.casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] !==
                 casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
-            screenProps.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
+            props.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
                 casinoRules[CasinoRulesKeys.canSurrender] ||
-            screenProps.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
-            screenProps.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
-            screenProps.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
-            screenProps.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
-            screenProps.gameConfig.useBlueCards !== useBlueCards ||
-            screenProps.gameConfig.useGoldHands !== useGoldHands) &&
+            props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
+            props.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
+            props.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
+            props.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
+            props.gameConfig.useBlueCards !== useBlueCards ||
+            props.gameConfig.useGoldHands !== useGoldHands) &&
         (goldHandsLevels[1] || goldHandsLevels[2] || goldHandsLevels[3] || goldHandsLevels[4]);
 
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <ScrollView
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
@@ -164,7 +160,7 @@ export const ConfigMenu: React.FC<{
                     </Text>
                     <HelpIcon
                         onPress={() => {
-                            navigation.navigate(ScreenTypes.blueCardsInfo);
+                            props.navigation.navigate(ScreenTypes.blueCardsInfo);
                         }}
                     />
                 </View>
@@ -198,7 +194,7 @@ export const ConfigMenu: React.FC<{
                             </Text>
                             <HelpIcon
                                 onPress={() => {
-                                    navigation.navigate(ScreenTypes.goldHandsInfo);
+                                    props.navigation.navigate(ScreenTypes.goldHandsInfo);
                                 }}
                             />
                         </View>
@@ -213,7 +209,7 @@ export const ConfigMenu: React.FC<{
                                 <Text style={{ ...textStyle }}>Hand levels</Text>
                                 <HelpIcon
                                     onPress={() => {
-                                        navigation.navigate(ScreenTypes.goldHandsLevelsInfo);
+                                        props.navigation.navigate(ScreenTypes.goldHandsLevelsInfo);
                                     }}
                                 />
                             </View>
@@ -287,9 +283,9 @@ export const ConfigMenu: React.FC<{
                                     text: 'Reset',
                                     onPress: () => {
                                         const nextTrainedHands = getEmptyTrainedHands();
-                                        screenProps.setTrainedHands(nextTrainedHands);
+                                        props.setTrainedHands(nextTrainedHands);
                                         updateTrainedHands(nextTrainedHands);
-                                        screenProps.setTrainedHandsStats({ passed: 0, trained: 0 });
+                                        props.setTrainedHandsStats({ passed: 0, trained: 0 });
                                     }
                                 }
                             ]

@@ -1,19 +1,25 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { HandComponent } from '../components/hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
-import { CardSuit, SimpleCardSymbol, SpecialCardSymbol } from '../types';
+import {
+    CardSuit,
+    NavigationProps,
+    ScreenTypes,
+    SimpleCardSymbol,
+    SpecialCardSymbol
+} from '../types';
 
-export const GoldHandsInfo: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => {
+type GoldHandsInfoProps = NavigationProps<ScreenTypes.goldHandsInfo> &
+    WithNavBarPropsFromScreenProps;
+
+export const GoldHandsInfo: React.FC<GoldHandsInfoProps> = (props) => {
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <ScrollView
                 style={{

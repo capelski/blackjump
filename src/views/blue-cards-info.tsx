@@ -1,14 +1,13 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { HandComponent } from '../components/hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
-import { CardSuit, Hand, SimpleCardSymbol } from '../types';
+import { CardSuit, Hand, NavigationProps, ScreenTypes, SimpleCardSymbol } from '../types';
 
-export const BlueCardsInfo: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => {
+type BlueCardsInfoProps = NavigationProps<ScreenTypes.blueCardsInfo> &
+    WithNavBarPropsFromScreenProps;
+
+export const BlueCardsInfo: React.FC<BlueCardsInfoProps> = (props) => {
     const hardFourteen: Hand = {
         bet: 1,
         cards: [
@@ -49,9 +48,10 @@ export const BlueCardsInfo: React.FC<{
 
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <ScrollView
                 style={{

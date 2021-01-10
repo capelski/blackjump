@@ -1,30 +1,29 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { Actions, ActionsProps } from '../components/actions';
 import { DecisionEvaluationComponent } from '../components/decision-evaluation';
 import { Divider } from '../components/divider';
 import { HandComponent } from '../components/hand-component';
 import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { tableCenterHeight } from '../constants';
-import { DecisionEvaluation, Hand, Phases, Player, ScreenTypes } from '../types';
-import { HandDecisionsParams } from './hand-decisions';
+import { DecisionEvaluation, Hand, NavigationProps, Phases, Player, ScreenTypes } from '../types';
 
-interface TableProps {
-    dealerHand?: Hand;
-    decisionEvaluation?: DecisionEvaluation;
-    phase: Phases;
-    player: Player;
-}
+type TableProps = NavigationProps<ScreenTypes.table> &
+    ActionsProps &
+    WithNavBarPropsFromScreenProps & {
+        dealerHand?: Hand;
+        decisionEvaluation?: DecisionEvaluation;
 
-export const Table: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }>;
-    screenProps: TableProps & ActionsProps & WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => (
+        phase: Phases;
+        player: Player;
+    };
+
+export const Table: React.FC<TableProps> = (props) => (
     <WithNavBar
-        navigation={navigation}
-        player={screenProps.player}
-        trainedHandsStats={screenProps.trainedHandsStats}
+        navigation={props.navigation}
+        route={props.route}
+        player={props.player}
+        trainedHandsStats={props.trainedHandsStats}
     >
         <View
             style={{
@@ -33,22 +32,21 @@ export const Table: React.FC<{
             }}
         >
             <View style={{ minHeight: 128, justifyContent: 'center' }}>
-                {screenProps.dealerHand && (
+                {props.dealerHand && (
                     <HandComponent
-                        hand={screenProps.dealerHand}
-                        isCurrentHand={screenProps.phase === Phases.dealer}
+                        hand={props.dealerHand}
+                        isCurrentHand={props.phase === Phases.dealer}
                     />
                 )}
             </View>
             <View style={{ height: tableCenterHeight, justifyContent: 'center', width: '100%' }}>
                 <Divider />
-                {screenProps.decisionEvaluation ? (
+                {props.decisionEvaluation ? (
                     <DecisionEvaluationComponent
-                        decisionEvaluation={screenProps.decisionEvaluation}
+                        decisionEvaluation={props.decisionEvaluation}
                         showDecisionsHandler={() => {
-                            navigation.navigate<HandDecisionsParams>(ScreenTypes.handDecisions, {
-                                handRepresentation: screenProps.player.lastActionHand!,
-                                previousRoute: ScreenTypes.table
+                            props.navigation.navigate(ScreenTypes.handDecisions, {
+                                handRepresentation: props.player.lastActionHand!
                             });
                         }}
                     />
@@ -81,18 +79,17 @@ export const Table: React.FC<{
                 <Divider />
             </View>
             <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-evenly' }}>
-                {screenProps.player.hands.map((hand, index) => (
+                {props.player.hands.map((hand, index) => (
                     <HandComponent
                         key={index}
                         hand={hand}
                         isCurrentHand={
-                            screenProps.phase === Phases.player &&
-                            index === screenProps.player.handIndex
+                            props.phase === Phases.player && index === props.player.handIndex
                         }
                     />
                 ))}
             </ScrollView>
         </View>
-        <Actions {...screenProps} />
+        <Actions {...props} />
     </WithNavBar>
 );

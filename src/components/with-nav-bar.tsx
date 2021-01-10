@@ -1,30 +1,22 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
-import { NavigationScreenProp } from 'react-navigation';
 import { configBarHeight, splitColor, surrenderColor } from '../constants';
 import { allTrainingPairsNumber } from '../logic/training-pairs';
-import { Player, ScreenTypes, TrainedHandsStats } from '../types';
+import { NavigationProps, Player, ScreenTypes, TrainedHandsStats } from '../types';
 
 export interface WithNavBarPropsFromScreenProps {
     player: Player;
     trainedHandsStats: TrainedHandsStats;
 }
 
-export interface WithNavBarParams {
-    previousRoute?: string;
-}
-
-interface WithNavBarProps extends WithNavBarPropsFromScreenProps {
-    navigation: NavigationScreenProp<{ routeName: string }, WithNavBarParams>;
-}
+type WithNavBarProps = NavigationProps<ScreenTypes> & WithNavBarPropsFromScreenProps;
 
 const textStyles = { color: 'white', fontSize: 20 };
 
 export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
     const earningsColor =
         props.player.cash > 0 ? splitColor : props.player.cash < 0 ? surrenderColor : 'white';
-    const previousRoute = props.navigation.getParam('previousRoute');
 
     return (
         <View style={{ flex: 1, width: '100%' }}>
@@ -129,27 +121,15 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        if (previousRoute) {
-                            props.navigation.navigate(previousRoute);
+                        if (props.route.name === ScreenTypes.table) {
+                            props.navigation.navigate(ScreenTypes.configMenu);
                         } else {
-                            const nextRoute =
-                                props.navigation.state.routeName === ScreenTypes.table
-                                    ? ScreenTypes.configMenu
-                                    : props.navigation.state.routeName ===
-                                          ScreenTypes.blueCardsInfo ||
-                                      props.navigation.state.routeName ===
-                                          ScreenTypes.goldHandsInfo ||
-                                      props.navigation.state.routeName ===
-                                          ScreenTypes.goldHandsLevelsInfo
-                                    ? ScreenTypes.configMenu
-                                    : ScreenTypes.table;
-
-                            props.navigation.navigate(nextRoute);
+                            props.navigation.goBack();
                         }
                     }}
                     style={{ alignItems: 'center', width: '15%' }}
                 >
-                    {props.navigation.state.routeName === ScreenTypes.table ? (
+                    {props.route.name === ScreenTypes.table ? (
                         <Svg height={24} viewBox="340 140 280 279.416" width={24}>
                             <Path
                                 fill="white"
@@ -172,7 +152,16 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
                     )}
                 </TouchableOpacity>
             </View>
-            {props.children}
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#088446'
+                }}
+            >
+                {props.children}
+            </View>
         </View>
     );
 };

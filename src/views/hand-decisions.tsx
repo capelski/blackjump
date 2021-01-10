@@ -1,38 +1,28 @@
 import React, { useState } from 'react';
 import { ScrollView, Text } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import {
-    WithNavBar,
-    WithNavBarParams,
-    WithNavBarPropsFromScreenProps
-} from '../components/with-nav-bar';
+import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
-import { GameConfig, HandRepresentation } from '../types';
+import { GameConfig, NavigationProps, ScreenTypes } from '../types';
 
-interface HandDecisionsProps {
-    gameConfig: GameConfig;
-}
+type HandDecisionsProps = NavigationProps<ScreenTypes.handDecisions> &
+    WithNavBarPropsFromScreenProps & {
+        gameConfig: GameConfig;
+    };
 
-export interface HandDecisionsParams extends WithNavBarParams {
-    handRepresentation: HandRepresentation;
-}
+export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
+    const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
 
-export const HandDecisions: React.FC<{
-    navigation: NavigationScreenProp<{ routeName: string }, HandDecisionsParams>;
-    screenProps: HandDecisionsProps & WithNavBarPropsFromScreenProps;
-}> = ({ navigation, screenProps }) => {
-    const [casinoRules, setCasinoRules] = useState(screenProps.gameConfig.casinoRules);
-
-    const handRepresentation = navigation.getParam('handRepresentation');
+    const handRepresentation = props.route.params['handRepresentation'];
     const relevantHand = handRepresentationToRelevantHand(handRepresentation);
 
     return (
         <WithNavBar
-            navigation={navigation}
-            player={screenProps.player}
-            trainedHandsStats={screenProps.trainedHandsStats}
+            navigation={props.navigation}
+            route={props.route}
+            player={props.player}
+            trainedHandsStats={props.trainedHandsStats}
         >
             <ScrollView
                 style={{

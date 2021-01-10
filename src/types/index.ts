@@ -25,7 +25,7 @@ export { GameConfig } from './game-config';
 export { Hand, HandOutcome, HandRepresentation } from './hand';
 export { Phases } from './phases';
 export { Player } from './player';
-export { ScreenTypes } from './screen-types';
+export { NavigationProps, RouteParams, ScreenTypes } from './screen-types';
 export {
     RelevantHand,
     TrainedHands,
