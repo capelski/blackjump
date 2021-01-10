@@ -7,9 +7,9 @@ import {
     NumericDictionary,
     SimpleCardSymbol,
     TrainedHands,
+    TrainedHandStatus,
     TrainingPair
 } from '../types';
-import { TrainedHandStatus } from '../types/training';
 import { getRandomItem } from '../utils';
 import {
     getCardsValues,

@@ -1,5 +1,10 @@
-import { Dictionary, HandRepresentation, SimpleCardSymbol, TrainedHands } from '../types';
-import { TrainedHandStatus } from '../types/training';
+import {
+    Dictionary,
+    HandRepresentation,
+    SimpleCardSymbol,
+    TrainedHands,
+    TrainedHandStatus
+} from '../types';
 import { decisionsDictionary } from './decisions-dictionary';
 import { allPossibleDealerCards } from './training-sets';
 
