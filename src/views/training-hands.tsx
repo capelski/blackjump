@@ -1,42 +1,36 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
+    AppNavigation,
     Hand,
     HandRepresentation,
-    NavigationProps,
     Phases,
-    ScreenTypes,
+    RouteNames,
     SimpleCardSymbol,
     TrainedHands
 } from '../types';
 
-type TrainingHandsProps = NavigationProps<ScreenTypes.trainingHands> &
-    WithNavBarPropsFromScreenProps & {
-        phase: Phases;
-        startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-        trainedHands: TrainedHands;
-    };
+type TrainingHandsProps = {
+    navigation: AppNavigation;
+    phase: Phases;
+    startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
+    trainedHands: TrainedHands;
+};
 
 export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
     const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation>();
 
     return (
-        <WithNavBar
-            navigation={props.navigation}
-            route={props.route}
-            player={props.player}
-            trainedHandsStats={props.trainedHandsStats}
-        >
+        <React.Fragment>
             <Text
                 style={{
                     color: 'white',
                     fontSize: 24,
                     fontWeight: 'bold',
-                    paddingVertical: 16,
+                    paddingTop: 16,
                     textAlign: 'center'
                 }}
             >
@@ -45,9 +39,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
             <ScrollView
                 style={{
                     flex: 1,
-                    paddingHorizontal: 16,
-                    marginVertical: 8,
-                    width: '100%'
+                    margin: 16
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
@@ -117,7 +109,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                                         trainingPair.dealer
                                                                     );
                                                                     props.navigation.navigate(
-                                                                        ScreenTypes.table
+                                                                        RouteNames.table
                                                                     );
                                                                 }
                                                             }}
@@ -147,7 +139,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 props.navigation.navigate(
-                                                    ScreenTypes.handDecisions,
+                                                    RouteNames.handDecisions,
                                                     {
                                                         handRepresentation
                                                     }
@@ -173,6 +165,6 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                     }
                 )}
             </ScrollView>
-        </WithNavBar>
+        </React.Fragment>
     );
 };

@@ -1,42 +1,27 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { HandComponent } from '../components/hand-component';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
-import {
-    CardSuit,
-    NavigationProps,
-    ScreenTypes,
-    SimpleCardSymbol,
-    SpecialCardSymbol
-} from '../types';
+import { CardSuit, SimpleCardSymbol, SpecialCardSymbol } from '../types';
 
-type GoldHandsInfoProps = NavigationProps<ScreenTypes.goldHandsInfo> &
-    WithNavBarPropsFromScreenProps;
-
-export const GoldHandsInfo: React.FC<GoldHandsInfoProps> = (props) => {
+export const GoldHandsInfo: React.FC = () => {
     return (
-        <WithNavBar
-            navigation={props.navigation}
-            route={props.route}
-            player={props.player}
-            trainedHandsStats={props.trainedHandsStats}
-        >
-            <ScrollView
+        <React.Fragment>
+            <Text
                 style={{
-                    margin: 16,
-                    overflow: 'scroll'
-                }}
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    color: 'white',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    paddingTop: 16,
+                    textAlign: 'center'
                 }}
             >
-                <Text
-                    style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
-                >
-                    Gold hands
-                </Text>
-
+                Gold hands
+            </Text>
+            <ScrollView
+                style={{
+                    margin: 16
+                }}
+            >
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     When Gold hands are enabled you will be dealt specific initial hands and dealer
                     will be dealt specific up cards, prioritizing those you haven't trained yet and
@@ -89,6 +74,6 @@ export const GoldHandsInfo: React.FC<GoldHandsInfoProps> = (props) => {
                     isCurrentHand={false}
                 />
             </ScrollView>
-        </WithNavBar>
+        </React.Fragment>
     );
 };

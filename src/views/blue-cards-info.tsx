@@ -1,13 +1,9 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { HandComponent } from '../components/hand-component';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
-import { CardSuit, Hand, NavigationProps, ScreenTypes, SimpleCardSymbol } from '../types';
+import { CardSuit, Hand, SimpleCardSymbol } from '../types';
 
-type BlueCardsInfoProps = NavigationProps<ScreenTypes.blueCardsInfo> &
-    WithNavBarPropsFromScreenProps;
-
-export const BlueCardsInfo: React.FC<BlueCardsInfoProps> = (props) => {
+export const BlueCardsInfo: React.FC = () => {
     const hardFourteen: Hand = {
         bet: 1,
         cards: [
@@ -47,28 +43,24 @@ export const BlueCardsInfo: React.FC<BlueCardsInfoProps> = (props) => {
     };
 
     return (
-        <WithNavBar
-            navigation={props.navigation}
-            route={props.route}
-            player={props.player}
-            trainedHandsStats={props.trainedHandsStats}
-        >
-            <ScrollView
+        <React.Fragment>
+            <Text
                 style={{
-                    flexGrow: 1,
-                    margin: 16
-                }}
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    color: 'white',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    paddingTop: 16,
+                    textAlign: 'center'
                 }}
             >
-                <Text
-                    style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
-                >
-                    Blue cards
-                </Text>
+                Blue cards
+            </Text>
 
+            <ScrollView
+                style={{
+                    margin: 16
+                }}
+            >
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     When Blue cards are enabled, each time you Hit or Split a hand, instead of being
                     a dealt a random card, you will be dealt a card that turns your current hand
@@ -378,6 +370,6 @@ export const BlueCardsInfo: React.FC<BlueCardsInfoProps> = (props) => {
                     After you have trained each hand at least once Blue cards won't apply anymore.
                 </Text>
             </ScrollView>
-        </WithNavBar>
+        </React.Fragment>
     );
 };

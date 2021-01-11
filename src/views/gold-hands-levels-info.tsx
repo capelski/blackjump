@@ -3,7 +3,6 @@ import { ScrollView, Text, View } from 'react-native';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { handToRelevantHand } from '../logic/basic-strategy';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import {
@@ -12,15 +11,12 @@ import {
     Dictionary,
     GameConfig,
     Hand,
-    NavigationProps,
-    ScreenTypes,
     SimpleCardSymbol
 } from '../types';
 
-type GoldHandsLevelsInfoProps = NavigationProps<ScreenTypes.goldHandsLevelsInfo> &
-    WithNavBarPropsFromScreenProps & {
-        gameConfig: GameConfig;
-    };
+type GoldHandsLevelsInfoProps = {
+    gameConfig: GameConfig;
+};
 
 const levelsColor: Dictionary<string, number> = {
     1: '#a0c5e4',
@@ -70,28 +66,24 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
     };
 
     return (
-        <WithNavBar
-            navigation={props.navigation}
-            route={props.route}
-            player={props.player}
-            trainedHandsStats={props.trainedHandsStats}
-        >
-            <ScrollView
+        <React.Fragment>
+            <Text
                 style={{
-                    margin: 16,
-                    overflow: 'scroll'
-                }}
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    color: 'white',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    paddingTop: 16,
+                    textAlign: 'center'
                 }}
             >
-                <Text
-                    style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}
-                >
-                    Hand levels
-                </Text>
+                Hand levels
+            </Text>
 
+            <ScrollView
+                style={{
+                    margin: 16
+                }}
+            >
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     The level of a hand tells how many different actions must be memorized for that
                     hand depending on the dealer's up card.
@@ -192,6 +184,6 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     ))}
                 </View>
             </ScrollView>
-        </WithNavBar>
+        </React.Fragment>
     );
 };

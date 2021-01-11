@@ -4,27 +4,19 @@ import { Actions, ActionsProps } from '../components/actions';
 import { DecisionEvaluationComponent } from '../components/decision-evaluation';
 import { Divider } from '../components/divider';
 import { HandComponent } from '../components/hand-component';
-import { WithNavBar, WithNavBarPropsFromScreenProps } from '../components/with-nav-bar';
 import { tableCenterHeight } from '../constants';
-import { DecisionEvaluation, Hand, NavigationProps, Phases, Player, ScreenTypes } from '../types';
+import { AppNavigation, DecisionEvaluation, Hand, Phases, Player, RouteNames } from '../types';
 
-type TableProps = NavigationProps<ScreenTypes.table> &
-    ActionsProps &
-    WithNavBarPropsFromScreenProps & {
-        dealerHand?: Hand;
-        decisionEvaluation?: DecisionEvaluation;
-
-        phase: Phases;
-        player: Player;
-    };
+type TableProps = ActionsProps & {
+    dealerHand?: Hand;
+    decisionEvaluation?: DecisionEvaluation;
+    navigation: AppNavigation;
+    phase: Phases;
+    player: Player;
+};
 
 export const Table: React.FC<TableProps> = (props) => (
-    <WithNavBar
-        navigation={props.navigation}
-        route={props.route}
-        player={props.player}
-        trainedHandsStats={props.trainedHandsStats}
-    >
+    <React.Fragment>
         <View
             style={{
                 flex: 1,
@@ -45,7 +37,7 @@ export const Table: React.FC<TableProps> = (props) => (
                     <DecisionEvaluationComponent
                         decisionEvaluation={props.decisionEvaluation}
                         showDecisionsHandler={() => {
-                            props.navigation.navigate(ScreenTypes.handDecisions, {
+                            props.navigation.navigate(RouteNames.handDecisions, {
                                 handRepresentation: props.player.lastActionHand!
                             });
                         }}
@@ -90,6 +82,15 @@ export const Table: React.FC<TableProps> = (props) => (
                 ))}
             </ScrollView>
         </View>
-        <Actions {...props} />
-    </WithNavBar>
+        <Actions
+            gameConfig={props.gameConfig}
+            handlers={props.handlers}
+            isDoubleEnabled={props.isDoubleEnabled}
+            isSplitEnabled={props.isSplitEnabled}
+            isSurrenderEnabled={props.isSurrenderEnabled}
+            phase={props.phase}
+            startTrainingRound={props.startTrainingRound}
+            trainedHands={props.trainedHands}
+        />
+    </React.Fragment>
 );

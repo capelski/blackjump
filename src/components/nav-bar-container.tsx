@@ -3,18 +3,18 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { configBarHeight, splitColor, surrenderColor } from '../constants';
 import { allTrainingPairsNumber } from '../logic/training-pairs';
-import { NavigationProps, Player, ScreenTypes, TrainedHandsStats } from '../types';
+import { AppNavigation, AppRoute, Player, RouteNames, TrainedHandsStats } from '../types';
 
-export interface WithNavBarPropsFromScreenProps {
+export interface NavBarContainerProps {
+    navigation: AppNavigation;
     player: Player;
+    route: AppRoute<RouteNames>;
     trainedHandsStats: TrainedHandsStats;
 }
 
-type WithNavBarProps = NavigationProps<ScreenTypes> & WithNavBarPropsFromScreenProps;
-
 const textStyles = { color: 'white', fontSize: 20 };
 
-export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
+export const NavBarContainer: React.FC<NavBarContainerProps> = (props) => {
     const earningsColor =
         props.player.cash > 0 ? splitColor : props.player.cash < 0 ? surrenderColor : 'white';
 
@@ -94,7 +94,7 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        props.navigation.navigate(ScreenTypes.trainingHands);
+                        props.navigation.navigate(RouteNames.trainingHands);
                     }}
                     style={{ alignItems: 'center', width: '30%' }}
                 >
@@ -121,15 +121,15 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        if (props.route.name === ScreenTypes.table) {
-                            props.navigation.navigate(ScreenTypes.configMenu);
+                        if (props.route.name === RouteNames.table) {
+                            props.navigation.navigate(RouteNames.configMenu);
                         } else {
                             props.navigation.goBack();
                         }
                     }}
                     style={{ alignItems: 'center', width: '15%' }}
                 >
-                    {props.route.name === ScreenTypes.table ? (
+                    {props.route.name === RouteNames.table ? (
                         <Svg height={24} viewBox="340 140 280 279.416" width={24}>
                             <Path
                                 fill="white"
@@ -155,8 +155,6 @@ export const WithNavBar: React.FC<WithNavBarProps> = (props) => {
             <View
                 style={{
                     flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
                     backgroundColor: '#088446'
                 }}
             >
