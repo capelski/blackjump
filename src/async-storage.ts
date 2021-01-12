@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { GameConfig, TrainedHands } from './types';
+import { CasinoRulesKeys, GameConfig, TrainedHands } from './types';
 
 export const getGameConfig = (currentGameConfig: GameConfig) =>
     AsyncStorage.getItem('gameConfig')
@@ -9,7 +9,33 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                 return {
                     casinoRules:
                         storedGameConfig && storedGameConfig.casinoRules !== undefined
-                            ? storedGameConfig.casinoRules
+                            ? {
+                                  [CasinoRulesKeys.doubleAfterSplit]:
+                                      storedGameConfig.casinoRules[
+                                          CasinoRulesKeys.doubleAfterSplit
+                                      ] !== undefined
+                                          ? storedGameConfig.casinoRules[
+                                                CasinoRulesKeys.doubleAfterSplit
+                                            ]
+                                          : currentGameConfig.casinoRules[
+                                                CasinoRulesKeys.doubleAfterSplit
+                                            ],
+                                  [CasinoRulesKeys.doubleOnlyOn_9_10_11]:
+                                      storedGameConfig.casinoRules[
+                                          CasinoRulesKeys.doubleOnlyOn_9_10_11
+                                      ] !== undefined
+                                          ? storedGameConfig.casinoRules[
+                                                CasinoRulesKeys.doubleOnlyOn_9_10_11
+                                            ]
+                                          : currentGameConfig.casinoRules[
+                                                CasinoRulesKeys.doubleOnlyOn_9_10_11
+                                            ],
+                                  [CasinoRulesKeys.surrender]:
+                                      storedGameConfig.casinoRules[CasinoRulesKeys.surrender] !==
+                                      undefined
+                                          ? storedGameConfig.casinoRules[CasinoRulesKeys.surrender]
+                                          : currentGameConfig.casinoRules[CasinoRulesKeys.surrender]
+                              }
                             : currentGameConfig.casinoRules,
                     goldHandsLevels:
                         storedGameConfig && storedGameConfig.goldHandsLevels !== undefined

@@ -3,8 +3,8 @@ import { getCardEffectiveValue, getCardsValues } from './card';
 
 export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     hand.cards.length === 2 &&
-    (casinoRules[CasinoRulesKeys.canDoubleAfterSplit] || handsNumber === 1) &&
-    (casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
+    (casinoRules[CasinoRulesKeys.doubleAfterSplit] || handsNumber === 1) &&
+    (!casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ||
         [9, 10, 11].indexOf(getHandEffectiveValue(hand)) > -1);
 
 export const canSplit = (hand: Hand) =>
@@ -12,7 +12,7 @@ export const canSplit = (hand: Hand) =>
     getCardEffectiveValue(hand.cards[0]) === getCardEffectiveValue(hand.cards[1]);
 
 export const canSurrender = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
-    handsNumber === 1 && hand.cards.length === 2 && casinoRules[CasinoRulesKeys.canSurrender];
+    handsNumber === 1 && hand.cards.length === 2 && casinoRules[CasinoRulesKeys.surrender];
 
 export const createHand = (cards: Card[], bet = 1): Hand => ({
     bet,

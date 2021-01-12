@@ -53,12 +53,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const isSaveButtonEnabled =
-        (props.gameConfig.casinoRules[CasinoRulesKeys.canDoubleAfterSplit] !==
-            casinoRules[CasinoRulesKeys.canDoubleAfterSplit] ||
-            props.gameConfig.casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] !==
-                casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand] ||
-            props.gameConfig.casinoRules[CasinoRulesKeys.canSurrender] !==
-                casinoRules[CasinoRulesKeys.canSurrender] ||
+        (props.gameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
+            casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] !==
+                casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
+                casinoRules[CasinoRulesKeys.surrender] ||
             props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
             props.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
             props.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||

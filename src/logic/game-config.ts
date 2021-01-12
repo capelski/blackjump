@@ -2,9 +2,9 @@ import { CasinoRulesKeys, GameConfig } from '../types';
 
 export const getDefaultGameConfig = (): GameConfig => ({
     casinoRules: {
-        [CasinoRulesKeys.canDoubleAfterSplit]: true,
-        [CasinoRulesKeys.canDoubleOnAnyInitialHand]: false,
-        [CasinoRulesKeys.canSurrender]: false
+        [CasinoRulesKeys.doubleAfterSplit]: true,
+        [CasinoRulesKeys.doubleOnlyOn_9_10_11]: true,
+        [CasinoRulesKeys.surrender]: false
     },
     goldHandsLevels: {
         1: true,

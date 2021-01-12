@@ -1,11 +1,11 @@
 export interface CasinoRules {
-    [CasinoRulesKeys.canDoubleAfterSplit]: boolean;
-    [CasinoRulesKeys.canDoubleOnAnyInitialHand]: boolean;
-    [CasinoRulesKeys.canSurrender]: boolean;
+    [CasinoRulesKeys.doubleAfterSplit]: boolean;
+    [CasinoRulesKeys.doubleOnlyOn_9_10_11]: boolean;
+    [CasinoRulesKeys.surrender]: boolean;
 }
 
 export enum CasinoRulesKeys {
-    canDoubleAfterSplit = 'Can double after split',
-    canDoubleOnAnyInitialHand = 'Can double on any initial hand',
-    canSurrender = 'Can surrender'
+    doubleAfterSplit = 'Double after split',
+    doubleOnlyOn_9_10_11 = 'Double only on 9/10/11',
+    surrender = 'Surrender'
 }

@@ -74,19 +74,19 @@ export const mapCasinoRulesDecisionToDynamicDecision = (
     casinoRules: CasinoRules
 ): DynamicDecision =>
     casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_hit
-        ? casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand]
-            ? DynamicDecisions.double_hit
-            : BaseDecisions.hit
+        ? casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11]
+            ? BaseDecisions.hit
+            : DynamicDecisions.double_hit
         : casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_stand
-        ? casinoRules[CasinoRulesKeys.canDoubleOnAnyInitialHand]
-            ? DynamicDecisions.double_stand
-            : BaseDecisions.stand
+        ? casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11]
+            ? BaseDecisions.stand
+            : DynamicDecisions.double_stand
         : casinoRulesDecision === CasinoRulesDecisions.splitIfDasAllowed_hit
-        ? casinoRules[CasinoRulesKeys.canDoubleAfterSplit]
+        ? casinoRules[CasinoRulesKeys.doubleAfterSplit]
             ? BaseDecisions.split
             : BaseDecisions.hit
         : casinoRulesDecision === CasinoRulesDecisions.surrenderIfAllowed_hit
-        ? casinoRules[CasinoRulesKeys.canSurrender]
+        ? casinoRules[CasinoRulesKeys.surrender]
             ? DynamicDecisions.surrender_hit
             : BaseDecisions.hit
         : casinoRulesDecision;
