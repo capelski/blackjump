@@ -13,12 +13,10 @@ export enum CasinoRulesDecisions {
     surrenderIfAllowed_hit = 'surrenderIfAllowed/hit'
 }
 
-export type DecisionEvaluation =
-    | { hit: true }
-    | {
-          hit: false;
-          failureReason: string;
-      };
+export type DecisionEvaluation = {
+    hit: boolean;
+    message: string;
+};
 
 export interface DecisionsSet {
     [key: number]: CasinoRulesDecision;

@@ -2,6 +2,7 @@ import { BaseDecisions, DynamicDecisions, PlayerDecisions } from './types';
 
 export const actionsHeight = 112;
 
+export const doubleColor = '#ffc107';
 export const hitColor = '#428bca';
 export const splitColor = '#5cb85c';
 export const surrenderColor = '#dc3545';
@@ -13,7 +14,7 @@ export const colors = {
     [DynamicDecisions.double_hit]: '#A1A669',
     [DynamicDecisions.double_stand]: '#A3BD71',
     [DynamicDecisions.surrender_hit]: '#8F6088',
-    [PlayerDecisions.double]: '#ffc107',
+    [PlayerDecisions.double]: doubleColor,
     [PlayerDecisions.surrender]: surrenderColor
 };
 

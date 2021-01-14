@@ -9,6 +9,7 @@ export type AppRoute<T extends RouteNames> = Route<T, RouteParams[T]>;
 export enum RouteNames {
     blueCardsInfo = 'blueCardsInfo',
     configMenu = 'configMenu',
+    failedHands = 'failedHands',
     goldHandsInfo = 'goldHandsInfo',
     goldHandsLevelsInfo = 'goldHandsLevelsInfo',
     handDecisions = 'decisions',
@@ -19,6 +20,7 @@ export enum RouteNames {
 export type RouteParams = {
     [RouteNames.blueCardsInfo]: undefined;
     [RouteNames.configMenu]: undefined;
+    [RouteNames.failedHands]: undefined;
     [RouteNames.goldHandsInfo]: undefined;
     [RouteNames.goldHandsLevelsInfo]: undefined;
     [RouteNames.handDecisions]: {

@@ -29,12 +29,13 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
-import { getEmptyTrainedHands } from './src/logic/trained-hands';
+import { getEmptyTrainedHands, getTrainedHandsStats } from './src/logic/trained-hands';
 import {
     AppNavigation,
     AppRoute,
     BaseDecisions,
     DecisionEvaluation,
+    FailedHand,
     Hand,
     Phases,
     Player,
@@ -50,6 +51,7 @@ import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
 import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
+import { FailedHands } from './src/views/failed-hands';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
@@ -60,6 +62,7 @@ export default function App() {
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
+    const [failedHands, setFailedHands] = useState<FailedHand[]>([]);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
@@ -73,23 +76,14 @@ export default function App() {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
         getTrainedHands().then((trainedHands) => {
             if (trainedHands) {
+                const _trainedHandsStats = getTrainedHandsStats(trainedHands);
+
+                setFailedHands(_trainedHandsStats.failedHands);
                 setTrainedHands(trainedHands);
-                const _trainedHandsStats = Object.values(trainedHands).reduce(
-                    (reduced, trainedHand) => {
-                        return Object.values(trainedHand).reduce((handReduced, handStatus) => {
-                            return {
-                                passed:
-                                    handReduced.passed +
-                                    (handStatus === TrainedHandStatus.passed ? 1 : 0),
-                                trained:
-                                    handReduced.trained +
-                                    (handStatus !== TrainedHandStatus.untrained ? 1 : 0)
-                            };
-                        }, reduced);
-                    },
-                    { passed: 0, trained: 0 }
-                );
-                setTrainedHandsStats(_trainedHandsStats);
+                setTrainedHandsStats({
+                    passed: _trainedHandsStats.passed,
+                    trained: _trainedHandsStats.trained
+                });
             }
         });
     }, []);
@@ -102,6 +96,7 @@ export default function App() {
     const isSurrenderEnabled =
         currentHand !== undefined &&
         canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);
+    const currentDealerSymbol = dealerHand && symbolToSimpleSymbol(dealerHand.cards[0].symbol);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -144,12 +139,7 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(
-                player,
-                gameConfig.useBlueCards,
-                symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
-                trainedHands
-            );
+            startNextHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
@@ -163,13 +153,37 @@ export default function App() {
             canSurrender: isSurrenderEnabled
         });
         const isHit = optimalDecision.decision === decision;
-        setDecisionEvaluation({ hit: isHit, failureReason: optimalDecision.description });
+        setDecisionEvaluation({
+            hit: isHit,
+            message: isHit ? 'Well done!' : optimalDecision.description
+        });
+
+        const handRepresentation = handToHandRepresentation(currentHand);
+
+        if (isHit) {
+            setFailedHands(
+                failedHands.filter(
+                    (failedHand) =>
+                        failedHand.dealerSymbol !== currentDealerSymbol! ||
+                        failedHand.handRepresentation !== handRepresentation
+                )
+            );
+        } else {
+            if (
+                !failedHands.some(
+                    (failedHand) =>
+                        failedHand.dealerSymbol === currentDealerSymbol! &&
+                        failedHand.handRepresentation === handRepresentation
+                )
+            ) {
+                setFailedHands(
+                    [{ dealerSymbol: currentDealerSymbol!, handRepresentation }].concat(failedHands)
+                );
+            }
+        }
 
         const nextTrainedHands: TrainedHands = { ...trainedHands };
-        const currentTrainedHandStatus =
-            nextTrainedHands[handToHandRepresentation(currentHand)][
-                symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
-            ];
+        const currentTrainedHandStatus = nextTrainedHands[handRepresentation][currentDealerSymbol!];
 
         setTrainedHandsStats({
             passed:
@@ -185,9 +199,9 @@ export default function App() {
                 (currentTrainedHandStatus === TrainedHandStatus.untrained ? 1 : 0)
         });
 
-        nextTrainedHands[handToHandRepresentation(currentHand)][
-            symbolToSimpleSymbol(dealerHand!.cards[0].symbol)
-        ] = isHit ? TrainedHandStatus.passed : TrainedHandStatus.failed;
+        nextTrainedHands[handToHandRepresentation(currentHand)][currentDealerSymbol!] = isHit
+            ? TrainedHandStatus.passed
+            : TrainedHandStatus.failed;
 
         setTrainedHands(nextTrainedHands);
         updateTrainedHands(nextTrainedHands);
@@ -203,12 +217,7 @@ export default function App() {
 
     const hitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
-        hitCurrentHand(
-            player,
-            gameConfig.useBlueCards,
-            symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
-            trainedHands
-        );
+        hitCurrentHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
 
         setPlayer({ ...player });
         if (isFinished(currentHand)) {
@@ -225,12 +234,7 @@ export default function App() {
 
     const splitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
-        splitCurrentHand(
-            player,
-            gameConfig.useBlueCards,
-            symbolToSimpleSymbol(dealerHand!.cards[0].symbol),
-            trainedHands
-        );
+        splitCurrentHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player))) {
@@ -291,6 +295,19 @@ export default function App() {
                 <Stack.Screen name={RouteNames.goldHandsLevelsInfo}>
                     {(props) =>
                         renderInNavBar(props, <GoldHandsLevelsInfo gameConfig={gameConfig} />)
+                    }
+                </Stack.Screen>
+                <Stack.Screen name={RouteNames.failedHands}>
+                    {(props) =>
+                        renderInNavBar(
+                            props,
+                            <FailedHands
+                                failedHands={failedHands}
+                                navigation={props.navigation}
+                                phase={phase}
+                                startTrainingRound={startTrainingRound}
+                            />
+                        )
                     }
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>

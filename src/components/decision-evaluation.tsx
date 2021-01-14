@@ -29,9 +29,7 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
                     textAlign: 'center'
                 }}
             >
-                {props.decisionEvaluation.hit
-                    ? 'Well done!'
-                    : props.decisionEvaluation.failureReason}
+                {props.decisionEvaluation.message}
             </Text>
         </TouchableOpacity>
     </View>

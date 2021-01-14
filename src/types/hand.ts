@@ -1,4 +1,9 @@
-import { Card } from './card';
+import { Card, SimpleCardSymbol } from './card';
+
+export interface FailedHand {
+    dealerSymbol: SimpleCardSymbol;
+    handRepresentation: HandRepresentation;
+}
 
 export interface Hand {
     bet: number;
