@@ -1,9 +1,9 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
-import { NavBarContainer } from './src/components/nav-bar-container';
+import { NavBar } from './src/components/nav-bar';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -49,9 +49,9 @@ import {
 } from './src/types';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
+import { FailedHands } from './src/views/failed-hands';
 import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
-import { FailedHands } from './src/views/failed-hands';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
@@ -71,6 +71,9 @@ export default function App() {
         passed: 0,
         trained: 0
     });
+
+    const navigationRef = useRef<NavigationContainerRef>(null);
+    const navigation: AppNavigation | null = (navigationRef.current as unknown) as AppNavigation;
 
     useEffect(() => {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
@@ -249,114 +252,87 @@ export default function App() {
         finishCurrentHand(player);
     };
 
-    const renderInNavBar = (
-        props: { navigation: AppNavigation; route: AppRoute<RouteNames> },
-        view: JSX.Element
-    ) => (
-        <NavBarContainer
-            navigation={props.navigation}
-            player={player}
-            route={props.route}
-            trainedHandsStats={trainedHandsStats}
-        >
-            {view}
-        </NavBarContainer>
-    );
-
     return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
             <StatusBar hidden={true} />
+            <NavBar
+                navigation={navigation}
+                player={player}
+                route={navigationRef.current?.getCurrentRoute() as AppRoute<RouteNames>}
+                trainedHandsStats={trainedHandsStats}
+            />
             <Stack.Navigator
                 initialRouteName={RouteNames.table}
                 screenOptions={{
-                    headerShown: false
+                    headerShown: false,
+                    cardStyle: {
+                        backgroundColor: '#088446'
+                    }
                 }}
             >
-                <Stack.Screen name={RouteNames.blueCardsInfo}>
-                    {(props) => renderInNavBar(props, <BlueCardsInfo />)}
-                </Stack.Screen>
+                <Stack.Screen name={RouteNames.blueCardsInfo} component={BlueCardsInfo} />
                 <Stack.Screen name={RouteNames.configMenu}>
-                    {(props) =>
-                        renderInNavBar(
-                            props,
-                            <ConfigMenu
-                                gameConfig={gameConfig}
-                                navigation={props.navigation}
-                                setGameConfig={setGameConfig}
-                                setTrainedHands={setTrainedHands}
-                                setTrainedHandsStats={setTrainedHandsStats}
-                            />
-                        )
-                    }
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.goldHandsInfo}>
-                    {(props) => renderInNavBar(props, <GoldHandsInfo />)}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.goldHandsLevelsInfo}>
-                    {(props) =>
-                        renderInNavBar(props, <GoldHandsLevelsInfo gameConfig={gameConfig} />)
-                    }
+                    {(props) => (
+                        <ConfigMenu
+                            gameConfig={gameConfig}
+                            navigation={props.navigation}
+                            setGameConfig={setGameConfig}
+                            setTrainedHands={setTrainedHands}
+                            setTrainedHandsStats={setTrainedHandsStats}
+                        />
+                    )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.failedHands}>
-                    {(props) =>
-                        renderInNavBar(
-                            props,
-                            <FailedHands
-                                failedHands={failedHands}
-                                navigation={props.navigation}
-                                phase={phase}
-                                startTrainingRound={startTrainingRound}
-                            />
-                        )
-                    }
+                    {(props) => (
+                        <FailedHands
+                            failedHands={failedHands}
+                            navigation={props.navigation}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                        />
+                    )}
                 </Stack.Screen>
+                <Stack.Screen name={RouteNames.goldHandsInfo} component={GoldHandsInfo} />
+                <Stack.Screen
+                    name={RouteNames.goldHandsLevelsInfo}
+                    component={GoldHandsLevelsInfo}
+                />
                 <Stack.Screen name={RouteNames.handDecisions}>
-                    {(props) =>
-                        renderInNavBar(
-                            props,
-                            <HandDecisions gameConfig={gameConfig} route={props.route} />
-                        )
-                    }
+                    {(props) => <HandDecisions gameConfig={gameConfig} route={props.route} />}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.table}>
-                    {(props) =>
-                        renderInNavBar(
-                            props,
-                            <Table
-                                dealerHand={dealerHand}
-                                decisionEvaluation={decisionEvaluation}
-                                gameConfig={gameConfig}
-                                handlers={{
-                                    double: doubleHandler,
-                                    hit: hitHandler,
-                                    split: splitHandler,
-                                    stand: standHandler,
-                                    surrender: surrenderHandler
-                                }}
-                                isDoubleEnabled={isDoubleEnabled}
-                                isSplitEnabled={isSplitEnabled}
-                                isSurrenderEnabled={isSurrenderEnabled}
-                                navigation={props.navigation}
-                                player={player}
-                                phase={phase}
-                                startTrainingRound={startTrainingRound}
-                                trainedHands={trainedHands}
-                            />
-                        )
-                    }
+                    {(props) => (
+                        <Table
+                            dealerHand={dealerHand}
+                            decisionEvaluation={decisionEvaluation}
+                            gameConfig={gameConfig}
+                            handlers={{
+                                double: doubleHandler,
+                                hit: hitHandler,
+                                split: splitHandler,
+                                stand: standHandler,
+                                surrender: surrenderHandler
+                            }}
+                            isDoubleEnabled={isDoubleEnabled}
+                            isSplitEnabled={isSplitEnabled}
+                            isSurrenderEnabled={isSurrenderEnabled}
+                            navigation={props.navigation}
+                            player={player}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                            trainedHands={trainedHands}
+                        />
+                    )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.trainingHands}>
-                    {(props) =>
-                        renderInNavBar(
-                            props,
-                            <TrainingHands
-                                navigation={props.navigation}
-                                phase={phase}
-                                startTrainingRound={startTrainingRound}
-                                trainedHands={trainedHands}
-                            />
-                        )
-                    }
+                    {(props) => (
+                        <TrainingHands
+                            navigation={props.navigation}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                            trainedHands={trainedHands}
+                        />
+                    )}
                 </Stack.Screen>
             </Stack.Navigator>
         </NavigationContainer>
