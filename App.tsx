@@ -73,7 +73,6 @@ export default function App() {
     });
 
     const navigationRef = useRef<NavigationContainerRef>(null);
-    const navigation: AppNavigation | null = (navigationRef.current as unknown) as AppNavigation;
 
     useEffect(() => {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
@@ -256,7 +255,7 @@ export default function App() {
         <NavigationContainer ref={navigationRef}>
             <StatusBar hidden={true} />
             <NavBar
-                navigation={navigation}
+                navigation={(navigationRef.current as unknown) as AppNavigation}
                 player={player}
                 route={navigationRef.current?.getCurrentRoute() as AppRoute<RouteNames>}
                 trainedHandsStats={trainedHandsStats}
