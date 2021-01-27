@@ -1,15 +1,41 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Animated, Text } from 'react-native';
 import { Card, SimpleCardSymbol } from '../types';
 
 interface CardComponentProps {
     card: Card;
 }
 
+const animationsDuration = 400;
+const initialOpacity = 0;
+const initialPosition = -20;
+
 export const CardComponent: React.FC<CardComponentProps> = (props) => {
+    const opacity = useMemo(() => new Animated.Value(initialOpacity), []);
+    const position = useMemo(() => new Animated.Value(initialPosition), []);
+
+    useEffect(() => {
+        opacity.setValue(initialOpacity);
+        position.setValue(initialPosition);
+
+        Animated.parallel([
+            Animated.timing(opacity, {
+                useNativeDriver: false,
+                toValue: 1,
+                duration: animationsDuration * 2
+            }),
+            Animated.timing(position, {
+                useNativeDriver: false,
+                toValue: 0,
+                duration: animationsDuration
+            })
+        ]).start();
+    }, [props.card]);
+
     const cardColor = props.card.suit === '♦' || props.card.suit === '♥' ? 'red' : 'black';
+
     return (
-        <View
+        <Animated.View
             style={{
                 backgroundColor: props.card.isBlueCard
                     ? '#346fa1'
@@ -20,7 +46,8 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 height: 66,
                 marginBottom: 8,
                 marginRight: 8,
-                position: 'relative',
+                opacity: opacity,
+                transform: [{ translateY: position }],
                 width: 56
             }}
         >
@@ -46,6 +73,6 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
             >
                 {props.card.symbol}
             </Text>
-        </View>
+        </Animated.View>
     );
 };
