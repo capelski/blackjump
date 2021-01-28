@@ -46,6 +46,16 @@ const animateIndicator = (position: Animated.Value) => {
             useNativeDriver
         }),
         Animated.timing(position, {
+            toValue: -shakeAmplitude,
+            duration: shakeDuration,
+            useNativeDriver
+        }),
+        Animated.timing(position, {
+            toValue: shakeAmplitude,
+            duration: shakeDuration,
+            useNativeDriver
+        }),
+        Animated.timing(position, {
             toValue: 0,
             duration: shakeDuration,
             useNativeDriver
