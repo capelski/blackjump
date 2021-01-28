@@ -20,12 +20,12 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
 
         Animated.parallel([
             Animated.timing(opacity, {
-                useNativeDriver: false,
+                useNativeDriver: true,
                 toValue: 1,
                 duration: animationsDuration * 2
             }),
             Animated.timing(position, {
-                useNativeDriver: false,
+                useNativeDriver: true,
                 toValue: 0,
                 duration: animationsDuration
             })
