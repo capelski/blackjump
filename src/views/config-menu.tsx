@@ -7,25 +7,15 @@ import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { hitColor, surrenderColor } from '../constants';
-import { getEmptyTrainedHands } from '../logic/trained-hands';
+import { getEmptyTrainingHands } from '../logic/training-hands';
 import { getGoldHandsNumber } from '../logic/training-pairs';
-import {
-    AppNavigation,
-    CasinoRulesKeys,
-    FailedHand,
-    GameConfig,
-    RouteNames,
-    TrainedHands,
-    TrainedHandsStats
-} from '../types';
+import { AppNavigation, CasinoRulesKeys, GameConfig, RouteNames, TrainingHands } from '../types';
 
 type ConfigMenuProps = {
     gameConfig: GameConfig;
     navigation: AppNavigation;
     setGameConfig: (gameConfig: GameConfig) => void;
-    setFailedHands: (failedHands: FailedHand[]) => void;
-    setTrainedHands: (trainedHands: TrainedHands) => void;
-    setTrainedHandsStats: (trainedHandsStats: TrainedHandsStats) => void;
+    setTrainingHands: (trainingHands: TrainingHands) => void;
 };
 
 const textStyle = {
@@ -271,11 +261,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             {
                                 text: 'Reset',
                                 onPress: () => {
-                                    const nextTrainedHands = getEmptyTrainedHands();
-                                    props.setFailedHands([]);
-                                    props.setTrainedHands(nextTrainedHands);
-                                    updateTrainedHands(nextTrainedHands);
-                                    props.setTrainedHandsStats({ passed: 0, trained: 0 });
+                                    const nextTrainingHands = getEmptyTrainingHands();
+                                    props.setTrainingHands(nextTrainingHands);
+                                    updateTrainedHands(nextTrainingHands.trained);
                                 }
                             }
                         ]

@@ -2,7 +2,7 @@ import { SimpleCardSymbol } from './card';
 import { CasinoRules, CasinoRulesKeys } from './casino-rules';
 import { DecisionsSet } from './decisions';
 import { Dictionary } from './dictionary';
-import { Hand, HandRepresentation } from './hand';
+import { FailedHand, Hand, HandRepresentation } from './hand';
 
 export interface RelevantHand {
     decisions: DecisionsSet;
@@ -25,6 +25,12 @@ export enum TrainedHandStatus {
     untrained = 0,
     passed = 1,
     failed = 2
+}
+
+export interface TrainingHands {
+    failed: FailedHand[];
+    stats: TrainedHandsStats;
+    trained: TrainedHands;
 }
 
 export interface TrainingPair {

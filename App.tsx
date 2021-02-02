@@ -34,13 +34,11 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
-import { getEmptyTrainedHands, getTrainedHandsStats } from './src/logic/trained-hands';
+import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
 import {
     AppNavigation,
-    AppRoute,
     BaseDecisions,
     DecisionEvaluation,
-    FailedHand,
     Hand,
     HandRepresentation,
     Phases,
@@ -49,8 +47,7 @@ import {
     PlayerDecisions,
     RouteNames,
     RouteParams,
-    TrainedHands,
-    TrainedHandsStats
+    TrainingHands
 } from './src/types';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
@@ -59,7 +56,7 @@ import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
-import { TrainingHands } from './src/views/training-hands';
+import { TrainingHands as TrainingHandsComponent } from './src/views/training-hands';
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
@@ -69,15 +66,10 @@ export default function App() {
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
-    const [failedHands, setFailedHands] = useState<FailedHand[]>([]);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
-    const [trainedHands, setTrainedHands] = useState<TrainedHands>(getEmptyTrainedHands());
-    const [trainedHandsStats, setTrainedHandsStats] = useState<TrainedHandsStats>({
-        passed: 0,
-        trained: 0
-    });
+    const [trainingHands, setTrainingHands] = useState<TrainingHands>(getEmptyTrainingHands());
 
     const navigationRef = useRef<NavigationContainerRef>(null);
 
@@ -85,14 +77,7 @@ export default function App() {
         getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
         getTrainedHands().then((trainedHands) => {
             if (trainedHands) {
-                const _trainedHandsStats = getTrainedHandsStats(trainedHands);
-
-                setFailedHands(_trainedHandsStats.failedHands);
-                setTrainedHands(trainedHands);
-                setTrainedHandsStats({
-                    passed: _trainedHandsStats.passed,
-                    trained: _trainedHandsStats.trained
-                });
+                setTrainingHands(retrieveTrainingHands(trainedHands));
             }
         });
     }, []);
@@ -156,7 +141,12 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
-            startNextHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
+            startNextHand(
+                player,
+                gameConfig.useBlueCards,
+                currentDealerSymbol!,
+                trainingHands.trained
+            );
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
                 finishCurrentHand(player);
@@ -178,7 +168,7 @@ export default function App() {
         const handRepresentation = handToHandRepresentation(currentHand);
 
         let nextFailedHands = getNextFailedHands(
-            failedHands,
+            trainingHands.failed,
             isHit,
             handRepresentation,
             currentDealerSymbol!
@@ -187,13 +177,13 @@ export default function App() {
         // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
         // will modify trainedHands[handRepresentation][currentDealerSymbol!]
         let nextTrainedHandsStats = getNextTrainedHandsStats(
-            trainedHandsStats,
+            trainingHands.stats,
             isHit,
-            trainedHands[handRepresentation][currentDealerSymbol!]
+            trainingHands.trained[handRepresentation][currentDealerSymbol!]
         );
 
         let nextTrainedHands = getNextTrainedHands(
-            trainedHands,
+            trainingHands.trained,
             isHit,
             handRepresentation,
             currentDealerSymbol!
@@ -248,12 +238,12 @@ export default function App() {
             );
         }
 
-        setFailedHands(nextFailedHands);
-
-        setTrainedHands(nextTrainedHands);
+        setTrainingHands({
+            failed: nextFailedHands,
+            stats: nextTrainedHandsStats,
+            trained: nextTrainedHands
+        });
         updateTrainedHands(nextTrainedHands);
-
-        setTrainedHandsStats(nextTrainedHandsStats);
     };
 
     const doubleHandler = () => {
@@ -266,7 +256,12 @@ export default function App() {
 
     const hitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
-        hitCurrentHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
+        hitCurrentHand(
+            player,
+            gameConfig.useBlueCards,
+            currentDealerSymbol!,
+            trainingHands.trained
+        );
 
         setPlayer({ ...player });
         if (isFinished(currentHand)) {
@@ -283,7 +278,12 @@ export default function App() {
 
     const splitHandler = () => {
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
-        splitCurrentHand(player, gameConfig.useBlueCards, currentDealerSymbol!, trainedHands);
+        splitCurrentHand(
+            player,
+            gameConfig.useBlueCards,
+            currentDealerSymbol!,
+            trainingHands.trained
+        );
 
         setPlayer({ ...player });
         if (isFinished(getCurrentHand(player))) {
@@ -305,7 +305,7 @@ export default function App() {
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 player={player}
                 routeName={currentRoute}
-                trainedHandsStats={trainedHandsStats}
+                trainedHandsStats={trainingHands.stats}
             />
             <Stack.Navigator
                 initialRouteName={RouteNames.table}
@@ -323,16 +323,14 @@ export default function App() {
                             gameConfig={gameConfig}
                             navigation={props.navigation}
                             setGameConfig={setGameConfig}
-                            setFailedHands={setFailedHands}
-                            setTrainedHands={setTrainedHands}
-                            setTrainedHandsStats={setTrainedHandsStats}
+                            setTrainingHands={setTrainingHands}
                         />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.failedHands}>
                     {(props) => (
                         <FailedHands
-                            failedHands={failedHands}
+                            failedHands={trainingHands.failed}
                             navigation={props.navigation}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
@@ -367,17 +365,17 @@ export default function App() {
                             player={player}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainedHands}
+                            trainedHands={trainingHands.trained}
                         />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.trainingHands}>
                     {(props) => (
-                        <TrainingHands
+                        <TrainingHandsComponent
                             navigation={props.navigation}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainedHands}
+                            trainedHands={trainingHands.trained}
                         />
                     )}
                 </Stack.Screen>

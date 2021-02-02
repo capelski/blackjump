@@ -4,12 +4,13 @@ import {
     HandRepresentation,
     SimpleCardSymbol,
     TrainedHands,
-    TrainedHandStatus
+    TrainedHandStatus,
+    TrainingHands
 } from '../types';
 import { decisionsDictionary } from './decisions-dictionary';
 import { allPossibleDealerCards } from './training-sets';
 
-export const getEmptyTrainedHands = (): TrainedHands =>
+const getEmptyTrainedHands = (): TrainedHands =>
     (Object.keys(decisionsDictionary) as HandRepresentation[])
         .map((playerHand) => ({
             [playerHand]: allPossibleDealerCards.reduce<
@@ -27,8 +28,17 @@ export const getEmptyTrainedHands = (): TrainedHands =>
             {} as TrainedHands
         );
 
-export const getTrainedHandsStats = (trainedHands: TrainedHands) => {
-    return Object.keys(trainedHands).reduce<{
+export const getEmptyTrainingHands = (): TrainingHands => ({
+    failed: [],
+    stats: {
+        passed: 0,
+        trained: 0
+    },
+    trained: getEmptyTrainedHands()
+});
+
+export const retrieveTrainingHands = (trainedHands: TrainedHands): TrainingHands => {
+    const trainedHandsData = Object.keys(trainedHands).reduce<{
         failedHands: FailedHand[];
         passed: number;
         trained: number;
@@ -55,4 +65,13 @@ export const getTrainedHandsStats = (trainedHands: TrainedHands) => {
         },
         { failedHands: [], passed: 0, trained: 0 }
     );
+
+    return {
+        failed: trainedHandsData.failedHands,
+        stats: {
+            passed: trainedHandsData.passed,
+            trained: trainedHandsData.trained
+        },
+        trained: trainedHands
+    };
 };
