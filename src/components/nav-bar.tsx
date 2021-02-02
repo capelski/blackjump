@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import { configBarHeight } from '../constants';
 import { allTrainingPairsNumber } from '../logic/training-pairs';
-import { AppNavigation, AppRoute, Player, RouteNames, TrainedHandsStats } from '../types';
+import { AppNavigation, Player, TrainedHandsStats } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
 import { PrecisionIndicator } from './nav-bar-items/precision-indicator';
@@ -11,7 +11,7 @@ import { ProgressIndicator } from './nav-bar-items/progress-indicator';
 export interface NavBarProps {
     navigation: AppNavigation;
     player: Player;
-    route?: AppRoute<RouteNames>;
+    routeName?: string;
     trainedHandsStats: TrainedHandsStats;
 }
 
@@ -131,7 +131,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                 <ProgressIndicator navigation={props.navigation} progress={progress} />
             </Animated.View>
 
-            <ConfigButton navigation={props.navigation} route={props.route} />
+            <ConfigButton navigation={props.navigation} routeName={props.routeName} />
         </View>
     );
 };

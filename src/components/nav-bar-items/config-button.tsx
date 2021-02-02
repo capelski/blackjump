@@ -1,18 +1,18 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { AppNavigation, AppRoute, RouteNames } from '../../types';
+import { AppNavigation, RouteNames } from '../../types';
 
 export interface ConfigButtonProps {
     navigation: AppNavigation;
-    route?: AppRoute<RouteNames>;
+    routeName?: string;
 }
 
 export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
     return (
         <TouchableOpacity
             onPress={() => {
-                if (props.route?.name === RouteNames.table) {
+                if (props.routeName === RouteNames.table) {
                     props.navigation.navigate(RouteNames.configMenu);
                 } else {
                     props.navigation.goBack();
@@ -20,7 +20,7 @@ export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
             }}
             style={{ alignItems: 'center', width: '15%' }}
         >
-            {props.route?.name === RouteNames.table ? (
+            {props.routeName === RouteNames.table ? (
                 <Svg height={24} viewBox="340 140 280 279.416" width={24}>
                     <Path
                         fill="white"

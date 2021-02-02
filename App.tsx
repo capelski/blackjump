@@ -62,8 +62,10 @@ import { Table } from './src/views/table';
 import { TrainingHands } from './src/views/training-hands';
 
 const Stack = createStackNavigator<RouteParams>();
+let navigationListener: Function | undefined;
 
 export default function App() {
+    const [currentRoute, setCurrentRoute] = useState<string>(RouteNames.table);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
@@ -94,6 +96,14 @@ export default function App() {
             }
         });
     }, []);
+
+    useEffect(() => {
+        if (navigationRef.current && !navigationListener) {
+            navigationListener = navigationRef.current.addListener('state', (event) => {
+                setCurrentRoute(event.data.state!.routes[event.data.state!.index!].name);
+            });
+        }
+    }, [navigationRef.current]);
 
     const currentHand = getCurrentHand(player);
     const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
@@ -294,7 +304,7 @@ export default function App() {
             <NavBar
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 player={player}
-                route={navigationRef.current?.getCurrentRoute() as AppRoute<RouteNames>}
+                routeName={currentRoute}
                 trainedHandsStats={trainedHandsStats}
             />
             <Stack.Navigator
