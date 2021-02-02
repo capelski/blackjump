@@ -12,6 +12,7 @@ import { getGoldHandsNumber } from '../logic/training-pairs';
 import {
     AppNavigation,
     CasinoRulesKeys,
+    FailedHand,
     GameConfig,
     RouteNames,
     TrainedHands,
@@ -22,6 +23,7 @@ type ConfigMenuProps = {
     gameConfig: GameConfig;
     navigation: AppNavigation;
     setGameConfig: (gameConfig: GameConfig) => void;
+    setFailedHands: (failedHands: FailedHand[]) => void;
     setTrainedHands: (trainedHands: TrainedHands) => void;
     setTrainedHandsStats: (trainedHandsStats: TrainedHandsStats) => void;
 };
@@ -270,6 +272,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 text: 'Reset',
                                 onPress: () => {
                                     const nextTrainedHands = getEmptyTrainedHands();
+                                    props.setFailedHands([]);
                                     props.setTrainedHands(nextTrainedHands);
                                     updateTrainedHands(nextTrainedHands);
                                     props.setTrainedHandsStats({ passed: 0, trained: 0 });

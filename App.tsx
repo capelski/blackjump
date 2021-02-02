@@ -313,6 +313,7 @@ export default function App() {
                             gameConfig={gameConfig}
                             navigation={props.navigation}
                             setGameConfig={setGameConfig}
+                            setFailedHands={setFailedHands}
                             setTrainedHands={setTrainedHands}
                             setTrainedHandsStats={setTrainedHandsStats}
                         />
