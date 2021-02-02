@@ -4,10 +4,11 @@ import {
     SimpleCardSymbol,
     TrainedHands,
     TrainedHandStatus,
-    TrainedHandsStats
+    TrainedHandsStats,
+    TrainingHands
 } from '../types';
 
-export const getNextFailedHands = (
+const getNextFailedHands = (
     currentFailedHands: FailedHand[],
     isHit: boolean,
     handRepresentation: HandRepresentation,
@@ -28,7 +29,7 @@ export const getNextFailedHands = (
         : [{ dealerSymbol: currentDealerSymbol!, handRepresentation }].concat(currentFailedHands);
 };
 
-export const getNextTrainedHands = (
+const getNextTrainedHands = (
     trainedHands: TrainedHands,
     isHit: boolean,
     handRepresentation: HandRepresentation,
@@ -43,7 +44,7 @@ export const getNextTrainedHands = (
     return nextTrainedHands;
 };
 
-export const getNextTrainedHandsStats = (
+const getNextTrainedHandsStats = (
     trainedHandsStats: TrainedHandsStats,
     isHit: boolean,
     currentTrainedHandStatus: TrainedHandStatus
@@ -59,5 +60,40 @@ export const getNextTrainedHandsStats = (
         trained:
             trainedHandsStats.trained +
             (currentTrainedHandStatus === TrainedHandStatus.untrained ? 1 : 0)
+    };
+};
+
+export const getNextTrainingHands = (
+    trainingHands: TrainingHands,
+    isHit: boolean,
+    handRepresentation: HandRepresentation,
+    currentDealerSymbol: SimpleCardSymbol
+): TrainingHands => {
+    const nextFailedHands = getNextFailedHands(
+        trainingHands.failed,
+        isHit,
+        handRepresentation,
+        currentDealerSymbol!
+    );
+
+    // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
+    // will modify trainedHands[handRepresentation][currentDealerSymbol!]
+    const nextTrainedHandsStats = getNextTrainedHandsStats(
+        trainingHands.stats,
+        isHit,
+        trainingHands.trained[handRepresentation][currentDealerSymbol!]
+    );
+
+    const nextTrainedHands = getNextTrainedHands(
+        trainingHands.trained,
+        isHit,
+        handRepresentation,
+        currentDealerSymbol!
+    );
+
+    return {
+        failed: nextFailedHands,
+        stats: nextTrainedHandsStats,
+        trained: nextTrainedHands
     };
 };

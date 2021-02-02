@@ -4,11 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
-import {
-    getNextFailedHands,
-    getNextTrainedHandsStats,
-    getNextTrainedHands
-} from './src/logic/app-state';
+import { getNextTrainingHands } from './src/logic/app-state';
 import { getOptimalDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -166,84 +162,33 @@ export default function App() {
         });
 
         const handRepresentation = handToHandRepresentation(currentHand);
-
-        let nextFailedHands = getNextFailedHands(
-            trainingHands.failed,
+        let nextTrainingHands = getNextTrainingHands(
+            trainingHands,
             isHit,
             handRepresentation,
             currentDealerSymbol!
         );
 
-        // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
-        // will modify trainedHands[handRepresentation][currentDealerSymbol!]
-        let nextTrainedHandsStats = getNextTrainedHandsStats(
-            trainingHands.stats,
-            isHit,
-            trainingHands.trained[handRepresentation][currentDealerSymbol!]
-        );
-
-        let nextTrainedHands = getNextTrainedHands(
-            trainingHands.trained,
-            isHit,
-            handRepresentation,
-            currentDealerSymbol!
-        );
-
-        // A 5,5 must also set the corresponding state for Hard 10
         if (handRepresentation === HandRepresentation.Split5s) {
-            nextFailedHands = getNextFailedHands(
-                nextFailedHands,
+            // A 5,5 must also set the corresponding state for Hard 10
+            nextTrainingHands = getNextTrainingHands(
+                nextTrainingHands,
                 isHit,
                 HandRepresentation.Hard10,
                 currentDealerSymbol!
             );
-
-            // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
-            // will modify nextTrainedHands[HandRepresentation.Hard10][currentDealerSymbol!]
-            nextTrainedHandsStats = getNextTrainedHandsStats(
-                nextTrainedHandsStats,
-                isHit,
-                nextTrainedHands[HandRepresentation.Hard10][currentDealerSymbol!]
-            );
-
-            nextTrainedHands = getNextTrainedHands(
-                nextTrainedHands,
-                isHit,
-                HandRepresentation.Hard10,
-                currentDealerSymbol!
-            );
-
-            // A 10,10 must also set the corresponding state for Hard 20
         } else if (handRepresentation === HandRepresentation.Split10s) {
-            nextFailedHands = getNextFailedHands(
-                nextFailedHands,
-                isHit,
-                HandRepresentation.Hard20,
-                currentDealerSymbol!
-            );
-
-            // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
-            // will modify nextTrainedHands[HandRepresentation.Hard20][currentDealerSymbol!]
-            nextTrainedHandsStats = getNextTrainedHandsStats(
-                nextTrainedHandsStats,
-                isHit,
-                nextTrainedHands[HandRepresentation.Hard20][currentDealerSymbol!]
-            );
-
-            nextTrainedHands = getNextTrainedHands(
-                nextTrainedHands,
+            // A 10,10 must also set the corresponding state for Hard 20
+            nextTrainingHands = getNextTrainingHands(
+                nextTrainingHands,
                 isHit,
                 HandRepresentation.Hard20,
                 currentDealerSymbol!
             );
         }
 
-        setTrainingHands({
-            failed: nextFailedHands,
-            stats: nextTrainedHandsStats,
-            trained: nextTrainedHands
-        });
-        updateTrainedHands(nextTrainedHands);
+        setTrainingHands(nextTrainingHands);
+        updateTrainedHands(nextTrainingHands.trained);
     };
 
     const doubleHandler = () => {
