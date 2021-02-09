@@ -7,6 +7,7 @@ import {
     TrainedHandsStats,
     TrainingHands
 } from '../types';
+import { isTrainingCompleted } from './training-hands';
 
 const getNextFailedHands = (
     currentFailedHands: FailedHand[],
@@ -93,6 +94,7 @@ export const getNextTrainingHands = (
 
     return {
         failed: nextFailedHands,
+        isCompleted: isTrainingCompleted(nextTrainedHandsStats),
         stats: nextTrainedHandsStats,
         trained: nextTrainedHands
     };

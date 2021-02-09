@@ -4,10 +4,12 @@ import {
     HandRepresentation,
     SimpleCardSymbol,
     TrainedHands,
+    TrainedHandsStats,
     TrainedHandStatus,
     TrainingHands
 } from '../types';
 import { decisionsDictionary } from './decisions-dictionary';
+import { allTrainingPairsNumber } from './training-pairs';
 import { allPossibleDealerCards } from './training-sets';
 
 const getEmptyTrainedHands = (): TrainedHands =>
@@ -30,12 +32,16 @@ const getEmptyTrainedHands = (): TrainedHands =>
 
 export const getEmptyTrainingHands = (): TrainingHands => ({
     failed: [],
+    isCompleted: false,
     stats: {
         passed: 0,
         trained: 0
     },
     trained: getEmptyTrainedHands()
 });
+
+export const isTrainingCompleted = (trainedHandsStats: TrainedHandsStats) =>
+    trainedHandsStats.trained === allTrainingPairsNumber;
 
 export const retrieveTrainingHands = (trainedHands: TrainedHands): TrainingHands => {
     const trainedHandsData = Object.keys(trainedHands).reduce<{
@@ -68,6 +74,7 @@ export const retrieveTrainingHands = (trainedHands: TrainedHands): TrainingHands
 
     return {
         failed: trainedHandsData.failedHands,
+        isCompleted: isTrainingCompleted(trainedHandsData),
         stats: {
             passed: trainedHandsData.passed,
             trained: trainedHandsData.trained

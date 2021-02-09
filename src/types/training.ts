@@ -29,6 +29,7 @@ export enum TrainedHandStatus {
 
 export interface TrainingHands {
     failed: FailedHand[];
+    isCompleted: boolean;
     stats: TrainedHandsStats;
     trained: TrainedHands;
 }

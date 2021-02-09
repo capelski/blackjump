@@ -52,13 +52,15 @@ import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Table } from './src/views/table';
+import { TrainingCompleted } from './src/views/training-completed';
 import { TrainingHands as TrainingHandsComponent } from './src/views/training-hands';
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
+const initialRouteName = RouteNames.table;
 
 export default function App() {
-    const [currentRoute, setCurrentRoute] = useState<string>(RouteNames.table);
+    const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
@@ -189,6 +191,10 @@ export default function App() {
 
         setTrainingHands(nextTrainingHands);
         updateTrainedHands(nextTrainingHands.trained);
+
+        if (nextTrainingHands.isCompleted && !trainingHands.isCompleted) {
+            navigationRef.current?.navigate(RouteNames.trainingCompleted);
+        }
     };
 
     const doubleHandler = () => {
@@ -253,7 +259,7 @@ export default function App() {
                 trainedHandsStats={trainingHands.stats}
             />
             <Stack.Navigator
-                initialRouteName={RouteNames.table}
+                initialRouteName={initialRouteName}
                 screenOptions={{
                     headerShown: false,
                     cardStyle: {
@@ -314,6 +320,7 @@ export default function App() {
                         />
                     )}
                 </Stack.Screen>
+                <Stack.Screen name={RouteNames.trainingCompleted} component={TrainingCompleted} />
                 <Stack.Screen name={RouteNames.trainingHands}>
                     {(props) => (
                         <TrainingHandsComponent
