@@ -66,10 +66,9 @@ const animateIndicator = (position: Animated.Value) => {
 
 export const NavBar: React.FC<NavBarProps> = (props) => {
     const precision =
-        (props.trainedHandsStats.trained &&
-            Math.floor((props.trainedHandsStats.passed * 1000) / props.trainedHandsStats.trained) /
-                10) ||
-        0;
+        props.trainedHandsStats.trained > 0
+            ? props.trainedHandsStats.passed / props.trainedHandsStats.trained
+            : 0;
     const progress =
         Math.floor((props.trainedHandsStats.trained * 1000) / allTrainingPairsNumber) / 10;
 

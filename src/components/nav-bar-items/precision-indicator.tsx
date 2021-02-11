@@ -9,6 +9,7 @@ export interface PrecisionIndicatorProps {
 }
 
 export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => {
+    const precision = Math.floor(props.precision * 1000) / 10;
     return (
         <TouchableOpacity
             onPress={() => {
@@ -16,7 +17,7 @@ export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => 
             }}
         >
             <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>{props.precision}%</Text>
+                <Text style={{ color: 'white', fontSize: 20 }}>{precision}%</Text>
                 <Svg height={28} viewBox="0 0 1000 1000" width={28} style={{ marginLeft: 4 }}>
                     <Path
                         fill="white"
