@@ -292,10 +292,9 @@ export default function App() {
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.goldHandsInfo} component={GoldHandsInfo} />
-                <Stack.Screen
-                    name={RouteNames.goldHandsLevelsInfo}
-                    component={GoldHandsLevelsInfo}
-                />
+                <Stack.Screen name={RouteNames.goldHandsLevelsInfo}>
+                    {() => <GoldHandsLevelsInfo gameConfig={gameConfig} />}
+                </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => <HandDecisions gameConfig={gameConfig} route={props.route} />}
                 </Stack.Screen>
