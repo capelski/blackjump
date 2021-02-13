@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { CardComponent } from '../components/card-component';
 import { HandComponent } from '../components/hand-component';
 import { CardSuit, Hand, SimpleCardSymbol } from '../types';
 
@@ -69,7 +70,24 @@ export const BlueCardsInfo: React.FC = () => {
                 </Text>
 
                 <Text
-                    style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}
+                    style={{ color: 'white', fontSize: 20, fontStyle: 'italic', marginBottom: 16 }}
+                >
+                    Blue cards have blue symbols and a blue circle (instead of the suit):
+                </Text>
+
+                <View style={{ alignItems: 'center' }}>
+                    <CardComponent
+                        card={{
+                            isBlueCard: true,
+                            isGoldCard: false,
+                            suit: CardSuit.spades,
+                            symbol: SimpleCardSymbol.Eight
+                        }}
+                    />
+                </View>
+
+                <Text
+                    style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginVertical: 16 }}
                 >
                     Notice that enabling this option will increase your probabilities of winning,
                     since you won't get busted as much as you would when being dealt random cards

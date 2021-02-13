@@ -28,6 +28,7 @@ export const Table: React.FC<TableProps> = (props) => (
                     <HandComponent
                         hand={props.dealerHand}
                         isCurrentHand={props.phase === Phases.dealer}
+                        navigation={props.navigation}
                     />
                 )}
             </View>
@@ -73,11 +74,12 @@ export const Table: React.FC<TableProps> = (props) => (
             <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-evenly' }}>
                 {props.player.hands.map((hand, index) => (
                     <HandComponent
-                        key={index}
                         hand={hand}
                         isCurrentHand={
                             props.phase === Phases.player && index === props.player.handIndex
                         }
+                        key={index}
+                        navigation={props.navigation}
                     />
                 ))}
             </ScrollView>

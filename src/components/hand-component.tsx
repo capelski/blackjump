@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { getHandValidValues } from '../logic/hand';
-import { Hand } from '../types';
+import { AppNavigation, Hand } from '../types';
 import { CardComponent } from './card-component';
 
 interface HandComponentProps {
     hand: Hand;
     isCurrentHand: boolean;
+    navigation?: AppNavigation;
 }
 
 export const HandComponent: React.FC<HandComponentProps> = (props) => {
@@ -30,7 +31,7 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
             }}
         >
             {props.hand.cards.map((card, index) => (
-                <CardComponent key={index} card={card} />
+                <CardComponent card={card} key={index} navigation={props.navigation} />
             ))}
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
                 <Text style={{ fontSize: 25, color: 'white' }}> {displayValues}</Text>

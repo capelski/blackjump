@@ -28,7 +28,35 @@ export const GoldHandsInfo: React.FC = () => {
                     those which you didn't get right.
                 </Text>
 
-                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
+                <Text
+                    style={{ color: 'white', fontSize: 20, fontStyle: 'italic', marginBottom: 16 }}
+                >
+                    Gold cards have golden symbols and a golden square (instead of the suit):
+                </Text>
+
+                <HandComponent
+                    hand={{
+                        bet: 1,
+                        cards: [
+                            {
+                                isBlueCard: false,
+                                isGoldCard: true,
+                                suit: CardSuit.spades,
+                                symbol: SimpleCardSymbol.Nine
+                            },
+                            {
+                                isBlueCard: false,
+                                isGoldCard: true,
+                                suit: CardSuit.hearts,
+                                symbol: SimpleCardSymbol.Eight
+                            }
+                        ],
+                        values: [17]
+                    }}
+                    isCurrentHand={false}
+                />
+
+                <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
                     Additionally, you can filter the hands you will be dealt by configuring the gold
                     hands Levels.
                 </Text>

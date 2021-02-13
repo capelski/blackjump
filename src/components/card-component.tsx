@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
-import { Animated, Text } from 'react-native';
-import { Card, SimpleCardSymbol } from '../types';
+import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { AppNavigation, Card, RouteNames, SimpleCardSymbol } from '../types';
 
 interface CardComponentProps {
     card: Card;
+    navigation?: AppNavigation;
 }
 
 const animationsDuration = 400;
@@ -32,16 +33,18 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
         ]).start();
     }, [props.card]);
 
-    const cardColor = props.card.suit === '♦' || props.card.suit === '♥' ? 'red' : 'black';
+    const cardColor = props.card.isBlueCard
+        ? '#346fa1'
+        : props.card.isGoldCard
+        ? '#e5c100'
+        : props.card.suit === '♦' || props.card.suit === '♥'
+        ? 'red'
+        : 'black';
 
     return (
         <Animated.View
             style={{
-                backgroundColor: props.card.isBlueCard
-                    ? '#346fa1'
-                    : props.card.isGoldCard
-                    ? '#e5c100'
-                    : 'white',
+                backgroundColor: 'white',
                 borderRadius: 8,
                 height: 66,
                 marginBottom: 8,
@@ -51,28 +54,56 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 width: 56
             }}
         >
-            <Text
-                style={{
-                    color: cardColor,
-                    fontSize: 16,
-                    position: 'absolute',
-                    right: 4,
-                    top: 4
-                }}
+            <TouchableOpacity
+                onPress={
+                    props.navigation
+                        ? () => {
+                              if (props.card.isBlueCard) {
+                                  props.navigation!.navigate(RouteNames.blueCardsInfo);
+                              } else if (props.card.isGoldCard) {
+                                  props.navigation!.navigate(RouteNames.goldHandsInfo);
+                              }
+                          }
+                        : undefined
+                }
             >
-                {props.card.suit}
-            </Text>
-            <Text
-                style={{
-                    color: cardColor,
-                    fontSize: 40,
-                    marginRight: props.card.symbol === SimpleCardSymbol.Ten ? 0 : 8,
-                    marginTop: 12,
-                    textAlign: 'center'
-                }}
-            >
-                {props.card.symbol}
-            </Text>
+                {props.card.isBlueCard || props.card.isGoldCard ? (
+                    <View
+                        style={{
+                            backgroundColor: cardColor,
+                            borderRadius: props.card.isBlueCard ? 12 : undefined,
+                            height: 12,
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            width: 12
+                        }}
+                    />
+                ) : (
+                    <Text
+                        style={{
+                            color: cardColor,
+                            fontSize: 16,
+                            position: 'absolute',
+                            right: 4,
+                            top: 4
+                        }}
+                    >
+                        {props.card.suit}
+                    </Text>
+                )}
+                <Text
+                    style={{
+                        color: cardColor,
+                        fontSize: 40,
+                        marginRight: props.card.symbol === SimpleCardSymbol.Ten ? 0 : 8,
+                        marginTop: 12,
+                        textAlign: 'center'
+                    }}
+                >
+                    {props.card.symbol}
+                </Text>
+            </TouchableOpacity>
         </Animated.View>
     );
 };
