@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
+import { doubleColor } from '../constants';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
@@ -148,13 +149,17 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                         >
                                             <Text
                                                 style={{
+                                                    backgroundColor: doubleColor,
+                                                    borderRadius: 16,
                                                     color: 'white',
                                                     fontSize: 20,
                                                     marginVertical: 16,
+                                                    marginHorizontal: 24,
+                                                    paddingVertical: 4,
                                                     textAlign: 'center'
                                                 }}
                                             >
-                                                See hand strategy ➡️
+                                                {handRelevantData.name} decisions ➡️
                                             </Text>
                                         </TouchableOpacity>
                                     </React.Fragment>

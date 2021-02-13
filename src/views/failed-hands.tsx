@@ -48,42 +48,48 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                     style={{
                                         alignItems: 'center',
                                         flexDirection: 'row',
-                                        justifyContent: 'center'
+                                        justifyContent: 'space-between'
                                     }}
                                 >
-                                    <Text
+                                    <View
                                         style={{
-                                            color: 'white',
-                                            fontSize: 20,
-                                            fontWeight: 'bold',
-                                            marginBottom: 16,
-                                            textAlign: 'center'
+                                            flexDirection: 'row'
                                         }}
                                     >
-                                        {handRelevantData.name}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: 20,
-                                            marginBottom: 16,
-                                            textAlign: 'center'
-                                        }}
-                                    >
-                                        {' '}
-                                        vs dealer's{' '}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: 20,
-                                            fontWeight: 'bold',
-                                            marginBottom: 16,
-                                            textAlign: 'center'
-                                        }}
-                                    >
-                                        {failedHand.dealerSymbol}
-                                    </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 20,
+                                                fontWeight: 'bold',
+                                                marginBottom: 16,
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            {handRelevantData.name}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 20,
+                                                marginBottom: 16,
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            {' '}
+                                            vs dealer's{' '}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 20,
+                                                fontWeight: 'bold',
+                                                marginBottom: 16,
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            {failedHand.dealerSymbol}
+                                        </Text>
+                                    </View>
                                     <View
                                         style={{
                                             opacity:
@@ -111,10 +117,8 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                                     borderRadius: 16,
                                                     color: 'white',
                                                     fontSize: 20,
-                                                    fontWeight: 'bold',
                                                     marginBottom: 16,
-                                                    marginLeft: 16,
-                                                    paddingHorizontal: 8,
+                                                    paddingHorizontal: 16,
                                                     paddingVertical: 4,
                                                     textAlign: 'center'
                                                 }}

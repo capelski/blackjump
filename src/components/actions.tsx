@@ -50,7 +50,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
 
                         props.startTrainingRound(playerHand, dealerHand);
                     }}
-                    text="Next"
+                    text="Train"
                     width="100%"
                 />
             ) : (

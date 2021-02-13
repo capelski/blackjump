@@ -26,7 +26,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
         >
             <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
-                {relevantHand.name}
+                {relevantHand.name} decisions
             </Text>
 
             <HandDecisionsTable casinoRules={casinoRules} relevantHand={relevantHand} />
