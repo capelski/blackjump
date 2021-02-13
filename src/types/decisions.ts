@@ -13,10 +13,12 @@ export enum CasinoRulesDecisions {
     surrenderIfAllowed_hit = 'surrenderIfAllowed/hit'
 }
 
-export type DecisionEvaluation = {
-    hit: boolean;
-    message: string;
-};
+export interface DecisionEvaluation {
+    dealerHandValue: number;
+    dynamicDecision: DynamicDecision;
+    handName: string;
+    isHit: boolean;
+}
 
 export interface DecisionsSet {
     [key: number]: CasinoRulesDecision;
@@ -50,11 +52,6 @@ export enum DynamicDecisions {
     double_hit = 'Double / Hit',
     double_stand = 'Double / Stand',
     surrender_hit = 'Surrender / Hit'
-}
-
-export interface OptimalDecision {
-    decision: PlayerDecision;
-    description: string;
 }
 
 export type PlayerDecision = BaseDecisions | PlayerDecisions;

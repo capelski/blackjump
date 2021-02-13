@@ -4,12 +4,12 @@ import {
     CasinoRulesDecision,
     CasinoRulesDecisions,
     CasinoRulesKeys,
+    DecisionEvaluation,
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
     Hand,
     HandRepresentation,
-    OptimalDecision,
     PlayerDecision,
     PlayerDecisions
 } from '../types';
@@ -17,12 +17,13 @@ import { decisionsDictionary } from './decisions-dictionary';
 import { getHandEffectiveValue } from './hand';
 import { handToHandRepresentation } from './hand-representation';
 
-export const getOptimalDecision = (
+export const evaluateDecision = (
     playerHand: Hand,
     dealerHand: Hand,
     casinoRules: CasinoRules,
-    dynamicConditions: DynamicConditions
-): OptimalDecision => {
+    dynamicConditions: DynamicConditions,
+    playerDecision: PlayerDecision
+): DecisionEvaluation => {
     const relevantHand = handToRelevantHand(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand);
 
@@ -31,14 +32,16 @@ export const getOptimalDecision = (
         casinoRulesDecision,
         casinoRules
     );
-    const actualDecision: PlayerDecision = mapDynamicDecisionToPlayerDecision(
+    const optimalDecision: PlayerDecision = mapDynamicDecisionToPlayerDecision(
         dynamicDecision,
         dynamicConditions
     );
 
     return {
-        decision: actualDecision,
-        description: `${relevantHand.name} must ${dynamicDecision} against dealer's ${dealerHandValue}. See hand strategy ➡️`
+        dealerHandValue,
+        dynamicDecision,
+        handName: relevantHand.name,
+        isHit: playerDecision === optimalDecision
     };
 };
 

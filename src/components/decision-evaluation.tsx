@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleProp, Text, TextStyle, TouchableOpacity, View } from 'react-native';
 import { splitColor, surrenderColor } from '../constants';
 import { DecisionEvaluation } from '../types';
 
@@ -8,29 +8,77 @@ interface DecisionEvaluationProps {
     showDecisionsHandler: () => void;
 }
 
+const textProperties: StyleProp<TextStyle> = {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center'
+};
+
 export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (props) => (
     <View
         style={{
             alignItems: 'center',
-            backgroundColor: props.decisionEvaluation.hit ? splitColor : surrenderColor,
+            backgroundColor: props.decisionEvaluation.isHit ? splitColor : surrenderColor,
             flex: 1,
             justifyContent: 'center',
             width: '100%'
         }}
     >
-        <TouchableOpacity
-            onPress={props.decisionEvaluation.hit ? undefined : props.showDecisionsHandler}
-        >
-            <Text
+        {props.decisionEvaluation.isHit ? (
+            <Text style={textProperties}>Well done</Text>
+        ) : (
+            <View
                 style={{
-                    padding: 8,
-                    color: 'white',
-                    fontSize: 20,
-                    textAlign: 'center'
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    paddingHorizontal: 8
                 }}
             >
-                {props.decisionEvaluation.message}
-            </Text>
-        </TouchableOpacity>
+                <Text
+                    style={{
+                        ...textProperties,
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {props.decisionEvaluation.handName}
+                </Text>
+                <Text style={textProperties}> must </Text>
+                <Text
+                    style={{
+                        ...textProperties,
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {props.decisionEvaluation.dynamicDecision}
+                </Text>
+                <Text style={textProperties}> vs dealer's </Text>
+                <Text
+                    style={{
+                        ...textProperties,
+                        fontWeight: 'bold',
+                        marginRight: 8
+                    }}
+                >
+                    {props.decisionEvaluation.dealerHandValue}
+                </Text>
+                <TouchableOpacity onPress={props.showDecisionsHandler} style={{ marginTop: 8 }}>
+                    <Text
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 16,
+                            color: surrenderColor,
+                            fontSize: 20,
+                            paddingHorizontal: 16,
+                            paddingVertical: 2,
+                            textAlign: 'center'
+                        }}
+                    >
+                        {props.decisionEvaluation.handName} decisions ➡️
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        )}
     </View>
 );

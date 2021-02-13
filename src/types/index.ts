@@ -16,7 +16,6 @@ export {
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
-    OptimalDecision,
     PlayerDecision,
     PlayerDecisions
 } from './decisions';

@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
 import { getNextTrainingHands } from './src/logic/app-state';
-import { getOptimalDecision } from './src/logic/basic-strategy';
+import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
 import {
@@ -102,7 +102,7 @@ export default function App() {
         if (decisionEvaluationTimeout) {
             clearTimeout(decisionEvaluationTimeout);
         }
-        if (decisionEvaluation && decisionEvaluation.hit) {
+        if (decisionEvaluation && decisionEvaluation.isHit) {
             const nextTimeout = setTimeout(() => {
                 setDecisionEvaluation(undefined);
             }, 1000);
@@ -152,21 +152,24 @@ export default function App() {
         }
     };
 
-    const evaluatePlayerDecision = (decision: PlayerDecision, hand: Hand) => {
-        const optimalDecision = getOptimalDecision(hand, dealerHand!, gameConfig.casinoRules, {
-            canDouble: isDoubleEnabled,
-            canSurrender: isSurrenderEnabled
-        });
-        const isHit = optimalDecision.decision === decision;
-        setDecisionEvaluation({
-            hit: isHit,
-            message: isHit ? 'Well done!' : optimalDecision.description
-        });
+    const evaluatePlayerDecision = (playerDecision: PlayerDecision, hand: Hand) => {
+        const nextDecisionEvaluation = evaluateDecision(
+            hand,
+            dealerHand!,
+            gameConfig.casinoRules,
+            {
+                canDouble: isDoubleEnabled,
+                canSurrender: isSurrenderEnabled
+            },
+            playerDecision
+        );
+
+        setDecisionEvaluation(nextDecisionEvaluation);
 
         const handRepresentation = handToHandRepresentation(currentHand);
         let nextTrainingHands = getNextTrainingHands(
             trainingHands,
-            isHit,
+            nextDecisionEvaluation.isHit,
             handRepresentation,
             currentDealerSymbol!
         );
@@ -175,7 +178,7 @@ export default function App() {
             // A 5,5 must also set the corresponding state for Hard 10
             nextTrainingHands = getNextTrainingHands(
                 nextTrainingHands,
-                isHit,
+                nextDecisionEvaluation.isHit,
                 HandRepresentation.Hard10,
                 currentDealerSymbol!
             );
@@ -183,7 +186,7 @@ export default function App() {
             // A 10,10 must also set the corresponding state for Hard 20
             nextTrainingHands = getNextTrainingHands(
                 nextTrainingHands,
-                isHit,
+                nextDecisionEvaluation.isHit,
                 HandRepresentation.Hard20,
                 currentDealerSymbol!
             );
