@@ -22,7 +22,7 @@ export {
 export { Dictionary, NumericDictionary } from './dictionary';
 export { GameConfig } from './game-config';
 export { FailedHand, Hand, HandOutcome, HandRepresentation } from './hand';
-export { AppNavigation, AppRoute, RouteNames, RouteParams } from './navigation';
+export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';
 export { Phases } from './phases';
 export { Player } from './player';
 export {

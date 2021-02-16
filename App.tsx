@@ -37,6 +37,7 @@ import {
     DecisionEvaluation,
     Hand,
     HandRepresentation,
+    initialRouteName,
     Phases,
     Player,
     PlayerDecision,
@@ -57,7 +58,6 @@ import { TrainingHands as TrainingHandsComponent } from './src/views/training-ha
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
-const initialRouteName = RouteNames.table;
 
 export default function App() {
     const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);

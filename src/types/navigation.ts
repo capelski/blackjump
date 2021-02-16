@@ -12,11 +12,13 @@ export enum RouteNames {
     failedHands = 'failedHands',
     goldHandsInfo = 'goldHandsInfo',
     goldHandsLevelsInfo = 'goldHandsLevelsInfo',
-    handDecisions = 'decisions',
+    handDecisions = 'handDecisions',
     table = 'table',
     trainingCompleted = 'trainingCompleted',
     trainingHands = 'trainingHands'
 }
+
+export const initialRouteName = RouteNames.table;
 
 export type RouteParams = {
     [RouteNames.blueCardsInfo]: undefined;
