@@ -2,13 +2,15 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 interface ButtonProps {
-    backgroundColor: string;
+    backgroundColor?: string;
     height: number | string;
     isEnabled: boolean;
     marginBottom?: number;
     marginTop?: number;
     onPress: () => void;
     text: string;
+    textColor?: string;
+    textSize?: number;
     width: number | string;
 }
 
@@ -34,8 +36,8 @@ export const Button: React.FC<ButtonProps> = (props) => (
         >
             <Text
                 style={{
-                    color: 'white',
-                    fontSize: 20,
+                    color: props.textColor || 'white',
+                    fontSize: props.textSize || 20,
                     fontWeight: 'bold'
                 }}
             >
