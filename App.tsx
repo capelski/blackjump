@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
+import { tableColor } from './src/constants';
 import { getNextTrainingHands } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
@@ -266,7 +267,7 @@ export default function App() {
                 screenOptions={{
                     headerShown: false,
                     cardStyle: {
-                        backgroundColor: '#088446'
+                        backgroundColor: tableColor
                     }
                 }}
             >
