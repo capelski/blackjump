@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { AppNavigation, initialRouteName, RouteNames } from '../../types';
 
 export interface ConfigButtonProps {
+    isEnabled: boolean;
     navigation: AppNavigation;
     routeName?: string;
 }
@@ -11,14 +12,17 @@ export interface ConfigButtonProps {
 export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
     return (
         <TouchableOpacity
-            onPress={() => {
-                if (props.routeName === initialRouteName) {
-                    props.navigation.navigate(RouteNames.configMenu);
-                } else {
-                    props.navigation.goBack();
-                }
-            }}
-            style={{ alignItems: 'center', width: '15%' }}
+            onPress={
+                props.isEnabled
+                    ? () => {
+                          if (props.routeName === initialRouteName) {
+                              props.navigation.navigate(RouteNames.configMenu);
+                          } else {
+                              props.navigation.goBack();
+                          }
+                      }
+                    : undefined
+            }
         >
             {props.routeName === initialRouteName ? (
                 <Svg height={24} viewBox="340 140 280 279.416" width={24}>

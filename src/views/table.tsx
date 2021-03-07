@@ -4,13 +4,23 @@ import { Actions, ActionsProps } from '../components/actions';
 import { DecisionEvaluationComponent } from '../components/decision-evaluation';
 import { Divider } from '../components/divider';
 import { HandComponent } from '../components/hand-component';
+import { OnBoardingSection } from '../components/onboarding-section';
 import { tableCenterHeight } from '../constants';
-import { AppNavigation, DecisionEvaluation, Hand, Phases, Player, RouteNames } from '../types';
+import {
+    AppNavigation,
+    DecisionEvaluation,
+    Hand,
+    OnBoardingSections,
+    Phases,
+    Player,
+    RouteNames
+} from '../types';
 
 type TableProps = ActionsProps & {
     dealerHand?: Hand;
     decisionEvaluation?: DecisionEvaluation;
     navigation: AppNavigation;
+    onBoardingStep: number;
     phase: Phases;
     player: Player;
 };
@@ -23,7 +33,11 @@ export const Table: React.FC<TableProps> = (props) => (
                 width: '100%'
             }}
         >
-            <View style={{ minHeight: 128, justifyContent: 'center' }}>
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.tableDealerHand}
+                onBoardingStep={props.onBoardingStep}
+                style={{ minHeight: 128, justifyContent: 'center' }}
+            >
                 {props.dealerHand && (
                     <HandComponent
                         hand={props.dealerHand}
@@ -31,17 +45,26 @@ export const Table: React.FC<TableProps> = (props) => (
                         navigation={props.navigation}
                     />
                 )}
-            </View>
-            <View style={{ height: tableCenterHeight, justifyContent: 'center', width: '100%' }}>
+            </OnBoardingSection>
+
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.tableFeedback}
+                onBoardingStep={props.onBoardingStep}
+                style={{ height: tableCenterHeight, justifyContent: 'center', width: '100%' }}
+            >
                 <Divider />
                 {props.decisionEvaluation ? (
                     <DecisionEvaluationComponent
                         decisionEvaluation={props.decisionEvaluation}
-                        showDecisionsHandler={() => {
-                            props.navigation.navigate(RouteNames.handDecisions, {
-                                handRepresentation: props.player.lastActionHand!
-                            });
-                        }}
+                        showDecisionsHandler={
+                            props.onBoardingStep > -1
+                                ? undefined
+                                : () => {
+                                      props.navigation.navigate(RouteNames.handDecisions, {
+                                          handRepresentation: props.player.lastActionHand!
+                                      });
+                                  }
+                        }
                     />
                 ) : (
                     <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -70,29 +93,49 @@ export const Table: React.FC<TableProps> = (props) => (
                     </View>
                 )}
                 <Divider />
-            </View>
-            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-evenly' }}>
-                {props.player.hands.map((hand, index) => (
-                    <HandComponent
-                        hand={hand}
-                        isCurrentHand={
-                            props.phase === Phases.player && index === props.player.handIndex
-                        }
-                        key={index}
-                        navigation={props.navigation}
-                    />
-                ))}
-            </ScrollView>
+            </OnBoardingSection>
+
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.tablePlayerHands}
+                onBoardingStep={props.onBoardingStep}
+                style={{ flex: 1 }}
+            >
+                <ScrollView
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        justifyContent: 'space-evenly'
+                    }}
+                    style={{ width: '100%' }}
+                >
+                    {props.player.hands.map((hand, index) => (
+                        <HandComponent
+                            hand={hand}
+                            isCurrentHand={
+                                props.phase === Phases.player && index === props.player.handIndex
+                            }
+                            key={index}
+                            navigation={props.navigation}
+                        />
+                    ))}
+                </ScrollView>
+            </OnBoardingSection>
         </View>
-        <Actions
-            gameConfig={props.gameConfig}
-            handlers={props.handlers}
-            isDoubleEnabled={props.isDoubleEnabled}
-            isSplitEnabled={props.isSplitEnabled}
-            isSurrenderEnabled={props.isSurrenderEnabled}
-            phase={props.phase}
-            startTrainingRound={props.startTrainingRound}
-            trainedHands={props.trainedHands}
-        />
+
+        <OnBoardingSection
+            isHighlighted={OnBoardingSections.tableActions}
+            onBoardingStep={props.onBoardingStep}
+        >
+            <Actions
+                gameConfig={props.gameConfig}
+                handlers={props.handlers}
+                isDoubleEnabled={props.isDoubleEnabled}
+                isSplitEnabled={props.isSplitEnabled}
+                isSurrenderEnabled={props.isSurrenderEnabled}
+                phase={props.phase}
+                onBoardingStep={props.onBoardingStep}
+                startTrainingRound={props.startTrainingRound}
+                trainedHands={props.trainedHands}
+            />
+        </OnBoardingSection>
     </React.Fragment>
 );

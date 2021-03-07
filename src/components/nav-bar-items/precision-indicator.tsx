@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { AppNavigation, RouteNames } from '../../types';
 
 export interface PrecisionIndicatorProps {
+    isEnabled: boolean;
     navigation: AppNavigation;
     precision: number;
 }
@@ -12,9 +13,13 @@ export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => 
     const precision = Math.floor(props.precision * 1000) / 10;
     return (
         <TouchableOpacity
-            onPress={() => {
-                props.navigation.navigate(RouteNames.failedHands);
-            }}
+            onPress={
+                props.isEnabled
+                    ? () => {
+                          props.navigation.navigate(RouteNames.failedHands);
+                      }
+                    : undefined
+            }
         >
             <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>{precision}%</Text>

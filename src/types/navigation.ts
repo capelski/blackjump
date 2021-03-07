@@ -13,6 +13,7 @@ export enum RouteNames {
     goldHandsInfo = 'goldHandsInfo',
     goldHandsLevelsInfo = 'goldHandsLevelsInfo',
     handDecisions = 'handDecisions',
+    onboarding = 'onboarding',
     table = 'table',
     trainingCompleted = 'trainingCompleted',
     trainingHands = 'trainingHands'
@@ -29,6 +30,7 @@ export type RouteParams = {
     [RouteNames.handDecisions]: {
         handRepresentation: HandRepresentation;
     };
+    [RouteNames.onboarding]: undefined;
     [RouteNames.table]: undefined;
     [RouteNames.trainingCompleted]: undefined;
     [RouteNames.trainingHands]: undefined;

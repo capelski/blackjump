@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
+import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
@@ -16,31 +17,35 @@ import {
 
 type TrainingHandsProps = {
     navigation: AppNavigation;
+    onBoardingStep: number;
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
 };
 
 export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
-    const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation>();
+    const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation | undefined>(
+        HandRepresentation.Hard5
+    );
 
     return (
         <React.Fragment>
-            <Text
-                style={{
-                    color: 'white',
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                    paddingTop: 16,
-                    textAlign: 'center'
-                }}
-            >
-                Training hands
-            </Text>
+            <OnBoardingSection onBoardingStep={props.onBoardingStep}>
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                        paddingVertical: 16,
+                        textAlign: 'center'
+                    }}
+                >
+                    Training hands
+                </Text>
+            </OnBoardingSection>
             <ScrollView
                 style={{
-                    flex: 1,
-                    margin: 16
+                    flex: 1
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
@@ -50,7 +55,12 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                         const dealerHands = props.trainedHands[handRepresentation];
 
                         return (
-                            <View key={index} style={{ marginBottom: 16, width: '100%' }}>
+                            <OnBoardingSection
+                                isHighlighted={unfoldedHand === handRepresentation}
+                                key={index}
+                                onBoardingStep={props.onBoardingStep}
+                                style={{ paddingVertical: 8, paddingHorizontal: 16, width: '100%' }}
+                            >
                                 <TouchableOpacity
                                     onPress={() => {
                                         setUnfoldedHand(
@@ -97,23 +107,28 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                     return (
                                                         <TouchableOpacity
                                                             key={dealerIndex}
-                                                            onPress={() => {
-                                                                if (
-                                                                    props.phase === Phases.finished
-                                                                ) {
-                                                                    const trainingPair = getSpecificTrainingPair(
-                                                                        handRepresentation,
-                                                                        dealerSymbol
-                                                                    );
-                                                                    props.startTrainingRound(
-                                                                        trainingPair.player,
-                                                                        trainingPair.dealer
-                                                                    );
-                                                                    props.navigation.navigate(
-                                                                        RouteNames.table
-                                                                    );
-                                                                }
-                                                            }}
+                                                            onPress={
+                                                                props.onBoardingStep > -1
+                                                                    ? undefined
+                                                                    : () => {
+                                                                          if (
+                                                                              props.phase ===
+                                                                              Phases.finished
+                                                                          ) {
+                                                                              const trainingPair = getSpecificTrainingPair(
+                                                                                  handRepresentation,
+                                                                                  dealerSymbol
+                                                                              );
+                                                                              props.startTrainingRound(
+                                                                                  trainingPair.player,
+                                                                                  trainingPair.dealer
+                                                                              );
+                                                                              props.navigation.navigate(
+                                                                                  RouteNames.table
+                                                                              );
+                                                                          }
+                                                                      }
+                                                            }
                                                             style={{
                                                                 alignItems: 'center',
                                                                 backgroundColor: backgroundColor,
@@ -138,14 +153,18 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                             )}
                                         </View>
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                props.navigation.navigate(
-                                                    RouteNames.handDecisions,
-                                                    {
-                                                        handRepresentation
-                                                    }
-                                                );
-                                            }}
+                                            onPress={
+                                                props.onBoardingStep > -1
+                                                    ? undefined
+                                                    : () => {
+                                                          props.navigation.navigate(
+                                                              RouteNames.handDecisions,
+                                                              {
+                                                                  handRepresentation
+                                                              }
+                                                          );
+                                                      }
+                                            }
                                         >
                                             <Text
                                                 style={{
@@ -165,7 +184,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                     </React.Fragment>
                                 )}
                                 <Divider />
-                            </View>
+                            </OnBoardingSection>
                         );
                     }
                 )}

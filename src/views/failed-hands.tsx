@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
+import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
 import { decisionsDictionary } from '../logic/decisions-dictionary';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
@@ -9,13 +10,17 @@ import { AppNavigation, FailedHand, Hand, Phases, RouteNames } from '../types';
 type FailedHandsProps = {
     failedHands: FailedHand[];
     navigation: AppNavigation;
+    onBoardingStep: number;
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
 };
 
 export const FailedHands: React.FC<FailedHandsProps> = (props) => {
     return (
-        <React.Fragment>
+        <OnBoardingSection
+            onBoardingStep={props.onBoardingStep}
+            style={{ alignItems: undefined, flex: 1 }}
+        >
             <Text
                 style={{
                     color: 'white',
@@ -134,6 +139,6 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                     })
                 )}
             </ScrollView>
-        </React.Fragment>
+        </OnBoardingSection>
     );
 };

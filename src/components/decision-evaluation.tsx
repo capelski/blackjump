@@ -5,7 +5,7 @@ import { DecisionEvaluation } from '../types';
 
 interface DecisionEvaluationProps {
     decisionEvaluation: DecisionEvaluation;
-    showDecisionsHandler: () => void;
+    showDecisionsHandler?: () => void;
 }
 
 const textProperties: StyleProp<TextStyle> = {

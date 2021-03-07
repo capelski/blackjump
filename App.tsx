@@ -2,8 +2,15 @@ import { NavigationContainer, NavigationContainerRef } from '@react-navigation/n
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
-import { getTrainedHands, getGameConfig, updateTrainedHands } from './src/async-storage';
+import {
+    getGameConfig,
+    getHasCompletedOnboarding,
+    getTrainedHands,
+    updateHasCompletedOnboarding,
+    updateTrainedHands
+} from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
+import { OnboardingBar } from './src/components/onboarding-bar';
 import { tableColor } from './src/constants';
 import { getNextTrainingHands } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
@@ -18,6 +25,7 @@ import {
     isFinished
 } from './src/logic/hand';
 import { handToHandRepresentation } from './src/logic/hand-representation';
+import { onBoardingSteps } from './src/logic/onboarding';
 import {
     createPlayer,
     doubleCurrentHand,
@@ -53,6 +61,7 @@ import { FailedHands } from './src/views/failed-hands';
 import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
+import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
 import { TrainingCompleted } from './src/views/training-completed';
 import { TrainingHands as TrainingHandsComponent } from './src/views/training-hands';
@@ -66,6 +75,7 @@ export default function App() {
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
+    const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [trainingHands, setTrainingHands] = useState<TrainingHands>(getEmptyTrainingHands());
@@ -77,6 +87,13 @@ export default function App() {
         getTrainedHands().then((trainedHands) => {
             if (trainedHands) {
                 setTrainingHands(retrieveTrainingHands(trainedHands));
+            }
+        });
+        getHasCompletedOnboarding().then((hasCompletedOnboarding) => {
+            if (!hasCompletedOnboarding) {
+                ((navigationRef.current as unknown) as AppNavigation).navigate(
+                    RouteNames.onboarding
+                );
             }
         });
     }, []);
@@ -98,6 +115,18 @@ export default function App() {
         currentHand !== undefined &&
         canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);
     const currentDealerSymbol = dealerHand && symbolToSimpleSymbol(dealerHand.cards[0].symbol);
+
+    const updateOnBoardingStep = (direction: 1 | -1) => {
+        const nextStep = onBoardingStep + direction;
+        onBoardingSteps[nextStep]?.load((navigationRef.current as unknown) as AppNavigation);
+        setOnBoardingStep(nextStep);
+    };
+
+    const exitOnboarding = () => {
+        setOnBoardingStep(-1);
+        updateHasCompletedOnboarding(true);
+        ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
+    };
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -132,6 +161,10 @@ export default function App() {
         setDecisionEvaluation(undefined);
         if (isFinished(getCurrentHand(player))) {
             finishCurrentHand(player);
+        }
+
+        if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 1) {
+            updateOnBoardingStep(1);
         }
     };
 
@@ -196,6 +229,10 @@ export default function App() {
         setTrainingHands(nextTrainingHands);
         updateTrainedHands(nextTrainingHands.trained);
 
+        if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 4) {
+            updateOnBoardingStep(1);
+        }
+
         if (nextTrainingHands.isCompleted && !trainingHands.isCompleted) {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
         }
@@ -258,6 +295,7 @@ export default function App() {
             <StatusBar hidden={true} />
             <NavBar
                 navigation={(navigationRef.current as unknown) as AppNavigation}
+                onBoardingStep={onBoardingStep}
                 player={player}
                 routeName={currentRoute}
                 trainedHandsStats={trainingHands.stats}
@@ -277,6 +315,8 @@ export default function App() {
                         <ConfigMenu
                             gameConfig={gameConfig}
                             navigation={props.navigation}
+                            onBoardingStep={onBoardingStep}
+                            phase={phase}
                             setGameConfig={setGameConfig}
                             setTrainingHands={setTrainingHands}
                         />
@@ -287,6 +327,7 @@ export default function App() {
                         <FailedHands
                             failedHands={trainingHands.failed}
                             navigation={props.navigation}
+                            onBoardingStep={onBoardingStep}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
                         />
@@ -298,6 +339,14 @@ export default function App() {
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => <HandDecisions gameConfig={gameConfig} route={props.route} />}
+                </Stack.Screen>
+                <Stack.Screen name={RouteNames.onboarding}>
+                    {() => (
+                        <Onboarding
+                            skipOnboardingHandler={exitOnboarding}
+                            startOnboardingHandler={() => updateOnBoardingStep(1)}
+                        />
+                    )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.table}>
                     {(props) => (
@@ -316,6 +365,7 @@ export default function App() {
                             isSplitEnabled={isSplitEnabled}
                             isSurrenderEnabled={isSurrenderEnabled}
                             navigation={props.navigation}
+                            onBoardingStep={onBoardingStep}
                             player={player}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
@@ -328,6 +378,7 @@ export default function App() {
                     {(props) => (
                         <TrainingHandsComponent
                             navigation={props.navigation}
+                            onBoardingStep={onBoardingStep}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
                             trainedHands={trainingHands.trained}
@@ -335,6 +386,15 @@ export default function App() {
                     )}
                 </Stack.Screen>
             </Stack.Navigator>
+
+            {onBoardingStep > -1 && (
+                <OnboardingBar
+                    exitOnboarding={exitOnboarding}
+                    nextStepHandler={() => updateOnBoardingStep(1)}
+                    onBoardingStep={onBoardingStep}
+                    previousStepHandler={() => updateOnBoardingStep(-1)}
+                />
+            )}
         </NavigationContainer>
     );
 }

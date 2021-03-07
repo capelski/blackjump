@@ -6,14 +6,25 @@ import { Button } from '../components/button';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
-import { hitColor, surrenderColor } from '../constants';
+import { OnBoardingSection } from '../components/onboarding-section';
+import { hitColor, splitColor, surrenderColor } from '../constants';
 import { getEmptyTrainingHands } from '../logic/training-hands';
 import { getGoldHandsNumber } from '../logic/training-pairs';
-import { AppNavigation, CasinoRulesKeys, GameConfig, RouteNames, TrainingHands } from '../types';
+import {
+    AppNavigation,
+    CasinoRulesKeys,
+    GameConfig,
+    OnBoardingSections,
+    Phases,
+    RouteNames,
+    TrainingHands
+} from '../types';
 
 type ConfigMenuProps = {
     gameConfig: GameConfig;
     navigation: AppNavigation;
+    onBoardingStep: number;
+    phase: Phases;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingHands: (trainingHands: TrainingHands) => void;
 };
@@ -64,214 +75,267 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             style={{
                 flexGrow: 1,
-
-                padding: 16,
                 width: '100%'
             }}
         >
-            <Button
-                height={56}
-                backgroundColor={hitColor}
-                isEnabled={true}
-                marginBottom={24}
-                marginTop={16}
-                onPress={() => {
-                    Linking.openURL('https://wizardofodds.com/games/blackjack/strategy/4-decks/');
-                }}
-                text="View strategy table"
-                width="100%"
-            />
-
-            <Text
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.basicStrategyTable}
+                onBoardingStep={props.onBoardingStep}
                 style={{
-                    color: 'white',
-                    fontSize: 20,
-                    marginVertical: 8,
-                    width: '100%'
+                    alignItems: 'center',
+                    paddingBottom: 8,
+                    paddingHorizontal: 16,
+                    paddingTop: 16
                 }}
             >
-                Casino rules
-            </Text>
-
-            <Divider />
-
-            {Object.values(CasinoRulesKeys).map((casinoRule) => (
-                <CasinoRuleSwitch
-                    casinoRule={casinoRule}
-                    key={casinoRule}
-                    onValueChange={(newValue) => {
-                        const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
-                        setCasinoRules(nextCasinoRules);
-                        setGoldHandsNumber(getGoldHandsNumber(nextCasinoRules, goldHandsLevels));
+                <Button
+                    height={56}
+                    backgroundColor={splitColor}
+                    isEnabled={true}
+                    marginTop={24}
+                    onPress={() => {
+                        Linking.openURL(
+                            'https://wizardofodds.com/games/blackjack/strategy/4-decks/'
+                        );
                     }}
-                    value={casinoRules[casinoRule]}
+                    text="Basic strategy table"
+                    width="75%"
                 />
-            ))}
+            </OnBoardingSection>
 
-            <Text
-                style={{
-                    color: 'white',
-                    fontSize: 20,
-                    marginBottom: 8,
-                    marginTop: 24,
-                    width: '100%'
-                }}
+            <OnBoardingSection
+                onBoardingStep={props.onBoardingStep}
+                style={{ alignItems: 'center', paddingHorizontal: 16, paddingTop: 8 }}
             >
-                App settings
-            </Text>
-
-            <Divider />
-
-            <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                <Switch
-                    onValueChange={(value) => {
-                        setUseBlueCards(value);
+                <Button
+                    height={56}
+                    backgroundColor={splitColor}
+                    isEnabled={props.phase === Phases.finished}
+                    marginBottom={32}
+                    onPress={() => {
+                        props.navigation.navigate(RouteNames.onboarding);
                     }}
-                    style={{ marginRight: 8 }}
-                    trackColor={{ true: hitColor, false: 'white' }}
-                    value={useBlueCards}
+                    text="Onboarding"
+                    width="75%"
                 />
+
+                <Divider />
+            </OnBoardingSection>
+
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.casinoRules}
+                onBoardingStep={props.onBoardingStep}
+                style={{ padding: 16 }}
+            >
                 <Text
                     style={{
                         color: 'white',
-                        fontSize: 20
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        marginBottom: 8,
+                        textAlign: 'center',
+                        width: '100%'
                     }}
                 >
-                    Blue cards
+                    Casino rules
                 </Text>
-                <HelpIcon
-                    onPress={() => {
-                        props.navigation.navigate(RouteNames.blueCardsInfo);
-                    }}
-                />
-            </View>
 
-            <View
-                style={{
-                    alignItems: 'flex-start',
-                    flexDirection: 'row',
-                    paddingTop: 16,
-                    width: '100%'
-                }}
+                {Object.values(CasinoRulesKeys).map((casinoRule) => (
+                    <CasinoRuleSwitch
+                        casinoRule={casinoRule}
+                        key={casinoRule}
+                        onValueChange={(newValue) => {
+                            const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
+                            setCasinoRules(nextCasinoRules);
+                            setGoldHandsNumber(
+                                getGoldHandsNumber(nextCasinoRules, goldHandsLevels)
+                            );
+                        }}
+                        value={casinoRules[casinoRule]}
+                    />
+                ))}
+            </OnBoardingSection>
+
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.appSettings}
+                onBoardingStep={props.onBoardingStep}
+                style={{ padding: 16 }}
             >
-                <Switch
-                    onValueChange={(value) => {
-                        setUseGoldHands(value);
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        marginBottom: 8,
+                        textAlign: 'center',
+                        width: '100%'
                     }}
-                    style={{ marginRight: 8 }}
-                    trackColor={{ true: hitColor, false: 'white' }}
-                    value={useGoldHands}
-                />
+                >
+                    App settings
+                </Text>
 
-                <View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontSize: 20
-                            }}
-                        >
-                            Gold hands
-                        </Text>
-                        <HelpIcon
-                            onPress={() => {
-                                props.navigation.navigate(RouteNames.goldHandsInfo);
-                            }}
-                        />
-                    </View>
-
-                    <View
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={(value) => {
+                            setUseBlueCards(value);
+                        }}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={useBlueCards}
+                    />
+                    <Text
                         style={{
-                            marginTop: 16,
-                            opacity: useGoldHands ? undefined : 0.3
+                            color: 'white',
+                            fontSize: 20
                         }}
                     >
+                        Blue cards
+                    </Text>
+                    <HelpIcon
+                        onPress={() => {
+                            props.navigation.navigate(RouteNames.blueCardsInfo);
+                        }}
+                    />
+                </View>
+
+                <View
+                    style={{
+                        alignItems: 'flex-start',
+                        flexDirection: 'row',
+                        paddingTop: 16,
+                        width: '100%'
+                    }}
+                >
+                    <Switch
+                        onValueChange={(value) => {
+                            setUseGoldHands(value);
+                        }}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={useGoldHands}
+                    />
+
+                    <View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ ...textStyle }}>Hand levels</Text>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                Gold hands
+                            </Text>
                             <HelpIcon
                                 onPress={() => {
-                                    props.navigation.navigate(RouteNames.goldHandsLevelsInfo);
+                                    props.navigation.navigate(RouteNames.goldHandsInfo);
                                 }}
                             />
                         </View>
 
                         <View
                             style={{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap'
+                                marginTop: 16,
+                                opacity: useGoldHands ? undefined : 0.3
                             }}
                         >
-                            {Object.keys(goldHandsLevels).map((number) => (
-                                <React.Fragment key={number}>
-                                    <Switch
-                                        disabled={!useGoldHands}
-                                        onValueChange={(newValue) => {
-                                            const nextGoldHands = {
-                                                ...goldHandsLevels,
-                                                [number]: newValue
-                                            };
-                                            setGoldHandsLevels(nextGoldHands);
-                                            setGoldHandsNumber(
-                                                getGoldHandsNumber(casinoRules, nextGoldHands)
-                                            );
-                                        }}
-                                        style={{ marginTop: 16 }}
-                                        trackColor={{ true: hitColor, false: 'white' }}
-                                        value={goldHandsLevels[parseInt(number)] || false}
-                                    />
-                                    <Text style={{ ...textStyle, marginTop: 16, paddingLeft: 4 }}>
-                                        {number}
-                                    </Text>
-                                </React.Fragment>
-                            ))}
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ ...textStyle }}>Hand levels</Text>
+                                <HelpIcon
+                                    onPress={() => {
+                                        props.navigation.navigate(RouteNames.goldHandsLevelsInfo);
+                                    }}
+                                />
+                            </View>
+
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap'
+                                }}
+                            >
+                                {Object.keys(goldHandsLevels).map((number) => (
+                                    <React.Fragment key={number}>
+                                        <Switch
+                                            disabled={!useGoldHands}
+                                            onValueChange={(newValue) => {
+                                                const nextGoldHands = {
+                                                    ...goldHandsLevels,
+                                                    [number]: newValue
+                                                };
+                                                setGoldHandsLevels(nextGoldHands);
+                                                setGoldHandsNumber(
+                                                    getGoldHandsNumber(casinoRules, nextGoldHands)
+                                                );
+                                            }}
+                                            style={{ marginTop: 16 }}
+                                            trackColor={{ true: hitColor, false: 'white' }}
+                                            value={goldHandsLevels[parseInt(number)] || false}
+                                        />
+                                        <Text
+                                            style={{ ...textStyle, marginTop: 16, paddingLeft: 4 }}
+                                        >
+                                            {number}
+                                        </Text>
+                                    </React.Fragment>
+                                ))}
+                            </View>
+                            <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
+                                ({goldHandsNumber} gold hands)
+                            </Text>
                         </View>
-                        <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
-                            ({goldHandsNumber} gold hands)
-                        </Text>
                     </View>
                 </View>
-            </View>
+            </OnBoardingSection>
 
-            <Button
-                height={56}
-                backgroundColor={hitColor}
-                isEnabled={isSaveButtonEnabled}
-                marginTop={40}
-                onPress={saveHandler}
-                text="Save"
-                width="75%"
-            />
-            <Button
-                height={56}
-                backgroundColor={surrenderColor}
-                isEnabled={true}
-                marginBottom={40}
-                marginTop={24}
-                onPress={() => {
-                    Alert.alert(
-                        'Reset training',
-                        'If you reset the training all training hands will be marked as ' +
-                            'untrained, setting the progress and precision indicators to 0%.' +
-                            'Are you sure you want to reset the training?',
-                        [
-                            {
-                                text: 'Cancel',
-                                style: 'cancel'
-                            },
-                            {
-                                text: 'Reset',
-                                onPress: () => {
-                                    const nextTrainingHands = getEmptyTrainingHands();
-                                    props.setTrainingHands(nextTrainingHands);
-                                    updateTrainedHands(nextTrainingHands.trained);
+            <OnBoardingSection
+                onBoardingStep={props.onBoardingStep}
+                style={{ alignItems: 'center', paddingBottom: 16, paddingHorizontal: 16 }}
+            >
+                <Button
+                    height={56}
+                    backgroundColor={hitColor}
+                    isEnabled={isSaveButtonEnabled}
+                    marginBottom={24}
+                    marginTop={24}
+                    onPress={saveHandler}
+                    text="Save"
+                    width="75%"
+                />
+
+                <Divider />
+
+                <Button
+                    height={56}
+                    backgroundColor={surrenderColor}
+                    isEnabled={true}
+                    marginBottom={40}
+                    marginTop={24}
+                    onPress={() => {
+                        Alert.alert(
+                            'Reset training',
+                            'If you reset the training all training hands will be marked as ' +
+                                'untrained, setting the progress and precision indicators to 0%.' +
+                                'Are you sure you want to reset the training?',
+                            [
+                                {
+                                    text: 'Cancel',
+                                    style: 'cancel'
+                                },
+                                {
+                                    text: 'Reset',
+                                    onPress: () => {
+                                        const nextTrainingHands = getEmptyTrainingHands();
+                                        props.setTrainingHands(nextTrainingHands);
+                                        updateTrainedHands(nextTrainingHands.trained);
+                                    }
                                 }
-                            }
-                        ]
-                    );
-                }}
-                text="Reset training"
-                width="75%"
-            />
+                            ]
+                        );
+                    }}
+                    text="Reset training"
+                    width="75%"
+                />
+            </OnBoardingSection>
         </ScrollView>
     );
 };

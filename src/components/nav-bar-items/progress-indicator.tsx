@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { AppNavigation, RouteNames } from '../../types';
 
 export interface NavBarProps {
+    isEnabled: boolean;
     navigation: AppNavigation;
     progress: number;
 }
@@ -11,9 +12,13 @@ export interface NavBarProps {
 export const ProgressIndicator: React.FC<NavBarProps> = (props) => {
     return (
         <TouchableOpacity
-            onPress={() => {
-                props.navigation.navigate(RouteNames.trainingHands);
-            }}
+            onPress={
+                props.isEnabled
+                    ? () => {
+                          props.navigation.navigate(RouteNames.trainingHands);
+                      }
+                    : undefined
+            }
         >
             <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>{props.progress}%</Text>

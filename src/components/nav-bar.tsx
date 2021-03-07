@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
-import { configBarHeight } from '../constants';
+import { configBarHeight, tableColor } from '../constants';
 import { allTrainingPairsNumber } from '../logic/training-pairs';
-import { AppNavigation, Player, TrainedHandsStats } from '../types';
+import { AppNavigation, OnBoardingSections, Player, TrainedHandsStats } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
 import { PrecisionIndicator } from './nav-bar-items/precision-indicator';
 import { ProgressIndicator } from './nav-bar-items/progress-indicator';
+import { OnBoardingSection } from './onboarding-section';
 
 export interface NavBarProps {
     navigation: AppNavigation;
+    onBoardingStep: number;
     player: Player;
     routeName?: string;
     trainedHandsStats: TrainedHandsStats;
@@ -91,46 +93,96 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
     return (
         <View
             style={{
-                alignItems: 'center',
-                backgroundColor: 'black',
                 flexDirection: 'row',
                 height: configBarHeight,
-                justifyContent: 'space-around',
                 width: '100%'
             }}
         >
-            <Animated.View
+            <OnBoardingSection
+                onBoardingStep={props.onBoardingStep}
                 style={{
-                    flexDirection: 'row',
+                    backgroundColor: 'black',
+                    height: '100%',
                     justifyContent: 'center',
-                    transform: [{ translateX: earningsPosition }],
                     width: '25%'
                 }}
             >
-                <EarningsIndicator earnings={props.player.cash} />
-            </Animated.View>
+                <Animated.View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        transform: [{ translateX: earningsPosition }]
+                    }}
+                >
+                    <EarningsIndicator earnings={props.player.cash} />
+                </Animated.View>
+            </OnBoardingSection>
 
-            <Animated.View
-                style={{
-                    alignItems: 'center',
-                    transform: [{ translateX: precisionPosition }],
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.precisionIndicator}
+                onBoardingStep={props.onBoardingStep}
+                style={(isHighlighted) => ({
+                    backgroundColor: isHighlighted ? tableColor : 'black',
+                    height: '100%',
+                    justifyContent: 'center',
                     width: '30%'
-                }}
+                })}
             >
-                <PrecisionIndicator navigation={props.navigation} precision={precision} />
-            </Animated.View>
+                <Animated.View
+                    style={{
+                        alignItems: 'center',
+                        transform: [{ translateX: precisionPosition }]
+                    }}
+                >
+                    <PrecisionIndicator
+                        isEnabled={props.onBoardingStep === -1}
+                        navigation={props.navigation}
+                        precision={precision}
+                    />
+                </Animated.View>
+            </OnBoardingSection>
 
-            <Animated.View
-                style={{
-                    alignItems: 'center',
-                    transform: [{ translateX: progressPosition }],
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.progressIndicator}
+                onBoardingStep={props.onBoardingStep}
+                style={(isHighlighted) => ({
+                    backgroundColor: isHighlighted ? tableColor : 'black',
+                    height: '100%',
+                    justifyContent: 'center',
                     width: '30%'
-                }}
+                })}
             >
-                <ProgressIndicator navigation={props.navigation} progress={progress} />
-            </Animated.View>
+                <Animated.View
+                    style={{
+                        alignItems: 'center',
+                        transform: [{ translateX: progressPosition }]
+                    }}
+                >
+                    <ProgressIndicator
+                        isEnabled={props.onBoardingStep === -1}
+                        navigation={props.navigation}
+                        progress={progress}
+                    />
+                </Animated.View>
+            </OnBoardingSection>
 
-            <ConfigButton navigation={props.navigation} routeName={props.routeName} />
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.configMenuButton}
+                onBoardingStep={props.onBoardingStep}
+                style={(isHighlighted) => ({
+                    alignItems: 'center',
+                    backgroundColor: isHighlighted ? tableColor : 'black',
+                    height: '100%',
+                    justifyContent: 'center',
+                    width: '15%'
+                })}
+            >
+                <ConfigButton
+                    isEnabled={props.onBoardingStep === -1}
+                    navigation={props.navigation}
+                    routeName={props.routeName}
+                />
+            </OnBoardingSection>
         </View>
     );
 };

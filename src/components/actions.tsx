@@ -3,8 +3,18 @@ import { View } from 'react-native';
 import { actionsHeight, colors } from '../constants';
 import { getRandomCard } from '../logic/card';
 import { createHand } from '../logic/hand';
+import { onBoardingSteps } from '../logic/onboarding';
 import { getRandomTrainingPair } from '../logic/training-pairs';
-import { BaseDecisions, GameConfig, Hand, Phases, PlayerDecisions, TrainedHands } from '../types';
+import {
+    BaseDecisions,
+    CardSuit,
+    GameConfig,
+    Hand,
+    Phases,
+    PlayerDecisions,
+    SimpleCardSymbol,
+    TrainedHands
+} from '../types';
 import { Button } from './button';
 
 export interface ActionsProps {
@@ -20,6 +30,7 @@ export interface ActionsProps {
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
     phase: Phases;
+    onBoardingStep: number;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
 }
@@ -37,16 +48,35 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     backgroundColor={colors[BaseDecisions.hit]}
                     isEnabled={true}
                     onPress={() => {
-                        const trainingPair =
-                            props.gameConfig.useGoldHands &&
-                            getRandomTrainingPair(props.gameConfig, props.trainedHands);
+                        let dealerHand: Hand;
+                        let playerHand: Hand;
 
-                        const playerHand = trainingPair
-                            ? trainingPair.player
-                            : createHand([getRandomCard(), getRandomCard()]);
-                        const dealerHand = trainingPair
-                            ? trainingPair.dealer
-                            : createHand([getRandomCard()]);
+                        if (
+                            onBoardingSteps[props.onBoardingStep] &&
+                            onBoardingSteps[props.onBoardingStep].id === 1
+                        ) {
+                            // Prevent dealing a BlackJack as initial hand when onboarding is active
+                            playerHand = createHand([
+                                {
+                                    isBlueCard: false,
+                                    isGoldCard: false,
+                                    suit: CardSuit.clubs,
+                                    symbol: SimpleCardSymbol.Seven
+                                },
+                                getRandomCard()
+                            ]);
+                            dealerHand = createHand([getRandomCard()]);
+                        } else if (props.gameConfig.useGoldHands) {
+                            const trainingPair = getRandomTrainingPair(
+                                props.gameConfig,
+                                props.trainedHands
+                            );
+                            playerHand = trainingPair.player;
+                            dealerHand = trainingPair.dealer;
+                        } else {
+                            playerHand = createHand([getRandomCard(), getRandomCard()]);
+                            dealerHand = createHand([getRandomCard()]);
+                        }
 
                         props.startTrainingRound(playerHand, dealerHand);
                     }}
