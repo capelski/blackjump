@@ -1,7 +1,10 @@
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Audio } from 'expo-av';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
+import failureSoundMp3 from './assets/failure.mp3';
+import successSoundMp3 from './assets/success.mp3';
 import {
     getGameConfig,
     getHasCompletedOnboarding,
@@ -55,6 +58,7 @@ import {
     RouteParams,
     TrainingHands
 } from './src/types';
+import { playSound } from './src/utils';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
 import { FailedHands } from './src/views/failed-hands';
@@ -69,6 +73,21 @@ import { TrainingHands as TrainingHandsComponent } from './src/views/training-ha
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
 
+const initializeSounds = () =>
+    Promise.all([
+        Audio.Sound.createAsync(failureSoundMp3),
+        Audio.Sound.createAsync(successSoundMp3)
+    ])
+        .then((results) => ({
+            failure: results[0].sound,
+            success: results[1].sound
+        }))
+        .catch((errors) => {
+            console.log(errors);
+            /* Failing to load audio is not a critical issue */
+            return undefined;
+        });
+
 export default function App() {
     const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);
     const [dealerHand, setDealerHand] = useState<Hand>();
@@ -78,6 +97,7 @@ export default function App() {
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
+    const [sounds, setSounds] = useState<{ failure: Audio.Sound; success: Audio.Sound }>();
     const [trainingHands, setTrainingHands] = useState<TrainingHands>(getEmptyTrainingHands());
 
     const navigationRef = useRef<NavigationContainerRef>(null);
@@ -96,6 +116,7 @@ export default function App() {
                 );
             }
         });
+        initializeSounds().then(setSounds);
     }, []);
 
     useEffect(() => {
@@ -197,6 +218,10 @@ export default function App() {
             },
             playerDecision
         );
+
+        if (sounds) {
+            playSound(nextDecisionEvaluation.isHit ? sounds.success : sounds.failure);
+        }
 
         setDecisionEvaluation(nextDecisionEvaluation);
 

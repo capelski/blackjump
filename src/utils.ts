@@ -1,3 +1,4 @@
+import { Audio } from 'expo-av';
 import { Dictionary } from './types';
 
 export const cartesianProduct = <T, U, R>(
@@ -20,6 +21,13 @@ const nNumbers = (n: number) =>
         .map((_, index) => index + 1);
 
 export const numberRange = (min: number, max: number) => nNumbers(max).filter((x) => x >= min);
+
+export const playSound = (sound: Audio.Sound) =>
+    sound
+        .stopAsync() // In case is already playing and it hasn't finished yet
+        .catch(/* Failing to stop audio is not a critical issue */)
+        .then(() => sound.playAsync())
+        .catch(/* Failing to play audio is not a critical issue */);
 
 export const removeDuplicates = (numbers: number[]): number[] => {
     const numbersDictionary = numbers.reduce<Dictionary<number>>(

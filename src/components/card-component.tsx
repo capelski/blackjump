@@ -1,5 +1,8 @@
-import React, { useEffect, useMemo } from 'react';
+import { Audio } from 'expo-av';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import cardSlideSoundMp3 from '../../assets/card-slide.mp3';
+import { createSoundQueue, pushSound } from '../logic/sound-queue';
 import { AppNavigation, Card, RouteNames, SimpleCardSymbol } from '../types';
 
 interface CardComponentProps {
@@ -11,13 +14,28 @@ const animationsDuration = 400;
 const initialOpacity = 0;
 const initialPosition = -20;
 
+const soundQueue = createSoundQueue();
+
 export const CardComponent: React.FC<CardComponentProps> = (props) => {
     const opacity = useMemo(() => new Animated.Value(initialOpacity), []);
     const position = useMemo(() => new Animated.Value(initialPosition), []);
+    const [cardSlideSound, setCardSlideSound] = useState<Audio.Sound>();
+
+    useEffect(() => {
+        Audio.Sound.createAsync(cardSlideSoundMp3, { volume: 0.5 })
+            .then((result) => {
+                setCardSlideSound(result.sound);
+            })
+            .catch(/* Failing to load audio is not a critical issue */);
+    }, []);
 
     useEffect(() => {
         opacity.setValue(initialOpacity);
         position.setValue(initialPosition);
+
+        if (cardSlideSound) {
+            pushSound(soundQueue, cardSlideSound);
+        }
 
         Animated.parallel([
             Animated.timing(opacity, {
@@ -31,7 +49,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 duration: animationsDuration
             })
         ]).start();
-    }, [props.card]);
+    }, [props.card, cardSlideSound]);
 
     const cardColor = props.card.isBlueCard
         ? '#346fa1'
