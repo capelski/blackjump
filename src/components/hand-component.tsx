@@ -7,6 +7,7 @@ import { CardComponent } from './card-component';
 interface HandComponentProps {
     hand: Hand;
     isCurrentHand: boolean;
+    isSoundEnabled: boolean;
     navigation?: AppNavigation;
 }
 
@@ -31,7 +32,12 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
             }}
         >
             {props.hand.cards.map((card, index) => (
-                <CardComponent card={card} key={index} navigation={props.navigation} />
+                <CardComponent
+                    card={card}
+                    isSoundEnabled={props.isSoundEnabled}
+                    key={index}
+                    navigation={props.navigation}
+                />
             ))}
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
                 <Text style={{ fontSize: 25, color: 'white' }}> {displayValues}</Text>

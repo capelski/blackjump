@@ -219,7 +219,7 @@ export default function App() {
             playerDecision
         );
 
-        if (sounds) {
+        if (gameConfig.isSoundEnabled && sounds) {
             playSound(nextDecisionEvaluation.isHit ? sounds.success : sounds.failure);
         }
 

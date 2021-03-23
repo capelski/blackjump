@@ -43,6 +43,10 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                     storedGameConfig && storedGameConfig.goldHandsLevels !== undefined
                         ? storedGameConfig.goldHandsLevels
                         : currentGameConfig.goldHandsLevels,
+                isSoundEnabled:
+                    storedGameConfig && storedGameConfig.isSoundEnabled !== undefined
+                        ? storedGameConfig.isSoundEnabled
+                        : currentGameConfig.isSoundEnabled,
                 useBlueCards:
                     storedGameConfig && storedGameConfig.useBlueCards !== undefined
                         ? storedGameConfig.useBlueCards

@@ -7,6 +7,7 @@ import { AppNavigation, Card, RouteNames, SimpleCardSymbol } from '../types';
 
 interface CardComponentProps {
     card: Card;
+    isSoundEnabled: boolean;
     navigation?: AppNavigation;
 }
 
@@ -33,7 +34,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
         opacity.setValue(initialOpacity);
         position.setValue(initialPosition);
 
-        if (cardSlideSound) {
+        if (props.isSoundEnabled && cardSlideSound) {
             pushSound(soundQueue, cardSlideSound);
         }
 

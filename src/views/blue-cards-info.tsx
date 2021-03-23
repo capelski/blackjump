@@ -83,6 +83,7 @@ export const BlueCardsInfo: React.FC = () => {
                             suit: CardSuit.spades,
                             symbol: SimpleCardSymbol.Eight
                         }}
+                        isSoundEnabled={false}
                     />
                 </View>
 
@@ -94,7 +95,7 @@ export const BlueCardsInfo: React.FC = () => {
                     (specially on high value hands like Hard 16).
                 </Text>
 
-                <HandComponent hand={hardFourteen} isCurrentHand={false} />
+                <HandComponent hand={hardFourteen} isCurrentHand={false} isSoundEnabled={false} />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
                     Let's say you have a Hard 14 and the dealer's up card is a 9. If you decide to
@@ -118,6 +119,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [15]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -134,6 +136,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [16]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -150,6 +153,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [17]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -166,6 +170,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [18]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -182,6 +187,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [19]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -198,6 +204,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [20]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
@@ -215,7 +222,7 @@ export const BlueCardsInfo: React.FC = () => {
                     has a 6, you have a 4,4 and you decide to Split it.
                 </Text>
 
-                <HandComponent hand={splitFour} isCurrentHand={false} />
+                <HandComponent hand={splitFour} isCurrentHand={false} isSoundEnabled={false} />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
                     The app will then check which hands greater than 4 you haven't trained yet (or
@@ -238,6 +245,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [5, 15]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -254,6 +262,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [6]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -270,6 +279,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [7]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -286,6 +296,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [8]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -302,6 +313,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [9]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -318,6 +330,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [10]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -334,6 +347,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [11]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -350,6 +364,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [12]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -366,6 +381,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [13]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
                 <HandComponent
                     hand={{
@@ -382,6 +398,7 @@ export const BlueCardsInfo: React.FC = () => {
                         values: [14]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>

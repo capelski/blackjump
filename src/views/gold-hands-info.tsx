@@ -54,6 +54,7 @@ export const GoldHandsInfo: React.FC = () => {
                         values: [17]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
@@ -100,6 +101,7 @@ export const GoldHandsInfo: React.FC = () => {
                         values: [21]
                     }}
                     isCurrentHand={false}
+                    isSoundEnabled={false}
                 />
             </ScrollView>
         </React.Fragment>

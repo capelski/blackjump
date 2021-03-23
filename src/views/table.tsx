@@ -42,6 +42,7 @@ export const Table: React.FC<TableProps> = (props) => (
                     <HandComponent
                         hand={props.dealerHand}
                         isCurrentHand={props.phase === Phases.dealer}
+                        isSoundEnabled={props.gameConfig.isSoundEnabled}
                         navigation={props.navigation}
                     />
                 )}
@@ -113,6 +114,7 @@ export const Table: React.FC<TableProps> = (props) => (
                             isCurrentHand={
                                 props.phase === Phases.player && index === props.player.handIndex
                             }
+                            isSoundEnabled={props.gameConfig.isSoundEnabled}
                             key={index}
                             navigation={props.navigation}
                         />

@@ -40,6 +40,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [goldHandsNumber, setGoldHandsNumber] = useState(
         getGoldHandsNumber(props.gameConfig.casinoRules, props.gameConfig.goldHandsLevels)
     );
+    const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
@@ -47,6 +48,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         const nextGameConfig: GameConfig = {
             casinoRules,
             goldHandsLevels,
+            isSoundEnabled,
             useBlueCards,
             useGoldHands
         };
@@ -66,6 +68,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             props.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
             props.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
             props.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
+            props.gameConfig.isSoundEnabled !== isSoundEnabled ||
             props.gameConfig.useBlueCards !== useBlueCards ||
             props.gameConfig.useGoldHands !== useGoldHands) &&
         (goldHandsLevels[1] || goldHandsLevels[2] || goldHandsLevels[3] || goldHandsLevels[4]);
@@ -176,9 +179,24 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
-                        onValueChange={(value) => {
-                            setUseBlueCards(value);
+                        onValueChange={setIsSoundEnabled}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={isSoundEnabled}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
                         }}
+                    >
+                        Sound effects 🔊
+                    </Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={setUseBlueCards}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
                         value={useBlueCards}
@@ -207,9 +225,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     }}
                 >
                     <Switch
-                        onValueChange={(value) => {
-                            setUseGoldHands(value);
-                        }}
+                        onValueChange={setUseGoldHands}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
                         value={useGoldHands}
