@@ -3,6 +3,7 @@ import { CasinoRulesKeys, GameConfig, TrainedHands } from './types';
 
 const gameConfigKey = 'gameConfig';
 const hasCompletedOnboardingKey = 'hasCompletedOnboarding';
+const playerEarningsKey = 'playerEarnings';
 const trainedHandsKey = 'trainedHands';
 
 export const getGameConfig = (currentGameConfig: GameConfig) =>
@@ -64,6 +65,11 @@ export const getHasCompletedOnboarding = () =>
         .then<boolean>((value) => (value ? JSON.parse(value) : false))
         .catch(() => false);
 
+export const getPlayerEarnings = () =>
+    AsyncStorage.getItem(playerEarningsKey)
+        .then<number>((value) => (value ? parseInt(value) : 0))
+        .catch(() => 0);
+
 export const getTrainedHands = () =>
     AsyncStorage.getItem(trainedHandsKey)
         .then<TrainedHands>((value) => (value ? JSON.parse(value) : undefined))
@@ -78,6 +84,10 @@ export const updateHasCompletedOnboarding = (hasCompletedOnboarding: boolean) =>
         hasCompletedOnboardingKey,
         JSON.stringify(hasCompletedOnboarding)
     ).catch(() => {});
+};
+
+export const updatePlayerEarnings = (playerEarnings: number) => {
+    AsyncStorage.setItem(playerEarningsKey, JSON.stringify(playerEarnings)).catch(() => {});
 };
 
 export const updateTrainedHands = (trainedHands: TrainedHands) => {

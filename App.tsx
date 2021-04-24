@@ -8,8 +8,10 @@ import successSoundMp3 from './assets/success.mp3';
 import {
     getGameConfig,
     getHasCompletedOnboarding,
+    getPlayerEarnings,
     getTrainedHands,
     updateHasCompletedOnboarding,
+    updatePlayerEarnings,
     updateTrainedHands
 } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
@@ -103,20 +105,31 @@ export default function App() {
     const navigationRef = useRef<NavigationContainerRef>(null);
 
     useEffect(() => {
-        getGameConfig(gameConfig).then((_gameConfig) => setGameConfig(_gameConfig));
-        getTrainedHands().then((trainedHands) => {
-            if (trainedHands) {
-                setTrainingHands(retrieveTrainingHands(trainedHands));
-            }
-        });
-        getHasCompletedOnboarding().then((hasCompletedOnboarding) => {
-            if (!hasCompletedOnboarding) {
+        Promise.all([
+            getGameConfig(gameConfig),
+            getHasCompletedOnboarding(),
+            getPlayerEarnings(),
+            getTrainedHands(),
+            initializeSounds()
+        ]).then((results) => {
+            setGameConfig(results[0]);
+
+            if (!results[1]) {
                 ((navigationRef.current as unknown) as AppNavigation).navigate(
                     RouteNames.onboarding
                 );
             }
+
+            if (results[2]) {
+                setPlayer({ ...player, cash: results[2] });
+            }
+
+            if (results[3]) {
+                setTrainingHands(retrieveTrainingHands(results[3]));
+            }
+
+            setSounds(results[4]);
         });
-        initializeSounds().then(setSounds);
     }, []);
 
     useEffect(() => {
@@ -170,6 +183,7 @@ export default function App() {
         } else if (phase === 'dealer') {
             resolveHands(player, dealerHand!);
             setPlayer({ ...player });
+            updatePlayerEarnings(player.cash);
             setPhase(Phases.finished);
         }
     }, [phase, dealerHand]);
