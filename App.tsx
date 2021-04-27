@@ -45,7 +45,10 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
-import { getAreGoldHandsBlockingProgress } from './src/logic/training-pairs';
+import {
+    allTrainingPairsNumber,
+    getAreGoldHandsBlockingProgress
+} from './src/logic/training-pairs';
 import {
     AppNavigation,
     BaseDecisions,
@@ -166,6 +169,8 @@ export default function App() {
         updateHasCompletedOnboarding(true);
         ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
     };
+
+    const progress = Math.floor((trainingHands.stats.trained * 1000) / allTrainingPairsNumber) / 10;
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -346,6 +351,7 @@ export default function App() {
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
                 player={player}
+                progress={progress}
                 routeName={currentRoute}
                 trainedHandsStats={trainingHands.stats}
             />
@@ -367,6 +373,7 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
+                            progress={progress}
                             setGameConfig={(_gameConfig) => {
                                 setGameConfig(_gameConfig);
                                 setAreGoldHandsBlockingProgress(

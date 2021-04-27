@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import { configBarHeight, tableColor } from '../constants';
-import { allTrainingPairsNumber } from '../logic/training-pairs';
 import { AppNavigation, OnBoardingSections, Player, TrainedHandsStats } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
@@ -14,6 +13,7 @@ export interface NavBarProps {
     navigation: AppNavigation;
     onBoardingStep: number;
     player: Player;
+    progress: number;
     routeName?: string;
     trainedHandsStats: TrainedHandsStats;
 }
@@ -72,8 +72,6 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
         props.trainedHandsStats.trained > 0
             ? props.trainedHandsStats.passed / props.trainedHandsStats.trained
             : 0;
-    const progress =
-        Math.floor((props.trainedHandsStats.trained * 1000) / allTrainingPairsNumber) / 10;
 
     const earningsPosition = useMemo(() => new Animated.Value(0), []);
     const precisionPosition = useMemo(() => new Animated.Value(0), []);
@@ -89,7 +87,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
 
     useEffect(() => {
         animateIndicator(progressPosition);
-    }, [progress]);
+    }, [props.progress]);
 
     return (
         <View
@@ -162,7 +160,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                     <ProgressIndicator
                         isEnabled={props.onBoardingStep === -1}
                         navigation={props.navigation}
-                        progress={progress}
+                        progress={props.progress}
                     />
                 </Animated.View>
             </OnBoardingSection>
@@ -182,6 +180,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                     areGoldHandsBlockingProgress={props.areGoldHandsBlockingProgress}
                     isEnabled={props.onBoardingStep === -1}
                     navigation={props.navigation}
+                    progress={props.progress}
                     routeName={props.routeName}
                 />
             </OnBoardingSection>

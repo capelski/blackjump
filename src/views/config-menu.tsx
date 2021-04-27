@@ -26,6 +26,7 @@ type ConfigMenuProps = {
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
+    progress: number;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingHands: (trainingHands: TrainingHands) => void;
     trainingHands: TrainingHands;
@@ -38,7 +39,7 @@ const textStyle = {
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [areGoldHandsBlockingProgress, setAreGoldHandsBlockingProgress] = useState(
-        props.areGoldHandsBlockingProgress
+        props.progress < 100 && props.areGoldHandsBlockingProgress
     );
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
     const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
@@ -175,10 +176,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 getGoldHandsNumber(nextCasinoRules, goldHandsLevels)
                             );
                             setAreGoldHandsBlockingProgress(
-                                getAreGoldHandsBlockingProgress(
-                                    { ...props.gameConfig, casinoRules: nextCasinoRules },
-                                    props.trainingHands.trained
-                                )
+                                props.progress < 100 &&
+                                    getAreGoldHandsBlockingProgress(
+                                        { ...props.gameConfig, casinoRules: nextCasinoRules },
+                                        props.trainingHands.trained
+                                    )
                             );
                         }}
                         value={casinoRules[casinoRule]}
@@ -243,6 +245,20 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     />
                 </View>
 
+                {props.progress === 100 && useBlueCards && (
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20,
+                            fontStyle: 'italic',
+                            paddingVertical: 16
+                        }}
+                    >
+                        Blue cards don't have any effect on 100% progress. Reset the training if you
+                        want to see them again
+                    </Text>
+                )}
+
                 <View
                     style={{
                         alignItems: 'flex-start',
@@ -255,10 +271,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         onValueChange={(value) => {
                             setUseGoldHands(value);
                             setAreGoldHandsBlockingProgress(
-                                getAreGoldHandsBlockingProgress(
-                                    { ...props.gameConfig, useGoldHands: value },
-                                    props.trainingHands.trained
-                                )
+                                props.progress < 100 &&
+                                    getAreGoldHandsBlockingProgress(
+                                        { ...props.gameConfig, useGoldHands: value },
+                                        props.trainingHands.trained
+                                    )
                             );
                         }}
                         style={{ marginRight: 8 }}
@@ -328,13 +345,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                                     )
                                                 );
                                                 setAreGoldHandsBlockingProgress(
-                                                    getAreGoldHandsBlockingProgress(
-                                                        {
-                                                            ...props.gameConfig,
-                                                            goldHandsLevels: nextGoldHandsLevels
-                                                        },
-                                                        props.trainingHands.trained
-                                                    )
+                                                    props.progress < 100 &&
+                                                        getAreGoldHandsBlockingProgress(
+                                                            {
+                                                                ...props.gameConfig,
+                                                                goldHandsLevels: nextGoldHandsLevels
+                                                            },
+                                                            props.trainingHands.trained
+                                                        )
                                                 );
                                             }}
                                             style={{ marginTop: 16 }}
