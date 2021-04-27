@@ -7,9 +7,9 @@ import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
-import { hitColor, splitColor, surrenderColor } from '../constants';
+import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
 import { getEmptyTrainingHands } from '../logic/training-hands';
-import { getGoldHandsNumber } from '../logic/training-pairs';
+import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pairs';
 import {
     AppNavigation,
     CasinoRulesKeys,
@@ -21,12 +21,14 @@ import {
 } from '../types';
 
 type ConfigMenuProps = {
+    areGoldHandsBlockingProgress: boolean;
     gameConfig: GameConfig;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingHands: (trainingHands: TrainingHands) => void;
+    trainingHands: TrainingHands;
 };
 
 const textStyle = {
@@ -35,6 +37,9 @@ const textStyle = {
 };
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
+    const [areGoldHandsBlockingProgress, setAreGoldHandsBlockingProgress] = useState(
+        props.areGoldHandsBlockingProgress
+    );
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
     const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
     const [goldHandsNumber, setGoldHandsNumber] = useState(
@@ -82,13 +87,29 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             }}
         >
             <OnBoardingSection
-                isHighlighted={OnBoardingSections.basicStrategyTable}
                 onBoardingStep={props.onBoardingStep}
                 style={{
                     alignItems: 'center',
                     paddingBottom: 8,
                     paddingHorizontal: 16,
                     paddingTop: 16
+                }}
+            >
+                {areGoldHandsBlockingProgress && (
+                    <Text style={{ color: doubleColor, fontSize: 20, fontStyle: 'italic' }}>
+                        ⚠️ The selected Gold hands levels are blocking untrained hands. Modify the
+                        selected levels or disable Gold Hands to train the missing hands
+                    </Text>
+                )}
+            </OnBoardingSection>
+
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.basicStrategyTable}
+                onBoardingStep={props.onBoardingStep}
+                style={{
+                    alignItems: 'center',
+                    paddingBottom: 8,
+                    paddingHorizontal: 16
                 }}
             >
                 <Button
@@ -152,6 +173,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             setCasinoRules(nextCasinoRules);
                             setGoldHandsNumber(
                                 getGoldHandsNumber(nextCasinoRules, goldHandsLevels)
+                            );
+                            setAreGoldHandsBlockingProgress(
+                                getAreGoldHandsBlockingProgress(
+                                    { ...props.gameConfig, casinoRules: nextCasinoRules },
+                                    props.trainingHands.trained
+                                )
                             );
                         }}
                         value={casinoRules[casinoRule]}
@@ -225,7 +252,15 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     }}
                 >
                     <Switch
-                        onValueChange={setUseGoldHands}
+                        onValueChange={(value) => {
+                            setUseGoldHands(value);
+                            setAreGoldHandsBlockingProgress(
+                                getAreGoldHandsBlockingProgress(
+                                    { ...props.gameConfig, useGoldHands: value },
+                                    props.trainingHands.trained
+                                )
+                            );
+                        }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
                         value={useGoldHands}
@@ -235,7 +270,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <Text
                                 style={{
-                                    color: 'white',
+                                    color: areGoldHandsBlockingProgress ? doubleColor : 'white',
                                     fontSize: 20
                                 }}
                             >
@@ -255,7 +290,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             }}
                         >
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ ...textStyle }}>Hand levels</Text>
+                                <Text
+                                    style={{
+                                        ...textStyle,
+                                        color: areGoldHandsBlockingProgress ? doubleColor : 'white'
+                                    }}
+                                >
+                                    Hand levels
+                                </Text>
                                 <HelpIcon
                                     onPress={() => {
                                         props.navigation.navigate(RouteNames.goldHandsLevelsInfo);
@@ -274,13 +316,25 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                         <Switch
                                             disabled={!useGoldHands}
                                             onValueChange={(newValue) => {
-                                                const nextGoldHands = {
+                                                const nextGoldHandsLevels = {
                                                     ...goldHandsLevels,
                                                     [number]: newValue
                                                 };
-                                                setGoldHandsLevels(nextGoldHands);
+                                                setGoldHandsLevels(nextGoldHandsLevels);
                                                 setGoldHandsNumber(
-                                                    getGoldHandsNumber(casinoRules, nextGoldHands)
+                                                    getGoldHandsNumber(
+                                                        casinoRules,
+                                                        nextGoldHandsLevels
+                                                    )
+                                                );
+                                                setAreGoldHandsBlockingProgress(
+                                                    getAreGoldHandsBlockingProgress(
+                                                        {
+                                                            ...props.gameConfig,
+                                                            goldHandsLevels: nextGoldHandsLevels
+                                                        },
+                                                        props.trainingHands.trained
+                                                    )
                                                 );
                                             }}
                                             style={{ marginTop: 16 }}
@@ -288,7 +342,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                             value={goldHandsLevels[parseInt(number)] || false}
                                         />
                                         <Text
-                                            style={{ ...textStyle, marginTop: 16, paddingLeft: 4 }}
+                                            style={{
+                                                ...textStyle,
+                                                color: areGoldHandsBlockingProgress
+                                                    ? doubleColor
+                                                    : 'white',
+                                                marginTop: 16,
+                                                paddingLeft: 4
+                                            }}
                                         >
                                             {number}
                                         </Text>

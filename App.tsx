@@ -45,6 +45,7 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
+import { getAreGoldHandsBlockingProgress } from './src/logic/training-pairs';
 import {
     AppNavigation,
     BaseDecisions,
@@ -91,6 +92,7 @@ const initializeSounds = () =>
         });
 
 export default function App() {
+    const [areGoldHandsBlockingProgress, setAreGoldHandsBlockingProgress] = useState(false);
     const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
@@ -126,6 +128,9 @@ export default function App() {
 
             if (results[3]) {
                 setTrainingHands(retrieveTrainingHands(results[3]));
+                setAreGoldHandsBlockingProgress(
+                    getAreGoldHandsBlockingProgress(results[0], results[3])
+                );
             }
 
             setSounds(results[4]);
@@ -275,6 +280,10 @@ export default function App() {
         if (nextTrainingHands.isCompleted && !trainingHands.isCompleted) {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
         }
+
+        setAreGoldHandsBlockingProgress(
+            getAreGoldHandsBlockingProgress(gameConfig, nextTrainingHands.trained)
+        );
     };
 
     const doubleHandler = () => {
@@ -333,6 +342,7 @@ export default function App() {
         <NavigationContainer ref={navigationRef}>
             <StatusBar hidden={true} />
             <NavBar
+                areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
                 player={player}
@@ -352,12 +362,30 @@ export default function App() {
                 <Stack.Screen name={RouteNames.configMenu}>
                     {(props) => (
                         <ConfigMenu
+                            areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
                             gameConfig={gameConfig}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
-                            setGameConfig={setGameConfig}
-                            setTrainingHands={setTrainingHands}
+                            setGameConfig={(_gameConfig) => {
+                                setGameConfig(_gameConfig);
+                                setAreGoldHandsBlockingProgress(
+                                    getAreGoldHandsBlockingProgress(
+                                        _gameConfig,
+                                        trainingHands.trained
+                                    )
+                                );
+                            }}
+                            setTrainingHands={(_trainingHands) => {
+                                setTrainingHands(_trainingHands);
+                                setAreGoldHandsBlockingProgress(
+                                    getAreGoldHandsBlockingProgress(
+                                        gameConfig,
+                                        _trainingHands.trained
+                                    )
+                                );
+                            }}
+                            trainingHands={trainingHands}
                         />
                     )}
                 </Stack.Screen>

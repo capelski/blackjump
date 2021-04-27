@@ -10,6 +10,7 @@ import { ProgressIndicator } from './nav-bar-items/progress-indicator';
 import { OnBoardingSection } from './onboarding-section';
 
 export interface NavBarProps {
+    areGoldHandsBlockingProgress: boolean;
     navigation: AppNavigation;
     onBoardingStep: number;
     player: Player;
@@ -178,6 +179,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                 })}
             >
                 <ConfigButton
+                    areGoldHandsBlockingProgress={props.areGoldHandsBlockingProgress}
                     isEnabled={props.onBoardingStep === -1}
                     navigation={props.navigation}
                     routeName={props.routeName}
