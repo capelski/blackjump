@@ -2,7 +2,7 @@
     "expo": {
         "name": "BlackJump",
         "slug": "blackjump",
-        "version": "1.8.0",
+        "version": "1.9.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "splash": {
@@ -17,7 +17,7 @@
         "android": {
             "package": "capelski.blackjump",
             "permissions": [],
-            "versionCode": 13
+            "versionCode": 14
         },
         "ios": {
             "bundleIdentifier": "capelski.blackjump",
