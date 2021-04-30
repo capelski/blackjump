@@ -11,24 +11,16 @@ import {
     getPlayerEarnings,
     getTrainedHands,
     updateHasCompletedOnboarding,
-    updatePlayerEarnings,
     updateTrainedHands
 } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
 import { OnboardingBar } from './src/components/onboarding-bar';
 import { tableColor } from './src/constants';
-import { getNextTrainingHands } from './src/logic/app-state';
+import { getNextTrainingHands, handleDealerTurn } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
-import {
-    canDouble,
-    canSplit,
-    canSurrender,
-    dealCard,
-    getHandEffectiveValue,
-    isFinished
-} from './src/logic/hand';
+import { canDouble, canSplit, canSurrender, isFinished } from './src/logic/hand';
 import { handToHandRepresentation } from './src/logic/hand-representation';
 import { onBoardingSteps } from './src/logic/onboarding';
 import {
@@ -38,7 +30,6 @@ import {
     hitCurrentHand,
     initializeHands,
     isLastHand,
-    resolveHands,
     splitCurrentHand,
     standCurrentHand,
     startNextHand,
@@ -185,16 +176,8 @@ export default function App() {
     }, [decisionEvaluation]);
 
     useEffect(() => {
-        if (phase === 'dealer' && dealerHand && getHandEffectiveValue(dealerHand) < 17) {
-            setTimeout(() => {
-                dealCard(dealerHand, getRandomCard());
-                setDealerHand({ ...dealerHand });
-            }, 1000);
-        } else if (phase === 'dealer') {
-            resolveHands(player, dealerHand!);
-            setPlayer({ ...player });
-            updatePlayerEarnings(player.cash);
-            setPhase(Phases.finished);
+        if (phase === 'dealer') {
+            handleDealerTurn(dealerHand!, gameConfig, player, setDealerHand, setPhase, setPlayer);
         }
     }, [phase, dealerHand]);
 

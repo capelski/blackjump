@@ -12,6 +12,7 @@ export const getDefaultGameConfig = (): GameConfig => ({
         3: true,
         4: true
     },
+    isDealerAnimationEnabled: true,
     isSoundEnabled: true,
     useBlueCards: false,
     useGoldHands: false

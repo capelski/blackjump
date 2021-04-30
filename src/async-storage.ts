@@ -44,6 +44,10 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                     storedGameConfig && storedGameConfig.goldHandsLevels !== undefined
                         ? storedGameConfig.goldHandsLevels
                         : currentGameConfig.goldHandsLevels,
+                isDealerAnimationEnabled:
+                    storedGameConfig && storedGameConfig.isDealerAnimationEnabled !== undefined
+                        ? storedGameConfig.isDealerAnimationEnabled
+                        : currentGameConfig.isDealerAnimationEnabled,
                 isSoundEnabled:
                     storedGameConfig && storedGameConfig.isSoundEnabled !== undefined
                         ? storedGameConfig.isSoundEnabled

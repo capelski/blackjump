@@ -1,13 +1,50 @@
+import { updatePlayerEarnings } from '../async-storage';
 import {
     FailedHand,
+    GameConfig,
+    Hand,
     HandRepresentation,
+    Phases,
+    Player,
     SimpleCardSymbol,
     TrainedHands,
-    TrainedHandStatus,
     TrainedHandsStats,
+    TrainedHandStatus,
     TrainingHands
 } from '../types';
+import { getRandomCard } from './card';
+import { getHandEffectiveValue, dealCard } from './hand';
+import { resolveHands } from './player';
 import { isTrainingCompleted } from './training-hands';
+
+export const handleDealerTurn = (
+    dealerHand: Hand,
+    gameConfig: GameConfig,
+    player: Player,
+    setDealerHand: (dealerHand: Hand) => void,
+    setPhase: (phase: Phases) => void,
+    setPlayer: (player: Player) => void
+) => {
+    if (gameConfig.isDealerAnimationEnabled && getHandEffectiveValue(dealerHand) < 17) {
+        setTimeout(() => {
+            dealCard(dealerHand, getRandomCard());
+            setDealerHand({ ...dealerHand });
+        }, 1000);
+    } else {
+        let nextDealerHand = { ...dealerHand };
+        if (!gameConfig.isDealerAnimationEnabled) {
+            while (getHandEffectiveValue(nextDealerHand) < 17) {
+                dealCard(nextDealerHand, getRandomCard());
+            }
+            setDealerHand(nextDealerHand);
+        }
+
+        resolveHands(player, nextDealerHand);
+        setPlayer({ ...player });
+        updatePlayerEarnings(player.cash);
+        setPhase(Phases.finished);
+    }
+};
 
 const getNextFailedHands = (
     currentFailedHands: FailedHand[],

@@ -46,6 +46,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [goldHandsNumber, setGoldHandsNumber] = useState(
         getGoldHandsNumber(props.gameConfig.casinoRules, props.gameConfig.goldHandsLevels)
     );
+    const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
+        props.gameConfig.isDealerAnimationEnabled
+    );
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
@@ -54,6 +57,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         const nextGameConfig: GameConfig = {
             casinoRules,
             goldHandsLevels,
+            isDealerAnimationEnabled,
             isSoundEnabled,
             useBlueCards,
             useGoldHands
@@ -74,6 +78,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             props.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
             props.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
             props.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
+            props.gameConfig.isDealerAnimationEnabled !== isDealerAnimationEnabled ||
             props.gameConfig.isSoundEnabled !== isSoundEnabled ||
             props.gameConfig.useBlueCards !== useBlueCards ||
             props.gameConfig.useGoldHands !== useGoldHands) &&
@@ -205,23 +210,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 >
                     App settings
                 </Text>
-
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={setIsSoundEnabled}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={isSoundEnabled}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Sound effects 🔊
-                    </Text>
-                </View>
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -379,6 +367,55 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             </Text>
                         </View>
                     </View>
+                </View>
+            </OnBoardingSection>
+
+            <OnBoardingSection onBoardingStep={props.onBoardingStep} style={{ padding: 16 }}>
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        marginBottom: 8,
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Animations
+                </Text>
+
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={setIsSoundEnabled}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={isSoundEnabled}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
+                        }}
+                    >
+                        Sound effects 🔊
+                    </Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={setIsDealerAnimationEnabled}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={isDealerAnimationEnabled}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
+                        }}
+                    >
+                        Dealer cards delay
+                    </Text>
                 </View>
             </OnBoardingSection>
 
