@@ -87,16 +87,8 @@ export const onBoardingSteps: OnBoardingStep[] = [
         text: 'Click on the Gear to access the configuration menu'
     },
     {
-        activeSection: OnBoardingSections.basicStrategyTable,
-        id: 11,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.configMenu);
-        },
-        text: 'View the basic strategy table'
-    },
-    {
         activeSection: OnBoardingSections.casinoRules,
-        id: 12,
+        id: 11,
         load: (navigation) => {
             navigation.navigate(RouteNames.configMenu);
         },
@@ -104,7 +96,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
     },
     {
         activeSection: OnBoardingSections.appSettings,
-        id: 13,
+        id: 12,
         load: (navigation) => {
             navigation.navigate(RouteNames.configMenu);
         },

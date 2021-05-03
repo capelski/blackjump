@@ -96,60 +96,22 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 onBoardingStep={props.onBoardingStep}
                 style={{
                     alignItems: 'center',
-                    paddingBottom: 8,
-                    paddingHorizontal: 16,
-                    paddingTop: 16
+                    paddingHorizontal: 16
                 }}
             >
                 {areGoldHandsBlockingProgress && (
-                    <Text style={{ color: doubleColor, fontSize: 20, fontStyle: 'italic' }}>
+                    <Text
+                        style={{
+                            color: doubleColor,
+                            fontSize: 20,
+                            fontStyle: 'italic',
+                            paddingTop: 16
+                        }}
+                    >
                         ⚠️ The selected Gold hands levels are blocking untrained hands. Modify the
                         selected levels or disable Gold Hands to train the missing hands
                     </Text>
                 )}
-            </OnBoardingSection>
-
-            <OnBoardingSection
-                isHighlighted={OnBoardingSections.basicStrategyTable}
-                onBoardingStep={props.onBoardingStep}
-                style={{
-                    alignItems: 'center',
-                    paddingBottom: 8,
-                    paddingHorizontal: 16
-                }}
-            >
-                <Button
-                    height={56}
-                    backgroundColor={splitColor}
-                    isEnabled={true}
-                    marginTop={24}
-                    onPress={() => {
-                        Linking.openURL(
-                            'https://wizardofodds.com/games/blackjack/strategy/4-decks/'
-                        );
-                    }}
-                    text="Basic strategy table"
-                    width="75%"
-                />
-            </OnBoardingSection>
-
-            <OnBoardingSection
-                onBoardingStep={props.onBoardingStep}
-                style={{ alignItems: 'center', paddingHorizontal: 16, paddingTop: 8 }}
-            >
-                <Button
-                    height={56}
-                    backgroundColor={splitColor}
-                    isEnabled={props.phase === Phases.finished}
-                    marginBottom={32}
-                    onPress={() => {
-                        props.navigation.navigate(RouteNames.onboarding);
-                    }}
-                    text="Onboarding"
-                    width="75%"
-                />
-
-                <Divider />
             </OnBoardingSection>
 
             <OnBoardingSection
@@ -163,12 +125,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         fontSize: 20,
                         fontWeight: 'bold',
                         marginBottom: 8,
-                        textAlign: 'center',
                         width: '100%'
                     }}
                 >
                     Casino rules
                 </Text>
+                <Divider />
 
                 {Object.values(CasinoRulesKeys).map((casinoRule) => (
                     <CasinoRuleSwitch
@@ -204,12 +166,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         fontSize: 20,
                         fontWeight: 'bold',
                         marginBottom: 8,
-                        textAlign: 'center',
                         width: '100%'
                     }}
                 >
                     App settings
                 </Text>
+                <Divider />
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -377,12 +339,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         fontSize: 20,
                         fontWeight: 'bold',
                         marginBottom: 8,
-                        textAlign: 'center',
                         width: '100%'
                     }}
                 >
                     Animations
                 </Text>
+                <Divider />
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -421,26 +383,52 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
             <OnBoardingSection
                 onBoardingStep={props.onBoardingStep}
-                style={{ alignItems: 'center', paddingBottom: 16, paddingHorizontal: 16 }}
+                style={{
+                    alignItems: 'center',
+                    paddingBottom: 40,
+                    paddingHorizontal: 16,
+                    paddingTop: 24
+                }}
             >
                 <Button
                     height={56}
                     backgroundColor={hitColor}
                     isEnabled={isSaveButtonEnabled}
-                    marginBottom={24}
-                    marginTop={24}
                     onPress={saveHandler}
                     text="Save"
                     width="75%"
                 />
 
-                <Divider />
+                <Button
+                    height={56}
+                    backgroundColor={splitColor}
+                    isEnabled={true}
+                    marginTop={56}
+                    onPress={() => {
+                        Linking.openURL(
+                            'https://wizardofodds.com/games/blackjack/strategy/4-decks/'
+                        );
+                    }}
+                    text="View basic strategy table"
+                    width="100%"
+                />
+
+                <Button
+                    height={56}
+                    backgroundColor={splitColor}
+                    isEnabled={props.phase === Phases.finished}
+                    marginTop={8}
+                    onPress={() => {
+                        props.navigation.navigate(RouteNames.onboarding);
+                    }}
+                    text="Onboarding"
+                    width="100%"
+                />
 
                 <Button
                     height={56}
                     backgroundColor={surrenderColor}
                     isEnabled={true}
-                    marginBottom={40}
                     marginTop={24}
                     onPress={() => {
                         Alert.alert(
@@ -465,7 +453,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         );
                     }}
                     text="Reset training"
-                    width="75%"
+                    width="100%"
                 />
             </OnBoardingSection>
         </ScrollView>
