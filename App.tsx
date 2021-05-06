@@ -374,6 +374,7 @@ export default function App() {
                                         _trainingHands.trained
                                     )
                                 );
+                                setPlayer({ ...player, cash: 0 });
                             }}
                             trainingHands={trainingHands}
                         />

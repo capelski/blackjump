@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
-import { updateGameConfig, updateTrainedHands } from '../async-storage';
+import { updateGameConfig, updatePlayerEarnings, updateTrainedHands } from '../async-storage';
 import { Button } from '../components/button';
 import { CasinoRuleSwitch } from '../components/casino-rule-switch';
 import { Divider } from '../components/divider';
@@ -433,8 +433,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     onPress={() => {
                         Alert.alert(
                             'Reset training',
-                            'If you reset the training all training hands will be marked as ' +
-                                'untrained, setting the progress and precision indicators to 0%.' +
+                            'Resetting the training will mark all hands as untrained, ' +
+                                'setting the progress and precision indicators to 0%, ' +
+                                'and set the player earnings to 0$ as well. ' +
                                 'Are you sure you want to reset the training?',
                             [
                                 {
@@ -447,6 +448,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                         const nextTrainingHands = getEmptyTrainingHands();
                                         props.setTrainingHands(nextTrainingHands);
                                         updateTrainedHands(nextTrainingHands.trained);
+                                        updatePlayerEarnings(0);
                                     }
                                 }
                             ]
