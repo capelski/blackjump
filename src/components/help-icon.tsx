@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
-import { hitColor } from '../constants';
+import { tableColor } from '../constants';
 
 interface HelpIconProps {
     onPress: () => void;
@@ -11,13 +11,14 @@ export const HelpIcon: React.FC<HelpIconProps> = (props) => {
         <TouchableOpacity onPress={props.onPress}>
             <Text
                 style={{
-                    backgroundColor: hitColor,
-                    borderRadius: 12,
-                    color: 'white',
-                    fontSize: 20,
+                    backgroundColor: 'white',
+                    borderRadius: 16,
+                    color: tableColor,
+                    fontSize: 18,
                     fontWeight: 'bold',
-                    paddingHorizontal: 8,
-                    marginLeft: 8
+                    marginLeft: 8,
+                    marginTop: 2,
+                    paddingHorizontal: 8
                 }}
             >
                 ?
