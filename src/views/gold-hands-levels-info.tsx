@@ -94,7 +94,12 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     card, thus it is level 1.
                 </Text>
 
-                <HandComponent hand={hardEight} isCurrentHand={false} isSoundEnabled={false} />
+                <HandComponent
+                    hand={hardEight}
+                    isCurrentHand={false}
+                    isSoundEnabled={false}
+                    skipAnimation={true}
+                />
                 <HandDecisionsTable
                     casinoRules={props.gameConfig.casinoRules}
                     relevantHand={handToRelevantHand(hardEight)}
@@ -106,7 +111,12 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     on the dealer's up card, so it's level 4.
                 </Text>
 
-                <HandComponent hand={splitNine} isCurrentHand={false} isSoundEnabled={false} />
+                <HandComponent
+                    hand={splitNine}
+                    isCurrentHand={false}
+                    isSoundEnabled={false}
+                    skipAnimation={true}
+                />
                 <HandDecisionsTable
                     casinoRules={props.gameConfig.casinoRules}
                     relevantHand={handToRelevantHand(splitNine)}

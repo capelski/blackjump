@@ -84,6 +84,7 @@ export const BlueCardsInfo: React.FC = () => {
                             symbol: SimpleCardSymbol.Eight
                         }}
                         isSoundEnabled={false}
+                        skipAnimation={true}
                     />
                 </View>
 
@@ -95,7 +96,12 @@ export const BlueCardsInfo: React.FC = () => {
                     (specially on high value hands like Hard 16).
                 </Text>
 
-                <HandComponent hand={hardFourteen} isCurrentHand={false} isSoundEnabled={false} />
+                <HandComponent
+                    hand={hardFourteen}
+                    isCurrentHand={false}
+                    isSoundEnabled={false}
+                    skipAnimation={true}
+                />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
                     Let's say you have a Hard 14 and the dealer's up card is a 9. If you decide to
@@ -120,6 +126,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -137,6 +144,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -154,6 +162,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -171,6 +180,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -188,6 +198,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -205,6 +216,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
@@ -222,7 +234,12 @@ export const BlueCardsInfo: React.FC = () => {
                     has a 6, you have a 4,4 and you decide to Split it.
                 </Text>
 
-                <HandComponent hand={splitFour} isCurrentHand={false} isSoundEnabled={false} />
+                <HandComponent
+                    hand={splitFour}
+                    isCurrentHand={false}
+                    isSoundEnabled={false}
+                    skipAnimation={true}
+                />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>
                     The app will then check which hands greater than 4 you haven't trained yet (or
@@ -246,6 +263,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -263,6 +281,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -280,6 +299,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -297,6 +317,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -314,6 +335,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -331,6 +353,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -348,6 +371,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -365,6 +389,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -382,6 +407,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
                 <HandComponent
                     hand={{
@@ -399,6 +425,7 @@ export const BlueCardsInfo: React.FC = () => {
                     }}
                     isCurrentHand={false}
                     isSoundEnabled={false}
+                    skipAnimation={true}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginVertical: 16 }}>

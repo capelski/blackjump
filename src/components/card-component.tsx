@@ -9,6 +9,7 @@ interface CardComponentProps {
     card: Card;
     isSoundEnabled: boolean;
     navigation?: AppNavigation;
+    skipAnimation?: boolean;
 }
 
 const animationsDuration = 400;
@@ -20,37 +21,50 @@ const soundQueue = createSoundQueue();
 export const CardComponent: React.FC<CardComponentProps> = (props) => {
     const opacity = useMemo(() => new Animated.Value(initialOpacity), []);
     const position = useMemo(() => new Animated.Value(initialPosition), []);
-    const [cardSlideSound, setCardSlideSound] = useState<Audio.Sound>();
+    const [cardSlideSound, setCardSlideSound] = useState<Audio.Sound | false>();
 
-    useEffect(() => {
-        Audio.Sound.createAsync(cardSlideSoundMp3, { volume: 0.5 })
-            .then((result) => {
-                setCardSlideSound(result.sound);
-            })
-            .catch(/* Failing to load audio is not a critical issue */);
-    }, []);
-
-    useEffect(() => {
-        opacity.setValue(initialOpacity);
-        position.setValue(initialPosition);
-
-        if (props.isSoundEnabled && cardSlideSound) {
-            pushSound(soundQueue, cardSlideSound);
+    const animateCard = (sound?: Audio.Sound | false) => {
+        if (!props.skipAnimation) {
+            Animated.parallel([
+                Animated.timing(opacity, {
+                    useNativeDriver: true,
+                    toValue: 1,
+                    duration: animationsDuration * 2
+                }),
+                Animated.timing(position, {
+                    useNativeDriver: true,
+                    toValue: 0,
+                    duration: animationsDuration
+                })
+            ]).start();
         }
 
-        Animated.parallel([
-            Animated.timing(opacity, {
-                useNativeDriver: true,
-                toValue: 1,
-                duration: animationsDuration * 2
-            }),
-            Animated.timing(position, {
-                useNativeDriver: true,
-                toValue: 0,
-                duration: animationsDuration
-            })
-        ]).start();
-    }, [props.card, cardSlideSound]);
+        if (props.isSoundEnabled && sound) {
+            pushSound(soundQueue, sound);
+        }
+    };
+
+    useEffect(() => {
+        if (cardSlideSound === undefined) {
+            Audio.Sound.createAsync(cardSlideSoundMp3, { volume: 0.5 })
+                .then((result) => {
+                    animateCard(result.sound);
+                    setCardSlideSound(result.sound);
+                })
+                .catch(() => {
+                    /* Failing to load audio is not a critical issue */
+                    animateCard();
+                    setCardSlideSound(false);
+                });
+        } else {
+            if (!props.skipAnimation) {
+                opacity.setValue(initialOpacity);
+                position.setValue(initialPosition);
+            }
+
+            animateCard(cardSlideSound);
+        }
+    }, [props.card]);
 
     const cardColor = props.card.isBlueCard
         ? '#346fa1'
@@ -68,8 +82,8 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 height: 66,
                 marginBottom: 8,
                 marginRight: 8,
-                opacity: opacity,
-                transform: [{ translateY: position }],
+                opacity: props.skipAnimation ? undefined : opacity,
+                transform: props.skipAnimation ? undefined : [{ translateY: position }],
                 width: 56
             }}
         >

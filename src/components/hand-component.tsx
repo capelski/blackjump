@@ -9,6 +9,7 @@ interface HandComponentProps {
     isCurrentHand: boolean;
     isSoundEnabled: boolean;
     navigation?: AppNavigation;
+    skipAnimation?: boolean;
 }
 
 export const HandComponent: React.FC<HandComponentProps> = (props) => {
@@ -37,6 +38,7 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
                     isSoundEnabled={props.isSoundEnabled}
                     key={index}
                     navigation={props.navigation}
+                    skipAnimation={props.skipAnimation}
                 />
             ))}
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
