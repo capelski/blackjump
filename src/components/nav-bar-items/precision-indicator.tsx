@@ -20,6 +20,12 @@ export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => 
                       }
                     : undefined
             }
+            style={{
+                alignItems: 'center',
+                flexGrow: 1,
+                justifyContent: 'center',
+                width: '100%'
+            }}
         >
             <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>{precision}%</Text>

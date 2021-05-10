@@ -19,6 +19,12 @@ export const ProgressIndicator: React.FC<NavBarProps> = (props) => {
                       }
                     : undefined
             }
+            style={{
+                alignItems: 'center',
+                flexGrow: 1,
+                justifyContent: 'center',
+                width: '100%'
+            }}
         >
             <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>{props.progress}%</Text>

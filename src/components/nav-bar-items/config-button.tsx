@@ -25,6 +25,12 @@ export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
                       }
                     : undefined
             }
+            style={{
+                alignItems: 'center',
+                flexGrow: 1,
+                justifyContent: 'center',
+                width: '100%'
+            }}
         >
             {props.routeName === initialRouteName ? (
                 <React.Fragment>

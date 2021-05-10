@@ -130,6 +130,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                 <Animated.View
                     style={{
                         alignItems: 'center',
+                        flexGrow: 1,
                         transform: [{ translateX: precisionPosition }]
                     }}
                 >
@@ -154,6 +155,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                 <Animated.View
                     style={{
                         alignItems: 'center',
+                        flexGrow: 1,
                         transform: [{ translateX: progressPosition }]
                     }}
                 >
