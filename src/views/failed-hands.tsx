@@ -34,15 +34,16 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
             </Text>
             <ScrollView
                 style={{
-                    flex: 1,
                     margin: 16
                 }}
-                contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+                contentContainerStyle={{ flex: 1 }}
             >
                 {props.failedHands.length === 0 ? (
-                    <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                        No failed hands so far. Nice job!
-                    </Text>
+                    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+                        <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
+                            No failed hands so far. Nice job!
+                        </Text>
+                    </View>
                 ) : (
                     Object.values(props.failedHands).map((failedHand, index) => {
                         const handRelevantData = decisionsDictionary[failedHand.handRepresentation];
