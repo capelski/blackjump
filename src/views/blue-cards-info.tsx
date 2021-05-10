@@ -146,60 +146,11 @@ export const BlueCardsInfo: React.FC = () => {
                     isSoundEnabled={false}
                     skipAnimation={true}
                 />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            ...hardFourteen.cards,
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Three
-                            }
-                        ],
-                        values: [17]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            ...hardFourteen.cards,
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Four
-                            }
-                        ],
-                        values: [18]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            ...hardFourteen.cards,
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Five
-                            }
-                        ],
-                        values: [19]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
+                <Text
+                    style={{ color: 'white', fontSize: 32, marginBottom: 8, textAlign: 'center' }}
+                >
+                    ...
+                </Text>
                 <HandComponent
                     hand={{
                         bet: 1,
@@ -283,132 +234,11 @@ export const BlueCardsInfo: React.FC = () => {
                     isSoundEnabled={false}
                     skipAnimation={true}
                 />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Three
-                            }
-                        ],
-                        values: [7]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Four
-                            }
-                        ],
-                        values: [8]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Five
-                            }
-                        ],
-                        values: [9]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Six
-                            }
-                        ],
-                        values: [10]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Seven
-                            }
-                        ],
-                        values: [11]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Eight
-                            }
-                        ],
-                        values: [12]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
-                <HandComponent
-                    hand={{
-                        bet: 1,
-                        cards: [
-                            splitFour.cards[0],
-                            {
-                                isBlueCard: true,
-                                isGoldCard: false,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Nine
-                            }
-                        ],
-                        values: [13]
-                    }}
-                    isCurrentHand={false}
-                    isSoundEnabled={false}
-                    skipAnimation={true}
-                />
+                <Text
+                    style={{ color: 'white', fontSize: 32, marginBottom: 8, textAlign: 'center' }}
+                >
+                    ...
+                </Text>
                 <HandComponent
                     hand={{
                         bet: 1,
