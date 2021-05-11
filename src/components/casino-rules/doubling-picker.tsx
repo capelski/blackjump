@@ -30,7 +30,7 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
 
             <View style={{ backgroundColor: 'white', flex: 1, marginLeft: 8 }}>
                 <Picker
-                    selectedValue={String(props.casinoRules[CasinoRulesKeys.doubling])}
+                    selectedValue={props.casinoRules[CasinoRulesKeys.doubling]}
                     style={{
                         backgroundColor: 'transparent',
                         color: tableColor,
