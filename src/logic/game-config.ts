@@ -1,9 +1,9 @@
-import { CasinoRulesKeys, GameConfig } from '../types';
+import { CasinoRulesKeys, Doubling, GameConfig } from '../types';
 
 export const getDefaultGameConfig = (): GameConfig => ({
     casinoRules: {
         [CasinoRulesKeys.doubleAfterSplit]: true,
-        [CasinoRulesKeys.doubleOnlyOn_9_10_11]: true,
+        [CasinoRulesKeys.doubling]: Doubling.nineToElevenSoft,
         [CasinoRulesKeys.surrender]: false
     },
     goldHandsLevels: {

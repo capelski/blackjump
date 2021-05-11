@@ -3,6 +3,7 @@ import {
     CasinoRulesDecisions,
     CasinoRulesKeys,
     Dictionary,
+    Doubling,
     DynamicDecisions,
     HandRepresentation,
     RelevantHand
@@ -44,20 +45,23 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
     },
     [HandRepresentation.Hard9]: {
         decisions: hit.until.dealer(2).then.double_hit.until.dealer(6).then.hit,
-        dependencies: [],
-        level: () => 3,
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven ? 3 : 1,
         name: 'Hard 9'
     },
     [HandRepresentation.Hard10]: {
         decisions: double_hit.until.dealer(9).then.hit,
-        dependencies: [],
-        level: () => 2,
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven ? 2 : 1,
         name: 'Hard 10'
     },
     [HandRepresentation.Hard11]: {
         decisions: double_hit.until.dealer(10).then.hit,
-        dependencies: [],
-        level: () => 2,
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven ? 2 : 1,
         name: 'Hard 11'
     },
     [HandRepresentation.Hard12]: {
@@ -122,32 +126,37 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
     // Soft hands
     [HandRepresentation.Soft13]: {
         decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 1 : 3),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 13'
     },
     [HandRepresentation.Soft14]: {
         decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 1 : 3),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 14'
     },
     [HandRepresentation.Soft15]: {
         decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 1 : 3),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 15'
     },
     [HandRepresentation.Soft16]: {
         decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 1 : 3),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 16'
     },
     [HandRepresentation.Soft17]: {
         decisions: hit.until.dealer(2).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 1 : 3),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 17'
     },
     [HandRepresentation.Soft18]: {
@@ -155,8 +164,9 @@ export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> =
             .dealer(2)
             .then.doubleIfAllowed_stand.until.dealer(6)
             .then.stand.until.dealer(8).then.hit,
-        dependencies: [CasinoRulesKeys.doubleOnlyOn_9_10_11],
-        level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ? 2 : 4),
+        dependencies: [CasinoRulesKeys.doubling],
+        level: (casinoRules) =>
+            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 4 : 2,
         name: 'Soft 18'
     },
     [HandRepresentation.Soft19]: {

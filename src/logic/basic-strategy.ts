@@ -5,6 +5,7 @@ import {
     CasinoRulesDecisions,
     CasinoRulesKeys,
     DecisionEvaluation,
+    Doubling,
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
@@ -77,13 +78,13 @@ export const mapCasinoRulesDecisionToDynamicDecision = (
     casinoRules: CasinoRules
 ): DynamicDecision =>
     casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_hit
-        ? casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11]
-            ? BaseDecisions.hit
-            : DynamicDecisions.double_hit
+        ? casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            ? DynamicDecisions.double_hit
+            : BaseDecisions.hit
         : casinoRulesDecision === CasinoRulesDecisions.doubleIfAllowed_stand
-        ? casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11]
-            ? BaseDecisions.stand
-            : DynamicDecisions.double_stand
+        ? casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            ? DynamicDecisions.double_stand
+            : BaseDecisions.stand
         : casinoRulesDecision === CasinoRulesDecisions.splitIfDasAllowed_hit
         ? casinoRules[CasinoRulesKeys.doubleAfterSplit]
             ? BaseDecisions.split

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { ScrollView, Text } from 'react-native';
-import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
-import { AppRoute, GameConfig, RouteNames } from '../types';
+import { AppRoute, CasinoRulesKeys, GameConfig, RouteNames } from '../types';
 
 type HandDecisionsProps = {
     gameConfig: GameConfig;
@@ -28,19 +29,31 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
                 {relevantHand.name} decisions
             </Text>
-
             <HandDecisionsTable casinoRules={casinoRules} relevantHand={relevantHand} />
 
-            {relevantHand.dependencies.map((dependency) => (
-                <CasinoRuleSwitch
-                    casinoRule={dependency}
-                    key={dependency}
-                    onValueChange={(newValue) => {
-                        setCasinoRules({ ...casinoRules, [dependency]: newValue });
-                    }}
-                    value={casinoRules[dependency]}
-                />
-            ))}
+            {relevantHand.dependencies.map((dependency) => {
+                return dependency === CasinoRulesKeys.doubleAfterSplit ? (
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        key={dependency}
+                        ruleName={CasinoRulesKeys.doubleAfterSplit}
+                        setCasinoRules={setCasinoRules}
+                    />
+                ) : dependency === CasinoRulesKeys.doubling ? (
+                    <DoublingPicker
+                        casinoRules={casinoRules}
+                        key={dependency}
+                        setCasinoRules={setCasinoRules}
+                    />
+                ) : (
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        key={dependency}
+                        ruleName={CasinoRulesKeys.surrender}
+                        setCasinoRules={setCasinoRules}
+                    />
+                );
+            })}
         </ScrollView>
     );
 };

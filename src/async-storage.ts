@@ -23,16 +23,11 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                                       : currentGameConfig.casinoRules[
                                             CasinoRulesKeys.doubleAfterSplit
                                         ],
-                              [CasinoRulesKeys.doubleOnlyOn_9_10_11]:
-                                  storedGameConfig.casinoRules[
-                                      CasinoRulesKeys.doubleOnlyOn_9_10_11
-                                  ] !== undefined
-                                      ? storedGameConfig.casinoRules[
-                                            CasinoRulesKeys.doubleOnlyOn_9_10_11
-                                        ]
-                                      : currentGameConfig.casinoRules[
-                                            CasinoRulesKeys.doubleOnlyOn_9_10_11
-                                        ],
+                              [CasinoRulesKeys.doubling]:
+                                  storedGameConfig.casinoRules[CasinoRulesKeys.doubling] !==
+                                  undefined
+                                      ? storedGameConfig.casinoRules[CasinoRulesKeys.doubling]
+                                      : currentGameConfig.casinoRules[CasinoRulesKeys.doubling],
                               [CasinoRulesKeys.surrender]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                                   undefined

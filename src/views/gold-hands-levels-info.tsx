@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { handToRelevantHand } from '../logic/basic-strategy';
@@ -181,17 +182,19 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 </View>
 
                 <View style={{ marginBottom: 16 }}>
-                    {Object.values(CasinoRulesKeys).map((casinoRule) => (
-                        <CasinoRuleSwitch
-                            casinoRule={casinoRule}
-                            key={casinoRule}
-                            onValueChange={(newValue) => {
-                                const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
-                                setCasinoRules(nextCasinoRules);
-                            }}
-                            value={casinoRules[casinoRule]}
-                        />
-                    ))}
+                    <DoublingPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
+
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        ruleName={CasinoRulesKeys.doubleAfterSplit}
+                        setCasinoRules={setCasinoRules}
+                    />
+
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        ruleName={CasinoRulesKeys.surrender}
+                        setCasinoRules={setCasinoRules}
+                    />
                 </View>
             </ScrollView>
         </React.Fragment>

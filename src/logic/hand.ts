@@ -1,11 +1,24 @@
-import { Card, CasinoRules, CasinoRulesKeys, Hand, HandOutcome } from '../types';
+import { Card, CasinoRules, CasinoRulesKeys, Doubling, Hand, HandOutcome } from '../types';
 import { getCardEffectiveValue, getCardsValues } from './card';
 
-export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
-    hand.cards.length === 2 &&
-    (casinoRules[CasinoRulesKeys.doubleAfterSplit] || handsNumber === 1) &&
-    (!casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ||
-        [9, 10, 11].indexOf(getHandEffectiveValue(hand)) > -1);
+export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) => {
+    const handEffectiveValue = getHandEffectiveValue(hand);
+    const isHandWithTwoCards = hand.cards.length === 2;
+    const isSingleHand = handsNumber === 1;
+
+    const contains9To11 = hand.values.some((handValue) => [9, 10, 11].indexOf(handValue) > -1);
+    const is10To11 = handEffectiveValue === 10 || handEffectiveValue === 11;
+    const is9To11 = handEffectiveValue === 9 || is10To11;
+
+    return (
+        isHandWithTwoCards &&
+        (casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ||
+            (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToElevenSoft && contains9To11) ||
+            (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven && is9To11) ||
+            (casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven && is10To11)) &&
+        (isSingleHand || casinoRules[CasinoRulesKeys.doubleAfterSplit])
+    );
+};
 
 export const canSplit = (hand: Hand) =>
     hand.cards.length === 2 &&

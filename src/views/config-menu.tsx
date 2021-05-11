@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
 import { updateGameConfig, updatePlayerEarnings, updateTrainedHands } from '../async-storage';
 import { Button } from '../components/button';
-import { CasinoRuleSwitch } from '../components/casino-rule-switch';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
@@ -12,7 +13,9 @@ import { getEmptyTrainingHands } from '../logic/training-hands';
 import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pairs';
 import {
     AppNavigation,
+    CasinoRules,
     CasinoRulesKeys,
+    Doubling,
     GameConfig,
     OnBoardingSections,
     Phases,
@@ -53,6 +56,17 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
+    const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
+        setGoldHandsNumber(getGoldHandsNumber(nextCasinoRules, goldHandsLevels));
+        setAreGoldHandsBlockingProgress(
+            props.progress < 100 &&
+                getAreGoldHandsBlockingProgress(
+                    { ...props.gameConfig, casinoRules: nextCasinoRules },
+                    props.trainingHands.trained
+                )
+        );
+    };
+
     const saveHandler = () => {
         const nextGameConfig: GameConfig = {
             casinoRules,
@@ -70,8 +84,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const isSaveButtonEnabled =
         (props.gameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
             casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
-            props.gameConfig.casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] !==
-                casinoRules[CasinoRulesKeys.doubleOnlyOn_9_10_11] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.doubling] !==
+                casinoRules[CasinoRulesKeys.doubling] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                 casinoRules[CasinoRulesKeys.surrender] ||
             props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
@@ -132,27 +146,32 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 </Text>
                 <Divider />
 
-                {Object.values(CasinoRulesKeys).map((casinoRule) => (
-                    <CasinoRuleSwitch
-                        casinoRule={casinoRule}
-                        key={casinoRule}
-                        onValueChange={(newValue) => {
-                            const nextCasinoRules = { ...casinoRules, [casinoRule]: newValue };
-                            setCasinoRules(nextCasinoRules);
-                            setGoldHandsNumber(
-                                getGoldHandsNumber(nextCasinoRules, goldHandsLevels)
-                            );
-                            setAreGoldHandsBlockingProgress(
-                                props.progress < 100 &&
-                                    getAreGoldHandsBlockingProgress(
-                                        { ...props.gameConfig, casinoRules: nextCasinoRules },
-                                        props.trainingHands.trained
-                                    )
-                            );
-                        }}
-                        value={casinoRules[casinoRule]}
+                <DoublingPicker
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    setCasinoRules={setCasinoRules}
+                />
+
+                <View
+                    style={{
+                        opacity:
+                            casinoRules[CasinoRulesKeys.doubling] > Doubling.none ? undefined : 0.3
+                    }}
+                >
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        onValueChange={casinoRuleChangeHandler}
+                        ruleName={CasinoRulesKeys.doubleAfterSplit}
+                        setCasinoRules={setCasinoRules}
                     />
-                ))}
+                </View>
+
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.surrender}
+                    setCasinoRules={setCasinoRules}
+                />
             </OnBoardingSection>
 
             <OnBoardingSection
