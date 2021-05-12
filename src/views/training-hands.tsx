@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
-import { decisionsDictionary } from '../logic/decisions-dictionary';
+import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
     AppNavigation,
@@ -51,8 +51,8 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
             >
                 {(Object.keys(props.trainedHands) as HandRepresentation[]).map(
                     (handRepresentation, index) => {
-                        const handRelevantData = decisionsDictionary[handRepresentation];
                         const dealerHands = props.trainedHands[handRepresentation];
+                        const handName = handRepresentationToRelevantHand(handRepresentation).name;
 
                         return (
                             <OnBoardingSection
@@ -79,7 +79,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                             textAlign: 'center'
                                         }}
                                     >
-                                        {handRelevantData.name}
+                                        {handName}
                                     </Text>
                                 </TouchableOpacity>
                                 {unfoldedHand && unfoldedHand === handRepresentation && (
@@ -178,7 +178,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                     textAlign: 'center'
                                                 }}
                                             >
-                                                {handRelevantData.name} decisions ➡️
+                                                {handName} decisions ➡️
                                             </Text>
                                         </TouchableOpacity>
                                     </React.Fragment>

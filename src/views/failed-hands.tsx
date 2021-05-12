@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
-import { decisionsDictionary } from '../logic/decisions-dictionary';
+import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import { AppNavigation, FailedHand, Hand, Phases, RouteNames } from '../types';
 
@@ -45,11 +45,13 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                         </Text>
                     </View>
                 ) : (
-                    Object.values(props.failedHands).map((failedHand, index) => {
-                        const handRelevantData = decisionsDictionary[failedHand.handRepresentation];
+                    Object.values(props.failedHands).map((failedHand) => {
+                        const handName = handRepresentationToRelevantHand(
+                            failedHand.handRepresentation
+                        ).name;
 
                         return (
-                            <View key={index} style={{ marginBottom: 16, width: '100%' }}>
+                            <View key={handName} style={{ marginBottom: 16, width: '100%' }}>
                                 <View
                                     style={{
                                         alignItems: 'center',
@@ -71,7 +73,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            {handRelevantData.name}
+                                            {handName}
                                         </Text>
                                         <Text
                                             style={{

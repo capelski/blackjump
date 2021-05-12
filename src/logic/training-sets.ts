@@ -1,5 +1,5 @@
 import { HandRepresentation, SimpleCardSymbol, TrainingSet } from '../types';
-import { decisionsDictionary } from './decisions-dictionary';
+import { relevantHands } from './relevant-hands';
 
 export const allPossibleDealerCards: SimpleCardSymbol[] = [
     SimpleCardSymbol.Ace,
@@ -14,12 +14,10 @@ export const allPossibleDealerCards: SimpleCardSymbol[] = [
     SimpleCardSymbol.Ten
 ];
 
-export const trainingSets = Object.keys(decisionsDictionary).map<TrainingSet>(
-    (relevantHandKey) => ({
-        dealerHands: [...allPossibleDealerCards],
-        playerHand: {
-            data: decisionsDictionary[relevantHandKey as HandRepresentation],
-            representation: relevantHandKey as HandRepresentation
-        }
-    })
-);
+export const trainingSets = Object.keys(relevantHands).map<TrainingSet>((relevantHandKey) => ({
+    dealerHands: [...allPossibleDealerCards],
+    playerHand: {
+        data: relevantHands[relevantHandKey as HandRepresentation],
+        representation: relevantHandKey as HandRepresentation
+    }
+}));

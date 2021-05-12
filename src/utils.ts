@@ -14,14 +14,6 @@ export const cartesianProduct = <T, U, R>(
 export const getRandomItem = <T>(items: T[]) =>
     items[Math.round(Math.random() * (items.length - 1))];
 
-const nNumbers = (n: number) =>
-    ' '
-        .repeat(n)
-        .split('')
-        .map((_, index) => index + 1);
-
-export const numberRange = (min: number, max: number) => nNumbers(max).filter((x) => x >= min);
-
 export const playSound = (sound: Audio.Sound) =>
     sound
         .stopAsync() // In case is already playing and it hasn't finished yet

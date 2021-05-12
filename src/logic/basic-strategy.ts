@@ -10,9 +10,9 @@ import {
     PlayerDecision,
     PlayerDecisions
 } from '../types';
-import { decisionsDictionary } from './decisions-dictionary';
 import { getHandEffectiveValue } from './hand';
 import { handToHandRepresentation } from './hand-representation';
+import { relevantHands } from './relevant-hands';
 
 export const evaluateDecision = (
     playerHand: Hand,
@@ -54,10 +54,10 @@ const evaluateDynamicDecision = (
         : dynamicDecision;
 
 export const handRepresentationToRelevantHand = (handRepresentation: HandRepresentation) => {
-    return decisionsDictionary[handRepresentation];
+    return relevantHands[handRepresentation];
 };
 
-export const handToRelevantHand = (playerHand: Hand) => {
+const handToRelevantHand = (playerHand: Hand) => {
     const handRepresentation = handToHandRepresentation(playerHand);
-    return decisionsDictionary[handRepresentation];
+    return handRepresentationToRelevantHand(handRepresentation);
 };

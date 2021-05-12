@@ -29,7 +29,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
                 {relevantHand.name} decisions
             </Text>
-            <HandDecisionsTable casinoRules={casinoRules} relevantHand={relevantHand} />
+            <HandDecisionsTable handDecisionSet={relevantHand.decisionSet(casinoRules)} />
 
             {relevantHand.dependencies.map((dependency) => {
                 return dependency === CasinoRulesKeys.doubleAfterSplit ? (

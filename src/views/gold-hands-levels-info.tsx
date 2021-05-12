@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { handToRelevantHand } from '../logic/basic-strategy';
-import { decisionsDictionary } from '../logic/decisions-dictionary';
+import { handDecisionSetGetters } from '../logic/hand-decision-set';
+import { relevantHands } from '../logic/relevant-hands';
 import {
     CardSuit,
     CasinoRulesKeys,
     Dictionary,
     GameConfig,
     Hand,
+    HandRepresentation,
     SimpleCardSymbol
 } from '../types';
 
@@ -102,8 +103,9 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     skipAnimation={true}
                 />
                 <HandDecisionsTable
-                    casinoRules={props.gameConfig.casinoRules}
-                    relevantHand={handToRelevantHand(hardEight)}
+                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Hard8](
+                        props.gameConfig.casinoRules
+                    )}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
@@ -119,8 +121,9 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     skipAnimation={true}
                 />
                 <HandDecisionsTable
-                    casinoRules={props.gameConfig.casinoRules}
-                    relevantHand={handToRelevantHand(splitNine)}
+                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Split9s](
+                        props.gameConfig.casinoRules
+                    )}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
@@ -160,7 +163,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 </View>
 
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {Object.values(decisionsDictionary).map((relevantHand) => {
+                    {Object.values(relevantHands).map((relevantHand) => {
                         const level = relevantHand.level(casinoRules);
                         return (
                             <Text

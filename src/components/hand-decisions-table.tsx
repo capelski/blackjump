@@ -1,24 +1,18 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { colors } from '../constants';
-import { CasinoRules, RelevantHand } from '../types';
-import { numberRange } from '../utils';
+import { HandDecisionSet } from '../types';
 
 interface HandDecisionsTableProps {
-    casinoRules: CasinoRules;
-    relevantHand: RelevantHand;
+    handDecisionSet: HandDecisionSet;
 }
 
-export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => {
-    const handDecisions = numberRange(2, 11).map((number) => ({
-        number,
-        decision: props.relevantHand.decisionSet(props.casinoRules)[number]
-    }));
-
-    return (
-        <View>
-            {handDecisions.map((dynamicDecision) => (
-                <View key={dynamicDecision.number} style={{ flexDirection: 'row', width: '100%' }}>
+export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => (
+    <View>
+        {Object.keys(props.handDecisionSet).map((key) => {
+            const number = parseInt(key);
+            return (
+                <View key={number} style={{ flexDirection: 'row', width: '100%' }}>
                     <Text
                         style={{
                             color: 'white',
@@ -29,11 +23,11 @@ export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => 
                             width: '15%'
                         }}
                     >
-                        {dynamicDecision.number}
+                        {number}
                     </Text>
                     <Text
                         style={{
-                            backgroundColor: colors[dynamicDecision.decision],
+                            backgroundColor: colors[props.handDecisionSet[number]],
                             color: 'white',
                             fontSize: 20,
                             fontWeight: 'bold',
@@ -44,10 +38,10 @@ export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => 
                             width: '85%'
                         }}
                     >
-                        {dynamicDecision.decision}
+                        {props.handDecisionSet[number]}
                     </Text>
                 </View>
-            ))}
-        </View>
-    );
-};
+            );
+        })}
+    </View>
+);
