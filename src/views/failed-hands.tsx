@@ -3,15 +3,15 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
-import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
-import { AppNavigation, FailedHand, Hand, Phases, RouteNames } from '../types';
+import { AppNavigation, FailedHand, Hand, Phases, RelevantHands, RouteNames } from '../types';
 
 type FailedHandsProps = {
     failedHands: FailedHand[];
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
+    relevantHands: RelevantHands;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
 };
 
@@ -46,9 +46,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                     </View>
                 ) : (
                     Object.values(props.failedHands).map((failedHand) => {
-                        const handName = handRepresentationToRelevantHand(
-                            failedHand.handRepresentation
-                        ).name;
+                        const handName = props.relevantHands[failedHand.handRepresentation].name;
 
                         return (
                             <View key={handName} style={{ marginBottom: 16, width: '100%' }}>

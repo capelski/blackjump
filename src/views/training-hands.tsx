@@ -3,13 +3,13 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
-import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
 import { getSpecificTrainingPair } from '../logic/training-pairs';
 import {
     AppNavigation,
     Hand,
     HandRepresentation,
     Phases,
+    RelevantHands,
     RouteNames,
     SimpleCardSymbol,
     TrainedHands
@@ -19,6 +19,7 @@ type TrainingHandsProps = {
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
+    relevantHands: RelevantHands;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
 };
@@ -52,7 +53,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 {(Object.keys(props.trainedHands) as HandRepresentation[]).map(
                     (handRepresentation, index) => {
                         const dealerHands = props.trainedHands[handRepresentation];
-                        const handName = handRepresentationToRelevantHand(handRepresentation).name;
+                        const handName = props.relevantHands[handRepresentation].name;
 
                         return (
                             <OnBoardingSection

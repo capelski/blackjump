@@ -5,7 +5,8 @@ import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { handDecisionSetGetters } from '../logic/hand-decision-set';
-import { relevantHands } from '../logic/relevant-hands';
+import { getRelevantHands } from '../logic/relevant-hands';
+
 import {
     CardSuit,
     CasinoRulesKeys,
@@ -29,6 +30,8 @@ const levelsColor: Dictionary<string, number> = {
 
 export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
+
+    const relevantHands = getRelevantHands(casinoRules);
 
     const hardEight: Hand = {
         bet: 1,
@@ -103,9 +106,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     skipAnimation={true}
                 />
                 <HandDecisionsTable
-                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Hard8](
-                        props.gameConfig.casinoRules
-                    )}
+                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Hard8](casinoRules)}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
@@ -122,7 +123,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 />
                 <HandDecisionsTable
                     handDecisionSet={handDecisionSetGetters[HandRepresentation.Split9s](
-                        props.gameConfig.casinoRules
+                        casinoRules
                     )}
                 />
 

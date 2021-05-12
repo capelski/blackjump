@@ -5,10 +5,12 @@ import {
     Hand,
     HandRepresentation,
     NumericDictionary,
+    RelevantHands,
     SimpleCardSymbol,
     TrainedHands,
     TrainedHandStatus,
-    TrainingPair
+    TrainingPair,
+    TrainingSet
 } from '../types';
 import { getRandomItem } from '../utils';
 import {
@@ -24,11 +26,11 @@ import {
     isSoftHandRepresentation,
     isSplitHandRepresentation
 } from './hand-representation';
-import { allPossibleDealerCards, trainingSets } from './training-sets';
+import { allPossibleDealerCards, defaultTrainingSets, getTrainingSets } from './training-sets';
 
-export const allTrainingPairsNumber = allPossibleDealerCards.length * trainingSets.length;
+export const allTrainingPairsNumber = allPossibleDealerCards.length * defaultTrainingSets.length;
 
-const getActiveTrainingSets = (gameConfig: GameConfig) =>
+const getActiveTrainingSets = (trainingSets: TrainingSet[], gameConfig: GameConfig) =>
     trainingSets.filter((trainingSet) => {
         const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.casinoRules);
         return gameConfig.goldHandsLevels[trainingSetLevel];
@@ -36,10 +38,12 @@ const getActiveTrainingSets = (gameConfig: GameConfig) =>
 
 export const getAreGoldHandsBlockingProgress = (
     gameConfig: GameConfig,
+    relevantHands: RelevantHands,
     trainedHands: TrainedHands
 ) =>
     gameConfig.useGoldHands
-        ? getUntrainedTrainingSets(gameConfig, trainedHands).length === 0
+        ? getUntrainedTrainingSets(gameConfig, getTrainingSets(relevantHands), trainedHands)
+              .length === 0
         : false;
 
 // Called after player hitting, splitting or starting a split hand. It returns a card that
@@ -54,7 +58,7 @@ export const getCardForUntrainedHand = (
     const isPlayerHandSoft = playerHand.values.length > 1;
     const playerHandValues = getCardsValues(playerHand.cards);
 
-    const valuesToUntrainedHands = trainingSets
+    const valuesToUntrainedHands = defaultTrainingSets
         .map((trainingSet) => {
             const isHandUntrainedForDealerCard =
                 trainedHands[trainingSet.playerHand.representation][dealerSymbol] ===
@@ -124,21 +128,26 @@ export const getCardForUntrainedHand = (
 
 export const getGoldHandsNumber = (
     casinoRules: CasinoRules,
+    relevantHands: RelevantHands,
     goldHandsLevels: NumericDictionary<boolean>
 ) =>
     allPossibleDealerCards.length *
-    trainingSets.filter((ts) => goldHandsLevels[ts.playerHand.data.level(casinoRules)]).length;
+    getTrainingSets(relevantHands).filter(
+        (trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level(casinoRules)]
+    ).length;
 
 export const getRandomTrainingPair = (
     gameConfig: GameConfig,
+    relevantHands: RelevantHands,
     trainedHands: TrainedHands
 ): TrainingPair => {
-    const untrainedTrainingSets = getUntrainedTrainingSets(gameConfig, trainedHands);
+    const trainingSets = getTrainingSets(relevantHands);
+    const untrainedTrainingSets = getUntrainedTrainingSets(gameConfig, trainingSets, trainedHands);
 
     const randomTrainingSet =
         untrainedTrainingSets.length > 0
             ? getRandomItem(untrainedTrainingSets)
-            : getRandomItem(getActiveTrainingSets(gameConfig)); // In case all hands have been passed
+            : getRandomItem(getActiveTrainingSets(trainingSets, gameConfig)); // In case all hands have been passed
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
@@ -180,8 +189,12 @@ export const getSpecificTrainingPair = (
     };
 };
 
-const getUntrainedTrainingSets = (gameConfig: GameConfig, trainedHands: TrainedHands) =>
-    getActiveTrainingSets(gameConfig).filter((trainingSet) => {
+const getUntrainedTrainingSets = (
+    gameConfig: GameConfig,
+    trainingSets: TrainingSet[],
+    trainedHands: TrainedHands
+) =>
+    getActiveTrainingSets(trainingSets, gameConfig).filter((trainingSet) => {
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
         return Object.values(trainedDealerHands).some(
             (status) => status !== TrainedHandStatus.passed

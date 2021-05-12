@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
 import { updateGameConfig, updatePlayerEarnings, updateTrainedHands } from '../async-storage';
 import { Button } from '../components/button';
-import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
+import { getRelevantHands } from '../logic/relevant-hands';
 import { getEmptyTrainingHands } from '../logic/training-hands';
 import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pairs';
 import {
@@ -17,8 +18,10 @@ import {
     CasinoRulesKeys,
     Doubling,
     GameConfig,
+    NumericDictionary,
     OnBoardingSections,
     Phases,
+    RelevantHands,
     RouteNames,
     TrainingHands
 } from '../types';
@@ -30,6 +33,7 @@ type ConfigMenuProps = {
     onBoardingStep: number;
     phase: Phases;
     progress: number;
+    relevantHands: RelevantHands;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingHands: (trainingHands: TrainingHands) => void;
     trainingHands: TrainingHands;
@@ -47,24 +51,62 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
     const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
     const [goldHandsNumber, setGoldHandsNumber] = useState(
-        getGoldHandsNumber(props.gameConfig.casinoRules, props.gameConfig.goldHandsLevels)
+        getGoldHandsNumber(
+            props.gameConfig.casinoRules,
+            props.relevantHands,
+            props.gameConfig.goldHandsLevels
+        )
     );
     const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
         props.gameConfig.isDealerAnimationEnabled
     );
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
+    const [relevantHands, setRelevantHands] = useState(props.relevantHands);
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
-    const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
-        setGoldHandsNumber(getGoldHandsNumber(nextCasinoRules, goldHandsLevels));
+    const isSomeLevelSelected = (_goldHandsLevels: NumericDictionary<boolean>) =>
+        _goldHandsLevels[1] || _goldHandsLevels[2] || _goldHandsLevels[3] || _goldHandsLevels[4];
+
+    const areGoldHandsBlockingProgressHandler = (options?: {
+        nextCasinoRules?: CasinoRules;
+        nextGoldHandsLevels?: NumericDictionary<boolean>;
+        nextRelevantHands?: RelevantHands;
+        nextUseGoldHands?: boolean;
+    }) => {
         setAreGoldHandsBlockingProgress(
             props.progress < 100 &&
+                isSomeLevelSelected((options && options.nextGoldHandsLevels) || goldHandsLevels) &&
                 getAreGoldHandsBlockingProgress(
-                    { ...props.gameConfig, casinoRules: nextCasinoRules },
+                    {
+                        casinoRules: (options && options.nextCasinoRules) || casinoRules,
+                        goldHandsLevels:
+                            (options && options.nextGoldHandsLevels) || goldHandsLevels,
+                        isDealerAnimationEnabled,
+                        isSoundEnabled,
+                        useBlueCards,
+                        useGoldHands:
+                            options && options.nextUseGoldHands !== undefined
+                                ? options.nextUseGoldHands
+                                : useGoldHands
+                    },
+                    (options && options.nextRelevantHands) || relevantHands,
                     props.trainingHands.trained
                 )
         );
+    };
+
+    const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
+        const nextRelevantHands = getRelevantHands(nextCasinoRules);
+        const nextGoldHandsNumber = getGoldHandsNumber(
+            nextCasinoRules,
+            nextRelevantHands,
+            goldHandsLevels
+        );
+
+        setGoldHandsNumber(nextGoldHandsNumber);
+        setRelevantHands(nextRelevantHands);
+        areGoldHandsBlockingProgressHandler({ nextCasinoRules, nextRelevantHands });
     };
 
     const saveHandler = () => {
@@ -96,7 +138,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             props.gameConfig.isSoundEnabled !== isSoundEnabled ||
             props.gameConfig.useBlueCards !== useBlueCards ||
             props.gameConfig.useGoldHands !== useGoldHands) &&
-        (goldHandsLevels[1] || goldHandsLevels[2] || goldHandsLevels[3] || goldHandsLevels[4]);
+        isSomeLevelSelected(goldHandsLevels);
 
     return (
         <ScrollView
@@ -239,13 +281,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     <Switch
                         onValueChange={(value) => {
                             setUseGoldHands(value);
-                            setAreGoldHandsBlockingProgress(
-                                props.progress < 100 &&
-                                    getAreGoldHandsBlockingProgress(
-                                        { ...props.gameConfig, useGoldHands: value },
-                                        props.trainingHands.trained
-                                    )
-                            );
+                            areGoldHandsBlockingProgressHandler({ nextUseGoldHands: value });
                         }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
@@ -310,19 +346,13 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                                 setGoldHandsNumber(
                                                     getGoldHandsNumber(
                                                         casinoRules,
+                                                        relevantHands,
                                                         nextGoldHandsLevels
                                                     )
                                                 );
-                                                setAreGoldHandsBlockingProgress(
-                                                    props.progress < 100 &&
-                                                        getAreGoldHandsBlockingProgress(
-                                                            {
-                                                                ...props.gameConfig,
-                                                                goldHandsLevels: nextGoldHandsLevels
-                                                            },
-                                                            props.trainingHands.trained
-                                                        )
-                                                );
+                                                areGoldHandsBlockingProgressHandler({
+                                                    nextGoldHandsLevels
+                                                });
                                             }}
                                             style={{ marginTop: 16 }}
                                             trackColor={{ true: hitColor, false: 'white' }}

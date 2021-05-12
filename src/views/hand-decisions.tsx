@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { ScrollView, Text } from 'react-native';
-import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
+import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { handRepresentationToRelevantHand } from '../logic/basic-strategy';
-import { AppRoute, CasinoRulesKeys, GameConfig, RouteNames } from '../types';
+import { handDecisionSetGetters } from '../logic/hand-decision-set';
+import { AppRoute, CasinoRules, CasinoRulesKeys, RelevantHands, RouteNames } from '../types';
 
 type HandDecisionsProps = {
-    gameConfig: GameConfig;
+    casinoRules: CasinoRules;
+    relevantHands: RelevantHands;
     route: AppRoute<RouteNames.handDecisions>;
 };
 
 export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
-    const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
+    const [casinoRules, setCasinoRules] = useState(props.casinoRules);
 
     const handRepresentation = props.route.params['handRepresentation'];
-    const relevantHand = handRepresentationToRelevantHand(handRepresentation);
+    const relevantHand = props.relevantHands[handRepresentation];
+    const handDecisionSet = handDecisionSetGetters[handRepresentation](casinoRules);
 
     return (
         <ScrollView
@@ -29,7 +31,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
                 {relevantHand.name} decisions
             </Text>
-            <HandDecisionsTable handDecisionSet={relevantHand.decisionSet(casinoRules)} />
+            <HandDecisionsTable handDecisionSet={handDecisionSet} />
 
             {relevantHand.dependencies.map((dependency) => {
                 return dependency === CasinoRulesKeys.doubleAfterSplit ? (

@@ -5,11 +5,13 @@ import { Dictionary } from './dictionary';
 import { FailedHand, Hand, HandRepresentation } from './hand';
 
 export interface RelevantHand {
-    decisionSet: (casinoRules: CasinoRules) => HandDecisionSet;
+    decisionSet: HandDecisionSet;
     dependencies: CasinoRulesKeys[];
     level: (casinoRules: CasinoRules) => number;
     name: string;
 }
+
+export type RelevantHands = Dictionary<RelevantHand, HandRepresentation>;
 
 export type TrainedHands = Dictionary<
     Dictionary<TrainedHandStatus, SimpleCardSymbol>,

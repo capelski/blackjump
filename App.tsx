@@ -35,6 +35,7 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
+import { getDefaultRelevantHands, getRelevantHands } from './src/logic/relevant-hands';
 import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
 import {
     allTrainingPairsNumber,
@@ -95,6 +96,7 @@ export default function App() {
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
+    const [relevantHands, setRelevantHands] = useState(getDefaultRelevantHands());
     const [sounds, setSounds] = useState<{ failure: Audio.Sound; success: Audio.Sound }>();
     const [trainingHands, setTrainingHands] = useState<TrainingHands>(getEmptyTrainingHands());
 
@@ -109,6 +111,8 @@ export default function App() {
             initializeSounds()
         ]).then((results) => {
             setGameConfig(results[0]);
+            const nextRelevantHands = getRelevantHands(results[0].casinoRules);
+            setRelevantHands(nextRelevantHands);
 
             if (!results[1]) {
                 ((navigationRef.current as unknown) as AppNavigation).navigate(
@@ -123,7 +127,7 @@ export default function App() {
             if (results[3]) {
                 setTrainingHands(retrieveTrainingHands(results[3]));
                 setAreGoldHandsBlockingProgress(
-                    getAreGoldHandsBlockingProgress(results[0], results[3])
+                    getAreGoldHandsBlockingProgress(results[0], nextRelevantHands, results[3])
                 );
             }
 
@@ -218,7 +222,7 @@ export default function App() {
         const nextDecisionEvaluation = evaluateDecision(
             hand,
             dealerHand!,
-            gameConfig.casinoRules,
+            relevantHands,
             {
                 canDouble: isDoubleEnabled,
                 canSurrender: isSurrenderEnabled
@@ -270,7 +274,7 @@ export default function App() {
         }
 
         setAreGoldHandsBlockingProgress(
-            getAreGoldHandsBlockingProgress(gameConfig, nextTrainingHands.trained)
+            getAreGoldHandsBlockingProgress(gameConfig, relevantHands, nextTrainingHands.trained)
         );
     };
 
@@ -357,20 +361,25 @@ export default function App() {
                             onBoardingStep={onBoardingStep}
                             phase={phase}
                             progress={progress}
+                            relevantHands={relevantHands}
                             setGameConfig={(_gameConfig) => {
-                                setGameConfig(_gameConfig);
+                                const nextRelevantHands = getRelevantHands(_gameConfig.casinoRules);
                                 setAreGoldHandsBlockingProgress(
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
+                                        nextRelevantHands,
                                         trainingHands.trained
                                     )
                                 );
+                                setGameConfig(_gameConfig);
+                                setRelevantHands(nextRelevantHands);
                             }}
                             setTrainingHands={(_trainingHands) => {
                                 setTrainingHands(_trainingHands);
                                 setAreGoldHandsBlockingProgress(
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
+                                        relevantHands,
                                         _trainingHands.trained
                                     )
                                 );
@@ -387,6 +396,7 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
+                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
                         />
                     )}
@@ -396,7 +406,13 @@ export default function App() {
                     {() => <GoldHandsLevelsInfo gameConfig={gameConfig} />}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
-                    {(props) => <HandDecisions gameConfig={gameConfig} route={props.route} />}
+                    {(props) => (
+                        <HandDecisions
+                            casinoRules={gameConfig.casinoRules}
+                            relevantHands={relevantHands}
+                            route={props.route}
+                        />
+                    )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.onboarding}>
                     {() => (
@@ -426,6 +442,7 @@ export default function App() {
                             onBoardingStep={onBoardingStep}
                             player={player}
                             phase={phase}
+                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
                             trainedHands={trainingHands.trained}
                         />
@@ -438,6 +455,7 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
+                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
                             trainedHands={trainingHands.trained}
                         />

@@ -1,30 +1,29 @@
 import {
     BaseDecisions,
-    CasinoRules,
     DecisionEvaluation,
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
     Hand,
-    HandRepresentation,
     PlayerDecision,
-    PlayerDecisions
+    PlayerDecisions,
+    RelevantHands
 } from '../types';
 import { getHandEffectiveValue } from './hand';
 import { handToHandRepresentation } from './hand-representation';
-import { relevantHands } from './relevant-hands';
 
 export const evaluateDecision = (
     playerHand: Hand,
     dealerHand: Hand,
-    casinoRules: CasinoRules,
+    relevantHands: RelevantHands,
     dynamicConditions: DynamicConditions,
     playerDecision: PlayerDecision
 ): DecisionEvaluation => {
-    const relevantHand = handToRelevantHand(playerHand);
+    const handRepresentation = handToHandRepresentation(playerHand);
+    const relevantHand = relevantHands[handRepresentation];
     const dealerHandValue = getHandEffectiveValue(dealerHand);
 
-    const dynamicDecision = relevantHand.decisionSet(casinoRules)[dealerHandValue];
+    const dynamicDecision = relevantHand.decisionSet[dealerHandValue];
     const optimalDecision = evaluateDynamicDecision(dynamicDecision, dynamicConditions);
 
     return {
@@ -52,12 +51,3 @@ const evaluateDynamicDecision = (
             ? PlayerDecisions.surrender
             : BaseDecisions.hit
         : dynamicDecision;
-
-export const handRepresentationToRelevantHand = (handRepresentation: HandRepresentation) => {
-    return relevantHands[handRepresentation];
-};
-
-const handToRelevantHand = (playerHand: Hand) => {
-    const handRepresentation = handToHandRepresentation(playerHand);
-    return handRepresentationToRelevantHand(handRepresentation);
-};

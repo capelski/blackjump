@@ -26,6 +26,7 @@ export { Phases } from './phases';
 export { Player } from './player';
 export {
     RelevantHand,
+    RelevantHands,
     TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
