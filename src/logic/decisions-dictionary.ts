@@ -1,6 +1,6 @@
 import {
     BaseDecisions,
-    CasinoRulesDecisions,
+    CasinoRules,
     CasinoRulesKeys,
     Dictionary,
     Doubling,
@@ -8,239 +8,622 @@ import {
     HandRepresentation,
     RelevantHand
 } from '../types';
-import { createDecisionsSet } from './decisions-set';
-
-const double_hit = createDecisionsSet(DynamicDecisions.double_hit);
-const hit = createDecisionsSet(BaseDecisions.hit);
-const split = createDecisionsSet(BaseDecisions.split);
-const splitIfDas_hit = createDecisionsSet(CasinoRulesDecisions.splitIfDasAllowed_hit);
-const stand = createDecisionsSet(BaseDecisions.stand);
+import { alwaysHit, alwaysSplit, alwaysStand } from './hand-decision-set';
 
 export const decisionsDictionary: Dictionary<RelevantHand, HandRepresentation> = {
-    // Hard hands
-    // '4' -> Only possible with 2,2. Covered in Split hands
+    /*** Hard hands ***/
+
+    /* Hard 4 => Only possible with 2,2. Covered in Split hands */
     [HandRepresentation.Hard5]: {
-        decisions: hit,
+        decisionSet: () => alwaysHit,
         dependencies: [],
         level: () => 1,
         name: 'Hard 5'
     },
     [HandRepresentation.Hard6]: {
-        decisions: hit,
+        decisionSet: () => alwaysHit,
         dependencies: [],
         level: () => 1,
         name: 'Hard 6'
     },
     [HandRepresentation.Hard7]: {
-        decisions: hit,
+        decisionSet: () => alwaysHit,
         dependencies: [],
         level: () => 1,
         name: 'Hard 7'
     },
     [HandRepresentation.Hard8]: {
-        decisions: hit,
+        decisionSet: () => alwaysHit,
         dependencies: [],
         level: () => 1,
         name: 'Hard 8'
     },
     [HandRepresentation.Hard9]: {
-        decisions: hit.until.dealer(2).then.double_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven ? 3 : 1,
         name: 'Hard 9'
     },
     [HandRepresentation.Hard10]: {
-        decisions: double_hit.until.dealer(9).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            8:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            9:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven ? 2 : 1,
         name: 'Hard 10'
     },
     [HandRepresentation.Hard11]: {
-        decisions: double_hit.until.dealer(10).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            8:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            9:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            10:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven ? 2 : 1,
         name: 'Hard 11'
     },
     [HandRepresentation.Hard12]: {
-        decisions: hit.until.dealer(3).then.stand.until.dealer(6).then.hit,
+        decisionSet: () => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4: BaseDecisions.stand,
+            5: BaseDecisions.stand,
+            6: BaseDecisions.stand,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [],
         level: () => 3,
         name: 'Hard 12'
     },
     [HandRepresentation.Hard13]: {
-        decisions: stand.until.dealer(6).then.hit,
+        decisionSet: () => ({
+            2: BaseDecisions.stand,
+            3: BaseDecisions.stand,
+            4: BaseDecisions.stand,
+            5: BaseDecisions.stand,
+            6: BaseDecisions.stand,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [],
         level: () => 2,
         name: 'Hard 13'
     },
     [HandRepresentation.Hard14]: {
-        decisions: stand.until.dealer(6).then.hit,
+        decisionSet: () => ({
+            2: BaseDecisions.stand,
+            3: BaseDecisions.stand,
+            4: BaseDecisions.stand,
+            5: BaseDecisions.stand,
+            6: BaseDecisions.stand,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [],
         level: () => 2,
         name: 'Hard 14'
     },
     [HandRepresentation.Hard15]: {
-        decisions: stand.until
-            .dealer(6)
-            .then.hit.until.dealer(9)
-            .then.surrenderIfAllowed_hit.until.dealer(10).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.stand,
+            3: BaseDecisions.stand,
+            4: BaseDecisions.stand,
+            5: BaseDecisions.stand,
+            6: BaseDecisions.stand,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.surrender],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.surrender] ? 4 : 2),
         name: 'Hard 15'
     },
     [HandRepresentation.Hard16]: {
-        decisions: stand.until.dealer(6).then.hit.until.dealer(8).then.surrenderIfAllowed_hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.stand,
+            3: BaseDecisions.stand,
+            4: BaseDecisions.stand,
+            5: BaseDecisions.stand,
+            6: BaseDecisions.stand,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit,
+            10: casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit,
+            11: casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.surrender],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.surrender] ? 3 : 2),
         name: 'Hard 16'
     },
     [HandRepresentation.Hard17]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Hard 17'
     },
     [HandRepresentation.Hard18]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Hard 18'
     },
     [HandRepresentation.Hard19]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Hard 19'
     },
     [HandRepresentation.Hard20]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Hard 20'
     },
-    // '21' -> Maximum score! This hand doesn't need training
+    /* Hard 21 => Maximum score! This hand doesn't need training */
 
-    // Soft hands
+    /*** Soft hands ***/
+
     [HandRepresentation.Soft13]: {
-        decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4: BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 13'
     },
     [HandRepresentation.Soft14]: {
-        decisions: hit.until.dealer(4).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4: BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 14'
     },
     [HandRepresentation.Soft15]: {
-        decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 15'
     },
     [HandRepresentation.Soft16]: {
-        decisions: hit.until.dealer(3).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 16'
     },
     [HandRepresentation.Soft17]: {
-        decisions: hit.until.dealer(2).then.doubleIfAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
         name: 'Soft 17'
     },
     [HandRepresentation.Soft18]: {
-        decisions: stand.until
-            .dealer(2)
-            .then.doubleIfAllowed_stand.until.dealer(6)
-            .then.stand.until.dealer(8).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.stand,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_stand
+                    : BaseDecisions.stand,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_stand
+                    : BaseDecisions.stand,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_stand
+                    : BaseDecisions.stand,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+                    ? DynamicDecisions.double_stand
+                    : BaseDecisions.stand,
+            7: BaseDecisions.stand,
+            8: BaseDecisions.stand,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubling],
         level: (casinoRules) =>
             casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 4 : 2,
         name: 'Soft 18'
     },
     [HandRepresentation.Soft19]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Soft 19'
     },
     [HandRepresentation.Soft20]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: 'Soft 20'
     },
-    // 'A,10' -> BlackJack! This hand doesn't need training
+    /* Soft 21 => BlackJack! This hand doesn't need training */
 
-    // Split hands
+    /*** Split hands ***/
     [HandRepresentation.Split2s]: {
-        decisions: splitIfDas_hit.until.dealer(3).then.split.until.dealer(7).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            3: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            4: BaseDecisions.split,
+            5: BaseDecisions.split,
+            6: BaseDecisions.split,
+            7: BaseDecisions.split,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubleAfterSplit],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleAfterSplit] ? 2 : 3),
         name: '2,2'
     },
     [HandRepresentation.Split3s]: {
-        decisions: splitIfDas_hit.until.dealer(3).then.split.until.dealer(7).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            3: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            4: BaseDecisions.split,
+            5: BaseDecisions.split,
+            6: BaseDecisions.split,
+            7: BaseDecisions.split,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubleAfterSplit],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleAfterSplit] ? 2 : 3),
         name: '3,3'
     },
     [HandRepresentation.Split4s]: {
-        decisions: hit.until.dealer(4).then.splitIfDasAllowed_hit.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: BaseDecisions.hit,
+            3: BaseDecisions.hit,
+            4: BaseDecisions.hit,
+            5: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            6: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubleAfterSplit],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleAfterSplit] ? 3 : 1),
         name: '4,4'
     },
     [HandRepresentation.Split5s]: {
-        decisions: double_hit.until.dealer(9).then.hit,
-        dependencies: [],
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            3:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            4:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            5:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            6:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            7:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            8:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            9:
+                casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                    ? DynamicDecisions.double_hit
+                    : BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
+        dependencies: [CasinoRulesKeys.doubling],
         level: () => 2,
         name: '5,5'
     },
     [HandRepresentation.Split6s]: {
-        decisions: splitIfDas_hit.until.dealer(2).then.split.until.dealer(6).then.hit,
+        decisionSet: (casinoRules: CasinoRules) => ({
+            2: casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+            3: BaseDecisions.split,
+            4: BaseDecisions.split,
+            5: BaseDecisions.split,
+            6: BaseDecisions.split,
+            7: BaseDecisions.hit,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [CasinoRulesKeys.doubleAfterSplit],
         level: (casinoRules) => (casinoRules[CasinoRulesKeys.doubleAfterSplit] ? 2 : 3),
         name: '6,6'
     },
     [HandRepresentation.Split7s]: {
-        decisions: split.until.dealer(7).then.hit,
+        decisionSet: () => ({
+            2: BaseDecisions.split,
+            3: BaseDecisions.split,
+            4: BaseDecisions.split,
+            5: BaseDecisions.split,
+            6: BaseDecisions.split,
+            7: BaseDecisions.split,
+            8: BaseDecisions.hit,
+            9: BaseDecisions.hit,
+            10: BaseDecisions.hit,
+            11: BaseDecisions.hit
+        }),
         dependencies: [],
         level: () => 2,
         name: '7,7'
     },
     [HandRepresentation.Split8s]: {
-        decisions: split,
+        decisionSet: () => alwaysSplit,
         dependencies: [],
         level: () => 1,
         name: '8,8'
     },
     [HandRepresentation.Split9s]: {
-        decisions: split.until.dealer(6).then.stand.until.dealer(7).then.split.until.dealer(9).then
-            .stand,
+        decisionSet: () => ({
+            2: BaseDecisions.split,
+            3: BaseDecisions.split,
+            4: BaseDecisions.split,
+            5: BaseDecisions.split,
+            6: BaseDecisions.split,
+            7: BaseDecisions.stand,
+            8: BaseDecisions.split,
+            9: BaseDecisions.split,
+            10: BaseDecisions.stand,
+            11: BaseDecisions.stand
+        }),
         dependencies: [],
         level: () => 4,
         name: '9,9'
     },
     [HandRepresentation.Split10s]: {
-        decisions: stand,
+        decisionSet: () => alwaysStand,
         dependencies: [],
         level: () => 1,
         name: '10,10'
     },
     [HandRepresentation.SplitAs]: {
-        decisions: split,
+        decisionSet: () => alwaysSplit,
         dependencies: [],
         level: () => 1,
         name: 'A,A'

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { colors } from '../constants';
-import { mapCasinoRulesDecisionToDynamicDecision } from '../logic/basic-strategy';
 import { CasinoRules, RelevantHand } from '../types';
 import { numberRange } from '../utils';
 
@@ -13,10 +12,7 @@ interface HandDecisionsTableProps {
 export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => {
     const handDecisions = numberRange(2, 11).map((number) => ({
         number,
-        decision: mapCasinoRulesDecisionToDynamicDecision(
-            props.relevantHand.decisions[number],
-            props.casinoRules
-        )
+        decision: props.relevantHand.decisionSet(props.casinoRules)[number]
     }));
 
     return (

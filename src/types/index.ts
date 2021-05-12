@@ -9,13 +9,11 @@ export {
 export { CasinoRules, CasinoRulesKeys, Doubling } from './casino-rules';
 export {
     BaseDecisions,
-    CasinoRulesDecision,
-    CasinoRulesDecisions,
     DecisionEvaluation,
-    DecisionsSet,
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
+    HandDecisionSet,
     PlayerDecision,
     PlayerDecisions
 } from './decisions';
