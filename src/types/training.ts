@@ -9,6 +9,7 @@ export interface RelevantHand {
     dependencies: CasinoRulesKeys[];
     level: number;
     name: string;
+    representation: HandRepresentation;
 }
 
 export type RelevantHands = Dictionary<RelevantHand, HandRepresentation>;
@@ -43,8 +44,5 @@ export interface TrainingPair {
 
 export interface TrainingSet {
     dealerHands: SimpleCardSymbol[];
-    playerHand: {
-        data: RelevantHand;
-        representation: HandRepresentation;
-    };
+    playerHand: RelevantHand;
 }

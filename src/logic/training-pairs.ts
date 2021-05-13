@@ -32,7 +32,7 @@ export const allTrainingPairsNumber = allPossibleDealerCards.length * defaultTra
 const getActiveTrainingSets = (
     trainingSets: TrainingSet[],
     goldHandsLevels: NumericDictionary<boolean>
-) => trainingSets.filter((trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level]);
+) => trainingSets.filter((trainingSet) => goldHandsLevels[trainingSet.playerHand.level]);
 
 export const getAreGoldHandsBlockingProgress = (
     gameConfig: GameConfig,
@@ -133,7 +133,7 @@ export const getGoldHandsNumber = (
 ) =>
     allPossibleDealerCards.length *
     getTrainingSets(relevantHands).filter(
-        (trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level]
+        (trainingSet) => goldHandsLevels[trainingSet.playerHand.level]
     ).length;
 
 export const getRandomTrainingPair = (
