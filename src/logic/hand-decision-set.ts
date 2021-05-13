@@ -48,6 +48,22 @@ const alwaysStand: HandDecisionSet = {
     11: BaseDecisions.stand
 };
 
+export const getHandDecisionSetLevel = (decisionSet: HandDecisionSet) =>
+    Object.values(decisionSet).reduce<{
+        previousValue: string;
+        level: number;
+    }>(
+        (reduced, next) => {
+            return reduced.previousValue === next
+                ? reduced
+                : { previousValue: next, level: reduced.level + 1 };
+        },
+        {
+            previousValue: '',
+            level: 0
+        }
+    ).level;
+
 export const handDecisionSetGetters: Dictionary<
     (casinoRules: CasinoRules) => HandDecisionSet,
     HandRepresentation
