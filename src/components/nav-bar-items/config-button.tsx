@@ -50,8 +50,8 @@ export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
                         <View
                             style={{
                                 position: 'absolute',
-                                right: -4,
-                                bottom: -4
+                                right: 8,
+                                bottom: 8
                             }}
                         >
                             <Text style={{ color: 'black', fontWeight: 'bold' }}>⚠️</Text>
