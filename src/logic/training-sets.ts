@@ -1,4 +1,4 @@
-import { HandRepresentation, RelevantHands, SimpleCardSymbol, TrainingSet } from '../types';
+import { RelevantHands, SimpleCardSymbol, TrainingSet } from '../types';
 import { getDefaultRelevantHands } from './relevant-hands';
 
 export const allPossibleDealerCards: SimpleCardSymbol[] = [
