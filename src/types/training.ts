@@ -1,5 +1,5 @@
 import { SimpleCardSymbol } from './card';
-import { CasinoRules, CasinoRulesKeys } from './casino-rules';
+import { CasinoRulesKeys } from './casino-rules';
 import { HandDecisionSet } from './decisions';
 import { Dictionary } from './dictionary';
 import { FailedHand, Hand, HandRepresentation } from './hand';
@@ -7,7 +7,7 @@ import { FailedHand, Hand, HandRepresentation } from './hand';
 export interface RelevantHand {
     decisionSet: HandDecisionSet;
     dependencies: CasinoRulesKeys[];
-    level: (casinoRules: CasinoRules) => number;
+    level: number;
     name: string;
 }
 

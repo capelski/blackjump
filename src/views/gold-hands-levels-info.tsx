@@ -164,25 +164,22 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 </View>
 
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {Object.values(relevantHands).map((relevantHand) => {
-                        const level = relevantHand.level(casinoRules);
-                        return (
-                            <Text
-                                key={relevantHand.name}
-                                style={{
-                                    backgroundColor: levelsColor[level],
-                                    color: 'white',
-                                    fontSize: 20,
-                                    marginHorizontal: '1.5%',
-                                    marginVertical: 4,
-                                    textAlign: 'center',
-                                    width: '30%'
-                                }}
-                            >
-                                {relevantHand.name}
-                            </Text>
-                        );
-                    })}
+                    {Object.values(relevantHands).map((relevantHand) => (
+                        <Text
+                            key={relevantHand.name}
+                            style={{
+                                backgroundColor: levelsColor[relevantHand.level],
+                                color: 'white',
+                                fontSize: 20,
+                                marginHorizontal: '1.5%',
+                                marginVertical: 4,
+                                textAlign: 'center',
+                                width: '30%'
+                            }}
+                        >
+                            {relevantHand.name}
+                        </Text>
+                    ))}
                 </View>
 
                 <View style={{ marginBottom: 16 }}>

@@ -15,7 +15,7 @@ export const allPossibleDealerCards: SimpleCardSymbol[] = [
 ];
 
 export const getTrainingSets = (relevantHands: RelevantHands) =>
-    Object.values(HandRepresentation).map<TrainingSet>((relevantHandKey) => ({
+    Object.keys(relevantHands).map<TrainingSet>((relevantHandKey) => ({
         dealerHands: [...allPossibleDealerCards],
         playerHand: {
             data: relevantHands[relevantHandKey as HandRepresentation],

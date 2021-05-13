@@ -51,11 +51,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
     const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
     const [goldHandsNumber, setGoldHandsNumber] = useState(
-        getGoldHandsNumber(
-            props.gameConfig.casinoRules,
-            props.relevantHands,
-            props.gameConfig.goldHandsLevels
-        )
+        getGoldHandsNumber(props.relevantHands, props.gameConfig.goldHandsLevels)
     );
     const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
         props.gameConfig.isDealerAnimationEnabled
@@ -98,11 +94,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
     const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
         const nextRelevantHands = getRelevantHands(nextCasinoRules);
-        const nextGoldHandsNumber = getGoldHandsNumber(
-            nextCasinoRules,
-            nextRelevantHands,
-            goldHandsLevels
-        );
+        const nextGoldHandsNumber = getGoldHandsNumber(nextRelevantHands, goldHandsLevels);
 
         setGoldHandsNumber(nextGoldHandsNumber);
         setRelevantHands(nextRelevantHands);
@@ -345,7 +337,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                                 setGoldHandsLevels(nextGoldHandsLevels);
                                                 setGoldHandsNumber(
                                                     getGoldHandsNumber(
-                                                        casinoRules,
                                                         relevantHands,
                                                         nextGoldHandsLevels
                                                     )

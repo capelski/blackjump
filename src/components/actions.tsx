@@ -70,9 +70,9 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                             dealerHand = createHand([getRandomCard()]);
                         } else if (props.gameConfig.useGoldHands) {
                             const trainingPair = getRandomTrainingPair(
-                                props.gameConfig,
                                 props.relevantHands,
-                                props.trainedHands
+                                props.trainedHands,
+                                props.gameConfig.goldHandsLevels
                             );
                             playerHand = trainingPair.player;
                             dealerHand = trainingPair.dealer;

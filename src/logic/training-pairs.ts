@@ -1,6 +1,5 @@
 import {
     Card,
-    CasinoRules,
     GameConfig,
     Hand,
     HandRepresentation,
@@ -30,11 +29,10 @@ import { allPossibleDealerCards, defaultTrainingSets, getTrainingSets } from './
 
 export const allTrainingPairsNumber = allPossibleDealerCards.length * defaultTrainingSets.length;
 
-const getActiveTrainingSets = (trainingSets: TrainingSet[], gameConfig: GameConfig) =>
-    trainingSets.filter((trainingSet) => {
-        const trainingSetLevel = trainingSet.playerHand.data.level(gameConfig.casinoRules);
-        return gameConfig.goldHandsLevels[trainingSetLevel];
-    });
+const getActiveTrainingSets = (
+    trainingSets: TrainingSet[],
+    goldHandsLevels: NumericDictionary<boolean>
+) => trainingSets.filter((trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level]);
 
 export const getAreGoldHandsBlockingProgress = (
     gameConfig: GameConfig,
@@ -42,8 +40,11 @@ export const getAreGoldHandsBlockingProgress = (
     trainedHands: TrainedHands
 ) =>
     gameConfig.useGoldHands
-        ? getUntrainedTrainingSets(gameConfig, getTrainingSets(relevantHands), trainedHands)
-              .length === 0
+        ? getUntrainedTrainingSets(
+              getTrainingSets(relevantHands),
+              trainedHands,
+              gameConfig.goldHandsLevels
+          ).length === 0
         : false;
 
 // Called after player hitting, splitting or starting a split hand. It returns a card that
@@ -127,27 +128,30 @@ export const getCardForUntrainedHand = (
 };
 
 export const getGoldHandsNumber = (
-    casinoRules: CasinoRules,
     relevantHands: RelevantHands,
     goldHandsLevels: NumericDictionary<boolean>
 ) =>
     allPossibleDealerCards.length *
     getTrainingSets(relevantHands).filter(
-        (trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level(casinoRules)]
+        (trainingSet) => goldHandsLevels[trainingSet.playerHand.data.level]
     ).length;
 
 export const getRandomTrainingPair = (
-    gameConfig: GameConfig,
     relevantHands: RelevantHands,
-    trainedHands: TrainedHands
+    trainedHands: TrainedHands,
+    goldHandsLevels: NumericDictionary<boolean>
 ): TrainingPair => {
     const trainingSets = getTrainingSets(relevantHands);
-    const untrainedTrainingSets = getUntrainedTrainingSets(gameConfig, trainingSets, trainedHands);
+    const untrainedTrainingSets = getUntrainedTrainingSets(
+        trainingSets,
+        trainedHands,
+        goldHandsLevels
+    );
 
     const randomTrainingSet =
         untrainedTrainingSets.length > 0
             ? getRandomItem(untrainedTrainingSets)
-            : getRandomItem(getActiveTrainingSets(trainingSets, gameConfig)); // In case all hands have been passed
+            : getRandomItem(getActiveTrainingSets(trainingSets, goldHandsLevels)); // In case all hands have been passed
 
     const dealerHandsDictionary = trainedHands[randomTrainingSet.playerHand.representation];
     const untrainedDealerHands = randomTrainingSet.dealerHands.filter(
@@ -190,11 +194,11 @@ export const getSpecificTrainingPair = (
 };
 
 const getUntrainedTrainingSets = (
-    gameConfig: GameConfig,
     trainingSets: TrainingSet[],
-    trainedHands: TrainedHands
+    trainedHands: TrainedHands,
+    goldHandsLevels: NumericDictionary<boolean>
 ) =>
-    getActiveTrainingSets(trainingSets, gameConfig).filter((trainingSet) => {
+    getActiveTrainingSets(trainingSets, goldHandsLevels).filter((trainingSet) => {
         const trainedDealerHands = trainedHands[trainingSet.playerHand.representation];
         return Object.values(trainedDealerHands).some(
             (status) => status !== TrainedHandStatus.passed
