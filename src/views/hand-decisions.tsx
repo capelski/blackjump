@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { handDecisionSetGetters } from '../logic/hand-decision-set';
+import { getHandDecisionSetLevel, handDecisionSetGetters } from '../logic/hand-decision-set';
 import { AppRoute, CasinoRules, CasinoRulesKeys, RelevantHands, RouteNames } from '../types';
 
 type HandDecisionsProps = {
@@ -28,9 +28,27 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             }}
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
         >
-            <Text style={{ color: 'white', fontSize: 30, paddingTop: 16, paddingBottom: 8 }}>
-                {relevantHand.name} decisions
-            </Text>
+            <View
+                style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingBottom: 16,
+                    width: '100%'
+                }}
+            >
+                <Text style={{ color: 'white', fontSize: 24 }}>{relevantHand.name} decisions</Text>
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 20,
+                        fontStyle: 'italic'
+                    }}
+                >
+                    Level {getHandDecisionSetLevel(handDecisionSet)}
+                </Text>
+            </View>
+
             <HandDecisionsTable handDecisionSet={handDecisionSet} />
 
             {relevantHand.dependencies.map((dependency) => {
