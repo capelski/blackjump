@@ -133,42 +133,42 @@ export const getRelevantHands = (casinoRules: CasinoRules): RelevantHands => ({
     [HandRepresentation.Soft13]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft13](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 3 : 1,
         name: 'Soft 13',
         representation: HandRepresentation.Soft13
     },
     [HandRepresentation.Soft14]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft14](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 3 : 1,
         name: 'Soft 14',
         representation: HandRepresentation.Soft14
     },
     [HandRepresentation.Soft15]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft15](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 3 : 1,
         name: 'Soft 15',
         representation: HandRepresentation.Soft15
     },
     [HandRepresentation.Soft16]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft16](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 3 : 1,
         name: 'Soft 16',
         representation: HandRepresentation.Soft16
     },
     [HandRepresentation.Soft17]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft17](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 3 : 1,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 3 : 1,
         name: 'Soft 17',
         representation: HandRepresentation.Soft17
     },
     [HandRepresentation.Soft18]: {
         decisionSet: handDecisionSetGetters[HandRepresentation.Soft18](casinoRules),
         dependencies: [CasinoRulesKeys.doubling],
-        level: casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ? 4 : 2,
+        level: casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ? 4 : 2,
         name: 'Soft 18',
         representation: HandRepresentation.Soft18
     },

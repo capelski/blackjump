@@ -232,11 +232,11 @@ export const handDecisionSetGetters: Dictionary<
         3: BaseDecisions.hit,
         4: BaseDecisions.hit,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         7: BaseDecisions.hit,
@@ -250,11 +250,11 @@ export const handDecisionSetGetters: Dictionary<
         3: BaseDecisions.hit,
         4: BaseDecisions.hit,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         7: BaseDecisions.hit,
@@ -267,15 +267,15 @@ export const handDecisionSetGetters: Dictionary<
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         7: BaseDecisions.hit,
@@ -288,15 +288,15 @@ export const handDecisionSetGetters: Dictionary<
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         7: BaseDecisions.hit,
@@ -308,19 +308,19 @@ export const handDecisionSetGetters: Dictionary<
     [HandRepresentation.Soft17]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         4:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_hit
                 : BaseDecisions.hit,
         7: BaseDecisions.hit,
@@ -332,19 +332,19 @@ export const handDecisionSetGetters: Dictionary<
     [HandRepresentation.Soft18]: (casinoRules) => ({
         2: BaseDecisions.stand,
         3:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_stand
                 : BaseDecisions.stand,
         4:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_stand
                 : BaseDecisions.stand,
         5:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_stand
                 : BaseDecisions.stand,
         6:
-            casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
                 ? DynamicDecisions.double_stand
                 : BaseDecisions.stand,
         7: BaseDecisions.stand,

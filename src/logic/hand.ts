@@ -12,7 +12,7 @@ export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRu
 
     return (
         isHandWithTwoCards &&
-        (casinoRules[CasinoRulesKeys.doubling] === Doubling.anyPair ||
+        (casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToElevenSoft && contains9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven && is9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven && is10To11)) &&
