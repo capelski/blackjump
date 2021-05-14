@@ -9,8 +9,7 @@ import {
 import { getObjectKeys, getRandomItem } from '../utils';
 import { getRandomSuit, simpleSymbolToSymbol } from './card';
 import { allDealerSymbols, getUntrainedDealerSymbols } from './dealer-symbols';
-import { createHand } from './hand';
-import { handCodeToHand } from './hand-code';
+import { createHand, handCodeToHand } from './hand';
 import { getActiveTrainingHands, getUntrainedTrainingHands } from './training-hand';
 
 export const allTrainingPairsNumber = allDealerSymbols.length * Object.keys(HandCode).length;

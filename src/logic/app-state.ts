@@ -7,9 +7,7 @@ import {
     Phases,
     Player,
     SimpleCardSymbol,
-    TrainedHandsStats,
     TrainingHandStatus,
-    TrainingProgress,
     TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
@@ -67,49 +65,23 @@ const getNextFailedHands = (
         : [{ dealerSymbol: currentDealerSymbol, handCode }].concat(currentFailedHands);
 };
 
-const getNextTrainingProgress = (
-    trainingProgress: TrainingProgress,
-    isHit: boolean,
-    handCode: HandCode,
-    currentDealerSymbol: SimpleCardSymbol
-) => {
-    const nextTrainingProgress: TrainingProgress = { ...trainingProgress };
-
-    nextTrainingProgress[handCode][currentDealerSymbol] = isHit
-        ? TrainingHandStatus.passed
-        : TrainingHandStatus.failed;
-
-    return nextTrainingProgress;
-};
-
-const getNextTrainedHandsStats = (
-    trainedHandsStats: TrainedHandsStats,
-    isHit: boolean,
-    currentHandTrainingStatus: TrainingHandStatus
-): TrainedHandsStats => {
-    return {
-        passed:
-            trainedHandsStats.passed +
-            (isHit && currentHandTrainingStatus !== TrainingHandStatus.passed
-                ? 1
-                : !isHit && currentHandTrainingStatus === TrainingHandStatus.passed
-                ? -1
-                : 0),
-        trained:
-            trainedHandsStats.trained +
-            (currentHandTrainingStatus === TrainingHandStatus.untrained ? 1 : 0)
-    };
-};
-
 export const getNextTrainingStatus = (
     trainingStatus: TrainingStatus,
     isHit: boolean,
     currentHandCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ): TrainingStatus => {
-    // getNextTrainingProgress will modify trainingStatus.progress[handCode][currentDealerSymbol]
-    // we need to keep the old value for getNextTrainedHandsStats
+    // The current trainingStatus.progress[handCode][currentDealerSymbol]
+    // value must be kept to update attemptedHands and passedHands
     const currentHandTrainingStatus = trainingStatus.progress[currentHandCode][currentDealerSymbol];
+
+    trainingStatus.progress[currentHandCode][currentDealerSymbol] = isHit
+        ? TrainingHandStatus.passed
+        : TrainingHandStatus.failed;
+
+    const nextAttemptedHands =
+        trainingStatus.attemptedHands +
+        (currentHandTrainingStatus === TrainingHandStatus.untrained ? 1 : 0);
 
     const nextFailedHands = getNextFailedHands(
         trainingStatus.failedHands,
@@ -118,23 +90,19 @@ export const getNextTrainingStatus = (
         currentDealerSymbol
     );
 
-    const nextTrainedHandsStats = getNextTrainedHandsStats(
-        trainingStatus.stats,
-        isHit,
-        currentHandTrainingStatus
-    );
-
-    const nextTrainingProgress = getNextTrainingProgress(
-        trainingStatus.progress,
-        isHit,
-        currentHandCode,
-        currentDealerSymbol
-    );
+    const nextPassedHands =
+        trainingStatus.passedHands +
+        (isHit && currentHandTrainingStatus !== TrainingHandStatus.passed
+            ? 1
+            : !isHit && currentHandTrainingStatus === TrainingHandStatus.passed
+            ? -1
+            : 0);
 
     return {
+        attemptedHands: nextAttemptedHands,
         failedHands: nextFailedHands,
-        isCompleted: isTrainingCompleted(nextTrainedHandsStats),
-        progress: nextTrainingProgress,
-        stats: nextTrainedHandsStats
+        isCompleted: isTrainingCompleted(nextPassedHands),
+        passedHands: nextPassedHands,
+        progress: trainingStatus.progress
     };
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import { configBarHeight, tableColor } from '../constants';
-import { AppNavigation, OnBoardingSections, Player, TrainedHandsStats } from '../types';
+import { AppNavigation, OnBoardingSections, Player } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
 import { PrecisionIndicator } from './nav-bar-items/precision-indicator';
@@ -10,12 +10,13 @@ import { OnBoardingSection } from './onboarding-section';
 
 export interface NavBarProps {
     areGoldHandsBlockingProgress: boolean;
+    attemptedHands: number;
     navigation: AppNavigation;
     onBoardingStep: number;
     player: Player;
+    passedHands: number;
     progress: number;
     routeName?: string;
-    trainedHandsStats: TrainedHandsStats;
 }
 
 const shakeAmplitude = 6;
@@ -68,10 +69,7 @@ const animateIndicator = (position: Animated.Value) => {
 };
 
 export const NavBar: React.FC<NavBarProps> = (props) => {
-    const precision =
-        props.trainedHandsStats.trained > 0
-            ? props.trainedHandsStats.passed / props.trainedHandsStats.trained
-            : 0;
+    const precision = props.attemptedHands > 0 ? props.passedHands / props.attemptedHands : 0;
 
     const earningsPosition = useMemo(() => new Animated.Value(0), []);
     const precisionPosition = useMemo(() => new Animated.Value(0), []);

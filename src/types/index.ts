@@ -28,10 +28,4 @@ export { Phases } from './phases';
 export { Player } from './player';
 export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
 export { TrainingPair } from './training-pair';
-export {
-    DealerSymbols,
-    FailedHand,
-    TrainedHandsStats,
-    TrainingProgress,
-    TrainingStatus
-} from './training-status';
+export { DealerSymbols, FailedHand, TrainingProgress, TrainingStatus } from './training-status';

@@ -10,7 +10,7 @@ import {
     TrainingHands
 } from '../types';
 import { symbolToSimpleSymbol } from './card';
-import { handToHandCode } from './hand-code';
+import { handToHandCode } from './hand';
 
 export const evaluateDecision = (
     playerHand: Hand,

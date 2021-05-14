@@ -11,17 +11,12 @@ export interface FailedHand {
     handCode: HandCode;
 }
 
-// TODO Rename
-export type TrainedHandsStats = {
-    passed: number;
-    trained: number;
-};
-
 export type TrainingProgress = Dictionary<DealerSymbols, HandCode>;
 
 export interface TrainingStatus {
+    attemptedHands: number;
     failedHands: FailedHand[];
     isCompleted: boolean;
+    passedHands: number;
     progress: TrainingProgress;
-    stats: TrainedHandsStats;
 }

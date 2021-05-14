@@ -4,6 +4,7 @@ import {
     CasinoRulesKeys,
     Doubling,
     Hand,
+    HandCode,
     HandOutcome,
     SimpleCardSymbol,
     TrainingHands,
@@ -16,9 +17,16 @@ import {
     getCardsValues,
     getRandomCard,
     getRandomSuit,
+    symbolToSimpleSymbol,
     valueToSymbol
 } from './card';
-import { isSplitHandCode, isSoftHandCode } from './hand-code';
+import {
+    getHardHandSymbols,
+    getSoftHandSymbols,
+    getSplitHandSymbols,
+    isSoftHandCode,
+    isSplitHandCode
+} from './hand-code';
 
 export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) => {
     const handEffectiveValue = getHandEffectiveValue(hand);
@@ -144,6 +152,34 @@ export const getHandEffectiveValue = (hand: Hand) => {
 
 export const getHandValidValues = (hand: Hand): number[] => {
     return hand.values.some((v) => v < 22) ? hand.values.filter((v) => v < 22) : [hand.values[0]];
+};
+
+export const handCodeToHand = (handCode: HandCode): Hand => {
+    const handSymbols = isSplitHandCode(handCode)
+        ? getSplitHandSymbols(handCode)
+        : isSoftHandCode(handCode)
+        ? getSoftHandSymbols(handCode)
+        : getHardHandSymbols(handCode);
+
+    return createHand(
+        handSymbols.map(
+            (symbol): Card => ({
+                isBlueCard: false,
+                isGoldCard: true,
+                suit: getRandomSuit(),
+                symbol
+            })
+        )
+    );
+};
+
+export const handToHandCode = (hand: Hand): HandCode => {
+    const handSymbols = hand.cards.map((c) => symbolToSimpleSymbol(c.symbol));
+    const isSplitHand = handSymbols.length === 2 && handSymbols[0] === handSymbols[1];
+
+    return isSplitHand
+        ? (handSymbols.join(',') as HandCode)
+        : (getHandValidValues(hand).join('/') as HandCode);
 };
 
 export const isBlackJack = (hand: Hand) => {

@@ -21,7 +21,7 @@ import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
 import { canDouble, canSplit, canSurrender, isFinished } from './src/logic/hand';
-import { handToHandCode } from './src/logic/hand-code';
+import { handToHandCode } from './src/logic/hand';
 import { onBoardingSteps } from './src/logic/onboarding';
 import {
     createPlayer,
@@ -174,7 +174,7 @@ export default function App() {
     };
 
     const getProgress = (_trainingStatus: TrainingStatus) =>
-        Math.floor((_trainingStatus.stats.trained * 1000) / allTrainingPairsNumber) / 10;
+        Math.floor((_trainingStatus.attemptedHands * 1000) / allTrainingPairsNumber) / 10;
     const progress = getProgress(trainingStatus);
 
     useEffect(() => {
@@ -353,12 +353,13 @@ export default function App() {
             <StatusBar hidden={true} />
             <NavBar
                 areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
+                attemptedHands={trainingStatus.attemptedHands}
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
+                passedHands={trainingStatus.passedHands}
                 player={player}
                 progress={progress}
                 routeName={currentRoute}
-                trainedHandsStats={trainingStatus.stats}
             />
             <Stack.Navigator
                 initialRouteName={initialRouteName}
