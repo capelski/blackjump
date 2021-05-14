@@ -1,6 +1,6 @@
 import { CasinoRules } from './casino-rules';
 import { Dictionary } from './dictionary';
-import { HandRepresentation } from './hand';
+import { HandCode } from './hand';
 
 export enum BaseDecisions {
     hit = 'Hit',
@@ -30,9 +30,10 @@ export enum DynamicDecisions {
 
 export type HandDecisionSetGetters = Dictionary<
     (casinoRules: CasinoRules) => HandDecisionSet,
-    HandRepresentation
+    HandCode
 >;
 
+// TODO Use SimpleCardSymbol instead of numbers
 export interface HandDecisionSet {
     [key: number]: DynamicDecision;
     2: DynamicDecision;

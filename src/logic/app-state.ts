@@ -3,7 +3,7 @@ import {
     FailedHand,
     GameConfig,
     Hand,
-    HandRepresentation,
+    HandCode,
     Phases,
     Player,
     SimpleCardSymbol,
@@ -49,33 +49,33 @@ export const handleDealerTurn = (
 const getNextFailedHands = (
     currentFailedHands: FailedHand[],
     isHit: boolean,
-    handRepresentation: HandRepresentation,
+    handCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ): FailedHand[] => {
     return isHit
         ? currentFailedHands.filter(
               (failedHand) =>
                   failedHand.dealerSymbol !== currentDealerSymbol! ||
-                  failedHand.handRepresentation !== handRepresentation
+                  failedHand.handCode !== handCode
           )
         : currentFailedHands.some(
               (failedHand) =>
                   failedHand.dealerSymbol === currentDealerSymbol! &&
-                  failedHand.handRepresentation === handRepresentation
+                  failedHand.handCode === handCode
           )
         ? currentFailedHands
-        : [{ dealerSymbol: currentDealerSymbol!, handRepresentation }].concat(currentFailedHands);
+        : [{ dealerSymbol: currentDealerSymbol!, handCode }].concat(currentFailedHands);
 };
 
 const getNextTrainingProgress = (
     trainingProgress: TrainingProgress,
     isHit: boolean,
-    handRepresentation: HandRepresentation,
+    handCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ) => {
     const nextTrainingProgress: TrainingProgress = { ...trainingProgress };
 
-    nextTrainingProgress[handRepresentation][currentDealerSymbol] = isHit
+    nextTrainingProgress[handCode][currentDealerSymbol] = isHit
         ? TrainedHandStatus.passed
         : TrainedHandStatus.failed;
 
@@ -104,28 +104,28 @@ const getNextTrainedHandsStats = (
 export const getNextTrainingStatus = (
     trainingStatus: TrainingStatus,
     isHit: boolean,
-    handRepresentation: HandRepresentation,
+    handCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ): TrainingStatus => {
     const nextFailedHands = getNextFailedHands(
         trainingStatus.failed,
         isHit,
-        handRepresentation,
+        handCode,
         currentDealerSymbol!
     );
 
     // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
-    // will modify trainedHands[handRepresentation][currentDealerSymbol!]
+    // will modify trainedHands[handCode][currentDealerSymbol!]
     const nextTrainedHandsStats = getNextTrainedHandsStats(
         trainingStatus.stats,
         isHit,
-        trainingStatus.progress[handRepresentation][currentDealerSymbol!]
+        trainingStatus.progress[handCode][currentDealerSymbol!]
     );
 
     const nextTrainedHands = getNextTrainingProgress(
         trainingStatus.progress,
         isHit,
-        handRepresentation,
+        handCode,
         currentDealerSymbol!
     );
 

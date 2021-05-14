@@ -2,13 +2,14 @@ import { SimpleCardSymbol } from './card';
 import { CasinoRulesKeys } from './casino-rules';
 import { HandDecisionSet } from './decisions';
 import { Dictionary } from './dictionary';
-import { Hand, HandRepresentation } from './hand';
+import { Hand, HandCode } from './hand';
 
+// TODO Rename to DealerSymbols
 export type DealerCards = Dictionary<TrainedHandStatus, SimpleCardSymbol>;
 
 export interface FailedHand {
     dealerSymbol: SimpleCardSymbol;
-    handRepresentation: HandRepresentation;
+    handCode: HandCode;
 }
 
 export type TrainedHandsStats = {
@@ -23,21 +24,21 @@ export enum TrainedHandStatus {
 }
 
 export interface TrainingHand {
+    code: HandCode;
     decisionSet: HandDecisionSet;
     dependencies: CasinoRulesKeys[];
     level: number;
     name: string;
-    representation: HandRepresentation;
 }
 
-export type TrainingHands = Dictionary<TrainingHand, HandRepresentation>;
+export type TrainingHands = Dictionary<TrainingHand, HandCode>;
 
 export interface TrainingPair {
     dealer: Hand;
     player: Hand;
 }
 
-export type TrainingProgress = Dictionary<DealerCards, HandRepresentation>;
+export type TrainingProgress = Dictionary<DealerCards, HandCode>;
 
 export interface TrainingStatus {
     failed: FailedHand[]; // TODO Rename to failedHands

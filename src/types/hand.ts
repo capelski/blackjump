@@ -7,16 +7,7 @@ export interface Hand {
     values: number[];
 }
 
-export enum HandOutcome {
-    blackjack = 'Blackjack',
-    bust = 'Bust',
-    dealerWins = 'Dealer wins',
-    playerWins = 'Player wins',
-    push = 'Push'
-}
-
-// TODO Rename to TrainingHandRepresentation
-export enum HandRepresentation {
+export enum HandCode {
     Hard5 = '5',
     Hard6 = '6',
     Hard7 = '7',
@@ -51,4 +42,12 @@ export enum HandRepresentation {
     Split9s = '9,9',
     Split10s = '10,10',
     SplitAs = 'A,A'
+}
+
+export enum HandOutcome {
+    blackjack = 'Blackjack',
+    bust = 'Bust',
+    dealerWins = 'Dealer wins',
+    playerWins = 'Player wins',
+    push = 'Push'
 }

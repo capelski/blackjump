@@ -62,7 +62,7 @@ export const Table: React.FC<TableProps> = (props) => (
                                 ? undefined
                                 : () => {
                                       props.navigation.navigate(RouteNames.handDecisions, {
-                                          handRepresentation: props.player.lastActionHand!
+                                          handCode: props.player.lastActionHand!
                                       });
                                   }
                         }

@@ -1,4 +1,4 @@
-import { CasinoRules, CasinoRulesKeys, HandRepresentation, TrainingHands } from '../types';
+import { CasinoRules, CasinoRulesKeys, HandCode, TrainingHands } from '../types';
 import { getDefaultCasinoRules } from './game-config';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from './hand-decision-set';
 
@@ -9,250 +9,250 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         /*** Hard hands ***/
 
         /* Hard 4 => Only possible with 2,2. Covered in Split hands */
-        [HandRepresentation.Hard5]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard5](casinoRules),
+        [HandCode.Hard5]: {
+            code: HandCode.Hard5,
+            decisionSet: handDecisionSetGetters[HandCode.Hard5](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 5',
-            representation: HandRepresentation.Hard5
+            name: 'Hard 5'
         },
-        [HandRepresentation.Hard6]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard6](casinoRules),
+        [HandCode.Hard6]: {
+            code: HandCode.Hard6,
+            decisionSet: handDecisionSetGetters[HandCode.Hard6](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 6',
-            representation: HandRepresentation.Hard6
+            name: 'Hard 6'
         },
-        [HandRepresentation.Hard7]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard7](casinoRules),
+        [HandCode.Hard7]: {
+            code: HandCode.Hard7,
+            decisionSet: handDecisionSetGetters[HandCode.Hard7](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 7',
-            representation: HandRepresentation.Hard7
+            name: 'Hard 7'
         },
-        [HandRepresentation.Hard8]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard8](casinoRules),
+        [HandCode.Hard8]: {
+            code: HandCode.Hard8,
+            decisionSet: handDecisionSetGetters[HandCode.Hard8](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 8',
-            representation: HandRepresentation.Hard8
+            name: 'Hard 8'
         },
-        [HandRepresentation.Hard9]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard9](casinoRules),
+        [HandCode.Hard9]: {
+            code: HandCode.Hard9,
+            decisionSet: handDecisionSetGetters[HandCode.Hard9](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Hard 9',
-            representation: HandRepresentation.Hard9
+            name: 'Hard 9'
         },
-        [HandRepresentation.Hard10]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard10](casinoRules),
+        [HandCode.Hard10]: {
+            code: HandCode.Hard10,
+            decisionSet: handDecisionSetGetters[HandCode.Hard10](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Hard 10',
-            representation: HandRepresentation.Hard10
+            name: 'Hard 10'
         },
-        [HandRepresentation.Hard11]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard11](casinoRules),
+        [HandCode.Hard11]: {
+            code: HandCode.Hard11,
+            decisionSet: handDecisionSetGetters[HandCode.Hard11](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Hard 11',
-            representation: HandRepresentation.Hard11
+            name: 'Hard 11'
         },
-        [HandRepresentation.Hard12]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard12](casinoRules),
+        [HandCode.Hard12]: {
+            code: HandCode.Hard12,
+            decisionSet: handDecisionSetGetters[HandCode.Hard12](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 12',
-            representation: HandRepresentation.Hard12
+            name: 'Hard 12'
         },
-        [HandRepresentation.Hard13]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard13](casinoRules),
+        [HandCode.Hard13]: {
+            code: HandCode.Hard13,
+            decisionSet: handDecisionSetGetters[HandCode.Hard13](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 13',
-            representation: HandRepresentation.Hard13
+            name: 'Hard 13'
         },
-        [HandRepresentation.Hard14]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard14](casinoRules),
+        [HandCode.Hard14]: {
+            code: HandCode.Hard14,
+            decisionSet: handDecisionSetGetters[HandCode.Hard14](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 14',
-            representation: HandRepresentation.Hard14
+            name: 'Hard 14'
         },
-        [HandRepresentation.Hard15]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard15](casinoRules),
+        [HandCode.Hard15]: {
+            code: HandCode.Hard15,
+            decisionSet: handDecisionSetGetters[HandCode.Hard15](casinoRules),
             dependencies: [CasinoRulesKeys.surrender],
             level: -1,
-            name: 'Hard 15',
-            representation: HandRepresentation.Hard15
+            name: 'Hard 15'
         },
-        [HandRepresentation.Hard16]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard16](casinoRules),
+        [HandCode.Hard16]: {
+            code: HandCode.Hard16,
+            decisionSet: handDecisionSetGetters[HandCode.Hard16](casinoRules),
             dependencies: [CasinoRulesKeys.surrender],
             level: -1,
-            name: 'Hard 16',
-            representation: HandRepresentation.Hard16
+            name: 'Hard 16'
         },
-        [HandRepresentation.Hard17]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard17](casinoRules),
+        [HandCode.Hard17]: {
+            code: HandCode.Hard17,
+            decisionSet: handDecisionSetGetters[HandCode.Hard17](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 17',
-            representation: HandRepresentation.Hard17
+            name: 'Hard 17'
         },
-        [HandRepresentation.Hard18]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard18](casinoRules),
+        [HandCode.Hard18]: {
+            code: HandCode.Hard18,
+            decisionSet: handDecisionSetGetters[HandCode.Hard18](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 18',
-            representation: HandRepresentation.Hard18
+            name: 'Hard 18'
         },
-        [HandRepresentation.Hard19]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard19](casinoRules),
+        [HandCode.Hard19]: {
+            code: HandCode.Hard19,
+            decisionSet: handDecisionSetGetters[HandCode.Hard19](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 19',
-            representation: HandRepresentation.Hard19
+            name: 'Hard 19'
         },
-        [HandRepresentation.Hard20]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Hard20](casinoRules),
+        [HandCode.Hard20]: {
+            code: HandCode.Hard20,
+            decisionSet: handDecisionSetGetters[HandCode.Hard20](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Hard 20',
-            representation: HandRepresentation.Hard20
+            name: 'Hard 20'
         },
         /* Hard 21 => Maximum score! This hand doesn't need training */
 
         /*** Soft hands ***/
 
-        [HandRepresentation.Soft13]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft13](casinoRules),
+        [HandCode.Soft13]: {
+            code: HandCode.Soft13,
+            decisionSet: handDecisionSetGetters[HandCode.Soft13](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 13',
-            representation: HandRepresentation.Soft13
+            name: 'Soft 13'
         },
-        [HandRepresentation.Soft14]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft14](casinoRules),
+        [HandCode.Soft14]: {
+            code: HandCode.Soft14,
+            decisionSet: handDecisionSetGetters[HandCode.Soft14](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 14',
-            representation: HandRepresentation.Soft14
+            name: 'Soft 14'
         },
-        [HandRepresentation.Soft15]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft15](casinoRules),
+        [HandCode.Soft15]: {
+            code: HandCode.Soft15,
+            decisionSet: handDecisionSetGetters[HandCode.Soft15](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 15',
-            representation: HandRepresentation.Soft15
+            name: 'Soft 15'
         },
-        [HandRepresentation.Soft16]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft16](casinoRules),
+        [HandCode.Soft16]: {
+            code: HandCode.Soft16,
+            decisionSet: handDecisionSetGetters[HandCode.Soft16](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 16',
-            representation: HandRepresentation.Soft16
+            name: 'Soft 16'
         },
-        [HandRepresentation.Soft17]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft17](casinoRules),
+        [HandCode.Soft17]: {
+            code: HandCode.Soft17,
+            decisionSet: handDecisionSetGetters[HandCode.Soft17](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 17',
-            representation: HandRepresentation.Soft17
+            name: 'Soft 17'
         },
-        [HandRepresentation.Soft18]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft18](casinoRules),
+        [HandCode.Soft18]: {
+            code: HandCode.Soft18,
+            decisionSet: handDecisionSetGetters[HandCode.Soft18](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: 'Soft 18',
-            representation: HandRepresentation.Soft18
+            name: 'Soft 18'
         },
-        [HandRepresentation.Soft19]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft19](casinoRules),
+        [HandCode.Soft19]: {
+            code: HandCode.Soft19,
+            decisionSet: handDecisionSetGetters[HandCode.Soft19](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Soft 19',
-            representation: HandRepresentation.Soft19
+            name: 'Soft 19'
         },
-        [HandRepresentation.Soft20]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Soft20](casinoRules),
+        [HandCode.Soft20]: {
+            code: HandCode.Soft20,
+            decisionSet: handDecisionSetGetters[HandCode.Soft20](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'Soft 20',
-            representation: HandRepresentation.Soft20
+            name: 'Soft 20'
         },
         /* Soft 21 => BlackJack! This hand doesn't need training */
 
         /*** Split hands ***/
-        [HandRepresentation.Split2s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split2s](casinoRules),
+        [HandCode.Split2s]: {
+            code: HandCode.Split2s,
+            decisionSet: handDecisionSetGetters[HandCode.Split2s](casinoRules),
             dependencies: [CasinoRulesKeys.doubleAfterSplit],
             level: -1,
-            name: '2,2',
-            representation: HandRepresentation.Split2s
+            name: '2,2'
         },
-        [HandRepresentation.Split3s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split3s](casinoRules),
+        [HandCode.Split3s]: {
+            code: HandCode.Split3s,
+            decisionSet: handDecisionSetGetters[HandCode.Split3s](casinoRules),
             dependencies: [CasinoRulesKeys.doubleAfterSplit],
             level: -1,
-            name: '3,3',
-            representation: HandRepresentation.Split3s
+            name: '3,3'
         },
-        [HandRepresentation.Split4s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split4s](casinoRules),
+        [HandCode.Split4s]: {
+            code: HandCode.Split4s,
+            decisionSet: handDecisionSetGetters[HandCode.Split4s](casinoRules),
             dependencies: [CasinoRulesKeys.doubleAfterSplit],
             level: -1,
-            name: '4,4',
-            representation: HandRepresentation.Split4s
+            name: '4,4'
         },
-        [HandRepresentation.Split5s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split5s](casinoRules),
+        [HandCode.Split5s]: {
+            code: HandCode.Split5s,
+            decisionSet: handDecisionSetGetters[HandCode.Split5s](casinoRules),
             dependencies: [CasinoRulesKeys.doubling],
             level: -1,
-            name: '5,5',
-            representation: HandRepresentation.Split5s
+            name: '5,5'
         },
-        [HandRepresentation.Split6s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split6s](casinoRules),
+        [HandCode.Split6s]: {
+            code: HandCode.Split6s,
+            decisionSet: handDecisionSetGetters[HandCode.Split6s](casinoRules),
             dependencies: [CasinoRulesKeys.doubleAfterSplit],
             level: -1,
-            name: '6,6',
-            representation: HandRepresentation.Split6s
+            name: '6,6'
         },
-        [HandRepresentation.Split7s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split7s](casinoRules),
+        [HandCode.Split7s]: {
+            code: HandCode.Split7s,
+            decisionSet: handDecisionSetGetters[HandCode.Split7s](casinoRules),
             dependencies: [],
             level: -1,
-            name: '7,7',
-            representation: HandRepresentation.Split7s
+            name: '7,7'
         },
-        [HandRepresentation.Split8s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split8s](casinoRules),
+        [HandCode.Split8s]: {
+            code: HandCode.Split8s,
+            decisionSet: handDecisionSetGetters[HandCode.Split8s](casinoRules),
             dependencies: [],
             level: -1,
-            name: '8,8',
-            representation: HandRepresentation.Split8s
+            name: '8,8'
         },
-        [HandRepresentation.Split9s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split9s](casinoRules),
+        [HandCode.Split9s]: {
+            code: HandCode.Split9s,
+            decisionSet: handDecisionSetGetters[HandCode.Split9s](casinoRules),
             dependencies: [],
             level: -1,
-            name: '9,9',
-            representation: HandRepresentation.Split9s
+            name: '9,9'
         },
-        [HandRepresentation.Split10s]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.Split10s](casinoRules),
+        [HandCode.Split10s]: {
+            code: HandCode.Split10s,
+            decisionSet: handDecisionSetGetters[HandCode.Split10s](casinoRules),
             dependencies: [],
             level: -1,
-            name: '10,10',
-            representation: HandRepresentation.Split10s
+            name: '10,10'
         },
-        [HandRepresentation.SplitAs]: {
-            decisionSet: handDecisionSetGetters[HandRepresentation.SplitAs](casinoRules),
+        [HandCode.SplitAs]: {
+            code: HandCode.SplitAs,
+            decisionSet: handDecisionSetGetters[HandCode.SplitAs](casinoRules),
             dependencies: [],
             level: -1,
-            name: 'A,A',
-            representation: HandRepresentation.SplitAs
+            name: 'A,A'
         }
     };
 

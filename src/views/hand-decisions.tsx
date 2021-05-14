@@ -16,9 +16,9 @@ type HandDecisionsProps = {
 export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.casinoRules);
 
-    const handRepresentation = props.route.params['handRepresentation'];
-    const trainingHand = props.trainingHands[handRepresentation];
-    const handDecisionSet = handDecisionSetGetters[handRepresentation](casinoRules);
+    const handCode = props.route.params['handCode'];
+    const trainingHand = props.trainingHands[handCode];
+    const handDecisionSet = handDecisionSetGetters[handCode](casinoRules);
 
     return (
         <ScrollView

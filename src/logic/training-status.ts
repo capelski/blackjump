@@ -1,7 +1,7 @@
 import {
     DealerCards,
     FailedHand,
-    HandRepresentation,
+    HandCode,
     TrainedHandsStats,
     TrainedHandStatus,
     TrainingProgress,
@@ -13,7 +13,7 @@ import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pair'
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     failed: [],
     isCompleted: false,
-    progress: Object.values(HandRepresentation)
+    progress: Object.values(HandCode)
         .map((playerHand) => ({
             [playerHand]: allPossibleDealerCards.reduce<DealerCards>(
                 (reducedDealerCards, dealerCard) => ({
@@ -42,8 +42,8 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
         passed: number;
         trained: number;
     }>(
-        (reduced, handRepresentation) => {
-            const dealerCards = trainingProgress[handRepresentation];
+        (reduced, handCode) => {
+            const dealerCards = trainingProgress[handCode];
             return getObjectKeys(dealerCards).reduce((handReduced, dealerCard) => {
                 const handStatus = dealerCards[dealerCard];
                 return {
@@ -52,7 +52,7 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
                             ? handReduced.failedHands.concat([
                                   {
                                       dealerSymbol: dealerCard,
-                                      handRepresentation
+                                      handCode: handCode
                                   }
                               ])
                             : handReduced.failedHands,

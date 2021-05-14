@@ -1,7 +1,7 @@
 import {
     HandDecisionSet,
     BaseDecisions,
-    HandRepresentation,
+    HandCode,
     CasinoRulesKeys,
     Doubling,
     DynamicDecisions
@@ -64,11 +64,11 @@ export const getHandDecisionSetLevel = (decisionSet: HandDecisionSet) =>
     ).level;
 
 export const handDecisionSetGetters: HandDecisionSetGetters = {
-    [HandRepresentation.Hard5]: () => alwaysHit,
-    [HandRepresentation.Hard6]: () => alwaysHit,
-    [HandRepresentation.Hard7]: () => alwaysHit,
-    [HandRepresentation.Hard8]: () => alwaysHit,
-    [HandRepresentation.Hard9]: (casinoRules) => ({
+    [HandCode.Hard5]: () => alwaysHit,
+    [HandCode.Hard6]: () => alwaysHit,
+    [HandCode.Hard7]: () => alwaysHit,
+    [HandCode.Hard8]: () => alwaysHit,
+    [HandCode.Hard9]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
@@ -92,7 +92,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard10]: (casinoRules) => ({
+    [HandCode.Hard10]: (casinoRules) => ({
         2:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
                 ? DynamicDecisions.double_hit
@@ -128,7 +128,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard11]: (casinoRules) => ({
+    [HandCode.Hard11]: (casinoRules) => ({
         2:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
                 ? DynamicDecisions.double_hit
@@ -167,7 +167,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
                 : BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard12]: () => ({
+    [HandCode.Hard12]: () => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4: BaseDecisions.stand,
@@ -179,7 +179,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard13]: () => ({
+    [HandCode.Hard13]: () => ({
         2: BaseDecisions.stand,
         3: BaseDecisions.stand,
         4: BaseDecisions.stand,
@@ -191,7 +191,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard14]: () => ({
+    [HandCode.Hard14]: () => ({
         2: BaseDecisions.stand,
         3: BaseDecisions.stand,
         4: BaseDecisions.stand,
@@ -203,7 +203,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard15]: (casinoRules) => ({
+    [HandCode.Hard15]: (casinoRules) => ({
         2: BaseDecisions.stand,
         3: BaseDecisions.stand,
         4: BaseDecisions.stand,
@@ -217,7 +217,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
             : BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Hard16]: (casinoRules) => ({
+    [HandCode.Hard16]: (casinoRules) => ({
         2: BaseDecisions.stand,
         3: BaseDecisions.stand,
         4: BaseDecisions.stand,
@@ -235,11 +235,11 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
             ? DynamicDecisions.surrender_hit
             : BaseDecisions.hit
     }),
-    [HandRepresentation.Hard17]: () => alwaysStand,
-    [HandRepresentation.Hard18]: () => alwaysStand,
-    [HandRepresentation.Hard19]: () => alwaysStand,
-    [HandRepresentation.Hard20]: () => alwaysStand,
-    [HandRepresentation.Soft13]: (casinoRules) => ({
+    [HandCode.Hard17]: () => alwaysStand,
+    [HandCode.Hard18]: () => alwaysStand,
+    [HandCode.Hard19]: () => alwaysStand,
+    [HandCode.Hard20]: () => alwaysStand,
+    [HandCode.Soft13]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4: BaseDecisions.hit,
@@ -257,7 +257,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft14]: (casinoRules) => ({
+    [HandCode.Soft14]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4: BaseDecisions.hit,
@@ -275,7 +275,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft15]: (casinoRules) => ({
+    [HandCode.Soft15]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4:
@@ -296,7 +296,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft16]: (casinoRules) => ({
+    [HandCode.Soft16]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4:
@@ -317,7 +317,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft17]: (casinoRules) => ({
+    [HandCode.Soft17]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
@@ -341,7 +341,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft18]: (casinoRules) => ({
+    [HandCode.Soft18]: (casinoRules) => ({
         2: BaseDecisions.stand,
         3:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
@@ -365,9 +365,9 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Soft19]: () => alwaysStand,
-    [HandRepresentation.Soft20]: () => alwaysStand,
-    [HandRepresentation.Split2s]: (casinoRules) => ({
+    [HandCode.Soft19]: () => alwaysStand,
+    [HandCode.Soft20]: () => alwaysStand,
+    [HandCode.Split2s]: (casinoRules) => ({
         2: casinoRules[CasinoRulesKeys.doubleAfterSplit] ? BaseDecisions.split : BaseDecisions.hit,
         3: casinoRules[CasinoRulesKeys.doubleAfterSplit] ? BaseDecisions.split : BaseDecisions.hit,
         4: BaseDecisions.split,
@@ -379,7 +379,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split3s]: (casinoRules) => ({
+    [HandCode.Split3s]: (casinoRules) => ({
         2: casinoRules[CasinoRulesKeys.doubleAfterSplit] ? BaseDecisions.split : BaseDecisions.hit,
         3: casinoRules[CasinoRulesKeys.doubleAfterSplit] ? BaseDecisions.split : BaseDecisions.hit,
         4: BaseDecisions.split,
@@ -391,7 +391,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split4s]: (casinoRules) => ({
+    [HandCode.Split4s]: (casinoRules) => ({
         2: BaseDecisions.hit,
         3: BaseDecisions.hit,
         4: BaseDecisions.hit,
@@ -403,7 +403,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split5s]: (casinoRules) => ({
+    [HandCode.Split5s]: (casinoRules) => ({
         2:
             casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
                 ? DynamicDecisions.double_hit
@@ -439,7 +439,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split6s]: (casinoRules) => ({
+    [HandCode.Split6s]: (casinoRules) => ({
         2: casinoRules[CasinoRulesKeys.doubleAfterSplit] ? BaseDecisions.split : BaseDecisions.hit,
         3: BaseDecisions.split,
         4: BaseDecisions.split,
@@ -451,7 +451,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split7s]: () => ({
+    [HandCode.Split7s]: () => ({
         2: BaseDecisions.split,
         3: BaseDecisions.split,
         4: BaseDecisions.split,
@@ -463,8 +463,8 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.hit,
         11: BaseDecisions.hit
     }),
-    [HandRepresentation.Split8s]: () => alwaysSplit,
-    [HandRepresentation.Split9s]: () => ({
+    [HandCode.Split8s]: () => alwaysSplit,
+    [HandCode.Split9s]: () => ({
         2: BaseDecisions.split,
         3: BaseDecisions.split,
         4: BaseDecisions.split,
@@ -476,6 +476,6 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         10: BaseDecisions.stand,
         11: BaseDecisions.stand
     }),
-    [HandRepresentation.Split10s]: () => alwaysStand,
-    [HandRepresentation.SplitAs]: () => alwaysSplit
+    [HandCode.Split10s]: () => alwaysStand,
+    [HandCode.SplitAs]: () => alwaysSplit
 };

@@ -7,7 +7,7 @@ import { getSpecificTrainingPair } from '../logic/training-pair';
 import {
     AppNavigation,
     Hand,
-    HandRepresentation,
+    HandCode,
     Phases,
     RouteNames,
     TrainingHands as ITrainingHands,
@@ -25,9 +25,7 @@ type TrainingHandsProps = {
 };
 
 export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
-    const [unfoldedHand, setUnfoldedHand] = useState<HandRepresentation | undefined>(
-        HandRepresentation.Hard5
-    );
+    const [unfoldedHand, setUnfoldedHand] = useState<HandCode | undefined>(HandCode.Hard5);
 
     return (
         <React.Fragment>
@@ -50,23 +48,21 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                {getObjectKeys(props.trainingProgress).map((handRepresentation) => {
-                    const dealerCards = props.trainingProgress[handRepresentation];
-                    const handName = props.trainingHands[handRepresentation].name;
+                {getObjectKeys(props.trainingProgress).map((handCode) => {
+                    const dealerCards = props.trainingProgress[handCode];
+                    const handName = props.trainingHands[handCode].name;
 
                     return (
                         <OnBoardingSection
-                            isHighlighted={unfoldedHand === handRepresentation}
-                            key={handRepresentation}
+                            isHighlighted={unfoldedHand === handCode}
+                            key={handCode}
                             onBoardingStep={props.onBoardingStep}
                             style={{ paddingVertical: 8, paddingHorizontal: 16, width: '100%' }}
                         >
                             <TouchableOpacity
                                 onPress={() => {
                                     setUnfoldedHand(
-                                        unfoldedHand !== handRepresentation
-                                            ? handRepresentation
-                                            : undefined
+                                        unfoldedHand !== handCode ? handCode : undefined
                                     );
                                 }}
                                 style={{ width: '100%' }}
@@ -82,7 +78,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                     {handName}
                                 </Text>
                             </TouchableOpacity>
-                            {unfoldedHand && unfoldedHand === handRepresentation && (
+                            {unfoldedHand && unfoldedHand === handCode && (
                                 <React.Fragment>
                                     <View
                                         style={{
@@ -113,7 +109,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                                       Phases.finished
                                                                   ) {
                                                                       const trainingPair = getSpecificTrainingPair(
-                                                                          handRepresentation,
+                                                                          handCode,
                                                                           dealerCard
                                                                       );
                                                                       props.startTrainingRound(
@@ -156,7 +152,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                       props.navigation.navigate(
                                                           RouteNames.handDecisions,
                                                           {
-                                                              handRepresentation
+                                                              handCode
                                                           }
                                                       );
                                                   }

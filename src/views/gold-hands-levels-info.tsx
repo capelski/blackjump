@@ -13,7 +13,7 @@ import {
     Dictionary,
     GameConfig,
     Hand,
-    HandRepresentation,
+    HandCode,
     SimpleCardSymbol
 } from '../types';
 
@@ -106,7 +106,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     skipAnimation={true}
                 />
                 <HandDecisionsTable
-                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Hard8](casinoRules)}
+                    handDecisionSet={handDecisionSetGetters[HandCode.Hard8](casinoRules)}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
@@ -122,9 +122,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     skipAnimation={true}
                 />
                 <HandDecisionsTable
-                    handDecisionSet={handDecisionSetGetters[HandRepresentation.Split9s](
-                        casinoRules
-                    )}
+                    handDecisionSet={handDecisionSetGetters[HandCode.Split9s](casinoRules)}
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>

@@ -46,7 +46,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                     </View>
                 ) : (
                     Object.values(props.failedHands).map((failedHand) => {
-                        const handName = props.trainingHands[failedHand.handRepresentation].name;
+                        const handName = props.trainingHands[failedHand.handCode].name;
 
                         return (
                             <View key={handName} style={{ marginBottom: 16, width: '100%' }}>
@@ -106,7 +106,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                             onPress={() => {
                                                 if (props.phase === Phases.finished) {
                                                     const trainingPair = getSpecificTrainingPair(
-                                                        failedHand.handRepresentation,
+                                                        failedHand.handCode,
                                                         failedHand.dealerSymbol
                                                     );
                                                     props.startTrainingRound(

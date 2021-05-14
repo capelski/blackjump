@@ -21,7 +21,7 @@ import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
 import { canDouble, canSplit, canSurrender, isFinished } from './src/logic/hand';
-import { handToHandRepresentation } from './src/logic/hand-representation';
+import { handToHandCode } from './src/logic/hand-code';
 import { onBoardingSteps } from './src/logic/onboarding';
 import {
     createPlayer,
@@ -43,7 +43,7 @@ import {
     BaseDecisions,
     DecisionEvaluation,
     Hand,
-    HandRepresentation,
+    HandCode,
     initialRouteName,
     Phases,
     Player,
@@ -243,28 +243,28 @@ export default function App() {
 
         setDecisionEvaluation(nextDecisionEvaluation);
 
-        const handRepresentation = handToHandRepresentation(currentHand);
+        const handCode = handToHandCode(currentHand);
         let nextTrainingStatus = getNextTrainingStatus(
             trainingStatus,
             nextDecisionEvaluation.isHit,
-            handRepresentation,
+            handCode,
             currentDealerSymbol!
         );
 
-        if (handRepresentation === HandRepresentation.Split5s) {
+        if (handCode === HandCode.Split5s) {
             // A 5,5 must also set the corresponding state for Hard 10
             nextTrainingStatus = getNextTrainingStatus(
                 nextTrainingStatus,
                 nextDecisionEvaluation.isHit,
-                HandRepresentation.Hard10,
+                HandCode.Hard10,
                 currentDealerSymbol!
             );
-        } else if (handRepresentation === HandRepresentation.Split10s) {
+        } else if (handCode === HandCode.Split10s) {
             // A 10,10 must also set the corresponding state for Hard 20
             nextTrainingStatus = getNextTrainingStatus(
                 nextTrainingStatus,
                 nextDecisionEvaluation.isHit,
-                HandRepresentation.Hard20,
+                HandCode.Hard20,
                 currentDealerSymbol!
             );
         }
