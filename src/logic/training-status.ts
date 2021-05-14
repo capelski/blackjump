@@ -27,7 +27,7 @@ export const getAreGoldHandsBlockingProgress = (
 
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     attemptedHands: 0,
-    failedHands: [],
+    failedTrainingPairs: [],
     isCompleted: false,
     passedHands: 0,
     progress: Object.values(HandCode).reduce<TrainingProgress>(
@@ -74,15 +74,15 @@ const reduceTrainingPairProgress = (
             reducedTrainingStatus.attemptedHands +
             (trainingPairStatus !== TrainingPairStatus.untrained ? 1 : 0),
         isCompleted: reducedTrainingStatus.isCompleted,
-        failedHands:
+        failedTrainingPairs:
             trainingPairStatus === TrainingPairStatus.failed
-                ? reducedTrainingStatus.failedHands.concat([
+                ? reducedTrainingStatus.failedTrainingPairs.concat([
                       {
                           dealerSymbol,
                           handCode
                       }
                   ])
-                : reducedTrainingStatus.failedHands,
+                : reducedTrainingStatus.failedTrainingPairs,
         passedHands:
             reducedTrainingStatus.passedHands +
             (trainingPairStatus === TrainingPairStatus.passed ? 1 : 0),
@@ -96,7 +96,7 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
             reduceTrainingHandProgress(handCode, trainingProgress[handCode], reducedTrainingStatus),
         {
             attemptedHands: 0,
-            failedHands: [],
+            failedTrainingPairs: [],
             isCompleted: false,
             passedHands: 0,
             progress: trainingProgress

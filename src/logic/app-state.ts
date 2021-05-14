@@ -1,12 +1,12 @@
 import { updatePlayerEarnings } from '../async-storage';
 import {
-    FailedHand,
     GameConfig,
     Hand,
     HandCode,
     Phases,
     Player,
     SimpleCardSymbol,
+    TrainingPairRepresentation,
     TrainingPairStatus,
     TrainingStatus
 } from '../types';
@@ -44,25 +44,25 @@ export const handleDealerTurn = (
     }
 };
 
-const getNextFailedHands = (
-    currentFailedHands: FailedHand[],
+const getNextFailedTrainingPairs = (
+    currentFailedTrainingPairs: TrainingPairRepresentation[],
     isHit: boolean,
     handCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
-): FailedHand[] => {
+): TrainingPairRepresentation[] => {
     return isHit
-        ? currentFailedHands.filter(
-              (failedHand) =>
-                  failedHand.dealerSymbol !== currentDealerSymbol ||
-                  failedHand.handCode !== handCode
+        ? currentFailedTrainingPairs.filter(
+              (failedTrainingPair) =>
+                  failedTrainingPair.dealerSymbol !== currentDealerSymbol ||
+                  failedTrainingPair.handCode !== handCode
           )
-        : currentFailedHands.some(
-              (failedHand) =>
-                  failedHand.dealerSymbol === currentDealerSymbol &&
-                  failedHand.handCode === handCode
+        : currentFailedTrainingPairs.some(
+              (failedTrainingPair) =>
+                  failedTrainingPair.dealerSymbol === currentDealerSymbol &&
+                  failedTrainingPair.handCode === handCode
           )
-        ? currentFailedHands
-        : [{ dealerSymbol: currentDealerSymbol, handCode }].concat(currentFailedHands);
+        ? currentFailedTrainingPairs
+        : [{ dealerSymbol: currentDealerSymbol, handCode }].concat(currentFailedTrainingPairs);
 };
 
 export const getNextTrainingStatus = (
@@ -83,8 +83,8 @@ export const getNextTrainingStatus = (
         trainingStatus.attemptedHands +
         (currentHandTrainingStatus === TrainingPairStatus.untrained ? 1 : 0);
 
-    const nextFailedHands = getNextFailedHands(
-        trainingStatus.failedHands,
+    const nextFailedTrainingPairs = getNextFailedTrainingPairs(
+        trainingStatus.failedTrainingPairs,
         isHit,
         currentHandCode,
         currentDealerSymbol
@@ -100,7 +100,7 @@ export const getNextTrainingStatus = (
 
     return {
         attemptedHands: nextAttemptedHands,
-        failedHands: nextFailedHands,
+        failedTrainingPairs: nextFailedTrainingPairs,
         isCompleted: isTrainingCompleted(nextPassedHands),
         passedHands: nextPassedHands,
         progress: trainingStatus.progress

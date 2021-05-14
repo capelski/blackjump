@@ -1,8 +1,14 @@
-import { Hand } from './hand';
+import { SimpleCardSymbol } from './card';
+import { Hand, HandCode } from './hand';
 
 export interface TrainingPair {
     dealer: Hand;
     player: Hand;
+}
+
+export interface TrainingPairRepresentation {
+    dealerSymbol: SimpleCardSymbol;
+    handCode: HandCode;
 }
 
 export enum TrainingPairStatus {

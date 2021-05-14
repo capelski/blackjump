@@ -4,10 +4,17 @@ import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
 import { getSpecificTrainingPair } from '../logic/training-pair';
-import { AppNavigation, FailedHand, Hand, Phases, RouteNames, TrainingHands } from '../types';
+import {
+    AppNavigation,
+    Hand,
+    Phases,
+    RouteNames,
+    TrainingHands,
+    TrainingPairRepresentation
+} from '../types';
 
 type FailedHandsProps = {
-    failedHands: FailedHand[];
+    failedTrainingPairs: TrainingPairRepresentation[];
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
@@ -38,15 +45,15 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                 }}
                 contentContainerStyle={{ flex: 1 }}
             >
-                {props.failedHands.length === 0 ? (
+                {props.failedTrainingPairs.length === 0 ? (
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
                         <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                             No failed hands so far. Nice job!
                         </Text>
                     </View>
                 ) : (
-                    Object.values(props.failedHands).map((failedHand) => {
-                        const handName = props.trainingHands[failedHand.handCode].name;
+                    Object.values(props.failedTrainingPairs).map((failedTrainingPair) => {
+                        const handName = props.trainingHands[failedTrainingPair.handCode].name;
 
                         return (
                             <View key={handName} style={{ marginBottom: 16, width: '100%' }}>
@@ -93,7 +100,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            {failedHand.dealerSymbol}
+                                            {failedTrainingPair.dealerSymbol}
                                         </Text>
                                     </View>
                                     <View
@@ -106,8 +113,8 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                                             onPress={() => {
                                                 if (props.phase === Phases.finished) {
                                                     const trainingPair = getSpecificTrainingPair(
-                                                        failedHand.handCode,
-                                                        failedHand.dealerSymbol
+                                                        failedTrainingPair.handCode,
+                                                        failedTrainingPair.dealerSymbol
                                                     );
                                                     props.startTrainingRound(
                                                         trainingPair.player,

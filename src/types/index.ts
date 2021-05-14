@@ -27,5 +27,5 @@ export { OnBoardingSections, OnBoardingStep } from './onboarding';
 export { Phases } from './phases';
 export { Player } from './player';
 export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
-export { TrainingPair, TrainingPairStatus } from './training-pair';
-export { FailedHand, TrainingProgress, TrainingStatus } from './training-status';
+export { TrainingPair, TrainingPairRepresentation, TrainingPairStatus } from './training-pair';
+export { TrainingProgress, TrainingStatus } from './training-status';
