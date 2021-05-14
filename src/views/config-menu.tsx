@@ -71,8 +71,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         nextUseGoldHands?: boolean;
     }) => {
         setAreGoldHandsBlockingProgress(
-            props.progress < 100 &&
-                isSomeLevelSelected((options && options.nextGoldHandsLevels) || goldHandsLevels) &&
+            isSomeLevelSelected((options && options.nextGoldHandsLevels) || goldHandsLevels) &&
                 getAreGoldHandsBlockingProgress(
                     {
                         casinoRules: (options && options.nextCasinoRules) || casinoRules,
@@ -87,7 +86,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 : useGoldHands
                     },
                     (options && options.nextRelevantHands) || relevantHands,
-                    props.trainingHands.trained
+                    props.trainingHands.trained,
+                    props.progress
                 )
         );
     };

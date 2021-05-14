@@ -31,6 +31,5 @@ export {
     TrainedHandsStats,
     TrainedHandStatus,
     TrainingHands,
-    TrainingPair,
-    TrainingSet
+    TrainingPair
 } from './training';

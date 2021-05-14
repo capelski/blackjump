@@ -41,8 +41,3 @@ export interface TrainingPair {
     dealer: Hand;
     player: Hand;
 }
-
-export interface TrainingSet {
-    dealerHands: SimpleCardSymbol[];
-    playerHand: RelevantHand;
-}

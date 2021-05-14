@@ -125,9 +125,16 @@ export default function App() {
             }
 
             if (results[3]) {
-                setTrainingHands(retrieveTrainingHands(results[3]));
+                const nextTrainingHands = retrieveTrainingHands(results[3]);
+
+                setTrainingHands(nextTrainingHands);
                 setAreGoldHandsBlockingProgress(
-                    getAreGoldHandsBlockingProgress(results[0], nextRelevantHands, results[3])
+                    getAreGoldHandsBlockingProgress(
+                        results[0],
+                        nextRelevantHands,
+                        results[3],
+                        getProgress(nextTrainingHands)
+                    )
                 );
             }
 
@@ -165,7 +172,9 @@ export default function App() {
         ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
     };
 
-    const progress = Math.floor((trainingHands.stats.trained * 1000) / allTrainingPairsNumber) / 10;
+    const getProgress = (_trainingHands: TrainingHands) =>
+        Math.floor((_trainingHands.stats.trained * 1000) / allTrainingPairsNumber) / 10;
+    const progress = getProgress(trainingHands);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -209,6 +218,7 @@ export default function App() {
                 player,
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
+                relevantHands,
                 trainingHands.trained
             );
             setPlayer({ ...player });
@@ -274,7 +284,12 @@ export default function App() {
         }
 
         setAreGoldHandsBlockingProgress(
-            getAreGoldHandsBlockingProgress(gameConfig, relevantHands, nextTrainingHands.trained)
+            getAreGoldHandsBlockingProgress(
+                gameConfig,
+                relevantHands,
+                nextTrainingHands.trained,
+                getProgress(nextTrainingHands)
+            )
         );
     };
 
@@ -292,6 +307,7 @@ export default function App() {
             player,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
+            relevantHands,
             trainingHands.trained
         );
 
@@ -314,6 +330,7 @@ export default function App() {
             player,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
+            relevantHands,
             trainingHands.trained
         );
 
@@ -368,7 +385,8 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
                                         nextRelevantHands,
-                                        trainingHands.trained
+                                        trainingHands.trained,
+                                        progress
                                     )
                                 );
                                 setGameConfig(_gameConfig);
@@ -380,7 +398,8 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
                                         relevantHands,
-                                        _trainingHands.trained
+                                        _trainingHands.trained,
+                                        getProgress(_trainingHands)
                                     )
                                 );
                                 setPlayer({ ...player, cash: 0 });
