@@ -14,14 +14,13 @@ export {
     DynamicConditions,
     DynamicDecision,
     DynamicDecisions,
-    HandDecisionSet,
-    HandDecisionSetGetters,
     PlayerDecision,
     PlayerDecisions
 } from './decisions';
 export { Dictionary, NumericDictionary } from './dictionary';
 export { GameConfig, GoldHandsLevels } from './game-config';
 export { Hand, HandCode, HandOutcome } from './hand';
+export { HandDecisionSet, HandDecisionSetGetters } from './hand-decision-set';
 export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';
 export { OnBoardingSections, OnBoardingStep } from './onboarding';
 export { Phases } from './phases';
