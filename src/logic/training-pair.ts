@@ -6,9 +6,9 @@ import {
     Hand,
     HandRepresentation,
     SimpleCardSymbol,
-    TrainedHands,
     TrainedHandStatus,
     TrainingHands,
+    TrainingProgress,
     TrainingPair
 } from '../types';
 import { getObjectKeys, getRandomItem } from '../utils';
@@ -48,12 +48,12 @@ const getActiveTrainingHands = (trainingHands: TrainingHands, goldHandsLevels: G
 export const getAreGoldHandsBlockingProgress = (
     gameConfig: GameConfig,
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands,
+    trainingProgress: TrainingProgress,
     progress: number
 ) =>
     gameConfig.useGoldHands
         ? progress < 100 &&
-          getUntrainedTrainingHands(trainingHands, trainedHands, gameConfig.goldHandsLevels)
+          getUntrainedTrainingHands(trainingHands, trainingProgress, gameConfig.goldHandsLevels)
               .length === 0
         : false;
 
@@ -65,7 +65,7 @@ export const getCardForUntrainedHand = (
     playerHand: Hand,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands
+    trainingProgress: TrainingProgress
 ): Card => {
     const isPlayerHandSoft = playerHand.values.length > 1;
     const playerHandValues = getCardsValues(playerHand.cards);
@@ -73,7 +73,7 @@ export const getCardForUntrainedHand = (
     const valuesToUntrainedHands = Object.values(trainingHands)
         .map((trainingHand) => {
             const isHandUntrainedForDealerCard =
-                trainedHands[trainingHand.representation][dealerSymbol] ===
+                trainingProgress[trainingHand.representation][dealerSymbol] ===
                 TrainedHandStatus.untrained;
 
             let valueToReachThisHand: number;
@@ -142,12 +142,12 @@ export const getGoldHandsNumber = (
 
 export const getRandomTrainingPair = (
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands,
+    trainingProgress: TrainingProgress,
     goldHandsLevels: GoldHandsLevels
 ): TrainingPair => {
     const untrainedTrainingHands = getUntrainedTrainingHands(
         trainingHands,
-        trainedHands,
+        trainingProgress,
         goldHandsLevels
     );
 
@@ -156,12 +156,12 @@ export const getRandomTrainingPair = (
             ? getRandomItem(untrainedTrainingHands)
             : getRandomItem(getActiveTrainingHands(trainingHands, goldHandsLevels)); // In case all hands have been passed
 
-    const dealerCards = trainedHands[randomTrainingHand.representation];
-    const untrainedDealerHands = getUntrainedDealerCards(dealerCards);
+    const dealerCards = trainingProgress[randomTrainingHand.representation];
+    const untrainedDealerCards = getUntrainedDealerCards(dealerCards);
 
     const randomDealerCard =
-        untrainedDealerHands.length > 0
-            ? getRandomItem(untrainedDealerHands)
+        untrainedDealerCards.length > 0
+            ? getRandomItem(untrainedDealerCards)
             : getRandomItem(getObjectKeys(dealerCards)); // In case all hands have been passed
 
     return {
@@ -201,10 +201,10 @@ const getUntrainedDealerCards = (dealerCards: DealerCards) =>
 
 const getUntrainedTrainingHands = (
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands,
+    trainingProgress: TrainingProgress,
     goldHandsLevels: GoldHandsLevels
 ) =>
     getActiveTrainingHands(trainingHands, goldHandsLevels).filter(
         (trainingHand) =>
-            getUntrainedDealerCards(trainedHands[trainingHand.representation]).length > 0
+            getUntrainedDealerCards(trainingProgress[trainingHand.representation]).length > 0
     );

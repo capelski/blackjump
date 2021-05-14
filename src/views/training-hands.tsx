@@ -10,8 +10,8 @@ import {
     HandRepresentation,
     Phases,
     RouteNames,
-    TrainedHands,
-    TrainingHands as ITrainingHands
+    TrainingHands as ITrainingHands,
+    TrainingProgress
 } from '../types';
 import { getObjectKeys } from '../utils';
 
@@ -20,8 +20,8 @@ type TrainingHandsProps = {
     onBoardingStep: number;
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-    trainedHands: TrainedHands;
     trainingHands: ITrainingHands;
+    trainingProgress: TrainingProgress;
 };
 
 export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
@@ -50,8 +50,8 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                {getObjectKeys(props.trainedHands).map((handRepresentation) => {
-                    const dealerHands = props.trainedHands[handRepresentation];
+                {getObjectKeys(props.trainingProgress).map((handRepresentation) => {
+                    const dealerCards = props.trainingProgress[handRepresentation];
                     const handName = props.trainingHands[handRepresentation].name;
 
                     return (
@@ -93,17 +93,17 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                 props.phase === Phases.finished ? undefined : 0.3
                                         }}
                                     >
-                                        {getObjectKeys(dealerHands).map((dealerSymbol) => {
+                                        {getObjectKeys(dealerCards).map((dealerCard) => {
                                             const backgroundColor =
-                                                dealerHands[dealerSymbol] === 0
+                                                dealerCards[dealerCard] === 0
                                                     ? '#333'
-                                                    : dealerHands[dealerSymbol] === 1
+                                                    : dealerCards[dealerCard] === 1
                                                     ? 'lightgreen'
                                                     : 'lightcoral';
 
                                             return (
                                                 <TouchableOpacity
-                                                    key={dealerSymbol}
+                                                    key={dealerCard}
                                                     onPress={
                                                         props.onBoardingStep > -1
                                                             ? undefined
@@ -114,7 +114,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                                   ) {
                                                                       const trainingPair = getSpecificTrainingPair(
                                                                           handRepresentation,
-                                                                          dealerSymbol
+                                                                          dealerCard
                                                                       );
                                                                       props.startTrainingRound(
                                                                           trainingPair.player,
@@ -142,7 +142,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                             fontWeight: 'bold'
                                                         }}
                                                     >
-                                                        {dealerSymbol}
+                                                        {dealerCard}
                                                     </Text>
                                                 </TouchableOpacity>
                                             );

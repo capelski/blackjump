@@ -28,11 +28,11 @@ export { Player } from './player';
 export {
     DealerCards,
     FailedHand,
-    TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
     TrainingHand,
     TrainingHands,
     TrainingPair,
+    TrainingProgress,
     TrainingStatus
 } from './training';

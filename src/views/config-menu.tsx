@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
-import { updateGameConfig, updatePlayerEarnings, updateTrainedHands } from '../async-storage';
+import { updateGameConfig, updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
@@ -86,7 +86,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 : useGoldHands
                     },
                     (options && options.nextTrainingHands) || trainingHands,
-                    props.trainingStatus.trained,
+                    props.trainingStatus.progress,
                     props.progress
                 )
         );
@@ -487,7 +487,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                     onPress: () => {
                                         const nextTrainingStatus = getDefaultTrainingStatus();
                                         props.setTrainingStatus(nextTrainingStatus);
-                                        updateTrainedHands(nextTrainingStatus.trained);
+                                        updateTrainingProgress(nextTrainingStatus.progress);
                                         updatePlayerEarnings(0);
                                     }
                                 }

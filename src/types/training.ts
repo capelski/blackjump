@@ -11,9 +11,6 @@ export interface FailedHand {
     handRepresentation: HandRepresentation;
 }
 
-// TODO Rename to TrainingHandsProgress
-export type TrainedHands = Dictionary<DealerCards, HandRepresentation>;
-
 export type TrainedHandsStats = {
     passed: number;
     trained: number;
@@ -40,9 +37,11 @@ export interface TrainingPair {
     player: Hand;
 }
 
+export type TrainingProgress = Dictionary<DealerCards, HandRepresentation>;
+
 export interface TrainingStatus {
-    failed: FailedHand[];
+    failed: FailedHand[]; // TODO Rename to failedHands
     isCompleted: boolean;
+    progress: TrainingProgress;
     stats: TrainedHandsStats;
-    trained: TrainedHands;
 }

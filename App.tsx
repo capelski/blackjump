@@ -9,9 +9,9 @@ import {
     getGameConfig,
     getHasCompletedOnboarding,
     getPlayerEarnings,
-    getTrainedHands,
+    getTrainingProgress,
     updateHasCompletedOnboarding,
-    updateTrainedHands
+    updateTrainingProgress
 } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
 import { OnboardingBar } from './src/components/onboarding-bar';
@@ -104,7 +104,7 @@ export default function App() {
             getGameConfig(gameConfig),
             getHasCompletedOnboarding(),
             getPlayerEarnings(),
-            getTrainedHands(),
+            getTrainingProgress(),
             initializeSounds()
         ]).then((results) => {
             setGameConfig(results[0]);
@@ -216,7 +216,7 @@ export default function App() {
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
                 trainingHands,
-                trainingStatus.trained
+                trainingStatus.progress
             );
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
@@ -270,7 +270,7 @@ export default function App() {
         }
 
         setTrainingStatus(nextTrainingStatus);
-        updateTrainedHands(nextTrainingStatus.trained);
+        updateTrainingProgress(nextTrainingStatus.progress);
 
         if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 4) {
             updateOnBoardingStep(1);
@@ -284,7 +284,7 @@ export default function App() {
             getAreGoldHandsBlockingProgress(
                 gameConfig,
                 trainingHands,
-                nextTrainingStatus.trained,
+                nextTrainingStatus.progress,
                 getProgress(nextTrainingStatus)
             )
         );
@@ -305,7 +305,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
-            trainingStatus.trained
+            trainingStatus.progress
         );
 
         setPlayer({ ...player });
@@ -328,7 +328,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
-            trainingStatus.trained
+            trainingStatus.progress
         );
 
         setPlayer({ ...player });
@@ -381,7 +381,7 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
                                         nextTrainingHands,
-                                        trainingStatus.trained,
+                                        trainingStatus.progress,
                                         progress
                                     )
                                 );
@@ -394,7 +394,7 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
                                         trainingHands,
-                                        _trainingStatus.trained,
+                                        _trainingStatus.progress,
                                         getProgress(_trainingStatus)
                                     )
                                 );
@@ -459,8 +459,8 @@ export default function App() {
                             player={player}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainingStatus.trained}
                             trainingHands={trainingHands}
+                            trainingProgress={trainingStatus.progress}
                         />
                     )}
                 </Stack.Screen>
@@ -472,8 +472,8 @@ export default function App() {
                             onBoardingStep={onBoardingStep}
                             phase={phase}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainingStatus.trained}
                             trainingHands={trainingHands}
+                            trainingProgress={trainingStatus.progress}
                         />
                     )}
                 </Stack.Screen>

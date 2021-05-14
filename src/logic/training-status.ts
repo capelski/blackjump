@@ -2,9 +2,9 @@ import {
     DealerCards,
     FailedHand,
     HandRepresentation,
-    TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
+    TrainingProgress,
     TrainingStatus
 } from '../types';
 import { getObjectKeys } from '../utils';
@@ -13,15 +13,7 @@ import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pair'
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     failed: [],
     isCompleted: false,
-    stats: {
-        passed: 0,
-        trained: 0
-    },
-    trained: getEmptyTrainedHands()
-});
-
-const getEmptyTrainedHands = (): TrainedHands =>
-    Object.values(HandRepresentation)
+    progress: Object.values(HandRepresentation)
         .map((playerHand) => ({
             [playerHand]: allPossibleDealerCards.reduce<DealerCards>(
                 (reducedDealerCards, dealerCard) => ({
@@ -31,30 +23,35 @@ const getEmptyTrainedHands = (): TrainedHands =>
                 {} as DealerCards
             )
         }))
-        .reduce<TrainedHands>(
+        .reduce<TrainingProgress>(
             (reducedPlayerHands, playerHand) => ({ ...reducedPlayerHands, ...playerHand }),
-            {} as TrainedHands
-        );
+            {} as TrainingProgress
+        ),
+    stats: {
+        passed: 0,
+        trained: 0
+    }
+});
 
 export const isTrainingCompleted = (trainedHandsStats: TrainedHandsStats) =>
     trainedHandsStats.trained === allTrainingPairsNumber;
 
-export const retrieveTrainingStatus = (trainedHands: TrainedHands): TrainingStatus => {
-    const trainedHandsData = getObjectKeys(trainedHands).reduce<{
+export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): TrainingStatus => {
+    const progressData = getObjectKeys(trainingProgress).reduce<{
         failedHands: FailedHand[];
         passed: number;
         trained: number;
     }>(
         (reduced, handRepresentation) => {
-            const trainedHand = trainedHands[handRepresentation];
-            return getObjectKeys(trainedHand).reduce((handReduced, dealerSymbol) => {
-                const handStatus = trainedHand[dealerSymbol];
+            const dealerCards = trainingProgress[handRepresentation];
+            return getObjectKeys(dealerCards).reduce((handReduced, dealerCard) => {
+                const handStatus = dealerCards[dealerCard];
                 return {
                     failedHands:
                         handStatus === TrainedHandStatus.failed
                             ? handReduced.failedHands.concat([
                                   {
-                                      dealerSymbol,
+                                      dealerSymbol: dealerCard,
                                       handRepresentation
                                   }
                               ])
@@ -69,12 +66,12 @@ export const retrieveTrainingStatus = (trainedHands: TrainedHands): TrainingStat
     );
 
     return {
-        failed: trainedHandsData.failedHands,
-        isCompleted: isTrainingCompleted(trainedHandsData),
+        failed: progressData.failedHands,
+        isCompleted: isTrainingCompleted(progressData),
+        progress: trainingProgress,
         stats: {
-            passed: trainedHandsData.passed,
-            trained: trainedHandsData.trained
-        },
-        trained: trainedHands
+            passed: progressData.passed,
+            trained: progressData.trained
+        }
     };
 };

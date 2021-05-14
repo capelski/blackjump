@@ -4,8 +4,8 @@ import {
     HandOutcome,
     Player,
     SimpleCardSymbol,
-    TrainedHands,
-    TrainingHands
+    TrainingHands,
+    TrainingProgress
 } from '../types';
 import { getRandomCard } from './card';
 import { createHand, dealCard, resolveHand } from './hand';
@@ -24,12 +24,12 @@ export const hitCurrentHand = (
     useBlueCards: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands
+    trainingProgress: TrainingProgress
 ) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = handToHandRepresentation(currentHand);
     const nextCard = useBlueCards
-        ? getCardForUntrainedHand(currentHand, dealerSymbol, trainingHands, trainedHands)
+        ? getCardForUntrainedHand(currentHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(currentHand, nextCard);
 };
@@ -75,7 +75,7 @@ export const splitCurrentHand = (
     useBlueCards: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands
+    trainingProgress: TrainingProgress
 ) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = handToHandRepresentation(currentHand);
@@ -83,7 +83,7 @@ export const splitCurrentHand = (
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
     const nextCard = useBlueCards
-        ? getCardForUntrainedHand(firstHand, dealerSymbol, trainingHands, trainedHands)
+        ? getCardForUntrainedHand(firstHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(firstHand, nextCard);
     player.hands.splice(player.handIndex, 1, firstHand, secondHand);
@@ -94,12 +94,12 @@ export const startNextHand = (
     useBlueCards: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
-    trainedHands: TrainedHands
+    trainingProgress: TrainingProgress
 ) => {
     player.handIndex++;
     const nextHand = player.hands[player.handIndex];
     const nextCard = useBlueCards
-        ? getCardForUntrainedHand(nextHand, dealerSymbol, trainingHands, trainedHands)
+        ? getCardForUntrainedHand(nextHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(nextHand, nextCard);
 };

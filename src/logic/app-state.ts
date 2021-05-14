@@ -7,9 +7,9 @@ import {
     Phases,
     Player,
     SimpleCardSymbol,
-    TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
+    TrainingProgress,
     TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
@@ -67,19 +67,19 @@ const getNextFailedHands = (
         : [{ dealerSymbol: currentDealerSymbol!, handRepresentation }].concat(currentFailedHands);
 };
 
-const getNextTrainedHands = (
-    trainedHands: TrainedHands,
+const getNextTrainingProgress = (
+    trainingProgress: TrainingProgress,
     isHit: boolean,
     handRepresentation: HandRepresentation,
     currentDealerSymbol: SimpleCardSymbol
-): TrainedHands => {
-    const nextTrainedHands: TrainedHands = { ...trainedHands };
+) => {
+    const nextTrainingProgress: TrainingProgress = { ...trainingProgress };
 
-    nextTrainedHands[handRepresentation][currentDealerSymbol] = isHit
+    nextTrainingProgress[handRepresentation][currentDealerSymbol] = isHit
         ? TrainedHandStatus.passed
         : TrainedHandStatus.failed;
 
-    return nextTrainedHands;
+    return nextTrainingProgress;
 };
 
 const getNextTrainedHandsStats = (
@@ -119,11 +119,11 @@ export const getNextTrainingStatus = (
     const nextTrainedHandsStats = getNextTrainedHandsStats(
         trainingStatus.stats,
         isHit,
-        trainingStatus.trained[handRepresentation][currentDealerSymbol!]
+        trainingStatus.progress[handRepresentation][currentDealerSymbol!]
     );
 
-    const nextTrainedHands = getNextTrainedHands(
-        trainingStatus.trained,
+    const nextTrainedHands = getNextTrainingProgress(
+        trainingStatus.progress,
         isHit,
         handRepresentation,
         currentDealerSymbol!
@@ -133,6 +133,6 @@ export const getNextTrainingStatus = (
         failed: nextFailedHands,
         isCompleted: isTrainingCompleted(nextTrainedHandsStats),
         stats: nextTrainedHandsStats,
-        trained: nextTrainedHands
+        progress: nextTrainedHands
     };
 };

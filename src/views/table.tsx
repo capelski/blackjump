@@ -136,8 +136,8 @@ export const Table: React.FC<TableProps> = (props) => (
                 phase={props.phase}
                 onBoardingStep={props.onBoardingStep}
                 startTrainingRound={props.startTrainingRound}
-                trainedHands={props.trainedHands}
                 trainingHands={props.trainingHands}
+                trainingProgress={props.trainingProgress}
             />
         </OnBoardingSection>
     </React.Fragment>
