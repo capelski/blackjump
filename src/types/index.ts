@@ -18,7 +18,7 @@ export {
     PlayerDecisions
 } from './decisions';
 export { Dictionary, NumericDictionary } from './dictionary';
-export { GameConfig } from './game-config';
+export { GameConfig, GoldHandsLevels } from './game-config';
 export { FailedHand, Hand, HandOutcome, HandRepresentation } from './hand';
 export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';
 export { OnBoardingSections, OnBoardingStep } from './onboarding';

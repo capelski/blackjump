@@ -18,7 +18,7 @@ import {
     CasinoRulesKeys,
     Doubling,
     GameConfig,
-    NumericDictionary,
+    GoldHandsLevels,
     OnBoardingSections,
     Phases,
     RelevantHands,
@@ -61,12 +61,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
-    const isSomeLevelSelected = (_goldHandsLevels: NumericDictionary<boolean>) =>
+    const isSomeLevelSelected = (_goldHandsLevels: GoldHandsLevels) =>
         _goldHandsLevels[1] || _goldHandsLevels[2] || _goldHandsLevels[3] || _goldHandsLevels[4];
 
     const areGoldHandsBlockingProgressHandler = (options?: {
         nextCasinoRules?: CasinoRules;
-        nextGoldHandsLevels?: NumericDictionary<boolean>;
+        nextGoldHandsLevels?: GoldHandsLevels;
         nextRelevantHands?: RelevantHands;
         nextUseGoldHands?: boolean;
     }) => {

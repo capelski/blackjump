@@ -2,9 +2,9 @@ import {
     Card,
     DealerHands,
     GameConfig,
+    GoldHandsLevels,
     Hand,
     HandRepresentation,
-    NumericDictionary,
     RelevantHands,
     SimpleCardSymbol,
     TrainedHands,
@@ -42,10 +42,8 @@ export const allPossibleDealerCards: SimpleCardSymbol[] = [
 export const allTrainingPairsNumber =
     allPossibleDealerCards.length * Object.keys(HandRepresentation).length;
 
-const getActiveRelevantHands = (
-    relevantHands: RelevantHands,
-    goldHandsLevels: NumericDictionary<boolean>
-) => Object.values(relevantHands).filter((hand) => goldHandsLevels[hand.level]);
+const getActiveRelevantHands = (relevantHands: RelevantHands, goldHandsLevels: GoldHandsLevels) =>
+    Object.values(relevantHands).filter((hand) => goldHandsLevels[hand.level]);
 
 export const getAreGoldHandsBlockingProgress = (
     gameConfig: GameConfig,
@@ -139,13 +137,13 @@ export const getCardForUntrainedHand = (
 
 export const getGoldHandsNumber = (
     relevantHands: RelevantHands,
-    goldHandsLevels: NumericDictionary<boolean>
+    goldHandsLevels: GoldHandsLevels
 ) => allPossibleDealerCards.length * getActiveRelevantHands(relevantHands, goldHandsLevels).length;
 
 export const getRandomTrainingPair = (
     relevantHands: RelevantHands,
     trainedHands: TrainedHands,
-    goldHandsLevels: NumericDictionary<boolean>
+    goldHandsLevels: GoldHandsLevels
 ): TrainingPair => {
     const untrainedRelevantHands = getUntrainedRelevantHands(
         relevantHands,
@@ -204,7 +202,7 @@ const getUntrainedDealerHands = (dealerHands: DealerHands) =>
 const getUntrainedRelevantHands = (
     relevantHands: RelevantHands,
     trainedHands: TrainedHands,
-    goldHandsLevels: NumericDictionary<boolean>
+    goldHandsLevels: GoldHandsLevels
 ) =>
     getActiveRelevantHands(relevantHands, goldHandsLevels).filter(
         (relevantHand) =>
