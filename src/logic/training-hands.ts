@@ -1,8 +1,7 @@
 import {
-    Dictionary,
+    DealerHands,
     FailedHand,
     HandRepresentation,
-    SimpleCardSymbol,
     TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
@@ -14,14 +13,12 @@ import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pairs
 const getEmptyTrainedHands = (): TrainedHands =>
     Object.values(HandRepresentation)
         .map((playerHand) => ({
-            [playerHand]: allPossibleDealerCards.reduce<
-                Dictionary<TrainedHandStatus, SimpleCardSymbol>
-            >(
+            [playerHand]: allPossibleDealerCards.reduce<DealerHands>(
                 (reducedDealerHands, dealerHand) => ({
                     ...reducedDealerHands,
                     [dealerHand]: TrainedHandStatus.untrained
                 }),
-                {} as Dictionary<TrainedHandStatus, SimpleCardSymbol>
+                {} as DealerHands
             )
         }))
         .reduce<TrainedHands>(

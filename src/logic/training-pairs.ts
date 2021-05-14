@@ -1,6 +1,6 @@
 import {
     Card,
-    Dictionary,
+    DealerHands,
     GameConfig,
     Hand,
     HandRepresentation,
@@ -196,7 +196,7 @@ export const getSpecificTrainingPair = (
     };
 };
 
-const getUntrainedDealerHands = (dealerHands: Dictionary<TrainedHandStatus, SimpleCardSymbol>) =>
+const getUntrainedDealerHands = (dealerHands: DealerHands) =>
     getObjectKeys(dealerHands).filter(
         (cardSymbol) => dealerHands[cardSymbol] !== TrainedHandStatus.passed
     );
