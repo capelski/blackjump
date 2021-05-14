@@ -4,7 +4,6 @@ import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { handDecisionSetGetters } from '../logic/hand-decision-set';
 import { getTrainingHands } from '../logic/training-hand';
 
 import {
@@ -105,9 +104,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     isSoundEnabled={false}
                     skipAnimation={true}
                 />
-                <HandDecisionsTable
-                    handDecisionSet={handDecisionSetGetters[HandCode.Hard8](casinoRules)}
-                />
+                <HandDecisionsTable handDecisionSet={trainingHands[HandCode.Hard8].decisionSet} />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
                     The more optimal actions you need to memorize for a hand, the higher the hand
@@ -121,9 +118,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     isSoundEnabled={false}
                     skipAnimation={true}
                 />
-                <HandDecisionsTable
-                    handDecisionSet={handDecisionSetGetters[HandCode.Split9s](casinoRules)}
-                />
+                <HandDecisionsTable handDecisionSet={trainingHands[HandCode.Split9s].decisionSet} />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
                     When disabling a level, the hands on that level will never be dealt as initial
