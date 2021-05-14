@@ -26,7 +26,7 @@ export { OnBoardingSections, OnBoardingStep } from './onboarding';
 export { Phases } from './phases';
 export { Player } from './player';
 export {
-    DealerHands,
+    DealerCards,
     RelevantHand,
     RelevantHands,
     TrainedHands,

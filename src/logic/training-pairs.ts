@@ -1,6 +1,6 @@
 import {
     Card,
-    DealerHands,
+    DealerCards,
     GameConfig,
     GoldHandsLevels,
     Hand,
@@ -156,13 +156,13 @@ export const getRandomTrainingPair = (
             ? getRandomItem(untrainedRelevantHands)
             : getRandomItem(getActiveRelevantHands(relevantHands, goldHandsLevels)); // In case all hands have been passed
 
-    const dealerHands = trainedHands[randomRelevantHand.representation];
-    const untrainedDealerHands = getUntrainedDealerHands(dealerHands);
+    const dealerCards = trainedHands[randomRelevantHand.representation];
+    const untrainedDealerHands = getUntrainedDealerCards(dealerCards);
 
-    const randomDealerHand =
+    const randomDealerCard =
         untrainedDealerHands.length > 0
             ? getRandomItem(untrainedDealerHands)
-            : getRandomItem(getObjectKeys(dealerHands)); // In case all hands have been passed
+            : getRandomItem(getObjectKeys(dealerCards)); // In case all hands have been passed
 
     return {
         dealer: createHand([
@@ -170,7 +170,7 @@ export const getRandomTrainingPair = (
                 isBlueCard: false,
                 isGoldCard: true,
                 suit: getRandomSuit(),
-                symbol: simpleSymbolToSymbol(randomDealerHand)
+                symbol: simpleSymbolToSymbol(randomDealerCard)
             }
         ]),
         player: handRepresentationToHand(randomRelevantHand.representation)
@@ -194,9 +194,9 @@ export const getSpecificTrainingPair = (
     };
 };
 
-const getUntrainedDealerHands = (dealerHands: DealerHands) =>
-    getObjectKeys(dealerHands).filter(
-        (cardSymbol) => dealerHands[cardSymbol] !== TrainedHandStatus.passed
+const getUntrainedDealerCards = (dealerCards: DealerCards) =>
+    getObjectKeys(dealerCards).filter(
+        (dealerCard) => dealerCards[dealerCard] !== TrainedHandStatus.passed
     );
 
 const getUntrainedRelevantHands = (
@@ -206,5 +206,5 @@ const getUntrainedRelevantHands = (
 ) =>
     getActiveRelevantHands(relevantHands, goldHandsLevels).filter(
         (relevantHand) =>
-            getUntrainedDealerHands(trainedHands[relevantHand.representation]).length > 0
+            getUntrainedDealerCards(trainedHands[relevantHand.representation]).length > 0
     );

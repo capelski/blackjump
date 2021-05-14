@@ -4,7 +4,7 @@ import { HandDecisionSet } from './decisions';
 import { Dictionary } from './dictionary';
 import { FailedHand, Hand, HandRepresentation } from './hand';
 
-export type DealerHands = Dictionary<TrainedHandStatus, SimpleCardSymbol>;
+export type DealerCards = Dictionary<TrainedHandStatus, SimpleCardSymbol>;
 
 export interface RelevantHand {
     decisionSet: HandDecisionSet;
@@ -16,7 +16,7 @@ export interface RelevantHand {
 
 export type RelevantHands = Dictionary<RelevantHand, HandRepresentation>;
 
-export type TrainedHands = Dictionary<DealerHands, HandRepresentation>;
+export type TrainedHands = Dictionary<DealerCards, HandRepresentation>;
 
 export type TrainedHandsStats = {
     passed: number;
