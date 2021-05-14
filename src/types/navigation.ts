@@ -1,6 +1,6 @@
 import { Route } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TrainingHand } from './training';
+import { TrainingHand } from './training-hand';
 
 export type AppNavigation = StackNavigationProp<RouteParams>;
 

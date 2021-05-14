@@ -26,14 +26,12 @@ export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } fr
 export { OnBoardingSections, OnBoardingStep } from './onboarding';
 export { Phases } from './phases';
 export { Player } from './player';
+export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
+export { TrainingPair } from './training-pair';
 export {
     DealerCards,
     FailedHand,
     TrainedHandsStats,
-    TrainingHand,
-    TrainingHands,
-    TrainingHandStatus,
-    TrainingPair,
     TrainingProgress,
     TrainingStatus
-} from './training';
+} from './training-status';
