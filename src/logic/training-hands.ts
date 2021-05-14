@@ -8,7 +8,7 @@ import {
     TrainingHands
 } from '../types';
 import { getObjectKeys } from '../utils';
-import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pairs';
+import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pair';
 
 const getEmptyTrainedHands = (): TrainedHands =>
     Object.values(HandRepresentation)

@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
-import { getSpecificTrainingPair } from '../logic/training-pairs';
+import { getSpecificTrainingPair } from '../logic/training-pair';
 import { AppNavigation, FailedHand, Hand, Phases, RelevantHands, RouteNames } from '../types';
 
 type FailedHandsProps = {

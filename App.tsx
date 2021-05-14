@@ -37,10 +37,7 @@ import {
 } from './src/logic/player';
 import { getDefaultRelevantHands, getRelevantHands } from './src/logic/relevant-hands';
 import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
-import {
-    allTrainingPairsNumber,
-    getAreGoldHandsBlockingProgress
-} from './src/logic/training-pairs';
+import { allTrainingPairsNumber, getAreGoldHandsBlockingProgress } from './src/logic/training-pair';
 import {
     AppNavigation,
     BaseDecisions,

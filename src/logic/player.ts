@@ -10,7 +10,7 @@ import {
 import { getRandomCard } from './card';
 import { createHand, dealCard, resolveHand } from './hand';
 import { handToHandRepresentation } from './hand-representation';
-import { getCardForUntrainedHand } from './training-pairs';
+import { getCardForUntrainedHand } from './training-pair';
 
 export const createPlayer = (cash = 0): Player => ({
     cash,

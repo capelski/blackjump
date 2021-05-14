@@ -4,7 +4,7 @@ import { actionsHeight, colors } from '../constants';
 import { getRandomCard } from '../logic/card';
 import { createHand } from '../logic/hand';
 import { onBoardingSteps } from '../logic/onboarding';
-import { getRandomTrainingPair } from '../logic/training-pairs';
+import { getRandomTrainingPair } from '../logic/training-pair';
 import {
     BaseDecisions,
     CardSuit,
