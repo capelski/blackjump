@@ -325,44 +325,47 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                     flexWrap: 'wrap'
                                 }}
                             >
-                                {Object.keys(goldHandsLevels).map((number) => (
-                                    <React.Fragment key={number}>
-                                        <Switch
-                                            disabled={!useGoldHands}
-                                            onValueChange={(newValue) => {
-                                                const nextGoldHandsLevels = {
-                                                    ...goldHandsLevels,
-                                                    [number]: newValue
-                                                };
-                                                setGoldHandsLevels(nextGoldHandsLevels);
-                                                setGoldHandsNumber(
-                                                    getGoldHandsNumber(
-                                                        trainingHands,
+                                {Object.keys(goldHandsLevels).map((numberKey) => {
+                                    const number = parseInt(numberKey, 10);
+                                    return (
+                                        <React.Fragment key={numberKey}>
+                                            <Switch
+                                                disabled={!useGoldHands}
+                                                onValueChange={(newValue) => {
+                                                    const nextGoldHandsLevels = {
+                                                        ...goldHandsLevels,
+                                                        [number]: newValue
+                                                    };
+                                                    setGoldHandsLevels(nextGoldHandsLevels);
+                                                    setGoldHandsNumber(
+                                                        getGoldHandsNumber(
+                                                            trainingHands,
+                                                            nextGoldHandsLevels
+                                                        )
+                                                    );
+                                                    areGoldHandsBlockingProgressHandler({
                                                         nextGoldHandsLevels
-                                                    )
-                                                );
-                                                areGoldHandsBlockingProgressHandler({
-                                                    nextGoldHandsLevels
-                                                });
-                                            }}
-                                            style={{ marginTop: 16 }}
-                                            trackColor={{ true: hitColor, false: 'white' }}
-                                            value={goldHandsLevels[parseInt(number)] || false}
-                                        />
-                                        <Text
-                                            style={{
-                                                ...textStyle,
-                                                color: areGoldHandsBlockingProgress
-                                                    ? doubleColor
-                                                    : 'white',
-                                                marginTop: 16,
-                                                paddingLeft: 4
-                                            }}
-                                        >
-                                            {number}
-                                        </Text>
-                                    </React.Fragment>
-                                ))}
+                                                    });
+                                                }}
+                                                style={{ marginTop: 16 }}
+                                                trackColor={{ true: hitColor, false: 'white' }}
+                                                value={goldHandsLevels[number] || false}
+                                            />
+                                            <Text
+                                                style={{
+                                                    ...textStyle,
+                                                    color: areGoldHandsBlockingProgress
+                                                        ? doubleColor
+                                                        : 'white',
+                                                    marginTop: 16,
+                                                    paddingLeft: 4
+                                                }}
+                                            >
+                                                {numberKey}
+                                            </Text>
+                                        </React.Fragment>
+                                    );
+                                })}
                             </View>
                             <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
                                 ({goldHandsNumber} gold hands)
