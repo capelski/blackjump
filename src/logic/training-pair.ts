@@ -6,8 +6,8 @@ import {
     Hand,
     HandCode,
     SimpleCardSymbol,
-    TrainedHandStatus,
     TrainingHands,
+    TrainingHandStatus,
     TrainingProgress,
     TrainingPair
 } from '../types';
@@ -68,7 +68,7 @@ export const getCardForUntrainedHand = (
     const valuesToUntrainedHands = Object.values(trainingHands)
         .map((trainingHand) => {
             const isHandUntrainedForDealerCard =
-                trainingProgress[trainingHand.code][dealerSymbol] === TrainedHandStatus.untrained;
+                trainingProgress[trainingHand.code][dealerSymbol] === TrainingHandStatus.untrained;
 
             let valueToReachThisHand: number;
 
@@ -190,7 +190,7 @@ export const getSpecificTrainingPair = (
 
 const getUntrainedDealerCards = (dealerCards: DealerCards) =>
     getObjectKeys(dealerCards).filter(
-        (dealerCard) => dealerCards[dealerCard] !== TrainedHandStatus.passed
+        (dealerCard) => dealerCards[dealerCard] !== TrainingHandStatus.passed
     );
 
 const getUntrainedTrainingHands = (

@@ -30,9 +30,9 @@ export {
     DealerCards,
     FailedHand,
     TrainedHandsStats,
-    TrainedHandStatus,
     TrainingHand,
     TrainingHands,
+    TrainingHandStatus,
     TrainingPair,
     TrainingProgress,
     TrainingStatus

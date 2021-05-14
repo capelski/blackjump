@@ -5,7 +5,7 @@ import { Dictionary } from './dictionary';
 import { Hand, HandCode } from './hand';
 
 // TODO Rename to DealerSymbols
-export type DealerCards = Dictionary<TrainedHandStatus, SimpleCardSymbol>;
+export type DealerCards = Dictionary<TrainingHandStatus, SimpleCardSymbol>;
 
 export interface FailedHand {
     dealerSymbol: SimpleCardSymbol;
@@ -17,13 +17,6 @@ export type TrainedHandsStats = {
     trained: number;
 };
 
-// TODO Rename to TrainingHandStatus
-export enum TrainedHandStatus {
-    untrained = 0,
-    passed = 1,
-    failed = 2
-}
-
 export interface TrainingHand {
     code: HandCode;
     decisionSet: HandDecisionSet;
@@ -33,6 +26,12 @@ export interface TrainingHand {
 }
 
 export type TrainingHands = Dictionary<TrainingHand, HandCode>;
+
+export enum TrainingHandStatus {
+    untrained = 0,
+    passed = 1,
+    failed = 2
+}
 
 export interface TrainingPair {
     dealer: Hand;

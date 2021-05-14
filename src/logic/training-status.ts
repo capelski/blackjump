@@ -3,7 +3,7 @@ import {
     FailedHand,
     HandCode,
     TrainedHandsStats,
-    TrainedHandStatus,
+    TrainingHandStatus,
     TrainingProgress,
     TrainingStatus
 } from '../types';
@@ -18,7 +18,7 @@ export const getDefaultTrainingStatus = (): TrainingStatus => ({
             [playerHand]: allPossibleDealerCards.reduce<DealerCards>(
                 (reducedDealerCards, dealerCard) => ({
                     ...reducedDealerCards,
-                    [dealerCard]: TrainedHandStatus.untrained
+                    [dealerCard]: TrainingHandStatus.untrained
                 }),
                 {} as DealerCards
             )
@@ -48,7 +48,7 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
                 const handStatus = dealerCards[dealerCard];
                 return {
                     failedHands:
-                        handStatus === TrainedHandStatus.failed
+                        handStatus === TrainingHandStatus.failed
                             ? handReduced.failedHands.concat([
                                   {
                                       dealerSymbol: dealerCard,
@@ -56,9 +56,9 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
                                   }
                               ])
                             : handReduced.failedHands,
-                    passed: handReduced.passed + (handStatus === TrainedHandStatus.passed ? 1 : 0),
+                    passed: handReduced.passed + (handStatus === TrainingHandStatus.passed ? 1 : 0),
                     trained:
-                        handReduced.trained + (handStatus !== TrainedHandStatus.untrained ? 1 : 0)
+                        handReduced.trained + (handStatus !== TrainingHandStatus.untrained ? 1 : 0)
                 };
             }, reduced);
         },
