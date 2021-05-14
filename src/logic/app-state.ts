@@ -10,12 +10,12 @@ import {
     TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
-    TrainingHands
+    TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
 import { getHandEffectiveValue, dealCard } from './hand';
 import { resolveHands } from './player';
-import { isTrainingCompleted } from './training-hands';
+import { isTrainingCompleted } from './training-status';
 
 export const handleDealerTurn = (
     dealerHand: Hand,
@@ -101,14 +101,14 @@ const getNextTrainedHandsStats = (
     };
 };
 
-export const getNextTrainingHands = (
-    trainingHands: TrainingHands,
+export const getNextTrainingStatus = (
+    trainingStatus: TrainingStatus,
     isHit: boolean,
     handRepresentation: HandRepresentation,
     currentDealerSymbol: SimpleCardSymbol
-): TrainingHands => {
+): TrainingStatus => {
     const nextFailedHands = getNextFailedHands(
-        trainingHands.failed,
+        trainingStatus.failed,
         isHit,
         handRepresentation,
         currentDealerSymbol!
@@ -117,13 +117,13 @@ export const getNextTrainingHands = (
     // Call getNextTrainedHandsStats before getNextTrainedHands, since the later
     // will modify trainedHands[handRepresentation][currentDealerSymbol!]
     const nextTrainedHandsStats = getNextTrainedHandsStats(
-        trainingHands.stats,
+        trainingStatus.stats,
         isHit,
-        trainingHands.trained[handRepresentation][currentDealerSymbol!]
+        trainingStatus.trained[handRepresentation][currentDealerSymbol!]
     );
 
     const nextTrainedHands = getNextTrainedHands(
-        trainingHands.trained,
+        trainingStatus.trained,
         isHit,
         handRepresentation,
         currentDealerSymbol!

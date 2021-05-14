@@ -10,8 +10,8 @@ import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
 import { getRelevantHands } from '../logic/relevant-hands';
-import { getEmptyTrainingHands } from '../logic/training-hands';
-import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pairs';
+import { getDefaultTrainingStatus } from '../logic/training-status';
+import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pair';
 import {
     AppNavigation,
     CasinoRules,
@@ -23,7 +23,7 @@ import {
     Phases,
     RelevantHands,
     RouteNames,
-    TrainingHands
+    TrainingStatus
 } from '../types';
 
 type ConfigMenuProps = {
@@ -35,8 +35,8 @@ type ConfigMenuProps = {
     progress: number;
     relevantHands: RelevantHands;
     setGameConfig: (gameConfig: GameConfig) => void;
-    setTrainingHands: (trainingHands: TrainingHands) => void;
-    trainingHands: TrainingHands;
+    setTrainingStatus: (trainingStatus: TrainingStatus) => void;
+    trainingStatus: TrainingStatus;
 };
 
 const textStyle = {
@@ -86,7 +86,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 : useGoldHands
                     },
                     (options && options.nextRelevantHands) || relevantHands,
-                    props.trainingHands.trained,
+                    props.trainingStatus.trained,
                     props.progress
                 )
         );
@@ -485,9 +485,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 {
                                     text: 'Reset',
                                     onPress: () => {
-                                        const nextTrainingHands = getEmptyTrainingHands();
-                                        props.setTrainingHands(nextTrainingHands);
-                                        updateTrainedHands(nextTrainingHands.trained);
+                                        const nextTrainingStatus = getDefaultTrainingStatus();
+                                        props.setTrainingStatus(nextTrainingStatus);
+                                        updateTrainedHands(nextTrainingStatus.trained);
                                         updatePlayerEarnings(0);
                                     }
                                 }

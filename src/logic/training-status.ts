@@ -5,10 +5,20 @@ import {
     TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
-    TrainingHands
+    TrainingStatus
 } from '../types';
 import { getObjectKeys } from '../utils';
 import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pair';
+
+export const getDefaultTrainingStatus = (): TrainingStatus => ({
+    failed: [],
+    isCompleted: false,
+    stats: {
+        passed: 0,
+        trained: 0
+    },
+    trained: getEmptyTrainedHands()
+});
 
 const getEmptyTrainedHands = (): TrainedHands =>
     Object.values(HandRepresentation)
@@ -26,20 +36,10 @@ const getEmptyTrainedHands = (): TrainedHands =>
             {} as TrainedHands
         );
 
-export const getEmptyTrainingHands = (): TrainingHands => ({
-    failed: [],
-    isCompleted: false,
-    stats: {
-        passed: 0,
-        trained: 0
-    },
-    trained: getEmptyTrainedHands()
-});
-
 export const isTrainingCompleted = (trainedHandsStats: TrainedHandsStats) =>
     trainedHandsStats.trained === allTrainingPairsNumber;
 
-export const retrieveTrainingHands = (trainedHands: TrainedHands): TrainingHands => {
+export const retrieveTrainingStatus = (trainedHands: TrainedHands): TrainingStatus => {
     const trainedHandsData = getObjectKeys(trainedHands).reduce<{
         failedHands: FailedHand[];
         passed: number;

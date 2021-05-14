@@ -33,6 +33,6 @@ export {
     TrainedHands,
     TrainedHandsStats,
     TrainedHandStatus,
-    TrainingHands,
-    TrainingPair
+    TrainingPair,
+    TrainingStatus
 } from './training';

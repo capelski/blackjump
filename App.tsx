@@ -16,7 +16,7 @@ import {
 import { NavBar } from './src/components/nav-bar';
 import { OnboardingBar } from './src/components/onboarding-bar';
 import { tableColor } from './src/constants';
-import { getNextTrainingHands, handleDealerTurn } from './src/logic/app-state';
+import { getNextTrainingStatus, handleDealerTurn } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -36,7 +36,7 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getDefaultRelevantHands, getRelevantHands } from './src/logic/relevant-hands';
-import { getEmptyTrainingHands, retrieveTrainingHands } from './src/logic/training-hands';
+import { getDefaultTrainingStatus, retrieveTrainingStatus } from './src/logic/training-status';
 import { allTrainingPairsNumber, getAreGoldHandsBlockingProgress } from './src/logic/training-pair';
 import {
     AppNavigation,
@@ -51,7 +51,7 @@ import {
     PlayerDecisions,
     RouteNames,
     RouteParams,
-    TrainingHands
+    TrainingStatus
 } from './src/types';
 import { playSound } from './src/utils';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
@@ -63,7 +63,7 @@ import { HandDecisions } from './src/views/hand-decisions';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
 import { TrainingCompleted } from './src/views/training-completed';
-import { TrainingHands as TrainingHandsComponent } from './src/views/training-hands';
+import { TrainingHands } from './src/views/training-hands';
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
@@ -95,7 +95,7 @@ export default function App() {
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [relevantHands, setRelevantHands] = useState(getDefaultRelevantHands());
     const [sounds, setSounds] = useState<{ failure: Audio.Sound; success: Audio.Sound }>();
-    const [trainingHands, setTrainingHands] = useState<TrainingHands>(getEmptyTrainingHands());
+    const [trainingStatus, setTrainingStatus] = useState(getDefaultTrainingStatus());
 
     const navigationRef = useRef<NavigationContainerRef>(null);
 
@@ -122,15 +122,15 @@ export default function App() {
             }
 
             if (results[3]) {
-                const nextTrainingHands = retrieveTrainingHands(results[3]);
+                const nextTrainingStatus = retrieveTrainingStatus(results[3]);
 
-                setTrainingHands(nextTrainingHands);
+                setTrainingStatus(nextTrainingStatus);
                 setAreGoldHandsBlockingProgress(
                     getAreGoldHandsBlockingProgress(
                         results[0],
                         nextRelevantHands,
                         results[3],
-                        getProgress(nextTrainingHands)
+                        getProgress(nextTrainingStatus)
                     )
                 );
             }
@@ -169,9 +169,9 @@ export default function App() {
         ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
     };
 
-    const getProgress = (_trainingHands: TrainingHands) =>
-        Math.floor((_trainingHands.stats.trained * 1000) / allTrainingPairsNumber) / 10;
-    const progress = getProgress(trainingHands);
+    const getProgress = (_trainingStatus: TrainingStatus) =>
+        Math.floor((_trainingStatus.stats.trained * 1000) / allTrainingPairsNumber) / 10;
+    const progress = getProgress(trainingStatus);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -216,7 +216,7 @@ export default function App() {
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
                 relevantHands,
-                trainingHands.trained
+                trainingStatus.trained
             );
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
@@ -244,8 +244,8 @@ export default function App() {
         setDecisionEvaluation(nextDecisionEvaluation);
 
         const handRepresentation = handToHandRepresentation(currentHand);
-        let nextTrainingHands = getNextTrainingHands(
-            trainingHands,
+        let nextTrainingStatus = getNextTrainingStatus(
+            trainingStatus,
             nextDecisionEvaluation.isHit,
             handRepresentation,
             currentDealerSymbol!
@@ -253,30 +253,30 @@ export default function App() {
 
         if (handRepresentation === HandRepresentation.Split5s) {
             // A 5,5 must also set the corresponding state for Hard 10
-            nextTrainingHands = getNextTrainingHands(
-                nextTrainingHands,
+            nextTrainingStatus = getNextTrainingStatus(
+                nextTrainingStatus,
                 nextDecisionEvaluation.isHit,
                 HandRepresentation.Hard10,
                 currentDealerSymbol!
             );
         } else if (handRepresentation === HandRepresentation.Split10s) {
             // A 10,10 must also set the corresponding state for Hard 20
-            nextTrainingHands = getNextTrainingHands(
-                nextTrainingHands,
+            nextTrainingStatus = getNextTrainingStatus(
+                nextTrainingStatus,
                 nextDecisionEvaluation.isHit,
                 HandRepresentation.Hard20,
                 currentDealerSymbol!
             );
         }
 
-        setTrainingHands(nextTrainingHands);
-        updateTrainedHands(nextTrainingHands.trained);
+        setTrainingStatus(nextTrainingStatus);
+        updateTrainedHands(nextTrainingStatus.trained);
 
         if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 4) {
             updateOnBoardingStep(1);
         }
 
-        if (nextTrainingHands.isCompleted && !trainingHands.isCompleted) {
+        if (nextTrainingStatus.isCompleted && !trainingStatus.isCompleted) {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
         }
 
@@ -284,8 +284,8 @@ export default function App() {
             getAreGoldHandsBlockingProgress(
                 gameConfig,
                 relevantHands,
-                nextTrainingHands.trained,
-                getProgress(nextTrainingHands)
+                nextTrainingStatus.trained,
+                getProgress(nextTrainingStatus)
             )
         );
     };
@@ -305,7 +305,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             relevantHands,
-            trainingHands.trained
+            trainingStatus.trained
         );
 
         setPlayer({ ...player });
@@ -328,7 +328,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             relevantHands,
-            trainingHands.trained
+            trainingStatus.trained
         );
 
         setPlayer({ ...player });
@@ -354,7 +354,7 @@ export default function App() {
                 player={player}
                 progress={progress}
                 routeName={currentRoute}
-                trainedHandsStats={trainingHands.stats}
+                trainedHandsStats={trainingStatus.stats}
             />
             <Stack.Navigator
                 initialRouteName={initialRouteName}
@@ -382,33 +382,33 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
                                         nextRelevantHands,
-                                        trainingHands.trained,
+                                        trainingStatus.trained,
                                         progress
                                     )
                                 );
                                 setGameConfig(_gameConfig);
                                 setRelevantHands(nextRelevantHands);
                             }}
-                            setTrainingHands={(_trainingHands) => {
-                                setTrainingHands(_trainingHands);
+                            setTrainingStatus={(_trainingStatus) => {
+                                setTrainingStatus(_trainingStatus);
                                 setAreGoldHandsBlockingProgress(
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
                                         relevantHands,
-                                        _trainingHands.trained,
-                                        getProgress(_trainingHands)
+                                        _trainingStatus.trained,
+                                        getProgress(_trainingStatus)
                                     )
                                 );
                                 setPlayer({ ...player, cash: 0 });
                             }}
-                            trainingHands={trainingHands}
+                            trainingStatus={trainingStatus}
                         />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.failedHands}>
                     {(props) => (
                         <FailedHands
-                            failedHands={trainingHands.failed}
+                            failedHands={trainingStatus.failed}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
@@ -460,20 +460,20 @@ export default function App() {
                             phase={phase}
                             relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainingHands.trained}
+                            trainedHands={trainingStatus.trained}
                         />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.trainingCompleted} component={TrainingCompleted} />
                 <Stack.Screen name={RouteNames.trainingHands}>
                     {(props) => (
-                        <TrainingHandsComponent
+                        <TrainingHands
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
                             relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
-                            trainedHands={trainingHands.trained}
+                            trainedHands={trainingStatus.trained}
                         />
                     )}
                 </Stack.Screen>

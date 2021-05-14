@@ -34,14 +34,14 @@ export enum TrainedHandStatus {
     failed = 2
 }
 
-export interface TrainingHands {
+export interface TrainingPair {
+    dealer: Hand;
+    player: Hand;
+}
+
+export interface TrainingStatus {
     failed: FailedHand[];
     isCompleted: boolean;
     stats: TrainedHandsStats;
     trained: TrainedHands;
-}
-
-export interface TrainingPair {
-    dealer: Hand;
-    player: Hand;
 }
