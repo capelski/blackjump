@@ -6,8 +6,8 @@ import {
     TrainingHands,
     TrainingProgress
 } from '../types';
+import { getDefaultCasinoRules } from './casino-rules';
 import { allDealerSymbols, getUntrainedDealerSymbols } from './dealer-symbols';
-import { getDefaultCasinoRules } from './game-config';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from './hand-decision-set';
 
 export const getActiveTrainingHands = (
