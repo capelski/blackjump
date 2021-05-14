@@ -408,7 +408,7 @@ export default function App() {
                 <Stack.Screen name={RouteNames.failedHands}>
                     {(props) => (
                         <FailedHands
-                            failedHands={trainingStatus.failed}
+                            failedHands={trainingStatus.failedHands}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}

@@ -17,6 +17,7 @@ export type TrainedHandsStats = {
     trained: number;
 };
 
+// TODO Rename to TrainingHandStatus
 export enum TrainedHandStatus {
     untrained = 0,
     passed = 1,
@@ -41,7 +42,7 @@ export interface TrainingPair {
 export type TrainingProgress = Dictionary<DealerCards, HandCode>;
 
 export interface TrainingStatus {
-    failed: FailedHand[]; // TODO Rename to failedHands
+    failedHands: FailedHand[];
     isCompleted: boolean;
     progress: TrainingProgress;
     stats: TrainedHandsStats;

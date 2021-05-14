@@ -11,7 +11,7 @@ import { getObjectKeys } from '../utils';
 import { allPossibleDealerCards, allTrainingPairsNumber } from './training-pair';
 
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
-    failed: [],
+    failedHands: [],
     isCompleted: false,
     progress: Object.values(HandCode)
         .map((playerHand) => ({
@@ -66,7 +66,7 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
     );
 
     return {
-        failed: progressData.failedHands,
+        failedHands: progressData.failedHands,
         isCompleted: isTrainingCompleted(progressData),
         progress: trainingProgress,
         stats: {

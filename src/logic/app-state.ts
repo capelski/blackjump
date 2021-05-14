@@ -108,7 +108,7 @@ export const getNextTrainingStatus = (
     currentDealerSymbol: SimpleCardSymbol
 ): TrainingStatus => {
     const nextFailedHands = getNextFailedHands(
-        trainingStatus.failed,
+        trainingStatus.failedHands,
         isHit,
         handCode,
         currentDealerSymbol!
@@ -122,7 +122,7 @@ export const getNextTrainingStatus = (
         trainingStatus.progress[handCode][currentDealerSymbol!]
     );
 
-    const nextTrainedHands = getNextTrainingProgress(
+    const nextTrainingProgress = getNextTrainingProgress(
         trainingStatus.progress,
         isHit,
         handCode,
@@ -130,9 +130,9 @@ export const getNextTrainingStatus = (
     );
 
     return {
-        failed: nextFailedHands,
+        failedHands: nextFailedHands,
         isCompleted: isTrainingCompleted(nextTrainedHandsStats),
-        stats: nextTrainedHandsStats,
-        progress: nextTrainedHands
+        progress: nextTrainingProgress,
+        stats: nextTrainedHandsStats
     };
 };
