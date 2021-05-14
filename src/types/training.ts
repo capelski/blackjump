@@ -2,9 +2,14 @@ import { SimpleCardSymbol } from './card';
 import { CasinoRulesKeys } from './casino-rules';
 import { HandDecisionSet } from './decisions';
 import { Dictionary } from './dictionary';
-import { FailedHand, Hand, HandRepresentation } from './hand';
+import { Hand, HandRepresentation } from './hand';
 
 export type DealerCards = Dictionary<TrainedHandStatus, SimpleCardSymbol>;
+
+export interface FailedHand {
+    dealerSymbol: SimpleCardSymbol;
+    handRepresentation: HandRepresentation;
+}
 
 export interface RelevantHand {
     decisionSet: HandDecisionSet;

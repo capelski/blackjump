@@ -1,9 +1,4 @@
-import { Card, SimpleCardSymbol } from './card';
-
-export interface FailedHand {
-    dealerSymbol: SimpleCardSymbol;
-    handRepresentation: HandRepresentation;
-}
+import { Card } from './card';
 
 export interface Hand {
     bet: number;
@@ -20,6 +15,7 @@ export enum HandOutcome {
     push = 'Push'
 }
 
+// TODO Rename to RelevantHandSymbol
 export enum HandRepresentation {
     Hard5 = '5',
     Hard6 = '6',
