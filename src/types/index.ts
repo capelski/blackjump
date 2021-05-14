@@ -2,6 +2,7 @@ export {
     Card,
     CardSuit,
     CardSymbol,
+    CardValues,
     SimpleCardSymbol,
     SpecialCardSymbol,
     TenPointsCardSymbol

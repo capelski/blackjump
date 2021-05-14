@@ -2,14 +2,14 @@ import {
     Card,
     CardSuit,
     CardSymbol,
-    Dictionary,
+    CardValues,
     SimpleCardSymbol,
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from '../types';
 import { cartesianProduct, getObjectKeys, getRandomItem, removeDuplicates } from '../utils';
 
-const cardsValue: Dictionary<number[], CardSymbol> = {
+const cardsValue: CardValues = {
     [SimpleCardSymbol.Ace]: [1, 11],
     [SimpleCardSymbol.Two]: [2],
     [SimpleCardSymbol.Three]: [3],

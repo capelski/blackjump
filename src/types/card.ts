@@ -1,3 +1,5 @@
+import { Dictionary } from './dictionary';
+
 export interface Card {
     isBlueCard: boolean;
     isGoldCard: boolean;
@@ -13,6 +15,8 @@ export enum CardSuit {
 }
 
 export type CardSymbol = SimpleCardSymbol | SpecialCardSymbol;
+
+export type CardValues = Dictionary<number[], CardSymbol>;
 
 export enum SimpleCardSymbol {
     Ace = 'A',
