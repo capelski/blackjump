@@ -4,15 +4,15 @@ import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
 import { getSpecificTrainingPair } from '../logic/training-pair';
-import { AppNavigation, FailedHand, Hand, Phases, RelevantHands, RouteNames } from '../types';
+import { AppNavigation, FailedHand, Hand, Phases, RouteNames, TrainingHands } from '../types';
 
 type FailedHandsProps = {
     failedHands: FailedHand[];
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
-    relevantHands: RelevantHands;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
+    trainingHands: TrainingHands;
 };
 
 export const FailedHands: React.FC<FailedHandsProps> = (props) => {
@@ -46,7 +46,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                     </View>
                 ) : (
                     Object.values(props.failedHands).map((failedHand) => {
-                        const handName = props.relevantHands[failedHand.handRepresentation].name;
+                        const handName = props.trainingHands[failedHand.handRepresentation].name;
 
                         return (
                             <View key={handName} style={{ marginBottom: 16, width: '100%' }}>

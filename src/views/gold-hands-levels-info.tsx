@@ -5,7 +5,7 @@ import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { handDecisionSetGetters } from '../logic/hand-decision-set';
-import { getRelevantHands } from '../logic/relevant-hands';
+import { getTrainingHands } from '../logic/training-hand';
 
 import {
     CardSuit,
@@ -31,7 +31,7 @@ const levelsColor: Dictionary<string, number> = {
 export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
 
-    const relevantHands = getRelevantHands(casinoRules);
+    const trainingHands = getTrainingHands(casinoRules);
 
     const hardEight: Hand = {
         bet: 1,
@@ -164,11 +164,11 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 </View>
 
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {Object.values(relevantHands).map((relevantHand) => (
+                    {Object.values(trainingHands).map((trainingHand) => (
                         <Text
-                            key={relevantHand.name}
+                            key={trainingHand.name}
                             style={{
-                                backgroundColor: levelsColor[relevantHand.level],
+                                backgroundColor: levelsColor[trainingHand.level],
                                 color: 'white',
                                 fontSize: 20,
                                 marginHorizontal: '1.5%',
@@ -177,7 +177,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                                 width: '30%'
                             }}
                         >
-                            {relevantHand.name}
+                            {trainingHand.name}
                         </Text>
                     ))}
                 </View>

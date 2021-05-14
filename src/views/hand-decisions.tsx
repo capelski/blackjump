@@ -4,19 +4,20 @@ import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from '../logic/hand-decision-set';
-import { AppRoute, CasinoRules, CasinoRulesKeys, RelevantHands, RouteNames } from '../types';
+import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames, TrainingHands } from '../types';
 
+// TODO Get only the corresponding trainingHand as prop
 type HandDecisionsProps = {
     casinoRules: CasinoRules;
-    relevantHands: RelevantHands;
     route: AppRoute<RouteNames.handDecisions>;
+    trainingHands: TrainingHands;
 };
 
 export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.casinoRules);
 
     const handRepresentation = props.route.params['handRepresentation'];
-    const relevantHand = props.relevantHands[handRepresentation];
+    const trainingHand = props.trainingHands[handRepresentation];
     const handDecisionSet = handDecisionSetGetters[handRepresentation](casinoRules);
 
     return (
@@ -37,7 +38,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
                     width: '100%'
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 24 }}>{relevantHand.name} decisions</Text>
+                <Text style={{ color: 'white', fontSize: 24 }}>{trainingHand.name} decisions</Text>
                 <Text
                     style={{
                         color: 'white',
@@ -51,7 +52,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
 
             <HandDecisionsTable handDecisionSet={handDecisionSet} />
 
-            {relevantHand.dependencies.map((dependency) => {
+            {trainingHand.dependencies.map((dependency) => {
                 return dependency === CasinoRulesKeys.doubleAfterSplit ? (
                     <RuleSwitcher
                         casinoRules={casinoRules}

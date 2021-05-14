@@ -12,9 +12,9 @@ import {
     Hand,
     Phases,
     PlayerDecisions,
-    RelevantHands,
     SimpleCardSymbol,
-    TrainedHands
+    TrainedHands,
+    TrainingHands
 } from '../types';
 import { Button } from './button';
 
@@ -31,9 +31,9 @@ export interface ActionsProps {
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
     phase: Phases;
-    relevantHands: RelevantHands;
     onBoardingStep: number;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
+    trainingHands: TrainingHands;
     trainedHands: TrainedHands;
 }
 
@@ -70,7 +70,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                             dealerHand = createHand([getRandomCard()]);
                         } else if (props.gameConfig.useGoldHands) {
                             const trainingPair = getRandomTrainingPair(
-                                props.relevantHands,
+                                props.trainingHands,
                                 props.trainedHands,
                                 props.gameConfig.goldHandsLevels
                             );

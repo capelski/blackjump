@@ -9,9 +9,9 @@ import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
-import { getRelevantHands } from '../logic/relevant-hands';
-import { getDefaultTrainingStatus } from '../logic/training-status';
+import { getTrainingHands } from '../logic/training-hand';
 import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pair';
+import { getDefaultTrainingStatus } from '../logic/training-status';
 import {
     AppNavigation,
     CasinoRules,
@@ -21,8 +21,8 @@ import {
     GoldHandsLevels,
     OnBoardingSections,
     Phases,
-    RelevantHands,
     RouteNames,
+    TrainingHands,
     TrainingStatus
 } from '../types';
 
@@ -33,9 +33,9 @@ type ConfigMenuProps = {
     onBoardingStep: number;
     phase: Phases;
     progress: number;
-    relevantHands: RelevantHands;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingStatus: (trainingStatus: TrainingStatus) => void;
+    trainingHands: TrainingHands;
     trainingStatus: TrainingStatus;
 };
 
@@ -51,13 +51,13 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
     const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
     const [goldHandsNumber, setGoldHandsNumber] = useState(
-        getGoldHandsNumber(props.relevantHands, props.gameConfig.goldHandsLevels)
+        getGoldHandsNumber(props.trainingHands, props.gameConfig.goldHandsLevels)
     );
     const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
         props.gameConfig.isDealerAnimationEnabled
     );
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
-    const [relevantHands, setRelevantHands] = useState(props.relevantHands);
+    const [trainingHands, setTrainingHands] = useState(props.trainingHands);
     const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
     const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
 
@@ -67,7 +67,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const areGoldHandsBlockingProgressHandler = (options?: {
         nextCasinoRules?: CasinoRules;
         nextGoldHandsLevels?: GoldHandsLevels;
-        nextRelevantHands?: RelevantHands;
+        nextTrainingHands?: TrainingHands;
         nextUseGoldHands?: boolean;
     }) => {
         setAreGoldHandsBlockingProgress(
@@ -85,7 +85,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 ? options.nextUseGoldHands
                                 : useGoldHands
                     },
-                    (options && options.nextRelevantHands) || relevantHands,
+                    (options && options.nextTrainingHands) || trainingHands,
                     props.trainingStatus.trained,
                     props.progress
                 )
@@ -93,12 +93,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
-        const nextRelevantHands = getRelevantHands(nextCasinoRules);
-        const nextGoldHandsNumber = getGoldHandsNumber(nextRelevantHands, goldHandsLevels);
+        const nextTrainingHands = getTrainingHands(nextCasinoRules);
+        const nextGoldHandsNumber = getGoldHandsNumber(nextTrainingHands, goldHandsLevels);
 
         setGoldHandsNumber(nextGoldHandsNumber);
-        setRelevantHands(nextRelevantHands);
-        areGoldHandsBlockingProgressHandler({ nextCasinoRules, nextRelevantHands });
+        setTrainingHands(nextTrainingHands);
+        areGoldHandsBlockingProgressHandler({ nextCasinoRules, nextTrainingHands });
     };
 
     const saveHandler = () => {
@@ -337,7 +337,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                                 setGoldHandsLevels(nextGoldHandsLevels);
                                                 setGoldHandsNumber(
                                                     getGoldHandsNumber(
-                                                        relevantHands,
+                                                        trainingHands,
                                                         nextGoldHandsLevels
                                                     )
                                                 );

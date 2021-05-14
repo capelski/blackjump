@@ -134,10 +134,10 @@ export const Table: React.FC<TableProps> = (props) => (
                 isSplitEnabled={props.isSplitEnabled}
                 isSurrenderEnabled={props.isSurrenderEnabled}
                 phase={props.phase}
-                relevantHands={props.relevantHands}
                 onBoardingStep={props.onBoardingStep}
                 startTrainingRound={props.startTrainingRound}
                 trainedHands={props.trainedHands}
+                trainingHands={props.trainingHands}
             />
         </OnBoardingSection>
     </React.Fragment>

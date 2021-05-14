@@ -1,11 +1,11 @@
-import { CasinoRules, CasinoRulesKeys, HandRepresentation, RelevantHands } from '../types';
+import { CasinoRules, CasinoRulesKeys, HandRepresentation, TrainingHands } from '../types';
 import { getDefaultCasinoRules } from './game-config';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from './hand-decision-set';
 
-export const getDefaultRelevantHands = () => getRelevantHands(getDefaultCasinoRules());
+export const getDefaultTrainingHands = () => getTrainingHands(getDefaultCasinoRules());
 
-export const getRelevantHands = (casinoRules: CasinoRules) => {
-    const relevantHands: RelevantHands = {
+export const getTrainingHands = (casinoRules: CasinoRules) => {
+    const trainingHands: TrainingHands = {
         /*** Hard hands ***/
 
         /* Hard 4 => Only possible with 2,2. Covered in Split hands */
@@ -256,9 +256,9 @@ export const getRelevantHands = (casinoRules: CasinoRules) => {
         }
     };
 
-    Object.values(relevantHands).forEach((relevantHand) => {
-        relevantHand.level = getHandDecisionSetLevel(relevantHand.decisionSet);
+    Object.values(trainingHands).forEach((trainingHand) => {
+        trainingHand.level = getHandDecisionSetLevel(trainingHand.decisionSet);
     });
 
-    return relevantHands;
+    return trainingHands;
 };

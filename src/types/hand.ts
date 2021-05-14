@@ -15,7 +15,7 @@ export enum HandOutcome {
     push = 'Push'
 }
 
-// TODO Rename to RelevantHandSymbol
+// TODO Rename to TrainingHandRepresentation
 export enum HandRepresentation {
     Hard5 = '5',
     Hard6 = '6',

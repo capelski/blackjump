@@ -35,9 +35,9 @@ import {
     startNextHand,
     surrenderCurrentHand
 } from './src/logic/player';
-import { getDefaultRelevantHands, getRelevantHands } from './src/logic/relevant-hands';
-import { getDefaultTrainingStatus, retrieveTrainingStatus } from './src/logic/training-status';
+import { getDefaultTrainingHands, getTrainingHands } from './src/logic/training-hand';
 import { allTrainingPairsNumber, getAreGoldHandsBlockingProgress } from './src/logic/training-pair';
+import { getDefaultTrainingStatus, retrieveTrainingStatus } from './src/logic/training-status';
 import {
     AppNavigation,
     BaseDecisions,
@@ -93,7 +93,7 @@ export default function App() {
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
-    const [relevantHands, setRelevantHands] = useState(getDefaultRelevantHands());
+    const [trainingHands, setTrainingHands] = useState(getDefaultTrainingHands());
     const [sounds, setSounds] = useState<{ failure: Audio.Sound; success: Audio.Sound }>();
     const [trainingStatus, setTrainingStatus] = useState(getDefaultTrainingStatus());
 
@@ -108,8 +108,8 @@ export default function App() {
             initializeSounds()
         ]).then((results) => {
             setGameConfig(results[0]);
-            const nextRelevantHands = getRelevantHands(results[0].casinoRules);
-            setRelevantHands(nextRelevantHands);
+            const nextTrainingHands = getTrainingHands(results[0].casinoRules);
+            setTrainingHands(nextTrainingHands);
 
             if (!results[1]) {
                 ((navigationRef.current as unknown) as AppNavigation).navigate(
@@ -128,7 +128,7 @@ export default function App() {
                 setAreGoldHandsBlockingProgress(
                     getAreGoldHandsBlockingProgress(
                         results[0],
-                        nextRelevantHands,
+                        nextTrainingHands,
                         results[3],
                         getProgress(nextTrainingStatus)
                     )
@@ -215,7 +215,7 @@ export default function App() {
                 player,
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
-                relevantHands,
+                trainingHands,
                 trainingStatus.trained
             );
             setPlayer({ ...player });
@@ -229,7 +229,7 @@ export default function App() {
         const nextDecisionEvaluation = evaluateDecision(
             hand,
             dealerHand!,
-            relevantHands,
+            trainingHands,
             {
                 canDouble: isDoubleEnabled,
                 canSurrender: isSurrenderEnabled
@@ -283,7 +283,7 @@ export default function App() {
         setAreGoldHandsBlockingProgress(
             getAreGoldHandsBlockingProgress(
                 gameConfig,
-                relevantHands,
+                trainingHands,
                 nextTrainingStatus.trained,
                 getProgress(nextTrainingStatus)
             )
@@ -304,7 +304,7 @@ export default function App() {
             player,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
-            relevantHands,
+            trainingHands,
             trainingStatus.trained
         );
 
@@ -327,7 +327,7 @@ export default function App() {
             player,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
-            relevantHands,
+            trainingHands,
             trainingStatus.trained
         );
 
@@ -375,32 +375,32 @@ export default function App() {
                             onBoardingStep={onBoardingStep}
                             phase={phase}
                             progress={progress}
-                            relevantHands={relevantHands}
                             setGameConfig={(_gameConfig) => {
-                                const nextRelevantHands = getRelevantHands(_gameConfig.casinoRules);
+                                const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
                                 setAreGoldHandsBlockingProgress(
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
-                                        nextRelevantHands,
+                                        nextTrainingHands,
                                         trainingStatus.trained,
                                         progress
                                     )
                                 );
                                 setGameConfig(_gameConfig);
-                                setRelevantHands(nextRelevantHands);
+                                setTrainingHands(nextTrainingHands);
                             }}
                             setTrainingStatus={(_trainingStatus) => {
                                 setTrainingStatus(_trainingStatus);
                                 setAreGoldHandsBlockingProgress(
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
-                                        relevantHands,
+                                        trainingHands,
                                         _trainingStatus.trained,
                                         getProgress(_trainingStatus)
                                     )
                                 );
                                 setPlayer({ ...player, cash: 0 });
                             }}
+                            trainingHands={trainingHands}
                             trainingStatus={trainingStatus}
                         />
                     )}
@@ -412,8 +412,8 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
-                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
+                            trainingHands={trainingHands}
                         />
                     )}
                 </Stack.Screen>
@@ -425,8 +425,8 @@ export default function App() {
                     {(props) => (
                         <HandDecisions
                             casinoRules={gameConfig.casinoRules}
-                            relevantHands={relevantHands}
                             route={props.route}
+                            trainingHands={trainingHands}
                         />
                     )}
                 </Stack.Screen>
@@ -458,9 +458,9 @@ export default function App() {
                             onBoardingStep={onBoardingStep}
                             player={player}
                             phase={phase}
-                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
                             trainedHands={trainingStatus.trained}
+                            trainingHands={trainingHands}
                         />
                     )}
                 </Stack.Screen>
@@ -471,9 +471,9 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
-                            relevantHands={relevantHands}
                             startTrainingRound={startTrainingRound}
                             trainedHands={trainingStatus.trained}
+                            trainingHands={trainingHands}
                         />
                     )}
                 </Stack.Screen>

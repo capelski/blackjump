@@ -11,16 +11,7 @@ export interface FailedHand {
     handRepresentation: HandRepresentation;
 }
 
-export interface RelevantHand {
-    decisionSet: HandDecisionSet;
-    dependencies: CasinoRulesKeys[];
-    level: number;
-    name: string;
-    representation: HandRepresentation;
-}
-
-export type RelevantHands = Dictionary<RelevantHand, HandRepresentation>;
-
+// TODO Rename to TrainingHandsProgress
 export type TrainedHands = Dictionary<DealerCards, HandRepresentation>;
 
 export type TrainedHandsStats = {
@@ -33,6 +24,16 @@ export enum TrainedHandStatus {
     passed = 1,
     failed = 2
 }
+
+export interface TrainingHand {
+    decisionSet: HandDecisionSet;
+    dependencies: CasinoRulesKeys[];
+    level: number;
+    name: string;
+    representation: HandRepresentation;
+}
+
+export type TrainingHands = Dictionary<TrainingHand, HandRepresentation>;
 
 export interface TrainingPair {
     dealer: Hand;

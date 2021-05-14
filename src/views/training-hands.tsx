@@ -9,9 +9,9 @@ import {
     Hand,
     HandRepresentation,
     Phases,
-    RelevantHands,
     RouteNames,
-    TrainedHands
+    TrainedHands,
+    TrainingHands as ITrainingHands
 } from '../types';
 import { getObjectKeys } from '../utils';
 
@@ -19,9 +19,9 @@ type TrainingHandsProps = {
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
-    relevantHands: RelevantHands;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainedHands: TrainedHands;
+    trainingHands: ITrainingHands;
 };
 
 export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
@@ -52,7 +52,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
             >
                 {getObjectKeys(props.trainedHands).map((handRepresentation) => {
                     const dealerHands = props.trainedHands[handRepresentation];
-                    const handName = props.relevantHands[handRepresentation].name;
+                    const handName = props.trainingHands[handRepresentation].name;
 
                     return (
                         <OnBoardingSection
