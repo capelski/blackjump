@@ -1,14 +1,30 @@
 import {
     DealerSymbols,
     FailedHand,
+    GameConfig,
     HandCode,
     TrainedHandsStats,
+    TrainingHands,
     TrainingHandStatus,
     TrainingProgress,
     TrainingStatus
 } from '../types';
 import { getObjectKeys } from '../utils';
-import { allDealerSymbols, allTrainingPairsNumber } from './training-pair';
+import { allDealerSymbols } from './dealer-symbols';
+import { getUntrainedTrainingHands } from './training-hand';
+import { allTrainingPairsNumber } from './training-pair';
+
+export const getAreGoldHandsBlockingProgress = (
+    gameConfig: GameConfig,
+    trainingHands: TrainingHands,
+    trainingProgress: TrainingProgress,
+    progress: number
+) =>
+    gameConfig.useGoldHands
+        ? progress < 100 &&
+          getUntrainedTrainingHands(trainingHands, trainingProgress, gameConfig.goldHandsLevels)
+              .length === 0
+        : false;
 
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     failedHands: [],

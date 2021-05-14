@@ -36,8 +36,12 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getDefaultTrainingHands, getTrainingHands } from './src/logic/training-hand';
-import { allTrainingPairsNumber, getAreGoldHandsBlockingProgress } from './src/logic/training-pair';
-import { getDefaultTrainingStatus, retrieveTrainingStatus } from './src/logic/training-status';
+import { allTrainingPairsNumber } from './src/logic/training-pair';
+import {
+    getAreGoldHandsBlockingProgress,
+    getDefaultTrainingStatus,
+    retrieveTrainingStatus
+} from './src/logic/training-status';
 import {
     AppNavigation,
     BaseDecisions,

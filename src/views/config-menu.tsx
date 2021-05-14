@@ -9,9 +9,11 @@ import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
-import { getTrainingHands } from '../logic/training-hand';
-import { getAreGoldHandsBlockingProgress, getGoldHandsNumber } from '../logic/training-pair';
-import { getDefaultTrainingStatus } from '../logic/training-status';
+import { getGoldHandsNumber, getTrainingHands } from '../logic/training-hand';
+import {
+    getAreGoldHandsBlockingProgress,
+    getDefaultTrainingStatus
+} from '../logic/training-status';
 import {
     AppNavigation,
     CasinoRules,

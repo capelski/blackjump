@@ -1,8 +1,26 @@
-import { CasinoRules, CasinoRulesKeys, HandCode, TrainingHands } from '../types';
+import {
+    CasinoRules,
+    CasinoRulesKeys,
+    GoldHandsLevels,
+    HandCode,
+    TrainingHands,
+    TrainingProgress
+} from '../types';
+import { allDealerSymbols, getUntrainedDealerSymbols } from './dealer-symbols';
 import { getDefaultCasinoRules } from './game-config';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from './hand-decision-set';
 
+export const getActiveTrainingHands = (
+    trainingHands: TrainingHands,
+    goldHandsLevels: GoldHandsLevels
+) => Object.values(trainingHands).filter((hand) => goldHandsLevels[hand.level]);
+
 export const getDefaultTrainingHands = () => getTrainingHands(getDefaultCasinoRules());
+
+export const getGoldHandsNumber = (
+    trainingHands: TrainingHands,
+    goldHandsLevels: GoldHandsLevels
+) => allDealerSymbols.length * getActiveTrainingHands(trainingHands, goldHandsLevels).length;
 
 export const getTrainingHands = (casinoRules: CasinoRules) => {
     const trainingHands: TrainingHands = {
@@ -262,3 +280,12 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
 
     return trainingHands;
 };
+
+export const getUntrainedTrainingHands = (
+    trainingHands: TrainingHands,
+    trainingProgress: TrainingProgress,
+    goldHandsLevels: GoldHandsLevels
+) =>
+    getActiveTrainingHands(trainingHands, goldHandsLevels).filter(
+        (trainingHand) => getUntrainedDealerSymbols(trainingProgress[trainingHand.code]).length > 0
+    );

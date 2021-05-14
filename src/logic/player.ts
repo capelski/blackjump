@@ -8,9 +8,8 @@ import {
     TrainingProgress
 } from '../types';
 import { getRandomCard } from './card';
-import { createHand, dealCard, resolveHand } from './hand';
+import { createHand, dealCard, getCardForUntrainedHand, resolveHand } from './hand';
 import { handToHandCode } from './hand-code';
-import { getCardForUntrainedHand } from './training-pair';
 
 export const createPlayer = (cash = 0): Player => ({
     cash,
