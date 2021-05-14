@@ -1,3 +1,4 @@
+import { SimpleCardSymbol } from './card';
 import { CasinoRules } from './casino-rules';
 import { Dictionary } from './dictionary';
 import { HandCode } from './hand';
@@ -9,7 +10,7 @@ export enum BaseDecisions {
 }
 
 export interface DecisionEvaluation {
-    dealerHandValue: number;
+    dealerSymbol: SimpleCardSymbol;
     dynamicDecision: DynamicDecision;
     handName: string;
     isHit: boolean;
@@ -33,19 +34,17 @@ export type HandDecisionSetGetters = Dictionary<
     HandCode
 >;
 
-// TODO Use SimpleCardSymbol instead of numbers
 export interface HandDecisionSet {
-    [key: number]: DynamicDecision;
-    2: DynamicDecision;
-    3: DynamicDecision;
-    4: DynamicDecision;
-    5: DynamicDecision;
-    6: DynamicDecision;
-    7: DynamicDecision;
-    8: DynamicDecision;
-    9: DynamicDecision;
-    10: DynamicDecision;
-    11: DynamicDecision;
+    [SimpleCardSymbol.Two]: DynamicDecision;
+    [SimpleCardSymbol.Three]: DynamicDecision;
+    [SimpleCardSymbol.Four]: DynamicDecision;
+    [SimpleCardSymbol.Five]: DynamicDecision;
+    [SimpleCardSymbol.Six]: DynamicDecision;
+    [SimpleCardSymbol.Seven]: DynamicDecision;
+    [SimpleCardSymbol.Eight]: DynamicDecision;
+    [SimpleCardSymbol.Nine]: DynamicDecision;
+    [SimpleCardSymbol.Ten]: DynamicDecision;
+    [SimpleCardSymbol.Ace]: DynamicDecision;
 }
 
 export type PlayerDecision = BaseDecisions | PlayerDecisions;

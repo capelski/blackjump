@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { colors } from '../constants';
 import { HandDecisionSet } from '../types';
+import { getObjectKeys } from '../utils';
 
 interface HandDecisionsTableProps {
     handDecisionSet: HandDecisionSet;
@@ -9,10 +10,9 @@ interface HandDecisionsTableProps {
 
 export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => (
     <View>
-        {Object.keys(props.handDecisionSet).map((key) => {
-            const number = parseInt(key);
+        {getObjectKeys(props.handDecisionSet).map((simpleCardSymbol) => {
             return (
-                <View key={number} style={{ flexDirection: 'row', width: '100%' }}>
+                <View key={simpleCardSymbol} style={{ flexDirection: 'row', width: '100%' }}>
                     <Text
                         style={{
                             color: 'white',
@@ -23,11 +23,11 @@ export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => 
                             width: '15%'
                         }}
                     >
-                        {number}
+                        {simpleCardSymbol}
                     </Text>
                     <Text
                         style={{
-                            backgroundColor: colors[props.handDecisionSet[number]],
+                            backgroundColor: colors[props.handDecisionSet[simpleCardSymbol]],
                             color: 'white',
                             fontSize: 20,
                             fontWeight: 'bold',
@@ -38,7 +38,7 @@ export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => 
                             width: '85%'
                         }}
                     >
-                        {props.handDecisionSet[number]}
+                        {props.handDecisionSet[simpleCardSymbol]}
                     </Text>
                 </View>
             );

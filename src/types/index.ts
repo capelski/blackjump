@@ -15,6 +15,7 @@ export {
     DynamicDecision,
     DynamicDecisions,
     HandDecisionSet,
+    HandDecisionSetGetters,
     PlayerDecision,
     PlayerDecisions
 } from './decisions';

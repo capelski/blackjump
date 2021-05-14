@@ -61,7 +61,7 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
                         marginRight: 8
                     }}
                 >
-                    {props.decisionEvaluation.dealerHandValue}
+                    {props.decisionEvaluation.dealerSymbol}
                 </Text>
                 <TouchableOpacity onPress={props.showDecisionsHandler} style={{ marginTop: 8 }}>
                     <Text

@@ -9,7 +9,7 @@ import {
     PlayerDecisions,
     TrainingHands
 } from '../types';
-import { getHandEffectiveValue } from './hand';
+import { symbolToSimpleSymbol } from './card';
 import { handToHandCode } from './hand-code';
 
 export const evaluateDecision = (
@@ -21,13 +21,13 @@ export const evaluateDecision = (
 ): DecisionEvaluation => {
     const handCode = handToHandCode(playerHand);
     const trainingHand = trainingHands[handCode];
-    const dealerHandValue = getHandEffectiveValue(dealerHand);
+    const dealerSymbol = symbolToSimpleSymbol(dealerHand.cards[0].symbol);
 
-    const dynamicDecision = trainingHand.decisionSet[dealerHandValue];
+    const dynamicDecision = trainingHand.decisionSet[dealerSymbol];
     const optimalDecision = evaluateDynamicDecision(dynamicDecision, dynamicConditions);
 
     return {
-        dealerHandValue,
+        dealerSymbol,
         dynamicDecision,
         handName: trainingHand.name,
         isHit: playerDecision === optimalDecision
