@@ -11,9 +11,9 @@ import {
     Phases,
     RelevantHands,
     RouteNames,
-    SimpleCardSymbol,
     TrainedHands
 } from '../types';
+import { getObjectKeys } from '../utils';
 
 type TrainingHandsProps = {
     navigation: AppNavigation;
@@ -50,145 +50,139 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 }}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
-                {(Object.keys(props.trainedHands) as HandRepresentation[]).map(
-                    (handRepresentation, index) => {
-                        const dealerHands = props.trainedHands[handRepresentation];
-                        const handName = props.relevantHands[handRepresentation].name;
+                {getObjectKeys(props.trainedHands).map((handRepresentation) => {
+                    const dealerHands = props.trainedHands[handRepresentation];
+                    const handName = props.relevantHands[handRepresentation].name;
 
-                        return (
-                            <OnBoardingSection
-                                isHighlighted={unfoldedHand === handRepresentation}
-                                key={index}
-                                onBoardingStep={props.onBoardingStep}
-                                style={{ paddingVertical: 8, paddingHorizontal: 16, width: '100%' }}
+                    return (
+                        <OnBoardingSection
+                            isHighlighted={unfoldedHand === handRepresentation}
+                            key={handRepresentation}
+                            onBoardingStep={props.onBoardingStep}
+                            style={{ paddingVertical: 8, paddingHorizontal: 16, width: '100%' }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setUnfoldedHand(
+                                        unfoldedHand !== handRepresentation
+                                            ? handRepresentation
+                                            : undefined
+                                    );
+                                }}
+                                style={{ width: '100%' }}
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setUnfoldedHand(
-                                            unfoldedHand !== handRepresentation
-                                                ? handRepresentation
-                                                : undefined
-                                        );
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontSize: 20,
+                                        marginBottom: 16,
+                                        textAlign: 'center'
                                     }}
-                                    style={{ width: '100%' }}
                                 >
-                                    <Text
+                                    {handName}
+                                </Text>
+                            </TouchableOpacity>
+                            {unfoldedHand && unfoldedHand === handRepresentation && (
+                                <React.Fragment>
+                                    <View
                                         style={{
-                                            color: 'white',
-                                            fontSize: 20,
-                                            marginBottom: 16,
-                                            textAlign: 'center'
+                                            flexDirection: 'row',
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'space-around',
+                                            opacity:
+                                                props.phase === Phases.finished ? undefined : 0.3
                                         }}
                                     >
-                                        {handName}
-                                    </Text>
-                                </TouchableOpacity>
-                                {unfoldedHand && unfoldedHand === handRepresentation && (
-                                    <React.Fragment>
-                                        <View
+                                        {getObjectKeys(dealerHands).map((dealerSymbol) => {
+                                            const backgroundColor =
+                                                dealerHands[dealerSymbol] === 0
+                                                    ? '#333'
+                                                    : dealerHands[dealerSymbol] === 1
+                                                    ? 'lightgreen'
+                                                    : 'lightcoral';
+
+                                            return (
+                                                <TouchableOpacity
+                                                    key={dealerSymbol}
+                                                    onPress={
+                                                        props.onBoardingStep > -1
+                                                            ? undefined
+                                                            : () => {
+                                                                  if (
+                                                                      props.phase ===
+                                                                      Phases.finished
+                                                                  ) {
+                                                                      const trainingPair = getSpecificTrainingPair(
+                                                                          handRepresentation,
+                                                                          dealerSymbol
+                                                                      );
+                                                                      props.startTrainingRound(
+                                                                          trainingPair.player,
+                                                                          trainingPair.dealer
+                                                                      );
+                                                                      props.navigation.navigate(
+                                                                          RouteNames.table
+                                                                      );
+                                                                  }
+                                                              }
+                                                    }
+                                                    style={{
+                                                        alignItems: 'center',
+                                                        backgroundColor: backgroundColor,
+                                                        borderRadius: 8,
+                                                        marginBottom: 8,
+                                                        paddingVertical: 4,
+                                                        width: '18%'
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: 'white',
+                                                            fontSize: 20,
+                                                            fontWeight: 'bold'
+                                                        }}
+                                                    >
+                                                        {dealerSymbol}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            );
+                                        })}
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={
+                                            props.onBoardingStep > -1
+                                                ? undefined
+                                                : () => {
+                                                      props.navigation.navigate(
+                                                          RouteNames.handDecisions,
+                                                          {
+                                                              handRepresentation
+                                                          }
+                                                      );
+                                                  }
+                                        }
+                                    >
+                                        <Text
                                             style={{
-                                                flexDirection: 'row',
-                                                flexWrap: 'wrap',
-                                                justifyContent: 'space-around',
-                                                opacity:
-                                                    props.phase === Phases.finished
-                                                        ? undefined
-                                                        : 0.3
+                                                backgroundColor: doubleColor,
+                                                borderRadius: 16,
+                                                color: 'white',
+                                                fontSize: 20,
+                                                marginVertical: 16,
+                                                marginHorizontal: 24,
+                                                paddingVertical: 4,
+                                                textAlign: 'center'
                                             }}
                                         >
-                                            {(Object.keys(dealerHands) as SimpleCardSymbol[]).map(
-                                                (dealerSymbol, dealerIndex) => {
-                                                    const backgroundColor =
-                                                        dealerHands[dealerSymbol] === 0
-                                                            ? '#333'
-                                                            : dealerHands[dealerSymbol] === 1
-                                                            ? 'lightgreen'
-                                                            : 'lightcoral';
-
-                                                    return (
-                                                        <TouchableOpacity
-                                                            key={dealerIndex}
-                                                            onPress={
-                                                                props.onBoardingStep > -1
-                                                                    ? undefined
-                                                                    : () => {
-                                                                          if (
-                                                                              props.phase ===
-                                                                              Phases.finished
-                                                                          ) {
-                                                                              const trainingPair = getSpecificTrainingPair(
-                                                                                  handRepresentation,
-                                                                                  dealerSymbol
-                                                                              );
-                                                                              props.startTrainingRound(
-                                                                                  trainingPair.player,
-                                                                                  trainingPair.dealer
-                                                                              );
-                                                                              props.navigation.navigate(
-                                                                                  RouteNames.table
-                                                                              );
-                                                                          }
-                                                                      }
-                                                            }
-                                                            style={{
-                                                                alignItems: 'center',
-                                                                backgroundColor: backgroundColor,
-                                                                borderRadius: 8,
-                                                                marginBottom: 8,
-                                                                paddingVertical: 4,
-                                                                width: '18%'
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    color: 'white',
-                                                                    fontSize: 20,
-                                                                    fontWeight: 'bold'
-                                                                }}
-                                                            >
-                                                                {dealerSymbol}
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    );
-                                                }
-                                            )}
-                                        </View>
-                                        <TouchableOpacity
-                                            onPress={
-                                                props.onBoardingStep > -1
-                                                    ? undefined
-                                                    : () => {
-                                                          props.navigation.navigate(
-                                                              RouteNames.handDecisions,
-                                                              {
-                                                                  handRepresentation
-                                                              }
-                                                          );
-                                                      }
-                                            }
-                                        >
-                                            <Text
-                                                style={{
-                                                    backgroundColor: doubleColor,
-                                                    borderRadius: 16,
-                                                    color: 'white',
-                                                    fontSize: 20,
-                                                    marginVertical: 16,
-                                                    marginHorizontal: 24,
-                                                    paddingVertical: 4,
-                                                    textAlign: 'center'
-                                                }}
-                                            >
-                                                {handName} decisions ➡️
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </React.Fragment>
-                                )}
-                                <Divider />
-                            </OnBoardingSection>
-                        );
-                    }
-                )}
+                                            {handName} decisions ➡️
+                                        </Text>
+                                    </TouchableOpacity>
+                                </React.Fragment>
+                            )}
+                            <Divider />
+                        </OnBoardingSection>
+                    );
+                })}
             </ScrollView>
         </React.Fragment>
     );

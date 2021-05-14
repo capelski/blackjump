@@ -11,6 +11,9 @@ export const cartesianProduct = <T, U, R>(
     }, []);
 };
 
+export const getObjectKeys = <T extends string | number | symbol>(object: { [key in T]: any }) =>
+    Object.keys(object) as T[];
+
 export const getRandomItem = <T>(items: T[]) =>
     items[Math.round(Math.random() * (items.length - 1))];
 

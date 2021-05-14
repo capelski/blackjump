@@ -11,7 +11,7 @@ import {
     TrainedHandStatus,
     TrainingPair
 } from '../types';
-import { getRandomItem } from '../utils';
+import { getObjectKeys, getRandomItem } from '../utils';
 import {
     getCardsValues,
     getRandomCard,
@@ -164,7 +164,7 @@ export const getRandomTrainingPair = (
     const randomDealerHand =
         untrainedDealerHands.length > 0
             ? getRandomItem(untrainedDealerHands)
-            : getRandomItem(Object.keys(dealerHands) as SimpleCardSymbol[]); // In case all hands have been passed
+            : getRandomItem(getObjectKeys(dealerHands)); // In case all hands have been passed
 
     return {
         dealer: createHand([
@@ -197,9 +197,9 @@ export const getSpecificTrainingPair = (
 };
 
 const getUntrainedDealerHands = (dealerHands: Dictionary<TrainedHandStatus, SimpleCardSymbol>) =>
-    Object.keys(dealerHands).filter(
-        (cardSymbol) => dealerHands[cardSymbol as SimpleCardSymbol] !== TrainedHandStatus.passed
-    ) as SimpleCardSymbol[];
+    getObjectKeys(dealerHands).filter(
+        (cardSymbol) => dealerHands[cardSymbol] !== TrainedHandStatus.passed
+    );
 
 const getUntrainedRelevantHands = (
     relevantHands: RelevantHands,

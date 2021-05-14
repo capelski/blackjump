@@ -7,7 +7,7 @@ import {
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from '../types';
-import { cartesianProduct, getRandomItem, removeDuplicates } from '../utils';
+import { cartesianProduct, getObjectKeys, getRandomItem, removeDuplicates } from '../utils';
 
 const cardsValue: Dictionary<number[], CardSymbol> = {
     [SimpleCardSymbol.Ace]: [1, 11],
@@ -27,7 +27,7 @@ const cardsValue: Dictionary<number[], CardSymbol> = {
 
 const suits = [CardSuit.clubs, CardSuit.diamonds, CardSuit.hearts, CardSuit.spades];
 
-const symbols = Object.keys(cardsValue) as CardSymbol[];
+const symbols = getObjectKeys(cardsValue);
 
 const deck = cartesianProduct(
     suits,
