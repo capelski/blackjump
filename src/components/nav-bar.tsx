@@ -10,11 +10,11 @@ import { OnBoardingSection } from './onboarding-section';
 
 export interface NavBarProps {
     areGoldHandsBlockingProgress: boolean;
-    attemptedHands: number;
+    attemptedTrainingPairs: number;
     navigation: AppNavigation;
     onBoardingStep: number;
     player: Player;
-    passedHands: number;
+    passedTrainingPairs: number;
     progress: number;
     routeName?: string;
 }
@@ -69,7 +69,10 @@ const animateIndicator = (position: Animated.Value) => {
 };
 
 export const NavBar: React.FC<NavBarProps> = (props) => {
-    const precision = props.attemptedHands > 0 ? props.passedHands / props.attemptedHands : 0;
+    const precision =
+        props.attemptedTrainingPairs > 0
+            ? props.passedTrainingPairs / props.attemptedTrainingPairs
+            : 0;
 
     const earningsPosition = useMemo(() => new Animated.Value(0), []);
     const precisionPosition = useMemo(() => new Animated.Value(0), []);

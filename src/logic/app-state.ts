@@ -71,16 +71,17 @@ export const getNextTrainingStatus = (
     currentHandCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ): TrainingStatus => {
-    // The current trainingStatus.progress[handCode][currentDealerSymbol]
-    // value must be kept to update attemptedHands and passedHands
-    const currentHandTrainingStatus = trainingStatus.progress[currentHandCode][currentDealerSymbol];
+    // The current trainingStatus.trainingProgress[currentHandCode][currentDealerSymbol]
+    // value must be kept to update attemptedTrainingPairs and passedTrainingPairs
+    const currentHandTrainingStatus =
+        trainingStatus.trainingProgress[currentHandCode][currentDealerSymbol];
 
-    trainingStatus.progress[currentHandCode][currentDealerSymbol] = isHit
+    trainingStatus.trainingProgress[currentHandCode][currentDealerSymbol] = isHit
         ? TrainingPairStatus.passed
         : TrainingPairStatus.failed;
 
-    const nextAttemptedHands =
-        trainingStatus.attemptedHands +
+    const nextAttemptedTrainingPairs =
+        trainingStatus.attemptedTrainingPairs +
         (currentHandTrainingStatus === TrainingPairStatus.untrained ? 1 : 0);
 
     const nextFailedTrainingPairs = getNextFailedTrainingPairs(
@@ -90,8 +91,8 @@ export const getNextTrainingStatus = (
         currentDealerSymbol
     );
 
-    const nextPassedHands =
-        trainingStatus.passedHands +
+    const nextPassedTrainingHands =
+        trainingStatus.passedTrainingPairs +
         (isHit && currentHandTrainingStatus !== TrainingPairStatus.passed
             ? 1
             : !isHit && currentHandTrainingStatus === TrainingPairStatus.passed
@@ -99,10 +100,10 @@ export const getNextTrainingStatus = (
             : 0);
 
     return {
-        attemptedHands: nextAttemptedHands,
+        attemptedTrainingPairs: nextAttemptedTrainingPairs,
         failedTrainingPairs: nextFailedTrainingPairs,
-        isCompleted: isTrainingCompleted(nextPassedHands),
-        passedHands: nextPassedHands,
-        progress: trainingStatus.progress
+        isCompleted: isTrainingCompleted(nextPassedTrainingHands),
+        passedTrainingPairs: nextPassedTrainingHands,
+        trainingProgress: trainingStatus.trainingProgress
     };
 };

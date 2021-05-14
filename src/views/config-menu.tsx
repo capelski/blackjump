@@ -88,7 +88,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 : useGoldHands
                     },
                     (options && options.nextTrainingHands) || trainingHands,
-                    props.trainingStatus.progress,
+                    props.trainingStatus.trainingProgress,
                     props.progress
                 )
         );
@@ -492,7 +492,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                     onPress: () => {
                                         const nextTrainingStatus = getDefaultTrainingStatus();
                                         props.setTrainingStatus(nextTrainingStatus);
-                                        updateTrainingProgress(nextTrainingStatus.progress);
+                                        updateTrainingProgress(nextTrainingStatus.trainingProgress);
                                         updatePlayerEarnings(0);
                                     }
                                 }

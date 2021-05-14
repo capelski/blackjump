@@ -26,11 +26,11 @@ export const getAreGoldHandsBlockingProgress = (
         : false;
 
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
-    attemptedHands: 0,
+    attemptedTrainingPairs: 0,
     failedTrainingPairs: [],
     isCompleted: false,
-    passedHands: 0,
-    progress: Object.values(HandCode).reduce<TrainingProgress>(
+    passedTrainingPairs: 0,
+    trainingProgress: Object.values(HandCode).reduce<TrainingProgress>(
         (reducedTrainingProgress, handCode) => ({
             ...reducedTrainingProgress,
             [handCode]: allDealerSymbols.reduce<TrainingHandStatus>(
@@ -45,7 +45,8 @@ export const getDefaultTrainingStatus = (): TrainingStatus => ({
     )
 });
 
-export const isTrainingCompleted = (passedHands: number) => passedHands === allTrainingPairsNumber;
+export const isTrainingCompleted = (passedTrainingPairs: number) =>
+    passedTrainingPairs === allTrainingPairsNumber;
 
 const reduceTrainingHandProgress = (
     handCode: HandCode,
@@ -70,8 +71,8 @@ const reduceTrainingPairProgress = (
     reducedTrainingStatus: TrainingStatus
 ): TrainingStatus => {
     return {
-        attemptedHands:
-            reducedTrainingStatus.attemptedHands +
+        attemptedTrainingPairs:
+            reducedTrainingStatus.attemptedTrainingPairs +
             (trainingPairStatus !== TrainingPairStatus.untrained ? 1 : 0),
         isCompleted: reducedTrainingStatus.isCompleted,
         failedTrainingPairs:
@@ -83,10 +84,10 @@ const reduceTrainingPairProgress = (
                       }
                   ])
                 : reducedTrainingStatus.failedTrainingPairs,
-        passedHands:
-            reducedTrainingStatus.passedHands +
+        passedTrainingPairs:
+            reducedTrainingStatus.passedTrainingPairs +
             (trainingPairStatus === TrainingPairStatus.passed ? 1 : 0),
-        progress: reducedTrainingStatus.progress
+        trainingProgress: reducedTrainingStatus.trainingProgress
     };
 };
 
@@ -95,15 +96,15 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
         (reducedTrainingStatus, handCode) =>
             reduceTrainingHandProgress(handCode, trainingProgress[handCode], reducedTrainingStatus),
         {
-            attemptedHands: 0,
+            attemptedTrainingPairs: 0,
             failedTrainingPairs: [],
             isCompleted: false,
-            passedHands: 0,
-            progress: trainingProgress
+            passedTrainingPairs: 0,
+            trainingProgress: trainingProgress
         } as TrainingStatus
     );
 
-    trainingStatus.isCompleted = isTrainingCompleted(trainingStatus.passedHands);
+    trainingStatus.isCompleted = isTrainingCompleted(trainingStatus.passedTrainingPairs);
 
     return trainingStatus;
 };

@@ -174,7 +174,7 @@ export default function App() {
     };
 
     const getProgress = (_trainingStatus: TrainingStatus) =>
-        Math.floor((_trainingStatus.attemptedHands * 1000) / allTrainingPairsNumber) / 10;
+        Math.floor((_trainingStatus.attemptedTrainingPairs * 1000) / allTrainingPairsNumber) / 10;
     const progress = getProgress(trainingStatus);
 
     useEffect(() => {
@@ -220,7 +220,7 @@ export default function App() {
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
                 trainingHands,
-                trainingStatus.progress
+                trainingStatus.trainingProgress
             );
             setPlayer({ ...player });
             if (isFinished(getCurrentHand(player))) {
@@ -274,7 +274,7 @@ export default function App() {
         }
 
         setTrainingStatus(nextTrainingStatus);
-        updateTrainingProgress(nextTrainingStatus.progress);
+        updateTrainingProgress(nextTrainingStatus.trainingProgress);
 
         if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 4) {
             updateOnBoardingStep(1);
@@ -288,7 +288,7 @@ export default function App() {
             getAreGoldHandsBlockingProgress(
                 gameConfig,
                 trainingHands,
-                nextTrainingStatus.progress,
+                nextTrainingStatus.trainingProgress,
                 getProgress(nextTrainingStatus)
             )
         );
@@ -309,7 +309,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
-            trainingStatus.progress
+            trainingStatus.trainingProgress
         );
 
         setPlayer({ ...player });
@@ -332,7 +332,7 @@ export default function App() {
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
-            trainingStatus.progress
+            trainingStatus.trainingProgress
         );
 
         setPlayer({ ...player });
@@ -353,10 +353,10 @@ export default function App() {
             <StatusBar hidden={true} />
             <NavBar
                 areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
-                attemptedHands={trainingStatus.attemptedHands}
+                attemptedTrainingPairs={trainingStatus.attemptedTrainingPairs}
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
-                passedHands={trainingStatus.passedHands}
+                passedTrainingPairs={trainingStatus.passedTrainingPairs}
                 player={player}
                 progress={progress}
                 routeName={currentRoute}
@@ -386,7 +386,7 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         _gameConfig,
                                         nextTrainingHands,
-                                        trainingStatus.progress,
+                                        trainingStatus.trainingProgress,
                                         progress
                                     )
                                 );
@@ -399,7 +399,7 @@ export default function App() {
                                     getAreGoldHandsBlockingProgress(
                                         gameConfig,
                                         trainingHands,
-                                        _trainingStatus.progress,
+                                        _trainingStatus.trainingProgress,
                                         getProgress(_trainingStatus)
                                     )
                                 );
@@ -461,7 +461,7 @@ export default function App() {
                             phase={phase}
                             startTrainingRound={startTrainingRound}
                             trainingHands={trainingHands}
-                            trainingProgress={trainingStatus.progress}
+                            trainingProgress={trainingStatus.trainingProgress}
                         />
                     )}
                 </Stack.Screen>
@@ -474,7 +474,7 @@ export default function App() {
                             phase={phase}
                             startTrainingRound={startTrainingRound}
                             trainingHands={trainingHands}
-                            trainingProgress={trainingStatus.progress}
+                            trainingProgress={trainingStatus.trainingProgress}
                         />
                     )}
                 </Stack.Screen>
