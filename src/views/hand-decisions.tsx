@@ -6,19 +6,16 @@ import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from '../logic/hand-decision-set';
 import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames, TrainingHands } from '../types';
 
-// TODO Get only the corresponding trainingHand as prop
 type HandDecisionsProps = {
     casinoRules: CasinoRules;
     route: AppRoute<RouteNames.handDecisions>;
-    trainingHands: TrainingHands;
 };
 
 export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.casinoRules);
 
-    const handCode = props.route.params['handCode'];
-    const trainingHand = props.trainingHands[handCode];
-    const handDecisionSet = handDecisionSetGetters[handCode](casinoRules);
+    const trainingHand = props.route.params['trainingHand'];
+    const handDecisionSet = handDecisionSetGetters[trainingHand.code](casinoRules);
 
     return (
         <ScrollView

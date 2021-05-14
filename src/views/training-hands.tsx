@@ -152,7 +152,8 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                       props.navigation.navigate(
                                                           RouteNames.handDecisions,
                                                           {
-                                                              handCode
+                                                              trainingHand:
+                                                                  props.trainingHands[handCode]
                                                           }
                                                       );
                                                   }

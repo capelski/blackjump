@@ -423,11 +423,7 @@ export default function App() {
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => (
-                        <HandDecisions
-                            casinoRules={gameConfig.casinoRules}
-                            route={props.route}
-                            trainingHands={trainingHands}
-                        />
+                        <HandDecisions casinoRules={gameConfig.casinoRules} route={props.route} />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.onboarding}>

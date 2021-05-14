@@ -1,6 +1,6 @@
 import { Route } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HandCode } from './hand';
+import { TrainingHand } from './training';
 
 export type AppNavigation = StackNavigationProp<RouteParams>;
 
@@ -28,7 +28,7 @@ export type RouteParams = {
     [RouteNames.goldHandsInfo]: undefined;
     [RouteNames.goldHandsLevelsInfo]: undefined;
     [RouteNames.handDecisions]: {
-        handCode: HandCode;
+        trainingHand: TrainingHand;
     };
     [RouteNames.onboarding]: undefined;
     [RouteNames.table]: undefined;

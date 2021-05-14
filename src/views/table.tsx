@@ -9,20 +9,24 @@ import { tableCenterHeight } from '../constants';
 import {
     AppNavigation,
     DecisionEvaluation,
+    GameConfig,
     Hand,
     OnBoardingSections,
     Phases,
     Player,
-    RouteNames
+    RouteNames,
+    TrainingHands
 } from '../types';
 
 type TableProps = ActionsProps & {
     dealerHand?: Hand;
     decisionEvaluation?: DecisionEvaluation;
+    gameConfig: GameConfig;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
     player: Player;
+    trainingHands: TrainingHands;
 };
 
 export const Table: React.FC<TableProps> = (props) => (
@@ -62,7 +66,8 @@ export const Table: React.FC<TableProps> = (props) => (
                                 ? undefined
                                 : () => {
                                       props.navigation.navigate(RouteNames.handDecisions, {
-                                          handCode: props.player.lastActionHand!
+                                          trainingHand:
+                                              props.trainingHands[props.player.lastActionHand!]
                                       });
                                   }
                         }
