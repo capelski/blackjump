@@ -49,7 +49,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
                 {getObjectKeys(props.trainingProgress).map((handCode) => {
-                    const dealerCards = props.trainingProgress[handCode];
+                    const dealerSymbols = props.trainingProgress[handCode];
                     const handName = props.trainingHands[handCode].name;
 
                     return (
@@ -89,17 +89,17 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                 props.phase === Phases.finished ? undefined : 0.3
                                         }}
                                     >
-                                        {getObjectKeys(dealerCards).map((dealerCard) => {
+                                        {getObjectKeys(dealerSymbols).map((dealerSymbol) => {
                                             const backgroundColor =
-                                                dealerCards[dealerCard] === 0
+                                                dealerSymbols[dealerSymbol] === 0
                                                     ? '#333'
-                                                    : dealerCards[dealerCard] === 1
+                                                    : dealerSymbols[dealerSymbol] === 1
                                                     ? 'lightgreen'
                                                     : 'lightcoral';
 
                                             return (
                                                 <TouchableOpacity
-                                                    key={dealerCard}
+                                                    key={dealerSymbol}
                                                     onPress={
                                                         props.onBoardingStep > -1
                                                             ? undefined
@@ -110,7 +110,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                                   ) {
                                                                       const trainingPair = getSpecificTrainingPair(
                                                                           handCode,
-                                                                          dealerCard
+                                                                          dealerSymbol
                                                                       );
                                                                       props.startTrainingRound(
                                                                           trainingPair.player,
@@ -138,7 +138,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                             fontWeight: 'bold'
                                                         }}
                                                     >
-                                                        {dealerCard}
+                                                        {dealerSymbol}
                                                     </Text>
                                                 </TouchableOpacity>
                                             );

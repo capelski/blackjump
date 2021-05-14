@@ -29,7 +29,7 @@ export { Player } from './player';
 export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
 export { TrainingPair } from './training-pair';
 export {
-    DealerCards,
+    DealerSymbols,
     FailedHand,
     TrainedHandsStats,
     TrainingProgress,
