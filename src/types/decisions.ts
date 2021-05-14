@@ -1,3 +1,7 @@
+import { CasinoRules } from './casino-rules';
+import { Dictionary } from './dictionary';
+import { HandRepresentation } from './hand';
+
 export enum BaseDecisions {
     hit = 'Hit',
     split = 'Split',
@@ -23,6 +27,11 @@ export enum DynamicDecisions {
     double_stand = 'Double / Stand',
     surrender_hit = 'Surrender / Hit'
 }
+
+export type HandDecisionSetGetters = Dictionary<
+    (casinoRules: CasinoRules) => HandDecisionSet,
+    HandRepresentation
+>;
 
 export interface HandDecisionSet {
     [key: number]: DynamicDecision;

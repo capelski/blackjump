@@ -3,11 +3,10 @@ import {
     BaseDecisions,
     HandRepresentation,
     CasinoRulesKeys,
-    CasinoRules,
-    Dictionary,
     Doubling,
     DynamicDecisions
 } from '../types';
+import { HandDecisionSetGetters } from '../types/decisions';
 
 const alwaysHit: HandDecisionSet = {
     2: BaseDecisions.hit,
@@ -64,10 +63,7 @@ export const getHandDecisionSetLevel = (decisionSet: HandDecisionSet) =>
         }
     ).level;
 
-export const handDecisionSetGetters: Dictionary<
-    (casinoRules: CasinoRules) => HandDecisionSet,
-    HandRepresentation
-> = {
+export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandRepresentation.Hard5]: () => alwaysHit,
     [HandRepresentation.Hard6]: () => alwaysHit,
     [HandRepresentation.Hard7]: () => alwaysHit,
