@@ -1,7 +1,9 @@
+import { SimpleCardSymbol } from './card';
 import { CasinoRulesKeys } from './casino-rules';
 import { HandDecisionSet } from './decisions';
 import { Dictionary } from './dictionary';
 import { HandCode } from './hand';
+import { TrainingPairStatus } from './training-pair';
 
 export interface TrainingHand {
     code: HandCode;
@@ -13,8 +15,4 @@ export interface TrainingHand {
 
 export type TrainingHands = Dictionary<TrainingHand, HandCode>;
 
-export enum TrainingHandStatus {
-    untrained = 0,
-    passed = 1,
-    failed = 2
-}
+export type TrainingHandStatus = Dictionary<TrainingPairStatus, SimpleCardSymbol>;

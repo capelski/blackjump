@@ -8,7 +8,7 @@ import {
     HandOutcome,
     SimpleCardSymbol,
     TrainingHands,
-    TrainingHandStatus,
+    TrainingPairStatus,
     TrainingProgress
 } from '../types';
 import { getRandomItem } from '../utils';
@@ -81,7 +81,7 @@ export const getCardForUntrainedHand = (
     const valuesToUntrainedHands = Object.values(trainingHands)
         .map((trainingHand) => {
             const isHandUntrainedForDealerSymbol =
-                trainingProgress[trainingHand.code][dealerSymbol] === TrainingHandStatus.untrained;
+                trainingProgress[trainingHand.code][dealerSymbol] === TrainingPairStatus.untrained;
 
             let valueToReachThisHand: number;
 

@@ -1,4 +1,4 @@
-import { DealerSymbols, SimpleCardSymbol, TrainingHandStatus } from '../types';
+import { SimpleCardSymbol, TrainingHandStatus, TrainingPairStatus } from '../types';
 import { getObjectKeys } from '../utils';
 
 export const allDealerSymbols: SimpleCardSymbol[] = [
@@ -14,7 +14,7 @@ export const allDealerSymbols: SimpleCardSymbol[] = [
     SimpleCardSymbol.Ten
 ];
 
-export const getUntrainedDealerSymbols = (dealerSymbols: DealerSymbols) =>
-    getObjectKeys(dealerSymbols).filter(
-        (dealerSymbol) => dealerSymbols[dealerSymbol] !== TrainingHandStatus.passed
+export const getUntrainedDealerSymbols = (trainingHandStatus: TrainingHandStatus) =>
+    getObjectKeys(trainingHandStatus).filter(
+        (dealerSymbol) => trainingHandStatus[dealerSymbol] !== TrainingPairStatus.passed
     );

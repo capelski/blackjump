@@ -49,7 +49,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
             >
                 {getObjectKeys(props.trainingProgress).map((handCode) => {
-                    const dealerSymbols = props.trainingProgress[handCode];
+                    const trainingHandStatus = props.trainingProgress[handCode];
                     const handName = props.trainingHands[handCode].name;
 
                     return (
@@ -89,11 +89,11 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                 props.phase === Phases.finished ? undefined : 0.3
                                         }}
                                     >
-                                        {getObjectKeys(dealerSymbols).map((dealerSymbol) => {
+                                        {getObjectKeys(trainingHandStatus).map((dealerSymbol) => {
                                             const backgroundColor =
-                                                dealerSymbols[dealerSymbol] === 0
+                                                trainingHandStatus[dealerSymbol] === 0
                                                     ? '#333'
-                                                    : dealerSymbols[dealerSymbol] === 1
+                                                    : trainingHandStatus[dealerSymbol] === 1
                                                     ? 'lightgreen'
                                                     : 'lightcoral';
 

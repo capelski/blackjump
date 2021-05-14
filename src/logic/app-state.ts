@@ -7,7 +7,7 @@ import {
     Phases,
     Player,
     SimpleCardSymbol,
-    TrainingHandStatus,
+    TrainingPairStatus,
     TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
@@ -76,12 +76,12 @@ export const getNextTrainingStatus = (
     const currentHandTrainingStatus = trainingStatus.progress[currentHandCode][currentDealerSymbol];
 
     trainingStatus.progress[currentHandCode][currentDealerSymbol] = isHit
-        ? TrainingHandStatus.passed
-        : TrainingHandStatus.failed;
+        ? TrainingPairStatus.passed
+        : TrainingPairStatus.failed;
 
     const nextAttemptedHands =
         trainingStatus.attemptedHands +
-        (currentHandTrainingStatus === TrainingHandStatus.untrained ? 1 : 0);
+        (currentHandTrainingStatus === TrainingPairStatus.untrained ? 1 : 0);
 
     const nextFailedHands = getNextFailedHands(
         trainingStatus.failedHands,
@@ -92,9 +92,9 @@ export const getNextTrainingStatus = (
 
     const nextPassedHands =
         trainingStatus.passedHands +
-        (isHit && currentHandTrainingStatus !== TrainingHandStatus.passed
+        (isHit && currentHandTrainingStatus !== TrainingPairStatus.passed
             ? 1
-            : !isHit && currentHandTrainingStatus === TrainingHandStatus.passed
+            : !isHit && currentHandTrainingStatus === TrainingPairStatus.passed
             ? -1
             : 0);
 

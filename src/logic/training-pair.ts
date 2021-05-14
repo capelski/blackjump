@@ -30,13 +30,13 @@ export const getRandomTrainingPair = (
             ? getRandomItem(untrainedTrainingHands)
             : getRandomItem(getActiveTrainingHands(trainingHands, goldHandsLevels)); // In case all hands have been passed
 
-    const dealerSymbols = trainingProgress[randomTrainingHand.code];
-    const untrainedDealerSymbols = getUntrainedDealerSymbols(dealerSymbols);
+    const trainingHandStatus = trainingProgress[randomTrainingHand.code];
+    const untrainedDealerSymbols = getUntrainedDealerSymbols(trainingHandStatus);
 
     const randomDealerSymbol =
         untrainedDealerSymbols.length > 0
             ? getRandomItem(untrainedDealerSymbols)
-            : getRandomItem(getObjectKeys(dealerSymbols)); // In case all hands have been passed
+            : getRandomItem(getObjectKeys(trainingHandStatus)); // In case all hands have been passed
 
     return {
         dealer: createHand([

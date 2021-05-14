@@ -3,20 +3,18 @@ import { Dictionary } from './dictionary';
 import { HandCode } from './hand';
 import { TrainingHandStatus } from './training-hand';
 
-export type DealerSymbols = Dictionary<TrainingHandStatus, SimpleCardSymbol>;
-
 // TODO Rename to FailedTrainingPair. Move to TrainingPair
 export interface FailedHand {
     dealerSymbol: SimpleCardSymbol;
     handCode: HandCode;
 }
 
-export type TrainingProgress = Dictionary<DealerSymbols, HandCode>;
+export type TrainingProgress = Dictionary<TrainingHandStatus, HandCode>;
 
 export interface TrainingStatus {
-    attemptedHands: number;
-    failedHands: FailedHand[];
+    attemptedHands: number; // TODO Rename to attemptedTrainingPairs
+    failedHands: FailedHand[]; // TODO Rename to failedTrainingPairs
     isCompleted: boolean;
-    passedHands: number;
-    progress: TrainingProgress;
+    passedHands: number; // TODO Rename to passedTrainingPairs
+    progress: TrainingProgress; // TODO Rename to trainingPairsProgress
 }
