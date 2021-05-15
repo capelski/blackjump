@@ -1,7 +1,5 @@
 import { BaseDecisions, DynamicDecisions, PlayerDecisions } from './types';
 
-export const actionsHeight = 112;
-
 export const doubleColor = '#ffc107';
 export const hitColor = '#428bca';
 export const splitColor = '#5cb85c';
@@ -20,7 +18,3 @@ export const colors = {
     [PlayerDecisions.double]: doubleColor,
     [PlayerDecisions.surrender]: surrenderColor
 };
-
-export const configBarHeight = 48;
-
-export const tableCenterHeight = 80;

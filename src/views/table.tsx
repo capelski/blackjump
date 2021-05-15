@@ -5,7 +5,6 @@ import { DecisionEvaluationComponent } from '../components/decision-evaluation';
 import { Divider } from '../components/divider';
 import { HandComponent } from '../components/hand-component';
 import { OnBoardingSection } from '../components/onboarding-section';
-import { tableCenterHeight } from '../constants';
 import {
     AppNavigation,
     DecisionEvaluation,
@@ -55,7 +54,7 @@ export const Table: React.FC<TableProps> = (props) => (
             <OnBoardingSection
                 isHighlighted={OnBoardingSections.tableFeedback}
                 onBoardingStep={props.onBoardingStep}
-                style={{ height: tableCenterHeight, justifyContent: 'center', width: '100%' }}
+                style={{ height: 80, justifyContent: 'center', width: '100%' }}
             >
                 <Divider />
                 {props.decisionEvaluation ? (

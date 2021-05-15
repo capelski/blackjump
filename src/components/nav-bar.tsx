@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
-import { configBarHeight, tableColor } from '../constants';
+import { tableColor } from '../constants';
 import { AppNavigation, OnBoardingSections, Player } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
@@ -94,7 +94,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
         <View
             style={{
                 flexDirection: 'row',
-                height: configBarHeight,
+                height: 48,
                 width: '100%'
             }}
         >
