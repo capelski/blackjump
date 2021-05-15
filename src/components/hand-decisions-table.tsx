@@ -9,7 +9,7 @@ interface HandDecisionsTableProps {
 }
 
 export const HandDecisionsTable: React.FC<HandDecisionsTableProps> = (props) => (
-    <View>
+    <View style={{ width: '100%' }}>
         {getObjectKeys(props.handDecisionSet).map((simpleCardSymbol) => {
             return (
                 <View key={simpleCardSymbol} style={{ flexDirection: 'row', width: '100%' }}>
