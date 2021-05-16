@@ -414,6 +414,7 @@ export default function App() {
                     {(props) => (
                         <FailedHands
                             failedTrainingPairs={trainingStatus.failedTrainingPairs}
+                            gameConfig={gameConfig}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
@@ -469,6 +470,7 @@ export default function App() {
                 <Stack.Screen name={RouteNames.trainingHands}>
                     {(props) => (
                         <TrainingHands
+                            gameConfig={gameConfig}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}

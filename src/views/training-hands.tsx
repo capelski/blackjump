@@ -6,6 +6,7 @@ import { doubleColor } from '../constants';
 import { getSpecificTrainingPair } from '../logic/training-pair';
 import {
     AppNavigation,
+    GameConfig,
     Hand,
     HandCode,
     Phases,
@@ -16,6 +17,7 @@ import {
 import { getObjectKeys } from '../utils';
 
 type TrainingHandsProps = {
+    gameConfig: GameConfig;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
@@ -101,25 +103,22 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                                 <TouchableOpacity
                                                     key={dealerSymbol}
                                                     onPress={
-                                                        props.onBoardingStep > -1
+                                                        props.onBoardingStep > -1 ||
+                                                        props.phase !== Phases.finished
                                                             ? undefined
                                                             : () => {
-                                                                  if (
-                                                                      props.phase ===
-                                                                      Phases.finished
-                                                                  ) {
-                                                                      const trainingPair = getSpecificTrainingPair(
-                                                                          handCode,
-                                                                          dealerSymbol
-                                                                      );
-                                                                      props.startTrainingRound(
-                                                                          trainingPair.player,
-                                                                          trainingPair.dealer
-                                                                      );
-                                                                      props.navigation.navigate(
-                                                                          RouteNames.table
-                                                                      );
-                                                                  }
+                                                                  const trainingPair = getSpecificTrainingPair(
+                                                                      handCode,
+                                                                      dealerSymbol,
+                                                                      props.gameConfig.casinoRules
+                                                                  );
+                                                                  props.startTrainingRound(
+                                                                      trainingPair.player,
+                                                                      trainingPair.dealer
+                                                                  );
+                                                                  props.navigation.navigate(
+                                                                      RouteNames.table
+                                                                  );
                                                               }
                                                     }
                                                     style={{

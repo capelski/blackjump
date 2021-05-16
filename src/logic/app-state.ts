@@ -11,7 +11,7 @@ import {
     TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
-import { getHandEffectiveValue, dealCard } from './hand';
+import { getHandEffectiveValue, dealCard, revealDealerHoleCard, hasHoleCard } from './hand';
 import { resolveHands } from './player';
 import { isTrainingCompleted } from './training-status';
 
@@ -23,14 +23,24 @@ export const handleDealerTurn = (
     setPhase: (phase: Phases) => void,
     setPlayer: (player: Player) => void
 ) => {
-    if (gameConfig.isDealerAnimationEnabled && getHandEffectiveValue(dealerHand) < 17) {
+    let nextDealerHand = { ...dealerHand };
+
+    if (gameConfig.isDealerAnimationEnabled && getHandEffectiveValue(nextDealerHand) < 17) {
         setTimeout(() => {
-            dealCard(dealerHand, getRandomCard());
-            setDealerHand({ ...dealerHand });
+            if (hasHoleCard(dealerHand)) {
+                revealDealerHoleCard(nextDealerHand);
+            } else {
+                dealCard(nextDealerHand, getRandomCard());
+            }
+            setDealerHand(nextDealerHand);
+            // Setting the dealerHand will trigger this handler again, through useEffect
         }, 1000);
     } else {
-        let nextDealerHand = { ...dealerHand };
         if (!gameConfig.isDealerAnimationEnabled) {
+            if (hasHoleCard(dealerHand)) {
+                revealDealerHoleCard(nextDealerHand);
+            }
+
             while (getHandEffectiveValue(nextDealerHand) < 17) {
                 dealCard(nextDealerHand, getRandomCard());
             }

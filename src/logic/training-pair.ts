@@ -1,15 +1,15 @@
 import {
-    GoldHandsLevels,
+    CasinoRules,
+    GameConfig,
     HandCode,
     SimpleCardSymbol,
     TrainingHands,
-    TrainingProgress,
-    TrainingPair
+    TrainingPair,
+    TrainingProgress
 } from '../types';
 import { getObjectKeys, getRandomItem } from '../utils';
-import { getRandomSuit, simpleSymbolToSymbol } from './card';
 import { allDealerSymbols, getUntrainedDealerSymbols } from './dealer-symbols';
-import { createHand, handCodeToHand } from './hand';
+import { createDealerHand, handCodeToHand } from './hand';
 import { getActiveTrainingHands, getUntrainedTrainingHands } from './training-hand';
 
 export const allTrainingPairsNumber = allDealerSymbols.length * Object.keys(HandCode).length;
@@ -17,18 +17,18 @@ export const allTrainingPairsNumber = allDealerSymbols.length * Object.keys(Hand
 export const getRandomTrainingPair = (
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress,
-    goldHandsLevels: GoldHandsLevels
+    gameConfig: GameConfig
 ): TrainingPair => {
     const untrainedTrainingHands = getUntrainedTrainingHands(
         trainingHands,
         trainingProgress,
-        goldHandsLevels
+        gameConfig.goldHandsLevels
     );
 
     const randomTrainingHand =
         untrainedTrainingHands.length > 0
             ? getRandomItem(untrainedTrainingHands)
-            : getRandomItem(getActiveTrainingHands(trainingHands, goldHandsLevels)); // In case all hands have been passed
+            : getRandomItem(getActiveTrainingHands(trainingHands, gameConfig.goldHandsLevels)); // In case all hands have been passed
 
     const trainingHandStatus = trainingProgress[randomTrainingHand.code];
     const untrainedDealerSymbols = getUntrainedDealerSymbols(trainingHandStatus);
@@ -39,31 +39,18 @@ export const getRandomTrainingPair = (
             : getRandomItem(getObjectKeys(trainingHandStatus)); // In case all hands have been passed
 
     return {
-        dealer: createHand([
-            {
-                isBlueCard: false,
-                isGoldCard: true,
-                suit: getRandomSuit(),
-                symbol: simpleSymbolToSymbol(randomDealerSymbol)
-            }
-        ]),
+        dealer: createDealerHand(gameConfig.casinoRules, randomDealerSymbol),
         player: handCodeToHand(randomTrainingHand.code)
     };
 };
 
 export const getSpecificTrainingPair = (
     handCode: HandCode,
-    dealerSymbol: SimpleCardSymbol
+    dealerSymbol: SimpleCardSymbol,
+    casinoRules: CasinoRules
 ): TrainingPair => {
     return {
-        dealer: createHand([
-            {
-                isBlueCard: false,
-                isGoldCard: true,
-                suit: getRandomSuit(),
-                symbol: simpleSymbolToSymbol(dealerSymbol)
-            }
-        ]),
+        dealer: createDealerHand(casinoRules, dealerSymbol),
         player: handCodeToHand(handCode)
     };
 };

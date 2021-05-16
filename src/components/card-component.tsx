@@ -77,7 +77,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
     return (
         <Animated.View
             style={{
-                backgroundColor: 'white',
+                backgroundColor: props.card.isHoleCard ? 'lightgrey' : 'white',
                 borderRadius: 8,
                 height: 66,
                 marginBottom: 8,
@@ -87,56 +87,58 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                 width: 56
             }}
         >
-            <TouchableOpacity
-                onPress={
-                    props.navigation
-                        ? () => {
-                              if (props.card.isBlueCard) {
-                                  props.navigation!.navigate(RouteNames.blueCardsInfo);
-                              } else if (props.card.isGoldCard) {
-                                  props.navigation!.navigate(RouteNames.goldHandsInfo);
+            {!props.card.isHoleCard && (
+                <TouchableOpacity
+                    onPress={
+                        props.navigation
+                            ? () => {
+                                  if (props.card.isBlueCard) {
+                                      props.navigation!.navigate(RouteNames.blueCardsInfo);
+                                  } else if (props.card.isGoldCard) {
+                                      props.navigation!.navigate(RouteNames.goldHandsInfo);
+                                  }
                               }
-                          }
-                        : undefined
-                }
-            >
-                {props.card.isBlueCard || props.card.isGoldCard ? (
-                    <View
-                        style={{
-                            backgroundColor: cardColor,
-                            borderRadius: props.card.isBlueCard ? 12 : undefined,
-                            height: 12,
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                            width: 12
-                        }}
-                    />
-                ) : (
+                            : undefined
+                    }
+                >
+                    {props.card.isBlueCard || props.card.isGoldCard ? (
+                        <View
+                            style={{
+                                backgroundColor: cardColor,
+                                borderRadius: props.card.isBlueCard ? 12 : undefined,
+                                height: 12,
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                width: 12
+                            }}
+                        />
+                    ) : (
+                        <Text
+                            style={{
+                                color: cardColor,
+                                fontSize: 16,
+                                position: 'absolute',
+                                right: 4,
+                                top: 4
+                            }}
+                        >
+                            {props.card.suit}
+                        </Text>
+                    )}
                     <Text
                         style={{
                             color: cardColor,
-                            fontSize: 16,
-                            position: 'absolute',
-                            right: 4,
-                            top: 4
+                            fontSize: 40,
+                            marginRight: props.card.symbol === SimpleCardSymbol.Ten ? 0 : 8,
+                            marginTop: 12,
+                            textAlign: 'center'
                         }}
                     >
-                        {props.card.suit}
+                        {props.card.symbol}
                     </Text>
-                )}
-                <Text
-                    style={{
-                        color: cardColor,
-                        fontSize: 40,
-                        marginRight: props.card.symbol === SimpleCardSymbol.Ten ? 0 : 8,
-                        marginTop: 12,
-                        textAlign: 'center'
-                    }}
-                >
-                    {props.card.symbol}
-                </Text>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            )}
         </Animated.View>
     );
 };

@@ -6,7 +6,10 @@ import { CasinoRules, CasinoRulesKeys } from '../../types';
 interface RuleSwitcherProps {
     casinoRules: CasinoRules;
     onValueChange?: (nextCasinoRules: CasinoRules) => void;
-    ruleName: CasinoRulesKeys.doubleAfterSplit | CasinoRulesKeys.surrender;
+    ruleName:
+        | CasinoRulesKeys.doubleAfterSplit
+        | CasinoRulesKeys.holeCard
+        | CasinoRulesKeys.surrender;
     setCasinoRules: (casinoRules: CasinoRules) => void;
 }
 

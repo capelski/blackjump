@@ -3,6 +3,7 @@ import { Dictionary } from './dictionary';
 export interface Card {
     isBlueCard: boolean;
     isGoldCard: boolean;
+    isHoleCard?: boolean;
     suit: CardSuit;
     symbol: CardSymbol;
 }

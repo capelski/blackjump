@@ -41,7 +41,7 @@ export const getCardEffectiveValue = (card: Card): number => {
 };
 
 export const getCardsValues = (cards: Card[]) => {
-    const cardsValues = cards.map((card) => getCardValues(card));
+    const cardsValues = cards.filter((card) => !card.isHoleCard).map((card) => getCardValues(card));
     const cardsAggregatedValues = cardsValues.reduce(
         (reducedValues, currentValues) =>
             cartesianProduct(reducedValues, currentValues, (x, y) => x + y),
@@ -52,9 +52,17 @@ export const getCardsValues = (cards: Card[]) => {
 
 const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
 
-export const getRandomCard = () => getRandomItem(deck);
+export const getRandomCard = (isHoleCard?: boolean) => {
+    const randomCard = getRandomItem(deck);
+    randomCard.isHoleCard = isHoleCard;
+    return randomCard;
+};
 
 export const getRandomSuit = () => getRandomItem(suits);
+
+export const revealHoleCard = (card: Card) => {
+    card.isHoleCard = false;
+};
 
 export const simpleSymbolToSymbol = (simpleSymbol: SimpleCardSymbol): CardSymbol =>
     simpleSymbol === SimpleCardSymbol.Ten ? getRandomItem(tenPointsSymbols) : simpleSymbol;

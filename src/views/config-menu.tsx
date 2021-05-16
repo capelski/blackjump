@@ -122,6 +122,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.doubling] !==
                 casinoRules[CasinoRulesKeys.doubling] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.holeCard] !==
+                casinoRules[CasinoRulesKeys.holeCard] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                 casinoRules[CasinoRulesKeys.surrender] ||
             props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
@@ -201,6 +203,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         setCasinoRules={setCasinoRules}
                     />
                 </View>
+
+                {/* TODO Create a help icon on Hole card. Create switch with help component? */}
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.holeCard}
+                    setCasinoRules={setCasinoRules}
+                />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}

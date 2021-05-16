@@ -1,5 +1,6 @@
 import {
     Card,
+    CardSymbol,
     CasinoRules,
     CasinoRulesKeys,
     Doubling,
@@ -17,6 +18,7 @@ import {
     getCardsValues,
     getRandomCard,
     getRandomSuit,
+    revealHoleCard,
     symbolToSimpleSymbol,
     valueToSymbol
 } from './card';
@@ -53,6 +55,25 @@ export const canSplit = (hand: Hand) =>
 
 export const canSurrender = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     handsNumber === 1 && hand.cards.length === 2 && casinoRules[CasinoRulesKeys.surrender];
+
+export const createDealerHand = (casinoRules: CasinoRules, dealerSymbol?: CardSymbol) => {
+    const dealerCards: Card[] = [
+        dealerSymbol
+            ? {
+                  isBlueCard: false,
+                  isGoldCard: true,
+                  suit: getRandomSuit(),
+                  symbol: dealerSymbol
+              }
+            : getRandomCard()
+    ];
+
+    if (casinoRules[CasinoRulesKeys.holeCard]) {
+        dealerCards.push(getRandomCard(true));
+    }
+
+    return createHand(dealerCards);
+};
 
 export const createHand = (cards: Card[], bet = 1): Hand => ({
     bet,
@@ -182,6 +203,8 @@ export const handToHandCode = (hand: Hand): HandCode => {
         : (getHandValidValues(hand).join('/') as HandCode);
 };
 
+export const hasHoleCard = (hand: Hand) => hand.cards.length > 1 && hand.cards[1].isHoleCard;
+
 export const isBlackJack = (hand: Hand) => {
     return (
         hand.cards.length === 2 &&
@@ -220,4 +243,9 @@ export const resolveHand = (playerHand: Hand, dealerHand: Hand): HandOutcome => 
 
     playerHand.outcome = handOutcome;
     return handOutcome;
+};
+
+export const revealDealerHoleCard = (hand: Hand) => {
+    revealHoleCard(hand.cards[1]);
+    hand.values = getCardsValues(hand.cards);
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { colors } from '../constants';
 import { getRandomCard } from '../logic/card';
-import { createHand } from '../logic/hand';
+import { createDealerHand, createHand } from '../logic/hand';
 import { onBoardingSteps } from '../logic/onboarding';
 import { getRandomTrainingPair } from '../logic/training-pair';
 import {
@@ -72,18 +72,18 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         },
                         getRandomCard()
                     ]);
-                    dealerHand = createHand([getRandomCard()]);
+                    dealerHand = createDealerHand(props.gameConfig.casinoRules);
                 } else if (props.gameConfig.useGoldHands) {
                     const trainingPair = getRandomTrainingPair(
                         props.trainingHands,
                         props.trainingProgress,
-                        props.gameConfig.goldHandsLevels
+                        props.gameConfig
                     );
                     playerHand = trainingPair.player;
                     dealerHand = trainingPair.dealer;
                 } else {
                     playerHand = createHand([getRandomCard(), getRandomCard()]);
-                    dealerHand = createHand([getRandomCard()]);
+                    dealerHand = createDealerHand(props.gameConfig.casinoRules);
                 }
 
                 props.startTrainingRound(playerHand, dealerHand);
