@@ -40,8 +40,10 @@ export const getCardEffectiveValue = (card: Card): number => {
     return values[values.length - 1];
 };
 
-export const getCardsValues = (cards: Card[]) => {
-    const cardsValues = cards.filter((card) => !card.isHoleCard).map((card) => getCardValues(card));
+export const getCardsValues = (cards: Card[], options?: { peeking?: boolean }) => {
+    const cardsValues = cards
+        .filter((card) => options?.peeking || !card.isHoleCard)
+        .map((card) => getCardValues(card));
     const cardsAggregatedValues = cardsValues.reduce(
         (reducedValues, currentValues) =>
             cartesianProduct(reducedValues, currentValues, (x, y) => x + y),
@@ -52,9 +54,11 @@ export const getCardsValues = (cards: Card[]) => {
 
 const getCardValues = (card: Card): number[] => cardsValue[card.symbol];
 
-export const getRandomCard = (isHoleCard?: boolean) => {
-    const randomCard = getRandomItem(deck);
-    randomCard.isHoleCard = isHoleCard;
+export const getRandomCard = (options?: { isHoleCard?: boolean }) => {
+    let randomCard = getRandomItem(deck);
+    if (options?.isHoleCard) {
+        randomCard = { ...randomCard, isHoleCard: true };
+    }
     return randomCard;
 };
 

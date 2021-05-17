@@ -30,6 +30,12 @@ import {
     isSplitHandCode
 } from './hand-code';
 
+export const canBeDealerBlackJack = (hand: Hand) => {
+    const visibleCard = hand.cards[0];
+    const cardSymbol = symbolToSimpleSymbol(visibleCard.symbol);
+    return cardSymbol === SimpleCardSymbol.Ace || cardSymbol === SimpleCardSymbol.Ten;
+};
+
 export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) => {
     const handEffectiveValue = getHandEffectiveValue(hand);
     const isHandWithTwoCards = hand.cards.length === 2;
@@ -69,7 +75,7 @@ export const createDealerHand = (casinoRules: CasinoRules, dealerSymbol?: CardSy
     ];
 
     if (casinoRules[CasinoRulesKeys.holeCard]) {
-        dealerCards.push(getRandomCard(true));
+        dealerCards.push(getRandomCard({ isHoleCard: true }));
     }
 
     return createHand(dealerCards);
@@ -216,6 +222,16 @@ export const isBlackJack = (hand: Hand) => {
 
 export const isBust = (hand: Hand) => {
     return getHandEffectiveValue(hand) > 21;
+};
+
+export const isDealerBlackJack = (hand: Hand) => {
+    const cardValues = getCardsValues(hand.cards, { peeking: true });
+    return (
+        hand.cards.length === 2 &&
+        cardValues.length === 2 &&
+        cardValues[0] === 11 &&
+        cardValues[1] === 21
+    );
 };
 
 export const isFinished = (hand: Hand) => {

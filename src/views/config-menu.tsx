@@ -118,8 +118,10 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const isSaveButtonEnabled =
-        (props.gameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
-            casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
+        (props.gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] !==
+            casinoRules[CasinoRulesKeys.blackjackPeek] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
+                casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.doubling] !==
                 casinoRules[CasinoRulesKeys.doubling] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.holeCard] !==
@@ -204,13 +206,47 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     />
                 </View>
 
-                {/* TODO Create a help icon on Hole card. Create switch with help component? */}
-                <RuleSwitcher
-                    casinoRules={casinoRules}
-                    onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.holeCard}
-                    setCasinoRules={setCasinoRules}
-                />
+                <View
+                    style={{
+                        alignItems: 'flex-start',
+                        flexDirection: 'row',
+                        paddingTop: 16,
+                        width: '100%'
+                    }}
+                >
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        hideLabel={true}
+                        onValueChange={casinoRuleChangeHandler}
+                        ruleName={CasinoRulesKeys.holeCard}
+                        setCasinoRules={setCasinoRules}
+                    />
+
+                    <View>
+                        {/* TODO Create a help icon on Hole card */}
+                        <Text
+                            style={{
+                                color: areGoldHandsBlockingProgress ? doubleColor : 'white',
+                                fontSize: 20
+                            }}
+                        >
+                            {CasinoRulesKeys.holeCard}
+                        </Text>
+
+                        <View
+                            style={{
+                                opacity: casinoRules[CasinoRulesKeys.holeCard] ? undefined : 0.3
+                            }}
+                        >
+                            <RuleSwitcher
+                                casinoRules={casinoRules}
+                                onValueChange={casinoRuleChangeHandler}
+                                ruleName={CasinoRulesKeys.blackjackPeek}
+                                setCasinoRules={setCasinoRules}
+                            />
+                        </View>
+                    </View>
+                </View>
 
                 <RuleSwitcher
                     casinoRules={casinoRules}

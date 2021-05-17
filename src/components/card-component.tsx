@@ -74,10 +74,12 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
         ? 'red'
         : 'black';
 
+    const backgroundColor = props.card.isHoleCard ? 'lightgrey' : 'white';
+
     return (
         <Animated.View
             style={{
-                backgroundColor: props.card.isHoleCard ? 'lightgrey' : 'white',
+                backgroundColor,
                 borderRadius: 8,
                 height: 66,
                 marginBottom: 8,

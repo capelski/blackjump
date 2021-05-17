@@ -14,6 +14,13 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                 casinoRules:
                     storedGameConfig && storedGameConfig.casinoRules !== undefined
                         ? {
+                              [CasinoRulesKeys.blackjackPeek]:
+                                  storedGameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] !==
+                                  undefined
+                                      ? storedGameConfig.casinoRules[CasinoRulesKeys.blackjackPeek]
+                                      : currentGameConfig.casinoRules[
+                                            CasinoRulesKeys.blackjackPeek
+                                        ],
                               [CasinoRulesKeys.doubleAfterSplit]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
                                   undefined

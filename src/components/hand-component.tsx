@@ -9,6 +9,7 @@ interface HandComponentProps {
     isCurrentHand: boolean;
     isSoundEnabled: boolean;
     navigation?: AppNavigation;
+    peeking?: boolean;
     skipAnimation?: boolean;
 }
 
@@ -42,12 +43,17 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
                 />
             ))}
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
-                <Text style={{ fontSize: 25, color: 'white' }}> {displayValues}</Text>
-                {props.hand.outcome && (
-                    <Text style={{ fontSize: 25, color: 'white', fontWeight: 'bold' }}>
-                        {' '}
-                        {props.hand.outcome}
-                    </Text>
+                {props.peeking ? (
+                    <Text style={{ color: 'black', fontSize: 32, height: '100%' }}>👁️</Text>
+                ) : (
+                    <React.Fragment>
+                        <Text style={{ color: 'white', fontSize: 25 }}> {displayValues}</Text>
+                        {props.hand.outcome && (
+                            <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>
+                                {props.hand.outcome}
+                            </Text>
+                        )}
+                    </React.Fragment>
                 )}
             </View>
         </View>

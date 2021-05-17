@@ -23,6 +23,7 @@ type TableProps = ActionsProps & {
     gameConfig: GameConfig;
     navigation: AppNavigation;
     onBoardingStep: number;
+    peeking: boolean;
     phase: Phases;
     player: Player;
     trainingHands: TrainingHands;
@@ -47,6 +48,7 @@ export const Table: React.FC<TableProps> = (props) => (
                         isCurrentHand={props.phase === Phases.dealer}
                         isSoundEnabled={props.gameConfig.isSoundEnabled}
                         navigation={props.navigation}
+                        peeking={props.peeking}
                     />
                 )}
             </OnBoardingSection>

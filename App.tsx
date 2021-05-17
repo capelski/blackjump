@@ -20,7 +20,15 @@ import { getNextTrainingStatus, handleDealerTurn } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
-import { canDouble, canSplit, canSurrender, isFinished } from './src/logic/hand';
+import {
+    canBeDealerBlackJack,
+    canDouble,
+    canSplit,
+    canSurrender,
+    isDealerBlackJack,
+    isFinished,
+    revealDealerHoleCard
+} from './src/logic/hand';
 import { handToHandCode } from './src/logic/hand';
 import { onBoardingSteps } from './src/logic/onboarding';
 import {
@@ -45,6 +53,7 @@ import {
 import {
     AppNavigation,
     BaseDecisions,
+    CasinoRulesKeys,
     DecisionEvaluation,
     Hand,
     HandCode,
@@ -95,6 +104,7 @@ export default function App() {
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
+    const [peeking, setPeeking] = useState(false);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [trainingHands, setTrainingHands] = useState(getDefaultTrainingHands());
@@ -196,14 +206,31 @@ export default function App() {
     }, [phase, dealerHand]);
 
     const startTrainingRound = (playerHand: Hand, dealerHand: Hand) => {
-        initializeHands(player, playerHand);
-        setDealerHand(dealerHand);
-        setPlayer({ ...player });
-        setPhase(Phases.player);
-        setDecisionEvaluation(undefined);
-        if (isFinished(getCurrentHand(player))) {
-            finishCurrentHand(player);
+        const nextPlayer = { ...player };
+        initializeHands(nextPlayer, playerHand);
+
+        if (
+            gameConfig.casinoRules[CasinoRulesKeys.holeCard] &&
+            gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] &&
+            canBeDealerBlackJack(dealerHand)
+        ) {
+            setPeeking(true);
+            setTimeout(() => {
+                setPeeking(false);
+                if (isDealerBlackJack(dealerHand)) {
+                    revealDealerHoleCard(dealerHand);
+                    setPhase(Phases.dealer);
+                } else {
+                    setPhase(Phases.player);
+                }
+            }, 1500);
+        } else {
+            setPhase(isFinished(getCurrentHand(nextPlayer)) ? Phases.dealer : Phases.player);
         }
+
+        setDealerHand(dealerHand);
+        setPlayer(nextPlayer);
+        setDecisionEvaluation(undefined);
 
         if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 1) {
             updateOnBoardingStep(1);
@@ -458,8 +485,9 @@ export default function App() {
                             isSurrenderEnabled={isSurrenderEnabled}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
-                            player={player}
+                            peeking={peeking}
                             phase={phase}
+                            player={player}
                             startTrainingRound={startTrainingRound}
                             trainingHands={trainingHands}
                             trainingProgress={trainingStatus.trainingProgress}

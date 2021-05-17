@@ -72,7 +72,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Hard11]: {
             code: HandCode.Hard11,
             decisionSet: handDecisionSetGetters[HandCode.Hard11](casinoRules),
-            dependencies: [CasinoRulesKeys.doubling],
+            dependencies: [CasinoRulesKeys.doubling, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 11'
         },
@@ -247,7 +247,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Split8s]: {
             code: HandCode.Split8s,
             decisionSet: handDecisionSetGetters[HandCode.Split8s](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: '8,8'
         },
@@ -268,7 +268,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.SplitAs]: {
             code: HandCode.SplitAs,
             decisionSet: handDecisionSetGetters[HandCode.SplitAs](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'A,A'
         }

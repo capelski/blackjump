@@ -72,7 +72,10 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         },
                         getRandomCard()
                     ]);
-                    dealerHand = createDealerHand(props.gameConfig.casinoRules);
+                    dealerHand = createDealerHand(
+                        props.gameConfig.casinoRules,
+                        SimpleCardSymbol.Six
+                    );
                 } else if (props.gameConfig.useGoldHands) {
                     const trainingPair = getRandomTrainingPair(
                         props.trainingHands,

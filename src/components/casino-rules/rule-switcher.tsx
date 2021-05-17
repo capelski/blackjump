@@ -5,16 +5,18 @@ import { CasinoRules, CasinoRulesKeys } from '../../types';
 
 interface RuleSwitcherProps {
     casinoRules: CasinoRules;
+    hideLabel?: boolean;
     onValueChange?: (nextCasinoRules: CasinoRules) => void;
     ruleName:
+        | CasinoRulesKeys.blackjackPeek
         | CasinoRulesKeys.doubleAfterSplit
         | CasinoRulesKeys.holeCard
         | CasinoRulesKeys.surrender;
     setCasinoRules: (casinoRules: CasinoRules) => void;
 }
 
-export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => (
-    <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
+    const SwitchCore = (
         <Switch
             onValueChange={(newValue) => {
                 const nextCasinoRules = {
@@ -28,13 +30,21 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => (
             trackColor={{ true: hitColor, false: 'white' }}
             value={props.casinoRules[props.ruleName]}
         />
-        <Text
-            style={{
-                color: 'white',
-                fontSize: 20
-            }}
-        >
-            {props.ruleName}
-        </Text>
-    </View>
-);
+    );
+
+    return props.hideLabel ? (
+        SwitchCore
+    ) : (
+        <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+            {SwitchCore}
+            <Text
+                style={{
+                    color: 'white',
+                    fontSize: 20
+                }}
+            >
+                {props.ruleName}
+            </Text>
+        </View>
+    );
+};

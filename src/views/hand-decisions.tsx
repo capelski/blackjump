@@ -50,14 +50,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             <HandDecisionsTable handDecisionSet={handDecisionSet} />
 
             {trainingHand.dependencies.map((dependency) => {
-                return dependency === CasinoRulesKeys.doubleAfterSplit ? (
-                    <RuleSwitcher
-                        casinoRules={casinoRules}
-                        key={dependency}
-                        ruleName={CasinoRulesKeys.doubleAfterSplit}
-                        setCasinoRules={setCasinoRules}
-                    />
-                ) : dependency === CasinoRulesKeys.doubling ? (
+                return dependency === CasinoRulesKeys.doubling ? (
                     <DoublingPicker
                         casinoRules={casinoRules}
                         key={dependency}
@@ -67,7 +60,7 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
                     <RuleSwitcher
                         casinoRules={casinoRules}
                         key={dependency}
-                        ruleName={CasinoRulesKeys.surrender}
+                        ruleName={dependency}
                         setCasinoRules={setCasinoRules}
                     />
                 );
