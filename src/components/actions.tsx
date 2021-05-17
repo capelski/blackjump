@@ -62,7 +62,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     onBoardingSteps[props.onBoardingStep] &&
                     onBoardingSteps[props.onBoardingStep].id === 1
                 ) {
-                    // Prevent dealing a BlackJack as initial hand when onboarding is active
+                    /* Prevent dealing a Blackjack as initial hand when onboarding is active */
                     playerHand = createHand([
                         {
                             isBlueCard: false,

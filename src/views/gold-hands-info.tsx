@@ -78,7 +78,7 @@ export const GoldHandsInfo: React.FC = () => {
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
                     Another consequence of enabling Gold hands, for example, is that you will never
-                    be dealt a BlackJack as initial hand (because it's a hand that requires no
+                    be dealt a Blackjack as initial hand (because it's a hand that requires no
                     training).
                 </Text>
 

@@ -199,7 +199,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
             level: -1,
             name: 'Soft 20'
         },
-        /* Soft 21 => BlackJack! This hand doesn't need training */
+        /* Soft 21 => Blackjack! This hand doesn't need training */
 
         /*** Split hands ***/
         [HandCode.Split2s]: {

@@ -30,7 +30,7 @@ import {
     isSplitHandCode
 } from './hand-code';
 
-export const canBeDealerBlackJack = (hand: Hand) => {
+export const canBeDealerBlackjack = (hand: Hand) => {
     const visibleCard = hand.cards[0];
     const cardSymbol = symbolToSimpleSymbol(visibleCard.symbol);
     return cardSymbol === SimpleCardSymbol.Ace || cardSymbol === SimpleCardSymbol.Ten;
@@ -211,7 +211,7 @@ export const handToHandCode = (hand: Hand): HandCode => {
 
 export const hasHoleCard = (hand: Hand) => hand.cards.length > 1 && hand.cards[1].isHoleCard;
 
-export const isBlackJack = (hand: Hand) => {
+export const isBlackjack = (hand: Hand) => {
     return (
         hand.cards.length === 2 &&
         hand.values.length === 2 &&
@@ -224,7 +224,7 @@ export const isBust = (hand: Hand) => {
     return getHandEffectiveValue(hand) > 21;
 };
 
-export const isDealerBlackJack = (hand: Hand) => {
+export const isDealerBlackjack = (hand: Hand) => {
     const cardValues = getCardsValues(hand.cards, { peeking: true });
     return (
         hand.cards.length === 2 &&
@@ -243,11 +243,11 @@ export const resolveHand = (playerHand: Hand, dealerHand: Hand): HandOutcome => 
     const dealerHandValue = getHandEffectiveValue(dealerHand!);
     const handOutcome = isBust(playerHand)
         ? HandOutcome.bust
-        : isBlackJack(playerHand) && isBlackJack(dealerHand!)
+        : isBlackjack(playerHand) && isBlackjack(dealerHand!)
         ? HandOutcome.push
-        : isBlackJack(playerHand)
+        : isBlackjack(playerHand)
         ? HandOutcome.blackjack
-        : isBlackJack(dealerHand!)
+        : isBlackjack(dealerHand!)
         ? HandOutcome.dealerWins
         : isBust(dealerHand!)
         ? HandOutcome.playerWins

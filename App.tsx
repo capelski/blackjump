@@ -21,11 +21,11 @@ import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
 import {
-    canBeDealerBlackJack,
+    canBeDealerBlackjack,
     canDouble,
     canSplit,
     canSurrender,
-    isDealerBlackJack,
+    isDealerBlackjack,
     isFinished,
     revealDealerHoleCard
 } from './src/logic/hand';
@@ -212,12 +212,12 @@ export default function App() {
         if (
             gameConfig.casinoRules[CasinoRulesKeys.holeCard] &&
             gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] &&
-            canBeDealerBlackJack(dealerHand)
+            canBeDealerBlackjack(dealerHand)
         ) {
             setPeeking(true);
             setTimeout(() => {
                 setPeeking(false);
-                if (isDealerBlackJack(dealerHand)) {
+                if (isDealerBlackjack(dealerHand)) {
                     revealDealerHoleCard(dealerHand);
                     setPhase(Phases.dealer);
                 } else {
