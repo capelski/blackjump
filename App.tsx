@@ -23,6 +23,7 @@ import { getDefaultGameConfig } from './src/logic/game-config';
 import {
     canBeDealerBlackjack,
     canDouble,
+    canHit,
     canSplit,
     canSurrender,
     isDealerBlackjack,
@@ -162,10 +163,10 @@ export default function App() {
     }, [navigationRef.current]);
 
     const currentHand = getCurrentHand(player);
-    const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isDoubleEnabled =
-        currentHand !== undefined &&
-        canDouble(currentHand, player.hands.length, gameConfig.casinoRules);
+        currentHand !== undefined && canDouble(currentHand, player.hands, gameConfig.casinoRules);
+    const isHitEnabled = currentHand !== undefined && canHit(player.hands, gameConfig.casinoRules);
+    const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
     const isSurrenderEnabled =
         currentHand !== undefined &&
         canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);
@@ -225,7 +226,11 @@ export default function App() {
                 }
             }, 1500);
         } else {
-            setPhase(isFinished(getCurrentHand(nextPlayer)) ? Phases.dealer : Phases.player);
+            setPhase(
+                isFinished(getCurrentHand(nextPlayer), nextPlayer.hands, gameConfig.casinoRules)
+                    ? Phases.dealer
+                    : Phases.player
+            );
         }
 
         setDealerHand(dealerHand);
@@ -242,16 +247,17 @@ export default function App() {
             setPhase(Phases.dealer);
             // By setting the phase to dealer, the corresponding useEffect hook will be executed
         } else {
+            const nextPlayer = { ...player };
             startNextHand(
-                player,
+                nextPlayer,
                 gameConfig.useBlueCards,
                 currentDealerSymbol!,
                 trainingHands,
                 trainingStatus.trainingProgress
             );
-            setPlayer({ ...player });
-            if (isFinished(getCurrentHand(player))) {
-                finishCurrentHand(player);
+            setPlayer(nextPlayer);
+            if (isFinished(getCurrentHand(nextPlayer), nextPlayer.hands, gameConfig.casinoRules)) {
+                finishCurrentHand(nextPlayer);
             }
         }
     };
@@ -322,57 +328,61 @@ export default function App() {
     };
 
     const doubleHandler = () => {
+        const nextPlayer = { ...player };
         evaluatePlayerDecision(PlayerDecisions.double, currentHand);
-        doubleCurrentHand(player, getRandomCard());
-
-        setPlayer({ ...player });
-        finishCurrentHand(player);
+        doubleCurrentHand(nextPlayer, getRandomCard());
+        setPlayer(nextPlayer);
+        finishCurrentHand(nextPlayer);
     };
 
     const hitHandler = () => {
+        const nextPlayer = { ...player };
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
         hitCurrentHand(
-            player,
+            nextPlayer,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
             trainingStatus.trainingProgress
         );
 
-        setPlayer({ ...player });
-        if (isFinished(currentHand)) {
-            finishCurrentHand(player);
+        setPlayer(nextPlayer);
+        if (isFinished(currentHand, nextPlayer.hands, gameConfig.casinoRules)) {
+            finishCurrentHand(nextPlayer);
         }
     };
 
     const standHandler = () => {
+        const nextPlayer = { ...player };
         evaluatePlayerDecision(BaseDecisions.stand, currentHand);
-        standCurrentHand(player);
-        setPlayer({ ...player });
-        finishCurrentHand(player);
+        standCurrentHand(nextPlayer);
+        setPlayer(nextPlayer);
+        finishCurrentHand(nextPlayer);
     };
 
     const splitHandler = () => {
+        const nextPlayer = { ...player };
         evaluatePlayerDecision(BaseDecisions.split, currentHand);
         splitCurrentHand(
-            player,
+            nextPlayer,
             gameConfig.useBlueCards,
             currentDealerSymbol!,
             trainingHands,
             trainingStatus.trainingProgress
         );
 
-        setPlayer({ ...player });
-        if (isFinished(getCurrentHand(player))) {
-            finishCurrentHand(player);
+        setPlayer(nextPlayer);
+        if (isFinished(getCurrentHand(nextPlayer), nextPlayer.hands, gameConfig.casinoRules)) {
+            finishCurrentHand(nextPlayer);
         }
     };
 
     const surrenderHandler = () => {
+        const nextPlayer = { ...player };
         evaluatePlayerDecision(PlayerDecisions.surrender, currentHand);
-        surrenderCurrentHand(player);
-        setPlayer({ ...player });
-        finishCurrentHand(player);
+        surrenderCurrentHand(nextPlayer);
+        setPlayer(nextPlayer);
+        finishCurrentHand(nextPlayer);
     };
 
     return (
@@ -481,6 +491,7 @@ export default function App() {
                                 surrender: surrenderHandler
                             }}
                             isDoubleEnabled={isDoubleEnabled}
+                            isHitEnabled={isHitEnabled}
                             isSplitEnabled={isSplitEnabled}
                             isSurrenderEnabled={isSurrenderEnabled}
                             navigation={props.navigation}

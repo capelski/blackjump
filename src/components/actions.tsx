@@ -30,6 +30,7 @@ export interface ActionsProps {
         surrender: () => void;
     };
     isDoubleEnabled: boolean;
+    isHitEnabled: boolean;
     isSplitEnabled: boolean;
     isSurrenderEnabled: boolean;
     phase: Phases;
@@ -100,7 +101,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                 <Button
                     height={56}
                     backgroundColor={colors[BaseDecisions.hit]}
-                    isEnabled={isPlayerTurn}
+                    isEnabled={isPlayerTurn && props.isHitEnabled}
                     onPress={props.handlers.hit}
                     text={BaseDecisions.hit}
                     width="50%"

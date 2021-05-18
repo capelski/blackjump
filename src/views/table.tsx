@@ -139,6 +139,7 @@ export const Table: React.FC<TableProps> = (props) => (
                 gameConfig={props.gameConfig}
                 handlers={props.handlers}
                 isDoubleEnabled={props.isDoubleEnabled}
+                isHitEnabled={props.isHitEnabled}
                 isSplitEnabled={props.isSplitEnabled}
                 isSurrenderEnabled={props.isSurrenderEnabled}
                 phase={props.phase}

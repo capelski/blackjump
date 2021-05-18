@@ -30,16 +30,21 @@ import {
     isSplitHandCode
 } from './hand-code';
 
+export const areHandsSplitAces = (hands: Hand[]) =>
+    hands.length > 1 &&
+    hands[0].cards[0].symbol === SimpleCardSymbol.Ace &&
+    hands[1].cards[0].symbol === SimpleCardSymbol.Ace;
+
 export const canBeDealerBlackjack = (hand: Hand) => {
     const visibleCard = hand.cards[0];
     const cardSymbol = symbolToSimpleSymbol(visibleCard.symbol);
     return cardSymbol === SimpleCardSymbol.Ace || cardSymbol === SimpleCardSymbol.Ten;
 };
 
-export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) => {
+export const canDouble = (hand: Hand, hands: Hand[], casinoRules: CasinoRules) => {
     const handEffectiveValue = getHandEffectiveValue(hand);
     const isHandWithTwoCards = hand.cards.length === 2;
-    const isSingleHand = handsNumber === 1;
+    const isSingleHand = hands.length === 1;
 
     const contains9To11 = hand.values.some((handValue) => [9, 10, 11].indexOf(handValue) > -1);
     const is10To11 = handEffectiveValue === 10 || handEffectiveValue === 11;
@@ -51,9 +56,13 @@ export const canDouble = (hand: Hand, handsNumber: number, casinoRules: CasinoRu
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToElevenSoft && contains9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven && is9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven && is10To11)) &&
-        (isSingleHand || casinoRules[CasinoRulesKeys.doubleAfterSplit])
+        (isSingleHand || casinoRules[CasinoRulesKeys.doubleAfterSplit]) &&
+        (!areHandsSplitAces(hands) || casinoRules[CasinoRulesKeys.hitSplitAces])
     );
 };
+
+export const canHit = (hands: Hand[], casinoRules: CasinoRules) =>
+    !areHandsSplitAces(hands) || casinoRules[CasinoRulesKeys.hitSplitAces];
 
 export const canSplit = (hand: Hand) =>
     hand.cards.length === 2 &&
@@ -235,9 +244,11 @@ export const isDealerBlackjack = (hand: Hand) => {
     );
 };
 
-export const isFinished = (hand: Hand) => {
-    return getHandEffectiveValue(hand) >= 21;
-};
+export const isFinished = (hand: Hand, hands: Hand[], casinoRules: CasinoRules) =>
+    getHandEffectiveValue(hand) >= 21 ||
+    (!casinoRules[CasinoRulesKeys.hitSplitAces] &&
+        areHandsSplitAces(hands) &&
+        hand.cards[1].symbol !== SimpleCardSymbol.Ace);
 
 export const resolveHand = (
     playerHand: Hand,
