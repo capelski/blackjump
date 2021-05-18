@@ -178,6 +178,12 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 </View>
 
                 <View style={{ marginBottom: 16 }}>
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        ruleName={CasinoRulesKeys.blackjackPeek}
+                        setCasinoRules={setCasinoRules}
+                    />
+
                     <DoublingPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
 
                     <RuleSwitcher
