@@ -5,6 +5,7 @@ import { updateGameConfig, updatePlayerEarnings, updateTrainingProgress } from '
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { SplitsNumberPicker } from '../components/casino-rules/splits-number-picker';
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
@@ -24,6 +25,7 @@ import {
     OnBoardingSections,
     Phases,
     RouteNames,
+    SplitsNumber,
     TrainingHands,
     TrainingStatus
 } from '../types';
@@ -128,6 +130,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 casinoRules[CasinoRulesKeys.hitSplitAces] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.holeCard] !==
                 casinoRules[CasinoRulesKeys.holeCard] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.splitsNumber] !==
+                casinoRules[CasinoRulesKeys.splitsNumber] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                 casinoRules[CasinoRulesKeys.surrender] ||
             props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
@@ -194,24 +198,21 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     setCasinoRules={setCasinoRules}
                 />
 
-                <View
-                    style={{
-                        opacity:
-                            casinoRules[CasinoRulesKeys.doubling] > Doubling.none ? undefined : 0.3
-                    }}
-                >
-                    <RuleSwitcher
-                        casinoRules={casinoRules}
-                        isDisabled={casinoRules[CasinoRulesKeys.doubling] === Doubling.none}
-                        onValueChange={casinoRuleChangeHandler}
-                        ruleName={CasinoRulesKeys.doubleAfterSplit}
-                        setCasinoRules={setCasinoRules}
-                    />
-                </View>
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    isDisabled={
+                        casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
+                        casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
+                    }
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.doubleAfterSplit}
+                    setCasinoRules={setCasinoRules}
+                />
 
                 {/* TODO Create a help icon on Hit split aces */}
                 <RuleSwitcher
                     casinoRules={casinoRules}
+                    isDisabled={casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.hitSplitAces}
                     setCasinoRules={setCasinoRules}
@@ -244,21 +245,21 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             {CasinoRulesKeys.holeCard}
                         </Text>
 
-                        <View
-                            style={{
-                                opacity: casinoRules[CasinoRulesKeys.holeCard] ? undefined : 0.3
-                            }}
-                        >
-                            <RuleSwitcher
-                                casinoRules={casinoRules}
-                                isDisabled={!casinoRules[CasinoRulesKeys.holeCard]}
-                                onValueChange={casinoRuleChangeHandler}
-                                ruleName={CasinoRulesKeys.blackjackPeek}
-                                setCasinoRules={setCasinoRules}
-                            />
-                        </View>
+                        <RuleSwitcher
+                            casinoRules={casinoRules}
+                            isDisabled={!casinoRules[CasinoRulesKeys.holeCard]}
+                            onValueChange={casinoRuleChangeHandler}
+                            ruleName={CasinoRulesKeys.blackjackPeek}
+                            setCasinoRules={setCasinoRules}
+                        />
                     </View>
                 </View>
+
+                <SplitsNumberPicker
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    setCasinoRules={setCasinoRules}
+                />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}

@@ -45,6 +45,11 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                                   undefined
                                       ? storedGameConfig.casinoRules[CasinoRulesKeys.holeCard]
                                       : currentGameConfig.casinoRules[CasinoRulesKeys.holeCard],
+                              [CasinoRulesKeys.splitsNumber]:
+                                  storedGameConfig.casinoRules[CasinoRulesKeys.splitsNumber] !==
+                                  undefined
+                                      ? storedGameConfig.casinoRules[CasinoRulesKeys.splitsNumber]
+                                      : currentGameConfig.casinoRules[CasinoRulesKeys.splitsNumber],
                               [CasinoRulesKeys.surrender]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                                   undefined

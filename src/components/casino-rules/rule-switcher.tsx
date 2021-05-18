@@ -44,7 +44,14 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
     return props.hideLabel ? (
         SwitchCore
     ) : (
-        <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+        <View
+            style={{
+                flexDirection: 'row',
+                opacity: props.isDisabled ? 0.3 : undefined,
+                paddingTop: 16,
+                width: '100%'
+            }}
+        >
             {SwitchCore}
             <Text
                 style={{

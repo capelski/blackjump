@@ -6,7 +6,8 @@ import {
     HandCode,
     HandDecisionSet,
     HandDecisionSetGetters,
-    SimpleCardSymbol
+    SimpleCardSymbol,
+    SplitsNumber
 } from '../types';
 
 const alwaysHit: HandDecisionSet = {
@@ -357,32 +358,64 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandCode.Soft19]: () => alwaysStand,
     [HandCode.Soft20]: () => alwaysStand,
     [HandCode.Split2s]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
-        [SimpleCardSymbol.Seven]: BaseDecisions.split,
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
         [SimpleCardSymbol.Ace]: BaseDecisions.hit
     }),
     [HandCode.Split3s]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
-        [SimpleCardSymbol.Seven]: BaseDecisions.split,
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
@@ -392,12 +425,16 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Two]: BaseDecisions.hit,
         [SimpleCardSymbol.Three]: BaseDecisions.hit,
         [SimpleCardSymbol.Four]: BaseDecisions.hit,
-        [SimpleCardSymbol.Five]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
         [SimpleCardSymbol.Seven]: BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
@@ -441,72 +478,182 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Ace]: BaseDecisions.hit
     }),
     [HandCode.Split6s]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: casinoRules[CasinoRulesKeys.doubleAfterSplit]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.split,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
         [SimpleCardSymbol.Seven]: BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
         [SimpleCardSymbol.Ace]: BaseDecisions.hit
     }),
-    [HandCode.Split7s]: () => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.split,
-        [SimpleCardSymbol.Three]: BaseDecisions.split,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
-        [SimpleCardSymbol.Seven]: BaseDecisions.split,
+    [HandCode.Split7s]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
         [SimpleCardSymbol.Ace]: BaseDecisions.hit
     }),
     [HandCode.Split8s]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.split,
-        [SimpleCardSymbol.Three]: BaseDecisions.split,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
-        [SimpleCardSymbol.Seven]: BaseDecisions.split,
-        [SimpleCardSymbol.Eight]: BaseDecisions.split,
-        [SimpleCardSymbol.Nine]: BaseDecisions.split,
-        [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.blackjackPeek]
-            ? BaseDecisions.split
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: casinoRules[CasinoRulesKeys.blackjackPeek]
-            ? BaseDecisions.split
-            : BaseDecisions.hit
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? BaseDecisions.split
+                : BaseDecisions.hit
     }),
-    [HandCode.Split9s]: () => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.split,
-        [SimpleCardSymbol.Three]: BaseDecisions.split,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
+    [HandCode.Split9s]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
         [SimpleCardSymbol.Seven]: BaseDecisions.stand,
-        [SimpleCardSymbol.Eight]: BaseDecisions.split,
-        [SimpleCardSymbol.Nine]: BaseDecisions.split,
+        [SimpleCardSymbol.Eight]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Nine]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.stand,
         [SimpleCardSymbol.Ten]: BaseDecisions.stand,
         [SimpleCardSymbol.Ace]: BaseDecisions.stand
     }),
     [HandCode.Split10s]: () => alwaysStand,
     [HandCode.SplitAs]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.split,
-        [SimpleCardSymbol.Three]: BaseDecisions.split,
-        [SimpleCardSymbol.Four]: BaseDecisions.split,
-        [SimpleCardSymbol.Five]: BaseDecisions.split,
-        [SimpleCardSymbol.Six]: BaseDecisions.split,
-        [SimpleCardSymbol.Seven]: BaseDecisions.split,
-        [SimpleCardSymbol.Eight]: BaseDecisions.split,
-        [SimpleCardSymbol.Nine]: BaseDecisions.split,
-        [SimpleCardSymbol.Ten]: BaseDecisions.split,
-        [SimpleCardSymbol.Ace]: casinoRules[CasinoRulesKeys.blackjackPeek]
-            ? BaseDecisions.split
-            : BaseDecisions.hit
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
+                ? BaseDecisions.split
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
+            casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? BaseDecisions.split
+                : BaseDecisions.hit
     })
 };

@@ -166,7 +166,9 @@ export default function App() {
     const isDoubleEnabled =
         currentHand !== undefined && canDouble(currentHand, player.hands, gameConfig.casinoRules);
     const isHitEnabled = currentHand !== undefined && canHit(player.hands, gameConfig.casinoRules);
-    const isSplitEnabled = currentHand !== undefined && canSplit(currentHand);
+    const isSplitEnabled =
+        currentHand !== undefined &&
+        canSplit(currentHand, player.hands.length, gameConfig.casinoRules);
     const isSurrenderEnabled =
         currentHand !== undefined &&
         canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);

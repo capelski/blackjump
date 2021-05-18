@@ -7,7 +7,7 @@ export {
     SpecialCardSymbol,
     TenPointsCardSymbol
 } from './card';
-export { CasinoRules, CasinoRulesKeys, Doubling } from './casino-rules';
+export { CasinoRules, CasinoRulesKeys, Doubling, SplitsNumber } from './casino-rules';
 export {
     BaseDecisions,
     DecisionEvaluation,

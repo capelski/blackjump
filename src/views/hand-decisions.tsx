@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { SplitsNumberPicker } from '../components/casino-rules/splits-number-picker';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { getHandDecisionSetLevel, handDecisionSetGetters } from '../logic/hand-decision-set';
-import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames, TrainingHands } from '../types';
+import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames } from '../types';
 
 type HandDecisionsProps = {
     casinoRules: CasinoRules;
@@ -52,6 +53,12 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
             {trainingHand.dependencies.map((dependency) => {
                 return dependency === CasinoRulesKeys.doubling ? (
                     <DoublingPicker
+                        casinoRules={casinoRules}
+                        key={dependency}
+                        setCasinoRules={setCasinoRules}
+                    />
+                ) : dependency === CasinoRulesKeys.splitsNumber ? (
+                    <SplitsNumberPicker
                         casinoRules={casinoRules}
                         key={dependency}
                         setCasinoRules={setCasinoRules}
