@@ -100,6 +100,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
 
                 <HandComponent
                     hand={hardEight}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -114,6 +115,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
 
                 <HandComponent
                     hand={splitNine}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}

@@ -98,6 +98,7 @@ export const BlueCardsInfo: React.FC = () => {
 
                 <HandComponent
                     hand={hardFourteen}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -124,6 +125,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [15]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -142,6 +144,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [16]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -165,6 +168,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [20]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -187,6 +191,7 @@ export const BlueCardsInfo: React.FC = () => {
 
                 <HandComponent
                     hand={splitFour}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -212,6 +217,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [5, 15]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -230,6 +236,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [6]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -253,6 +260,7 @@ export const BlueCardsInfo: React.FC = () => {
                         ],
                         values: [14]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}

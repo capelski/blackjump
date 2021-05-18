@@ -53,6 +53,7 @@ export const GoldHandsInfo: React.FC = () => {
                         ],
                         values: [17]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
@@ -101,6 +102,7 @@ export const GoldHandsInfo: React.FC = () => {
                         ],
                         values: [21]
                     }}
+                    handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
                     skipAnimation={true}
