@@ -38,9 +38,13 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
                         width: '100%'
                     }}
                     onValueChange={(newValue: string) => {
+                        const nextDoubling = parseInt(newValue);
                         const nextCasinoRules = {
                             ...props.casinoRules,
-                            [CasinoRulesKeys.doubling]: parseInt(newValue)
+                            [CasinoRulesKeys.doubleAfterSplit]:
+                                props.casinoRules[CasinoRulesKeys.doubleAfterSplit] &&
+                                nextDoubling > 0,
+                            [CasinoRulesKeys.doubling]: nextDoubling
                         };
                         props.setCasinoRules(nextCasinoRules);
                         props.onValueChange && props.onValueChange(nextCasinoRules);

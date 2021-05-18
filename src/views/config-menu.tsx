@@ -202,6 +202,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 >
                     <RuleSwitcher
                         casinoRules={casinoRules}
+                        isDisabled={casinoRules[CasinoRulesKeys.doubling] === Doubling.none}
                         onValueChange={casinoRuleChangeHandler}
                         ruleName={CasinoRulesKeys.doubleAfterSplit}
                         setCasinoRules={setCasinoRules}
