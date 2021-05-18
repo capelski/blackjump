@@ -1,11 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { getHandValidValues } from '../logic/hand';
+import { getHandValidValues, isBlackjack } from '../logic/hand';
 import { AppNavigation, Hand } from '../types';
 import { CardComponent } from './card-component';
 
 interface HandComponentProps {
     hand: Hand;
+    handsNumber: number;
     isCurrentHand: boolean;
     isSoundEnabled: boolean;
     navigation?: AppNavigation;
@@ -15,12 +16,12 @@ interface HandComponentProps {
 
 export const HandComponent: React.FC<HandComponentProps> = (props) => {
     const handValues = getHandValidValues(props.hand).join('/');
-    const displayValues =
-        handValues.indexOf('21') > -1
-            ? props.hand.cards.length === 2
-                ? 'Blackjack'
-                : '21'
-            : handValues;
+    const displayValues = isBlackjack(props.hand, props.handsNumber)
+        ? 'Blackjack'
+        : handValues.indexOf('21') > -1
+        ? '21'
+        : handValues;
+
     return (
         <View
             style={{

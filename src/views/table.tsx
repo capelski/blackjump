@@ -45,6 +45,7 @@ export const Table: React.FC<TableProps> = (props) => (
                 {props.dealerHand && (
                     <HandComponent
                         hand={props.dealerHand}
+                        handsNumber={1}
                         isCurrentHand={props.phase === Phases.dealer}
                         isSoundEnabled={props.gameConfig.isSoundEnabled}
                         navigation={props.navigation}
@@ -117,6 +118,7 @@ export const Table: React.FC<TableProps> = (props) => (
                     {props.player.hands.map((hand, index) => (
                         <HandComponent
                             hand={hand}
+                            handsNumber={props.player.hands.length}
                             isCurrentHand={
                                 props.phase === Phases.player && index === props.player.handIndex
                             }

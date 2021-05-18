@@ -53,7 +53,7 @@ export const isLastHand = (player: Player) => player.hands.length - 1 <= player.
 
 export const resolveHands = (player: Player, dealerHand: Hand) => {
     const earnings = player.hands.reduce((earnings, hand) => {
-        const handOutcome = resolveHand(hand, dealerHand);
+        const handOutcome = resolveHand(hand, player.hands.length, dealerHand);
         return (
             earnings +
             (handOutcome === HandOutcome.blackjack

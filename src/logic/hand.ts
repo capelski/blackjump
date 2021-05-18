@@ -211,8 +211,9 @@ export const handToHandCode = (hand: Hand): HandCode => {
 
 export const hasHoleCard = (hand: Hand) => hand.cards.length > 1 && hand.cards[1].isHoleCard;
 
-export const isBlackjack = (hand: Hand) => {
+export const isBlackjack = (hand: Hand, handsNumber: number) => {
     return (
+        handsNumber === 1 &&
         hand.cards.length === 2 &&
         hand.values.length === 2 &&
         hand.values[0] === 11 &&
@@ -220,7 +221,7 @@ export const isBlackjack = (hand: Hand) => {
     );
 };
 
-export const isBust = (hand: Hand) => {
+const isBust = (hand: Hand) => {
     return getHandEffectiveValue(hand) > 21;
 };
 
@@ -238,16 +239,20 @@ export const isFinished = (hand: Hand) => {
     return getHandEffectiveValue(hand) >= 21;
 };
 
-export const resolveHand = (playerHand: Hand, dealerHand: Hand): HandOutcome => {
+export const resolveHand = (
+    playerHand: Hand,
+    handsNumber: number,
+    dealerHand: Hand
+): HandOutcome => {
     const playerHandValue = getHandEffectiveValue(playerHand);
     const dealerHandValue = getHandEffectiveValue(dealerHand!);
     const handOutcome = isBust(playerHand)
         ? HandOutcome.bust
-        : isBlackjack(playerHand) && isBlackjack(dealerHand!)
+        : isBlackjack(playerHand, handsNumber) && isBlackjack(dealerHand!, handsNumber)
         ? HandOutcome.push
-        : isBlackjack(playerHand)
+        : isBlackjack(playerHand, handsNumber)
         ? HandOutcome.blackjack
-        : isBlackjack(dealerHand!)
+        : isBlackjack(dealerHand!, handsNumber)
         ? HandOutcome.dealerWins
         : isBust(dealerHand!)
         ? HandOutcome.playerWins
