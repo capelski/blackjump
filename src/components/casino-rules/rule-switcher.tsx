@@ -10,7 +10,7 @@ interface RuleSwitcherProps {
     onValueChange?: (nextCasinoRules: CasinoRules) => void;
     ruleName:
         | CasinoRulesKeys.blackjackPeek
-        | CasinoRulesKeys.doubleAfterSplit
+        | CasinoRulesKeys.doublingAfterSplit
         | CasinoRulesKeys.hitSplitAces
         | CasinoRulesKeys.holeCard
         | CasinoRulesKeys.surrender;

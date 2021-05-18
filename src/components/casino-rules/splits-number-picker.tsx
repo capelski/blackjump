@@ -41,8 +41,8 @@ export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => 
                         const nextSplitsNumber = parseInt(newValue);
                         const nextCasinoRules = {
                             ...props.casinoRules,
-                            [CasinoRulesKeys.doubleAfterSplit]:
-                                props.casinoRules[CasinoRulesKeys.doubleAfterSplit] &&
+                            [CasinoRulesKeys.doublingAfterSplit]:
+                                props.casinoRules[CasinoRulesKeys.doublingAfterSplit] &&
                                 nextSplitsNumber > 0,
                             [CasinoRulesKeys.hitSplitAces]:
                                 props.casinoRules[CasinoRulesKeys.hitSplitAces] &&

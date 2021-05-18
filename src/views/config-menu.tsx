@@ -122,8 +122,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const isSaveButtonEnabled =
         (props.gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] !==
             casinoRules[CasinoRulesKeys.blackjackPeek] ||
-            props.gameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
-                casinoRules[CasinoRulesKeys.doubleAfterSplit] ||
+            props.gameConfig.casinoRules[CasinoRulesKeys.doublingAfterSplit] !==
+                casinoRules[CasinoRulesKeys.doublingAfterSplit] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.doubling] !==
                 casinoRules[CasinoRulesKeys.doubling] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.hitSplitAces] !==
@@ -205,7 +205,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
                     }
                     onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.doubleAfterSplit}
+                    ruleName={CasinoRulesKeys.doublingAfterSplit}
                     setCasinoRules={setCasinoRules}
                 />
 

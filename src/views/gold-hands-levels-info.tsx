@@ -188,7 +188,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
 
                     <RuleSwitcher
                         casinoRules={casinoRules}
-                        ruleName={CasinoRulesKeys.doubleAfterSplit}
+                        ruleName={CasinoRulesKeys.doublingAfterSplit}
                         setCasinoRules={setCasinoRules}
                     />
 

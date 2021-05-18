@@ -57,7 +57,7 @@ export const canDouble = (hand: Hand, hands: Hand[], casinoRules: CasinoRules) =
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToElevenSoft && contains9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven && is9To11) ||
             (casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven && is10To11)) &&
-        (isSingleHand || casinoRules[CasinoRulesKeys.doubleAfterSplit]) &&
+        (isSingleHand || casinoRules[CasinoRulesKeys.doublingAfterSplit]) &&
         (!areHandsSplitAces(hands) || casinoRules[CasinoRulesKeys.hitSplitAces])
     );
 };

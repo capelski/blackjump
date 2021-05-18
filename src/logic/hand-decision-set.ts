@@ -360,12 +360,12 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandCode.Split2s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Three]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Four]:
@@ -392,12 +392,12 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandCode.Split3s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Three]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Four]:
@@ -427,12 +427,12 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Four]: BaseDecisions.hit,
         [SimpleCardSymbol.Five]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Six]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Seven]: BaseDecisions.hit,
@@ -480,7 +480,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandCode.Split6s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
-            casinoRules[CasinoRulesKeys.doubleAfterSplit]
+            casinoRules[CasinoRulesKeys.doublingAfterSplit]
                 ? BaseDecisions.split
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Three]:

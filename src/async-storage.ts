@@ -21,20 +21,21 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                                       : currentGameConfig.casinoRules[
                                             CasinoRulesKeys.blackjackPeek
                                         ],
-                              [CasinoRulesKeys.doubleAfterSplit]:
-                                  storedGameConfig.casinoRules[CasinoRulesKeys.doubleAfterSplit] !==
-                                  undefined
-                                      ? storedGameConfig.casinoRules[
-                                            CasinoRulesKeys.doubleAfterSplit
-                                        ]
-                                      : currentGameConfig.casinoRules[
-                                            CasinoRulesKeys.doubleAfterSplit
-                                        ],
                               [CasinoRulesKeys.doubling]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.doubling] !==
                                   undefined
                                       ? storedGameConfig.casinoRules[CasinoRulesKeys.doubling]
                                       : currentGameConfig.casinoRules[CasinoRulesKeys.doubling],
+                              [CasinoRulesKeys.doublingAfterSplit]:
+                                  storedGameConfig.casinoRules[
+                                      CasinoRulesKeys.doublingAfterSplit
+                                  ] !== undefined
+                                      ? storedGameConfig.casinoRules[
+                                            CasinoRulesKeys.doublingAfterSplit
+                                        ]
+                                      : currentGameConfig.casinoRules[
+                                            CasinoRulesKeys.doublingAfterSplit
+                                        ],
                               [CasinoRulesKeys.hitSplitAces]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.hitSplitAces] !==
                                   undefined

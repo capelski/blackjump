@@ -41,8 +41,8 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
                         const nextDoubling = parseInt(newValue);
                         const nextCasinoRules = {
                             ...props.casinoRules,
-                            [CasinoRulesKeys.doubleAfterSplit]:
-                                props.casinoRules[CasinoRulesKeys.doubleAfterSplit] &&
+                            [CasinoRulesKeys.doublingAfterSplit]:
+                                props.casinoRules[CasinoRulesKeys.doublingAfterSplit] &&
                                 nextDoubling > 0,
                             [CasinoRulesKeys.doubling]: nextDoubling
                         };

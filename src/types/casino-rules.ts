@@ -1,7 +1,7 @@
 export interface CasinoRules {
     [CasinoRulesKeys.blackjackPeek]: boolean;
-    [CasinoRulesKeys.doubleAfterSplit]: boolean;
     [CasinoRulesKeys.doubling]: Doubling;
+    [CasinoRulesKeys.doublingAfterSplit]: boolean;
     [CasinoRulesKeys.hitSplitAces]: boolean;
     [CasinoRulesKeys.holeCard]: boolean;
     [CasinoRulesKeys.splitsNumber]: SplitsNumber;
@@ -10,8 +10,8 @@ export interface CasinoRules {
 
 export enum CasinoRulesKeys {
     blackjackPeek = 'Blackjack Peek',
-    doubleAfterSplit = 'Double after split',
     doubling = 'Doubling',
+    doublingAfterSplit = 'Doubling after split',
     hitSplitAces = 'Hit split aces',
     holeCard = 'Hole card',
     splitsNumber = 'Splits number',

@@ -205,21 +205,21 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Split2s]: {
             code: HandCode.Split2s,
             decisionSet: handDecisionSetGetters[HandCode.Split2s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doubleAfterSplit],
+            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
             level: -1,
             name: '2,2'
         },
         [HandCode.Split3s]: {
             code: HandCode.Split3s,
             decisionSet: handDecisionSetGetters[HandCode.Split3s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doubleAfterSplit],
+            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
             level: -1,
             name: '3,3'
         },
         [HandCode.Split4s]: {
             code: HandCode.Split4s,
             decisionSet: handDecisionSetGetters[HandCode.Split4s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doubleAfterSplit],
+            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
             level: -1,
             name: '4,4'
         },
@@ -233,7 +233,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Split6s]: {
             code: HandCode.Split6s,
             decisionSet: handDecisionSetGetters[HandCode.Split6s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doubleAfterSplit],
+            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
             level: -1,
             name: '6,6'
         },
