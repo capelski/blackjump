@@ -28,6 +28,9 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
                               ...props.casinoRules,
                               [props.ruleName]: newValue
                           };
+                          if (props.ruleName === CasinoRulesKeys.holeCard && !newValue) {
+                              nextCasinoRules[CasinoRulesKeys.blackjackPeek] = false;
+                          }
                           props.setCasinoRules(nextCasinoRules);
                           props.onValueChange && props.onValueChange(nextCasinoRules);
                       }
