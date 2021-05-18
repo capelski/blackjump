@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
+import { SplitsNumberPicker } from '../components/casino-rules/splits-number-picker';
 import { HandComponent } from '../components/hand-component';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { getTrainingHands } from '../logic/training-hand';
@@ -10,10 +11,12 @@ import {
     CardSuit,
     CasinoRulesKeys,
     Dictionary,
+    Doubling,
     GameConfig,
     Hand,
     HandCode,
-    SimpleCardSymbol
+    SimpleCardSymbol,
+    SplitsNumber
 } from '../types';
 
 type GoldHandsLevelsInfoProps = {
@@ -188,9 +191,15 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
 
                     <RuleSwitcher
                         casinoRules={casinoRules}
+                        isDisabled={
+                            casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
+                            casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
+                        }
                         ruleName={CasinoRulesKeys.doublingAfterSplit}
                         setCasinoRules={setCasinoRules}
                     />
+
+                    <SplitsNumberPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
 
                     <RuleSwitcher
                         casinoRules={casinoRules}
