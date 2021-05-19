@@ -8,6 +8,24 @@ export interface Hand {
 }
 
 export enum HandCode {
+    Split2s = '2,2',
+    Split3s = '3,3',
+    Split4s = '4,4',
+    Split5s = '5,5',
+    Split6s = '6,6',
+    Split7s = '7,7',
+    Split8s = '8,8',
+    Split9s = '9,9',
+    Split10s = '10,10',
+    SplitAs = 'A,A',
+    Soft13 = '3/13',
+    Soft14 = '4/14',
+    Soft15 = '5/15',
+    Soft16 = '6/16',
+    Soft17 = '7/17',
+    Soft18 = '8/18',
+    Soft19 = '9/19',
+    Soft20 = '10/20',
     Hard5 = '5',
     Hard6 = '6',
     Hard7 = '7',
@@ -23,25 +41,7 @@ export enum HandCode {
     Hard17 = '17',
     Hard18 = '18',
     Hard19 = '19',
-    Hard20 = '20',
-    Soft13 = '3/13',
-    Soft14 = '4/14',
-    Soft15 = '5/15',
-    Soft16 = '6/16',
-    Soft17 = '7/17',
-    Soft18 = '8/18',
-    Soft19 = '9/19',
-    Soft20 = '10/20',
-    Split2s = '2,2',
-    Split3s = '3,3',
-    Split4s = '4,4',
-    Split5s = '5,5',
-    Split6s = '6,6',
-    Split7s = '7,7',
-    Split8s = '8,8',
-    Split9s = '9,9',
-    Split10s = '10,10',
-    SplitAs = 'A,A'
+    Hard20 = '20'
 }
 
 export enum HandOutcome {

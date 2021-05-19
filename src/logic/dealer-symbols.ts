@@ -2,7 +2,6 @@ import { SimpleCardSymbol, TrainingHandStatus, TrainingPairStatus } from '../typ
 import { getObjectKeys } from '../utils';
 
 export const allDealerSymbols: SimpleCardSymbol[] = [
-    SimpleCardSymbol.Ace,
     SimpleCardSymbol.Two,
     SimpleCardSymbol.Three,
     SimpleCardSymbol.Four,
@@ -11,7 +10,8 @@ export const allDealerSymbols: SimpleCardSymbol[] = [
     SimpleCardSymbol.Seven,
     SimpleCardSymbol.Eight,
     SimpleCardSymbol.Nine,
-    SimpleCardSymbol.Ten
+    SimpleCardSymbol.Ten,
+    SimpleCardSymbol.Ace
 ];
 
 export const getUntrainedDealerSymbols = (trainingHandStatus: TrainingHandStatus) =>

@@ -53,310 +53,6 @@ export const getHandDecisionSetLevel = (decisionSet: HandDecisionSet) =>
     ).level;
 
 export const handDecisionSetGetters: HandDecisionSetGetters = {
-    [HandCode.Hard5]: () => alwaysHit,
-    [HandCode.Hard6]: () => alwaysHit,
-    [HandCode.Hard7]: () => alwaysHit,
-    [HandCode.Hard8]: () => alwaysHit,
-    [HandCode.Hard9]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard10]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Three]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard11]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Three]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven &&
-            casinoRules[CasinoRulesKeys.blackjackPeek]
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard12]: () => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.hit,
-        [SimpleCardSymbol.Four]: BaseDecisions.stand,
-        [SimpleCardSymbol.Five]: BaseDecisions.stand,
-        [SimpleCardSymbol.Six]: BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard13]: () => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.stand,
-        [SimpleCardSymbol.Three]: BaseDecisions.stand,
-        [SimpleCardSymbol.Four]: BaseDecisions.stand,
-        [SimpleCardSymbol.Five]: BaseDecisions.stand,
-        [SimpleCardSymbol.Six]: BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard14]: () => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.stand,
-        [SimpleCardSymbol.Three]: BaseDecisions.stand,
-        [SimpleCardSymbol.Four]: BaseDecisions.stand,
-        [SimpleCardSymbol.Five]: BaseDecisions.stand,
-        [SimpleCardSymbol.Six]: BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard15]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.stand,
-        [SimpleCardSymbol.Three]: BaseDecisions.stand,
-        [SimpleCardSymbol.Four]: BaseDecisions.stand,
-        [SimpleCardSymbol.Five]: BaseDecisions.stand,
-        [SimpleCardSymbol.Six]: BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.surrender]
-            ? DynamicDecisions.surrender_hit
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Hard16]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.stand,
-        [SimpleCardSymbol.Three]: BaseDecisions.stand,
-        [SimpleCardSymbol.Four]: BaseDecisions.stand,
-        [SimpleCardSymbol.Five]: BaseDecisions.stand,
-        [SimpleCardSymbol.Six]: BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: casinoRules[CasinoRulesKeys.surrender]
-            ? DynamicDecisions.surrender_hit
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.surrender]
-            ? DynamicDecisions.surrender_hit
-            : BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: casinoRules[CasinoRulesKeys.surrender]
-            ? DynamicDecisions.surrender_hit
-            : BaseDecisions.hit
-    }),
-    [HandCode.Hard17]: () => alwaysStand,
-    [HandCode.Hard18]: () => alwaysStand,
-    [HandCode.Hard19]: () => alwaysStand,
-    [HandCode.Hard20]: () => alwaysStand,
-    [HandCode.Soft13]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.hit,
-        [SimpleCardSymbol.Four]: BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft14]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.hit,
-        [SimpleCardSymbol.Four]: BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft15]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft16]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]: BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft17]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.hit,
-        [SimpleCardSymbol.Three]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_hit
-                : BaseDecisions.hit,
-        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
-        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft18]: (casinoRules) => ({
-        [SimpleCardSymbol.Two]: BaseDecisions.stand,
-        [SimpleCardSymbol.Three]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_stand
-                : BaseDecisions.stand,
-        [SimpleCardSymbol.Four]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_stand
-                : BaseDecisions.stand,
-        [SimpleCardSymbol.Five]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_stand
-                : BaseDecisions.stand,
-        [SimpleCardSymbol.Six]:
-            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
-                ? DynamicDecisions.double_stand
-                : BaseDecisions.stand,
-        [SimpleCardSymbol.Seven]: BaseDecisions.stand,
-        [SimpleCardSymbol.Eight]: BaseDecisions.stand,
-        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
-    }),
-    [HandCode.Soft19]: () => alwaysStand,
-    [HandCode.Soft20]: () => alwaysStand,
     [HandCode.Split2s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
@@ -655,5 +351,309 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
             casinoRules[CasinoRulesKeys.blackjackPeek]
                 ? BaseDecisions.split
                 : BaseDecisions.hit
-    })
+    }),
+    [HandCode.Soft13]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft14]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft15]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft16]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft17]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft18]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_stand
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_stand
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_stand
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.anyPair
+                ? DynamicDecisions.double_stand
+                : BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.stand,
+        [SimpleCardSymbol.Eight]: BaseDecisions.stand,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Soft19]: () => alwaysStand,
+    [HandCode.Soft20]: () => alwaysStand,
+    [HandCode.Hard5]: () => alwaysHit,
+    [HandCode.Hard6]: () => alwaysHit,
+    [HandCode.Hard7]: () => alwaysHit,
+    [HandCode.Hard8]: () => alwaysHit,
+    [HandCode.Hard9]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.nineToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard10]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard11]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Three]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Four]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Five]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Six]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]:
+            casinoRules[CasinoRulesKeys.doubling] >= Doubling.tenToEleven &&
+            casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.double_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard12]: () => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard13]: () => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]: BaseDecisions.stand,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard14]: () => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]: BaseDecisions.stand,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard15]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]: BaseDecisions.stand,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.surrender]
+            ? DynamicDecisions.surrender_hit
+            : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+    }),
+    [HandCode.Hard16]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]: BaseDecisions.stand,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: casinoRules[CasinoRulesKeys.surrender]
+            ? DynamicDecisions.surrender_hit
+            : BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.surrender]
+            ? DynamicDecisions.surrender_hit
+            : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]: casinoRules[CasinoRulesKeys.surrender]
+            ? DynamicDecisions.surrender_hit
+            : BaseDecisions.hit
+    }),
+    [HandCode.Hard17]: () => alwaysStand,
+    [HandCode.Hard18]: () => alwaysStand,
+    [HandCode.Hard19]: () => alwaysStand,
+    [HandCode.Hard20]: () => alwaysStand
 };

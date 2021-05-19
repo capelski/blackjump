@@ -238,7 +238,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         {/* TODO Create a help icon on Hole card */}
                         <Text
                             style={{
-                                color: areGoldHandsBlockingProgress ? doubleColor : 'white',
+                                color: 'white',
                                 fontSize: 20
                             }}
                         >
@@ -509,11 +509,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     isEnabled={true}
                     marginTop={56}
                     onPress={() => {
-                        Linking.openURL(
-                            'https://wizardofodds.com/games/blackjack/strategy/4-decks/'
-                        );
+                        props.navigation.navigate(RouteNames.basicStrategyTable);
                     }}
-                    text="View basic strategy table"
+                    text="Basic strategy table"
                     width="100%"
                 />
 

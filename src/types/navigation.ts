@@ -7,6 +7,7 @@ export type AppNavigation = StackNavigationProp<RouteParams>;
 export type AppRoute<T extends RouteNames> = Route<T, RouteParams[T]>;
 
 export enum RouteNames {
+    basicStrategyTable = 'basicStrategyTable',
     blueCardsInfo = 'blueCardsInfo',
     configMenu = 'configMenu',
     failedHands = 'failedHands',
@@ -22,6 +23,7 @@ export enum RouteNames {
 export const initialRouteName = RouteNames.table;
 
 export type RouteParams = {
+    [RouteNames.basicStrategyTable]: undefined;
     [RouteNames.blueCardsInfo]: undefined;
     [RouteNames.configMenu]: undefined;
     [RouteNames.failedHands]: undefined;

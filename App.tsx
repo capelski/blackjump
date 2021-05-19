@@ -68,6 +68,7 @@ import {
     TrainingStatus
 } from './src/types';
 import { playSound } from './src/utils';
+import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
 import { FailedHands } from './src/views/failed-hands';
@@ -409,6 +410,9 @@ export default function App() {
                     }
                 }}
             >
+                <Stack.Screen name={RouteNames.basicStrategyTable}>
+                    {() => <BasicStrategyTable casinoRules={gameConfig.casinoRules} />}
+                </Stack.Screen>
                 <Stack.Screen name={RouteNames.blueCardsInfo} component={BlueCardsInfo} />
                 <Stack.Screen name={RouteNames.configMenu}>
                     {(props) => (
