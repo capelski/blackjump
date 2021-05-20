@@ -20,10 +20,11 @@ import { getObjectKeys } from '../utils';
 
 const actionsAbbreviationMap: Dictionary<string, BaseDecisions | DynamicDecisions> = {
     [BaseDecisions.hit]: 'H',
-    [BaseDecisions.split]: 'P',
     [BaseDecisions.stand]: 'S',
     [DynamicDecisions.double_hit]: 'Dh',
     [DynamicDecisions.double_stand]: 'Ds',
+    [DynamicDecisions.split_hit]: 'Ph',
+    [DynamicDecisions.split_stand]: 'Ps',
     [DynamicDecisions.surrender_hit]: 'Rh'
 };
 

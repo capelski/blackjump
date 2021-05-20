@@ -272,6 +272,7 @@ export default function App() {
             trainingHands,
             {
                 canDouble: isDoubleEnabled,
+                canSplit: isSplitEnabled,
                 canSurrender: isSurrenderEnabled
             },
             playerDecision
@@ -365,7 +366,7 @@ export default function App() {
 
     const splitHandler = () => {
         const nextPlayer = { ...player };
-        evaluatePlayerDecision(BaseDecisions.split, currentHand);
+        evaluatePlayerDecision(PlayerDecisions.split, currentHand);
         splitCurrentHand(
             nextPlayer,
             gameConfig.useBlueCards,

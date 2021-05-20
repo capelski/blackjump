@@ -118,10 +118,10 @@ export const Actions: React.FC<ActionsProps> = (props) => {
             <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
                 <Button
                     height={56}
-                    backgroundColor={colors[BaseDecisions.split]}
+                    backgroundColor={colors[PlayerDecisions.split]}
                     isEnabled={isPlayerTurn && props.isSplitEnabled}
                     onPress={props.handlers.split}
-                    text={BaseDecisions.split}
+                    text={PlayerDecisions.split}
                     width={`${optionalButtonsWidth}%`}
                 />
                 {isDoublingAvailable && (
