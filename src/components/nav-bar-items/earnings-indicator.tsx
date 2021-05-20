@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
-import { splitColor, surrenderColor } from '../../constants';
+import { dangerColor, splitColor } from '../../constants';
 
 export interface EarningsIndicatorProps {
     earnings: number;
@@ -9,7 +9,7 @@ export interface EarningsIndicatorProps {
 
 export const EarningsIndicator: React.FC<EarningsIndicatorProps> = (props) => {
     const earningsColor =
-        props.earnings > 0 ? splitColor : props.earnings < 0 ? surrenderColor : 'white';
+        props.earnings > 0 ? splitColor : props.earnings < 0 ? dangerColor : 'white';
 
     return (
         <React.Fragment>

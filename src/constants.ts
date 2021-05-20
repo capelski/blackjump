@@ -1,10 +1,13 @@
 import { BaseDecisions, Dictionary, DynamicDecisions, PlayerDecisions } from './types';
 
-export const doubleColor = '#ffc107';
+export const doubleColor = '#a1a669';
 export const hitColor = '#428bca';
 export const splitColor = '#5cb85c';
 export const standColor = '#46b8da';
-export const surrenderColor = '#dc3545';
+export const surrenderColor = '#8f6088';
+
+export const dangerColor = '#dc3545';
+export const warningColor = '#ffc107';
 
 export const tableColor = '#088446';
 

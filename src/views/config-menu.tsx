@@ -1,4 +1,3 @@
-import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Switch, Text, View } from 'react-native';
 import { updateGameConfig, updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
@@ -9,7 +8,7 @@ import { SplitsNumberPicker } from '../components/casino-rules/splits-number-pic
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
-import { doubleColor, hitColor, splitColor, surrenderColor } from '../constants';
+import { dangerColor, hitColor, splitColor, warningColor } from '../constants';
 import { getGoldHandsNumber, getTrainingHands } from '../logic/training-hand';
 import {
     getAreGoldHandsBlockingProgress,
@@ -162,7 +161,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 {areGoldHandsBlockingProgress && (
                     <Text
                         style={{
-                            color: doubleColor,
+                            color: warningColor,
                             fontSize: 20,
                             fontStyle: 'italic',
                             paddingTop: 16
@@ -345,7 +344,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <Text
                                 style={{
-                                    color: areGoldHandsBlockingProgress ? doubleColor : 'white',
+                                    color: areGoldHandsBlockingProgress ? warningColor : 'white',
                                     fontSize: 20
                                 }}
                             >
@@ -368,7 +367,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 <Text
                                     style={{
                                         ...textStyle,
-                                        color: areGoldHandsBlockingProgress ? doubleColor : 'white'
+                                        color: areGoldHandsBlockingProgress ? warningColor : 'white'
                                     }}
                                 >
                                     Hand levels
@@ -416,7 +415,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                                 style={{
                                                     ...textStyle,
                                                     color: areGoldHandsBlockingProgress
-                                                        ? doubleColor
+                                                        ? warningColor
                                                         : 'white',
                                                     marginTop: 16,
                                                     paddingLeft: 4
@@ -529,7 +528,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
                 <Button
                     height={56}
-                    backgroundColor={surrenderColor}
+                    backgroundColor={dangerColor}
                     isEnabled={true}
                     marginTop={24}
                     onPress={() => {
