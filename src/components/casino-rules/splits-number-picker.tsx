@@ -53,11 +53,10 @@ export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => 
                         props.onValueChange && props.onValueChange(nextCasinoRules);
                     }}
                 >
-                    <Picker.Item label="Unlimited" value={SplitsNumber.unlimited} />
-                    <Picker.Item label="3" value={SplitsNumber.three} />
-                    <Picker.Item label="2" value={SplitsNumber.two} />
-                    <Picker.Item label="1" value={SplitsNumber.one} />
                     <Picker.Item label="None" value={SplitsNumber.none} />
+                    <Picker.Item label="1" value={SplitsNumber.one} />
+                    <Picker.Item label="2" value={SplitsNumber.two} />
+                    <Picker.Item label="3" value={SplitsNumber.three} />
                 </Picker>
             </View>
         </View>

@@ -68,8 +68,7 @@ export const canHit = (hands: Hand[], casinoRules: CasinoRules) =>
 export const canSplit = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     hand.cards.length === 2 &&
     getCardEffectiveValue(hand.cards[0]) === getCardEffectiveValue(hand.cards[1]) &&
-    (casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.unlimited ||
-        casinoRules[CasinoRulesKeys.splitsNumber] >= handsNumber);
+    casinoRules[CasinoRulesKeys.splitsNumber] >= handsNumber;
 
 export const canSurrender = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     handsNumber === 1 && hand.cards.length === 2 && casinoRules[CasinoRulesKeys.surrender];
