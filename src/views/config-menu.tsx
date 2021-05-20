@@ -8,7 +8,7 @@ import { SplitsNumberPicker } from '../components/casino-rules/splits-number-pic
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
-import { dangerColor, hitColor, splitColor, warningColor } from '../constants';
+import { dangerColor, doubleColor, hitColor, splitColor, warningColor } from '../constants';
 import { getGoldHandsNumber, getTrainingHands } from '../logic/training-hand';
 import {
     getAreGoldHandsBlockingProgress,
@@ -151,6 +151,28 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 width: '100%'
             }}
         >
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.basicStrategyTable}
+                onBoardingStep={props.onBoardingStep}
+                style={{
+                    alignItems: 'center',
+                    paddingBottom: 8,
+                    paddingHorizontal: 16,
+                    paddingVertical: 16
+                }}
+            >
+                <Button
+                    height={56}
+                    backgroundColor={splitColor}
+                    isEnabled={true}
+                    onPress={() => {
+                        props.navigation.navigate(RouteNames.basicStrategyTable);
+                    }}
+                    text="Basic strategy table"
+                    width="100%"
+                />
+            </OnBoardingSection>
+
             <OnBoardingSection
                 onBoardingStep={props.onBoardingStep}
                 style={{
@@ -488,7 +510,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 onBoardingStep={props.onBoardingStep}
                 style={{
                     alignItems: 'center',
-                    paddingBottom: 40,
                     paddingHorizontal: 16,
                     paddingTop: 24
                 }}
@@ -497,40 +518,41 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     height={56}
                     backgroundColor={hitColor}
                     isEnabled={isSaveButtonEnabled}
+                    marginBottom={40}
                     onPress={saveHandler}
                     text="Save"
-                    width="75%"
-                />
-
-                <Button
-                    height={56}
-                    backgroundColor={splitColor}
-                    isEnabled={true}
-                    marginTop={56}
-                    onPress={() => {
-                        props.navigation.navigate(RouteNames.basicStrategyTable);
-                    }}
-                    text="Basic strategy table"
                     width="100%"
                 />
 
+                <Divider />
+
                 <Button
                     height={56}
-                    backgroundColor={splitColor}
+                    backgroundColor={doubleColor}
                     isEnabled={props.phase === Phases.finished}
-                    marginTop={8}
+                    marginTop={40}
                     onPress={() => {
                         props.navigation.navigate(RouteNames.onboarding);
                     }}
                     text="Onboarding"
                     width="100%"
                 />
+            </OnBoardingSection>
 
+            <OnBoardingSection
+                isHighlighted={OnBoardingSections.resetTraining}
+                onBoardingStep={props.onBoardingStep}
+                style={{
+                    alignItems: 'center',
+                    paddingBottom: 16,
+                    paddingHorizontal: 16
+                }}
+            >
                 <Button
                     height={56}
                     backgroundColor={dangerColor}
                     isEnabled={true}
-                    marginTop={24}
+                    marginTop={8}
                     onPress={() => {
                         Alert.alert(
                             'Reset training',

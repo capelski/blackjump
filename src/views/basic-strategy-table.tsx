@@ -73,7 +73,6 @@ const TextCell: React.FC<TextCellProps> = (props) => (
 
 interface BasicStrategyTableProps {
     casinoRules: CasinoRules;
-    // onBoardingStep: number; // TODO Add onboarding step for basic strategy table
 }
 
 export const BasicStrategyTable: React.FC<BasicStrategyTableProps> = (props) => {

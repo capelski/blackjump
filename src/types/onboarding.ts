@@ -2,10 +2,12 @@ import { AppNavigation } from './navigation';
 
 export enum OnBoardingSections {
     appSettings = 'appSettings',
+    basicStrategyTable = 'basicStrategyTable',
     casinoRules = 'casinoRules',
     configMenuButton = 'configMenuButton',
     precisionIndicator = 'precisionIndicator',
     progressIndicator = 'progressIndicator',
+    resetTraining = 'resetTraining',
     tableActions = 'tableActions',
     tableDealerHand = 'tableDealerHand',
     tableFeedback = 'tableFeedback',

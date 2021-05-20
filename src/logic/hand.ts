@@ -8,7 +8,6 @@ import {
     HandCode,
     HandOutcome,
     SimpleCardSymbol,
-    SplitsNumber,
     TrainingHands,
     TrainingPairStatus,
     TrainingProgress

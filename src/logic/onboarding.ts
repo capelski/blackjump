@@ -8,7 +8,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'Click Train to start playing a hand'
+        text: 'Click Train to start training a random hand'
     },
     {
         activeSection: OnBoardingSections.tablePlayerHands,
@@ -35,7 +35,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'Chose the right action for each of your hands'
+        text: 'Chose an action for each of your hands'
     },
     {
         activeSection: OnBoardingSections.tableFeedback,
@@ -44,7 +44,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'A validation message will be shown for the chosen action'
+        text: 'See whether you chose the right action or not'
     },
     {
         activeSection: OnBoardingSections.progressIndicator,
@@ -52,7 +52,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: "The Progress indicator tells the % of hands you've trained"
+        text: 'This indicator shows the % of trained hands'
     },
     {
         activeSection: OnBoardingSections.progressIndicator,
@@ -60,7 +60,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.trainingHands);
         },
-        text: 'Click on it to view trained hands or train a specific one'
+        text: 'Click on it to train hands or view their status'
     },
     {
         activeSection: OnBoardingSections.precisionIndicator,
@@ -68,7 +68,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: "The Precision indicator tells the % of hands you've failed"
+        text: 'This indicator shows the % of passed hands'
     },
     {
         activeSection: OnBoardingSections.precisionIndicator,
@@ -76,7 +76,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.failedHands);
         },
-        text: 'Click on it to see the list of failed hands'
+        text: "Click on it to see the hands you've failed"
     },
     {
         activeSection: OnBoardingSections.configMenuButton,
@@ -84,22 +84,32 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'Click on the Gear to access the configuration menu'
+        text: 'Click here to access the configuration menu'
     },
     {
-        activeSection: OnBoardingSections.casinoRules,
+        activeSection: OnBoardingSections.basicStrategyTable,
         id: 11,
         load: (navigation) => {
             navigation.navigate(RouteNames.configMenu);
         },
+        text: 'View and memorize the basic strategy table'
+    },
+    {
+        activeSection: OnBoardingSections.casinoRules,
+        id: 12,
+        load: () => {},
         text: 'Chose the casino rules you want to train with'
     },
     {
         activeSection: OnBoardingSections.appSettings,
-        id: 12,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.configMenu);
-        },
-        text: 'Speed up your training by enabling additional options'
+        id: 13,
+        load: () => {},
+        text: 'Speed up your training with additional options'
+    },
+    {
+        activeSection: OnBoardingSections.resetTraining,
+        id: 14,
+        load: () => {},
+        text: 'Start training over and master basic strategy'
     }
 ];
