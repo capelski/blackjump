@@ -25,6 +25,7 @@ const actionsAbbreviationMap: Dictionary<string, BaseDecisions | DynamicDecision
     [DynamicDecisions.double_stand]: 'Ds',
     [DynamicDecisions.split_hit]: 'Ph',
     [DynamicDecisions.split_stand]: 'Ps',
+    [DynamicDecisions.split_surrender_hit]: 'Pr',
     [DynamicDecisions.surrender_hit]: 'Rh',
     [DynamicDecisions.surrender_stand]: 'Rs'
 };

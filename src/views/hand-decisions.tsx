@@ -22,7 +22,8 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
         <ScrollView
             style={{
                 flex: 1,
-                padding: 16,
+                paddingHorizontal: 16,
+                marginVertical: 16,
                 width: '100%'
             }}
             contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}

@@ -274,19 +274,27 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Nine]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none
-                ? DynamicDecisions.split_hit
+                ? casinoRules[CasinoRulesKeys.surrender]
+                    ? DynamicDecisions.split_surrender_hit
+                    : DynamicDecisions.split_hit
+                : casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Ten]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
             casinoRules[CasinoRulesKeys.blackjackPeek]
-                ? DynamicDecisions.split_hit
+                ? casinoRules[CasinoRulesKeys.surrender]
+                    ? DynamicDecisions.split_surrender_hit
+                    : DynamicDecisions.split_hit
                 : casinoRules[CasinoRulesKeys.surrender]
                 ? DynamicDecisions.surrender_hit
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Ace]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
             casinoRules[CasinoRulesKeys.blackjackPeek]
-                ? DynamicDecisions.split_hit
+                ? casinoRules[CasinoRulesKeys.surrender]
+                    ? DynamicDecisions.split_surrender_hit
+                    : DynamicDecisions.split_hit
                 : casinoRules[CasinoRulesKeys.surrender]
                 ? DynamicDecisions.surrender_hit
                 : BaseDecisions.hit
