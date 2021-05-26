@@ -64,6 +64,12 @@ const evaluateDynamicDecision = (
         ? dynamicConditions.canSurrender
             ? PlayerDecisions.surrender
             : BaseDecisions.hit
+        : dynamicDecision === DynamicDecisions.surrender_split_hit
+        ? dynamicConditions.canSurrender
+            ? PlayerDecisions.surrender
+            : dynamicConditions.canSplit
+            ? PlayerDecisions.split
+            : BaseDecisions.hit
         : dynamicDecision === DynamicDecisions.surrender_stand
         ? dynamicConditions.canSurrender
             ? PlayerDecisions.surrender

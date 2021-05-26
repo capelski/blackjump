@@ -21,6 +21,15 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                                       : currentGameConfig.casinoRules[
                                             CasinoRulesKeys.blackjackPeek
                                         ],
+                              [CasinoRulesKeys.dealerHitsSoft17]:
+                                  storedGameConfig.casinoRules[CasinoRulesKeys.dealerHitsSoft17] !==
+                                  undefined
+                                      ? storedGameConfig.casinoRules[
+                                            CasinoRulesKeys.dealerHitsSoft17
+                                        ]
+                                      : currentGameConfig.casinoRules[
+                                            CasinoRulesKeys.dealerHitsSoft17
+                                        ],
                               [CasinoRulesKeys.doubling]:
                                   storedGameConfig.casinoRules[CasinoRulesKeys.doubling] !==
                                   undefined

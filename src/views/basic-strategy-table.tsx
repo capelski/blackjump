@@ -27,6 +27,7 @@ const actionsAbbreviationMap: Dictionary<string, BaseDecisions | DynamicDecision
     [DynamicDecisions.split_stand]: 'Ps',
     [DynamicDecisions.split_surrender_hit]: 'Pr',
     [DynamicDecisions.surrender_hit]: 'Rh',
+    [DynamicDecisions.surrender_split_hit]: 'Rp',
     [DynamicDecisions.surrender_stand]: 'Rs'
 };
 
@@ -84,6 +85,18 @@ export const BasicStrategyTable: React.FC<BasicStrategyTableProps> = (props) => 
     return (
         <ScrollView style={{ width: '100%' }}>
             <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    ruleName={CasinoRulesKeys.blackjackPeek}
+                    setCasinoRules={setCasinoRules}
+                />
+
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    ruleName={CasinoRulesKeys.dealerHitsSoft17}
+                    setCasinoRules={setCasinoRules}
+                />
+
                 <DoublingPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
 
                 <RuleSwitcher
@@ -93,12 +106,6 @@ export const BasicStrategyTable: React.FC<BasicStrategyTableProps> = (props) => 
                         props.casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
                     }
                     ruleName={CasinoRulesKeys.doublingAfterSplit}
-                    setCasinoRules={setCasinoRules}
-                />
-
-                <RuleSwitcher
-                    casinoRules={casinoRules}
-                    ruleName={CasinoRulesKeys.blackjackPeek}
                     setCasinoRules={setCasinoRules}
                 />
 

@@ -20,6 +20,7 @@ export const colors: Dictionary<string, BaseDecisions | DynamicDecisions | Playe
     [DynamicDecisions.split_stand]: splitColor,
     [DynamicDecisions.split_surrender_hit]: splitColor,
     [DynamicDecisions.surrender_hit]: surrenderColor,
+    [DynamicDecisions.surrender_split_hit]: surrenderColor,
     [DynamicDecisions.surrender_stand]: surrenderColor,
     [PlayerDecisions.double]: doubleColor,
     [PlayerDecisions.split]: splitColor,

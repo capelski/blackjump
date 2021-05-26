@@ -7,6 +7,7 @@ import { HandComponent } from '../components/hand-component';
 import { OnBoardingSection } from '../components/onboarding-section';
 import {
     AppNavigation,
+    CasinoRulesKeys,
     DecisionEvaluation,
     GameConfig,
     Hand,
@@ -96,7 +97,10 @@ export const Table: React.FC<TableProps> = (props) => (
                                 textAlign: 'center'
                             }}
                         >
-                            and stand on all 17s
+                            and stand on{' '}
+                            {props.gameConfig.casinoRules[CasinoRulesKeys.dealerHitsSoft17]
+                                ? 'hard 17'
+                                : 'all 17s'}
                         </Text>
                     </View>
                 )}
