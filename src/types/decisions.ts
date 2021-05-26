@@ -25,7 +25,8 @@ export enum DynamicDecisions {
     double_stand = 'Double / Stand',
     split_hit = 'Split / Hit',
     split_stand = 'Split / Stand',
-    surrender_hit = 'Surrender / Hit'
+    surrender_hit = 'Surrender / Hit',
+    surrender_stand = 'Surrender / Stand'
 }
 
 export type PlayerDecision = BaseDecisions | PlayerDecisions;

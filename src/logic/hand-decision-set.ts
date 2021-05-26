@@ -115,7 +115,10 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
     [HandCode.Split4s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.hit,
@@ -199,7 +202,10 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
     [HandCode.Split7s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
@@ -228,8 +234,14 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ten]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
     [HandCode.Split8s]: (casinoRules) => ({
         [SimpleCardSymbol.Two]:
@@ -268,11 +280,15 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
             casinoRules[CasinoRulesKeys.blackjackPeek]
                 ? DynamicDecisions.split_hit
+                : casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Ace]:
             casinoRules[CasinoRulesKeys.splitsNumber] > SplitsNumber.none &&
             casinoRules[CasinoRulesKeys.blackjackPeek]
                 ? DynamicDecisions.split_hit
+                : casinoRules[CasinoRulesKeys.surrender]
+                ? DynamicDecisions.surrender_hit
                 : BaseDecisions.hit
     }),
     [HandCode.Split9s]: (casinoRules) => ({
@@ -480,9 +496,51 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
     }),
     [HandCode.Soft19]: () => alwaysStand,
     [HandCode.Soft20]: () => alwaysStand,
-    [HandCode.Hard5]: () => alwaysHit,
-    [HandCode.Hard6]: () => alwaysHit,
-    [HandCode.Hard7]: () => alwaysHit,
+    [HandCode.Hard5]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.hit,
+        [SimpleCardSymbol.Five]: BaseDecisions.hit,
+        [SimpleCardSymbol.Six]: BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
+    }),
+    [HandCode.Hard6]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.hit,
+        [SimpleCardSymbol.Five]: BaseDecisions.hit,
+        [SimpleCardSymbol.Six]: BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
+    }),
+    [HandCode.Hard7]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.hit,
+        [SimpleCardSymbol.Three]: BaseDecisions.hit,
+        [SimpleCardSymbol.Four]: BaseDecisions.hit,
+        [SimpleCardSymbol.Five]: BaseDecisions.hit,
+        [SimpleCardSymbol.Six]: BaseDecisions.hit,
+        [SimpleCardSymbol.Seven]: BaseDecisions.hit,
+        [SimpleCardSymbol.Eight]: BaseDecisions.hit,
+        [SimpleCardSymbol.Nine]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
+    }),
     [HandCode.Hard8]: () => alwaysHit,
     [HandCode.Hard9]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.hit,
@@ -584,7 +642,7 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
                 : BaseDecisions.hit,
         [SimpleCardSymbol.Ace]: BaseDecisions.hit
     }),
-    [HandCode.Hard12]: () => ({
+    [HandCode.Hard12]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.hit,
         [SimpleCardSymbol.Three]: BaseDecisions.hit,
         [SimpleCardSymbol.Four]: BaseDecisions.stand,
@@ -594,9 +652,12 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
-    [HandCode.Hard13]: () => ({
+    [HandCode.Hard13]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.stand,
         [SimpleCardSymbol.Three]: BaseDecisions.stand,
         [SimpleCardSymbol.Four]: BaseDecisions.stand,
@@ -606,9 +667,12 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
         [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
-    [HandCode.Hard14]: () => ({
+    [HandCode.Hard14]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.stand,
         [SimpleCardSymbol.Three]: BaseDecisions.stand,
         [SimpleCardSymbol.Four]: BaseDecisions.stand,
@@ -617,8 +681,14 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Seven]: BaseDecisions.hit,
         [SimpleCardSymbol.Eight]: BaseDecisions.hit,
         [SimpleCardSymbol.Nine]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ten]: BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ten]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
     [HandCode.Hard15]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.stand,
@@ -632,7 +702,10 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
         [SimpleCardSymbol.Ten]: casinoRules[CasinoRulesKeys.surrender]
             ? DynamicDecisions.surrender_hit
             : BaseDecisions.hit,
-        [SimpleCardSymbol.Ace]: BaseDecisions.hit
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_hit
+                : BaseDecisions.hit
     }),
     [HandCode.Hard16]: (casinoRules) => ({
         [SimpleCardSymbol.Two]: BaseDecisions.stand,
@@ -652,7 +725,21 @@ export const handDecisionSetGetters: HandDecisionSetGetters = {
             ? DynamicDecisions.surrender_hit
             : BaseDecisions.hit
     }),
-    [HandCode.Hard17]: () => alwaysStand,
+    [HandCode.Hard17]: (casinoRules) => ({
+        [SimpleCardSymbol.Two]: BaseDecisions.stand,
+        [SimpleCardSymbol.Three]: BaseDecisions.stand,
+        [SimpleCardSymbol.Four]: BaseDecisions.stand,
+        [SimpleCardSymbol.Five]: BaseDecisions.stand,
+        [SimpleCardSymbol.Six]: BaseDecisions.stand,
+        [SimpleCardSymbol.Seven]: BaseDecisions.stand,
+        [SimpleCardSymbol.Eight]: BaseDecisions.stand,
+        [SimpleCardSymbol.Nine]: BaseDecisions.stand,
+        [SimpleCardSymbol.Ten]: BaseDecisions.stand,
+        [SimpleCardSymbol.Ace]:
+            casinoRules[CasinoRulesKeys.surrender] && !casinoRules[CasinoRulesKeys.blackjackPeek]
+                ? DynamicDecisions.surrender_stand
+                : BaseDecisions.stand
+    }),
     [HandCode.Hard18]: () => alwaysStand,
     [HandCode.Hard19]: () => alwaysStand,
     [HandCode.Hard20]: () => alwaysStand

@@ -34,7 +34,12 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Split3s]: {
             code: HandCode.Split3s,
             decisionSet: handDecisionSetGetters[HandCode.Split3s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
+            dependencies: [
+                CasinoRulesKeys.splitsNumber,
+                CasinoRulesKeys.doublingAfterSplit,
+                CasinoRulesKeys.surrender,
+                CasinoRulesKeys.blackjackPeek
+            ],
             level: -1,
             name: '3,3'
         },
@@ -55,21 +60,34 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Split6s]: {
             code: HandCode.Split6s,
             decisionSet: handDecisionSetGetters[HandCode.Split6s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.doublingAfterSplit],
+            dependencies: [
+                CasinoRulesKeys.splitsNumber,
+                CasinoRulesKeys.doublingAfterSplit,
+                CasinoRulesKeys.surrender,
+                CasinoRulesKeys.blackjackPeek
+            ],
             level: -1,
             name: '6,6'
         },
         [HandCode.Split7s]: {
             code: HandCode.Split7s,
             decisionSet: handDecisionSetGetters[HandCode.Split7s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber],
+            dependencies: [
+                CasinoRulesKeys.splitsNumber,
+                CasinoRulesKeys.surrender,
+                CasinoRulesKeys.blackjackPeek
+            ],
             level: -1,
             name: '7,7'
         },
         [HandCode.Split8s]: {
             code: HandCode.Split8s,
             decisionSet: handDecisionSetGetters[HandCode.Split8s](casinoRules),
-            dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.blackjackPeek],
+            dependencies: [
+                CasinoRulesKeys.splitsNumber,
+                CasinoRulesKeys.surrender,
+                CasinoRulesKeys.blackjackPeek
+            ],
             level: -1,
             name: '8,8'
         },
@@ -155,21 +173,21 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Hard5]: {
             code: HandCode.Hard5,
             decisionSet: handDecisionSetGetters[HandCode.Hard5](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 5'
         },
         [HandCode.Hard6]: {
             code: HandCode.Hard6,
             decisionSet: handDecisionSetGetters[HandCode.Hard6](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 6'
         },
         [HandCode.Hard7]: {
             code: HandCode.Hard7,
             decisionSet: handDecisionSetGetters[HandCode.Hard7](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 7'
         },
@@ -204,28 +222,28 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Hard12]: {
             code: HandCode.Hard12,
             decisionSet: handDecisionSetGetters[HandCode.Hard12](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 12'
         },
         [HandCode.Hard13]: {
             code: HandCode.Hard13,
             decisionSet: handDecisionSetGetters[HandCode.Hard13](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 13'
         },
         [HandCode.Hard14]: {
             code: HandCode.Hard14,
             decisionSet: handDecisionSetGetters[HandCode.Hard14](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 14'
         },
         [HandCode.Hard15]: {
             code: HandCode.Hard15,
             decisionSet: handDecisionSetGetters[HandCode.Hard15](casinoRules),
-            dependencies: [CasinoRulesKeys.surrender],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 15'
         },
@@ -239,7 +257,7 @@ export const getTrainingHands = (casinoRules: CasinoRules) => {
         [HandCode.Hard17]: {
             code: HandCode.Hard17,
             decisionSet: handDecisionSetGetters[HandCode.Hard17](casinoRules),
-            dependencies: [],
+            dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
             level: -1,
             name: 'Hard 17'
         },
