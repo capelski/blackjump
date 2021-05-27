@@ -1,5 +1,7 @@
 import { updatePlayerEarnings } from '../async-storage';
 import {
+    CasinoRules,
+    CasinoRulesKeys,
     GameConfig,
     Hand,
     HandCode,
@@ -11,7 +13,13 @@ import {
     TrainingStatus
 } from '../types';
 import { getRandomCard } from './card';
-import { getHandEffectiveValue, dealCard, revealDealerHoleCard, hasHoleCard } from './hand';
+import {
+    dealCard,
+    getHandEffectiveValue,
+    getHandValidValues,
+    hasHoleCard,
+    revealDealerHoleCard
+} from './hand';
 import { resolveHands } from './player';
 import { isTrainingCompleted } from './training-status';
 
@@ -25,7 +33,10 @@ export const handleDealerTurn = (
 ) => {
     let nextDealerHand = { ...dealerHand };
 
-    if (gameConfig.isDealerAnimationEnabled && getHandEffectiveValue(nextDealerHand) < 17) {
+    if (
+        gameConfig.isDealerAnimationEnabled &&
+        mustDealerDraw(nextDealerHand, gameConfig.casinoRules)
+    ) {
         setTimeout(() => {
             if (hasHoleCard(dealerHand)) {
                 revealDealerHoleCard(nextDealerHand);
@@ -41,7 +52,7 @@ export const handleDealerTurn = (
                 revealDealerHoleCard(nextDealerHand);
             }
 
-            while (getHandEffectiveValue(nextDealerHand) < 17) {
+            while (mustDealerDraw(nextDealerHand, gameConfig.casinoRules)) {
                 dealCard(nextDealerHand, getRandomCard());
             }
             setDealerHand(nextDealerHand);
@@ -116,4 +127,14 @@ export const getNextTrainingStatus = (
         passedTrainingPairs: nextPassedTrainingHands,
         trainingProgress: trainingStatus.trainingProgress
     };
+};
+
+const mustDealerDraw = (dealerHand: Hand, casinoRules: CasinoRules) => {
+    const handEffectiveValue = getHandEffectiveValue(dealerHand);
+    return (
+        handEffectiveValue < 17 ||
+        (casinoRules[CasinoRulesKeys.dealerHitsSoft17] &&
+            getHandValidValues(dealerHand).length > 1 &&
+            handEffectiveValue === 17)
+    );
 };
