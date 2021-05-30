@@ -49,7 +49,7 @@ export const Table: React.FC<TableProps> = (props) => (
                         handsNumber={1}
                         isCurrentHand={props.phase === Phases.dealer}
                         isSoundEnabled={props.gameConfig.isSoundEnabled}
-                        navigation={props.navigation}
+                        navigation={props.onBoardingStep > -1 ? undefined : props.navigation}
                         peeking={props.peeking}
                     />
                 )}
@@ -128,7 +128,7 @@ export const Table: React.FC<TableProps> = (props) => (
                             }
                             isSoundEnabled={props.gameConfig.isSoundEnabled}
                             key={index}
-                            navigation={props.navigation}
+                            navigation={props.onBoardingStep > -1 ? undefined : props.navigation}
                         />
                     ))}
                 </ScrollView>
