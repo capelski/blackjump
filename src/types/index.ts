@@ -22,7 +22,7 @@ export { GameConfig, GoldHandsLevels } from './game-config';
 export { Hand, HandCode, HandOutcome } from './hand';
 export { HandDecisionSet, HandDecisionSetGetters } from './hand-decision-set';
 export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';
-export { OnBoardingSections, OnBoardingStep } from './onboarding';
+export { OnBoardingSections, OnBoardingStep, OnBoardingStepEvent } from './onboarding';
 export { Phases } from './phases';
 export { Player } from './player';
 export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';

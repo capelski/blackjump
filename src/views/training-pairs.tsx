@@ -11,22 +11,23 @@ import {
     HandCode,
     Phases,
     RouteNames,
-    TrainingHands as ITrainingHands,
+    TrainingHands,
+    TrainingPairStatus,
     TrainingProgress
 } from '../types';
 import { getObjectKeys } from '../utils';
 
-type TrainingHandsProps = {
+type TrainingPairsProps = {
     gameConfig: GameConfig;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
-    trainingHands: ITrainingHands;
+    trainingHands: TrainingHands;
     trainingProgress: TrainingProgress;
 };
 
-export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
+export const TrainingPairs: React.FC<TrainingPairsProps> = (props) => {
     const [unfoldedHand, setUnfoldedHand] = useState<HandCode | undefined>(HandCode.Hard5);
 
     return (
@@ -41,7 +42,7 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                         textAlign: 'center'
                     }}
                 >
-                    Training hands
+                    Training pairs
                 </Text>
             </OnBoardingSection>
             <ScrollView
@@ -93,9 +94,11 @@ export const TrainingHands: React.FC<TrainingHandsProps> = (props) => {
                                     >
                                         {getObjectKeys(trainingHandStatus).map((dealerSymbol) => {
                                             const backgroundColor =
-                                                trainingHandStatus[dealerSymbol] === 0
+                                                trainingHandStatus[dealerSymbol] ===
+                                                TrainingPairStatus.untrained
                                                     ? '#333'
-                                                    : trainingHandStatus[dealerSymbol] === 1
+                                                    : trainingHandStatus[dealerSymbol] ===
+                                                      TrainingPairStatus.passed
                                                     ? 'lightgreen'
                                                     : 'lightcoral';
 

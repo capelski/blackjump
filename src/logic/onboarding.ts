@@ -1,115 +1,92 @@
-import { OnBoardingSections, OnBoardingStep, RouteNames } from '../types';
+import { OnBoardingSections, OnBoardingStep, OnBoardingStepEvent, RouteNames } from '../types';
 
 export const onBoardingSteps: OnBoardingStep[] = [
     {
-        activeSection: OnBoardingSections.tableActions,
+        activeSection: [OnBoardingSections.tableActions],
+        event: OnBoardingStepEvent.startRound,
         hideNextButton: true,
-        id: 1,
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'Click Train to start training a random hand'
+        text: 'Click Random to start training a random pair'
     },
     {
-        activeSection: OnBoardingSections.tablePlayerHands,
+        activeSection: [OnBoardingSections.tableDealerHand, OnBoardingSections.tablePlayerHands],
         hidePreviousButton: true,
-        id: 2,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.table);
-        },
+        text: 'pair = player initial hand + dealer up card'
+    },
+    {
+        activeSection: [OnBoardingSections.tablePlayerHands],
         text: 'This is your hand'
     },
     {
-        activeSection: OnBoardingSections.tableDealerHand,
-        id: 3,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.table);
-        },
+        activeSection: [OnBoardingSections.tableDealerHand],
         text: "This is the dealer's hand"
     },
     {
-        activeSection: OnBoardingSections.tableActions,
+        activeSection: [OnBoardingSections.tableActions],
+        event: OnBoardingStepEvent.playerAction,
         hideNextButton: true,
         hidePreviousButton: true,
-        id: 4,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.table);
-        },
         text: 'Chose an action for each of your hands'
     },
     {
-        activeSection: OnBoardingSections.tableFeedback,
+        activeSection: [OnBoardingSections.tableFeedback],
         hidePreviousButton: true,
-        id: 5,
-        load: (navigation) => {
-            navigation.navigate(RouteNames.table);
-        },
         text: 'See whether you chose the right action or not'
     },
     {
-        activeSection: OnBoardingSections.progressIndicator,
-        id: 6,
+        activeSection: [OnBoardingSections.progressIndicator],
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'This indicator shows the % of trained hands'
+        text: 'This indicator shows the % of trained pairs'
     },
     {
-        activeSection: OnBoardingSections.progressIndicator,
-        id: 7,
+        activeSection: [OnBoardingSections.progressIndicator],
         load: (navigation) => {
-            navigation.navigate(RouteNames.trainingHands);
+            navigation.navigate(RouteNames.trainingPairs);
         },
-        text: 'Click on it to train hands or view their status'
+        text: 'Click on it to train pairs or view their status'
     },
     {
-        activeSection: OnBoardingSections.precisionIndicator,
-        id: 8,
+        activeSection: [OnBoardingSections.precisionIndicator],
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
-        text: 'This indicator shows the % of passed hands'
+        text: 'This indicator shows the % of passed pairs'
     },
     {
-        activeSection: OnBoardingSections.precisionIndicator,
-        id: 9,
+        activeSection: [OnBoardingSections.precisionIndicator],
         load: (navigation) => {
-            navigation.navigate(RouteNames.failedHands);
+            navigation.navigate(RouteNames.failedPairs);
         },
-        text: "Click on it to see the hands you've failed"
+        text: "Click on it to see the pairs you've failed"
     },
     {
-        activeSection: OnBoardingSections.configMenuButton,
-        id: 10,
+        activeSection: [OnBoardingSections.configMenuButton],
         load: (navigation) => {
             navigation.navigate(RouteNames.table);
         },
         text: 'Click here to access the configuration menu'
     },
     {
-        activeSection: OnBoardingSections.basicStrategyTable,
-        id: 11,
+        activeSection: [OnBoardingSections.basicStrategyTable],
         load: (navigation) => {
             navigation.navigate(RouteNames.configMenu);
         },
         text: 'View and memorize the basic strategy table'
     },
     {
-        activeSection: OnBoardingSections.casinoRules,
-        id: 12,
-        load: () => {},
+        activeSection: [OnBoardingSections.casinoRules],
         text: 'Chose the casino rules you want to train with'
     },
     {
-        activeSection: OnBoardingSections.appSettings,
-        id: 13,
-        load: () => {},
+        activeSection: [OnBoardingSections.appSettings],
         text: 'Speed up your training with additional options'
     },
     {
-        activeSection: OnBoardingSections.resetTraining,
-        id: 14,
-        load: () => {},
+        activeSection: [OnBoardingSections.resetTraining],
         text: 'Start training over and master basic strategy'
     }
 ];

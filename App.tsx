@@ -59,6 +59,7 @@ import {
     Hand,
     HandCode,
     initialRouteName,
+    OnBoardingStepEvent,
     Phases,
     Player,
     PlayerDecision,
@@ -71,14 +72,14 @@ import { playSound } from './src/utils';
 import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
-import { FailedHands } from './src/views/failed-hands';
+import { FailedPairs } from './src/views/failed-pairs';
 import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
 import { TrainingCompleted } from './src/views/training-completed';
-import { TrainingHands } from './src/views/training-hands';
+import { TrainingPairs } from './src/views/training-pairs';
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
@@ -175,9 +176,11 @@ export default function App() {
         canSurrender(currentHand, player.hands.length, gameConfig.casinoRules);
     const currentDealerSymbol = dealerHand && symbolToSimpleSymbol(dealerHand.cards[0].symbol);
 
-    const updateOnBoardingStep = (direction: 1 | -1) => {
-        const nextStep = onBoardingStep + direction;
-        onBoardingSteps[nextStep]?.load((navigationRef.current as unknown) as AppNavigation);
+    const updateOnBoardingStep = (direction: 'forward' | 'backward') => {
+        const nextStep = onBoardingStep + (direction === 'forward' ? 1 : -1);
+        onBoardingSteps[nextStep] &&
+            onBoardingSteps[nextStep].load &&
+            onBoardingSteps[nextStep].load!((navigationRef.current as unknown) as AppNavigation);
         setOnBoardingStep(nextStep);
     };
 
@@ -240,8 +243,11 @@ export default function App() {
         setPlayer(nextPlayer);
         setDecisionEvaluation(undefined);
 
-        if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 1) {
-            updateOnBoardingStep(1);
+        if (
+            onBoardingSteps[onBoardingStep] &&
+            onBoardingSteps[onBoardingStep].event === OnBoardingStepEvent.startRound
+        ) {
+            updateOnBoardingStep('forward');
         }
     };
 
@@ -313,8 +319,11 @@ export default function App() {
         setTrainingStatus(nextTrainingStatus);
         updateTrainingProgress(nextTrainingStatus.trainingProgress);
 
-        if (onBoardingSteps[onBoardingStep] && onBoardingSteps[onBoardingStep].id === 4) {
-            updateOnBoardingStep(1);
+        if (
+            onBoardingSteps[onBoardingStep] &&
+            onBoardingSteps[onBoardingStep].event === OnBoardingStepEvent.playerAction
+        ) {
+            updateOnBoardingStep('forward');
         }
 
         if (nextTrainingStatus.isCompleted && !trainingStatus.isCompleted) {
@@ -454,9 +463,9 @@ export default function App() {
                         />
                     )}
                 </Stack.Screen>
-                <Stack.Screen name={RouteNames.failedHands}>
+                <Stack.Screen name={RouteNames.failedPairs}>
                     {(props) => (
-                        <FailedHands
+                        <FailedPairs
                             failedTrainingPairs={trainingStatus.failedTrainingPairs}
                             gameConfig={gameConfig}
                             navigation={props.navigation}
@@ -480,7 +489,7 @@ export default function App() {
                     {() => (
                         <Onboarding
                             skipOnboardingHandler={exitOnboarding}
-                            startOnboardingHandler={() => updateOnBoardingStep(1)}
+                            startOnboardingHandler={() => updateOnBoardingStep('forward')}
                         />
                     )}
                 </Stack.Screen>
@@ -513,9 +522,9 @@ export default function App() {
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.trainingCompleted} component={TrainingCompleted} />
-                <Stack.Screen name={RouteNames.trainingHands}>
+                <Stack.Screen name={RouteNames.trainingPairs}>
                     {(props) => (
-                        <TrainingHands
+                        <TrainingPairs
                             gameConfig={gameConfig}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
@@ -531,9 +540,9 @@ export default function App() {
             {onBoardingStep > -1 && (
                 <OnboardingBar
                     exitOnboarding={exitOnboarding}
-                    nextStepHandler={() => updateOnBoardingStep(1)}
+                    nextStepHandler={() => updateOnBoardingStep('forward')}
                     onBoardingStep={onBoardingStep}
-                    previousStepHandler={() => updateOnBoardingStep(-1)}
+                    previousStepHandler={() => updateOnBoardingStep('backward')}
                 />
             )}
         </NavigationContainer>

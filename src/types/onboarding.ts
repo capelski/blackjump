@@ -15,10 +15,15 @@ export enum OnBoardingSections {
 }
 
 export type OnBoardingStep = {
-    activeSection?: OnBoardingSections;
+    activeSection?: OnBoardingSections[];
+    event?: OnBoardingStepEvent;
     hideNextButton?: boolean;
     hidePreviousButton?: boolean;
-    id: number;
-    load: (navigation: AppNavigation) => void;
+    load?: (navigation: AppNavigation) => void;
     text: string;
 };
+
+export enum OnBoardingStepEvent {
+    startRound = 0,
+    playerAction = 1
+}

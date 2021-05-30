@@ -14,7 +14,7 @@ import {
     TrainingPairRepresentation
 } from '../types';
 
-type FailedHandsProps = {
+type FailedPairsProps = {
     failedTrainingPairs: TrainingPairRepresentation[];
     gameConfig: GameConfig;
     navigation: AppNavigation;
@@ -24,7 +24,7 @@ type FailedHandsProps = {
     trainingHands: TrainingHands;
 };
 
-export const FailedHands: React.FC<FailedHandsProps> = (props) => {
+export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
     return (
         <OnBoardingSection
             onBoardingStep={props.onBoardingStep}
@@ -39,7 +39,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                     textAlign: 'center'
                 }}
             >
-                Failed hands
+                Failed pairs
             </Text>
             <ScrollView
                 style={{
@@ -50,7 +50,7 @@ export const FailedHands: React.FC<FailedHandsProps> = (props) => {
                 {props.failedTrainingPairs.length === 0 ? (
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
                         <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                            No failed hands so far. Nice job!
+                            No failed pairs so far. Nice job!
                         </Text>
                     </View>
                 ) : (

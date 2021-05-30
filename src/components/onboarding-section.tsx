@@ -17,7 +17,9 @@ export const OnBoardingSection: React.FC<OnBoardingSectionProps> = (props) => {
             ? props.isHighlighted
             : props.isHighlighted !== undefined &&
               onBoardingSteps[props.onBoardingStep] &&
-              onBoardingSteps[props.onBoardingStep].activeSection === props.isHighlighted);
+              onBoardingSteps[props.onBoardingStep].activeSection !== undefined &&
+              onBoardingSteps[props.onBoardingStep].activeSection!.indexOf(props.isHighlighted) >
+                  -1);
     const style =
         props.style && typeof props.style === 'function' ? props.style(isHighlighted) : props.style;
 

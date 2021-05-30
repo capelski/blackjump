@@ -12,6 +12,7 @@ import {
     Doubling,
     GameConfig,
     Hand,
+    OnBoardingStepEvent,
     Phases,
     PlayerDecisions,
     SimpleCardSymbol,
@@ -61,13 +62,13 @@ export const Actions: React.FC<ActionsProps> = (props) => {
 
                 if (
                     onBoardingSteps[props.onBoardingStep] &&
-                    onBoardingSteps[props.onBoardingStep].id === 1
+                    onBoardingSteps[props.onBoardingStep].event === OnBoardingStepEvent.startRound
                 ) {
                     /* Prevent dealing a Blackjack as initial hand when onboarding is active */
                     playerHand = createHand([
                         {
                             isBlueCard: false,
-                            isGoldCard: false,
+                            isGoldCard: true,
                             suit: CardSuit.clubs,
                             symbol: SimpleCardSymbol.Seven
                         },
@@ -92,7 +93,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
 
                 props.startTrainingRound(playerHand, dealerHand);
             }}
-            text="Train"
+            text="Random"
             width="100%"
         />
     ) : (

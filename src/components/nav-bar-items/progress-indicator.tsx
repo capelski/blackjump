@@ -15,7 +15,7 @@ export const ProgressIndicator: React.FC<NavBarProps> = (props) => {
             onPress={
                 props.isEnabled
                     ? () => {
-                          props.navigation.navigate(RouteNames.trainingHands);
+                          props.navigation.navigate(RouteNames.trainingPairs);
                       }
                     : undefined
             }
