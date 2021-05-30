@@ -7,8 +7,8 @@ export type TrainingProgress = Dictionary<TrainingHandStatus, HandCode>;
 
 export interface TrainingStatus {
     attemptedTrainingPairs: number;
-    failedTrainingPairs: TrainingPairRepresentation[];
     isCompleted: boolean;
+    missedTrainingPairs: TrainingPairRepresentation[];
     passedTrainingPairs: number;
     trainingProgress: TrainingProgress;
 }

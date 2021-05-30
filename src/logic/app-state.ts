@@ -65,25 +65,25 @@ export const handleDealerTurn = (
     }
 };
 
-const getNextFailedTrainingPairs = (
-    currentFailedTrainingPairs: TrainingPairRepresentation[],
+const getNextMissedTrainingPairs = (
+    missedTrainingPairs: TrainingPairRepresentation[],
     isHit: boolean,
     handCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
 ): TrainingPairRepresentation[] => {
     return isHit
-        ? currentFailedTrainingPairs.filter(
-              (failedTrainingPair) =>
-                  failedTrainingPair.dealerSymbol !== currentDealerSymbol ||
-                  failedTrainingPair.handCode !== handCode
+        ? missedTrainingPairs.filter(
+              (missedTrainingPair) =>
+                  missedTrainingPair.dealerSymbol !== currentDealerSymbol ||
+                  missedTrainingPair.handCode !== handCode
           )
-        : currentFailedTrainingPairs.some(
-              (failedTrainingPair) =>
-                  failedTrainingPair.dealerSymbol === currentDealerSymbol &&
-                  failedTrainingPair.handCode === handCode
+        : missedTrainingPairs.some(
+              (missedTrainingPair) =>
+                  missedTrainingPair.dealerSymbol === currentDealerSymbol &&
+                  missedTrainingPair.handCode === handCode
           )
-        ? currentFailedTrainingPairs
-        : [{ dealerSymbol: currentDealerSymbol, handCode }].concat(currentFailedTrainingPairs);
+        ? missedTrainingPairs
+        : [{ dealerSymbol: currentDealerSymbol, handCode }].concat(missedTrainingPairs);
 };
 
 export const getNextTrainingStatus = (
@@ -99,14 +99,14 @@ export const getNextTrainingStatus = (
 
     trainingStatus.trainingProgress[currentHandCode][currentDealerSymbol] = isHit
         ? TrainingPairStatus.passed
-        : TrainingPairStatus.failed;
+        : TrainingPairStatus.missed;
 
     const nextAttemptedTrainingPairs =
         trainingStatus.attemptedTrainingPairs +
         (currentHandTrainingStatus === TrainingPairStatus.untrained ? 1 : 0);
 
-    const nextFailedTrainingPairs = getNextFailedTrainingPairs(
-        trainingStatus.failedTrainingPairs,
+    const nextMissedTrainingPairs = getNextMissedTrainingPairs(
+        trainingStatus.missedTrainingPairs,
         isHit,
         currentHandCode,
         currentDealerSymbol
@@ -122,8 +122,8 @@ export const getNextTrainingStatus = (
 
     return {
         attemptedTrainingPairs: nextAttemptedTrainingPairs,
-        failedTrainingPairs: nextFailedTrainingPairs,
         isCompleted: isTrainingCompleted(nextPassedTrainingHands),
+        missedTrainingPairs: nextMissedTrainingPairs,
         passedTrainingPairs: nextPassedTrainingHands,
         trainingProgress: trainingStatus.trainingProgress
     };

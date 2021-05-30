@@ -10,10 +10,10 @@ export enum RouteNames {
     basicStrategyTable = 'basicStrategyTable',
     blueCardsInfo = 'blueCardsInfo',
     configMenu = 'configMenu',
-    failedPairs = 'failedPairs',
     goldHandsInfo = 'goldHandsInfo',
     goldHandsLevelsInfo = 'goldHandsLevelsInfo',
     handDecisions = 'handDecisions',
+    missedPairs = 'missedPairs',
     onboarding = 'onboarding',
     table = 'table',
     trainingCompleted = 'trainingCompleted',
@@ -26,12 +26,12 @@ export type RouteParams = {
     [RouteNames.basicStrategyTable]: undefined;
     [RouteNames.blueCardsInfo]: undefined;
     [RouteNames.configMenu]: undefined;
-    [RouteNames.failedPairs]: undefined;
     [RouteNames.goldHandsInfo]: undefined;
     [RouteNames.goldHandsLevelsInfo]: undefined;
     [RouteNames.handDecisions]: {
         trainingHand: TrainingHand;
     };
+    [RouteNames.missedPairs]: undefined;
     [RouteNames.onboarding]: undefined;
     [RouteNames.table]: undefined;
     [RouteNames.trainingCompleted]: undefined;

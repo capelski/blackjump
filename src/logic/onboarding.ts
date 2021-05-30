@@ -13,7 +13,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
     {
         activeSection: [OnBoardingSections.tableDealerHand, OnBoardingSections.tablePlayerHands],
         hidePreviousButton: true,
-        text: 'pair = player initial hand + dealer up card'
+        text: 'training pair = player hand + dealer up card'
     },
     {
         activeSection: [OnBoardingSections.tablePlayerHands],
@@ -33,7 +33,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
     {
         activeSection: [OnBoardingSections.tableFeedback],
         hidePreviousButton: true,
-        text: 'See whether you chose the right action or not'
+        text: 'Confirm whether you chose the right action'
     },
     {
         activeSection: [OnBoardingSections.progressIndicator],
@@ -59,9 +59,9 @@ export const onBoardingSteps: OnBoardingStep[] = [
     {
         activeSection: [OnBoardingSections.precisionIndicator],
         load: (navigation) => {
-            navigation.navigate(RouteNames.failedPairs);
+            navigation.navigate(RouteNames.missedPairs);
         },
-        text: "Click on it to see the pairs you've failed"
+        text: "Click on it to see the pairs you've missed"
     },
     {
         activeSection: [OnBoardingSections.configMenuButton],

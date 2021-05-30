@@ -14,5 +14,5 @@ export interface TrainingPairRepresentation {
 export enum TrainingPairStatus {
     untrained = 0,
     passed = 1,
-    failed = 2
+    missed = 2
 }

@@ -16,7 +16,7 @@ export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => 
             onPress={
                 props.isEnabled
                     ? () => {
-                          props.navigation.navigate(RouteNames.failedPairs);
+                          props.navigation.navigate(RouteNames.missedPairs);
                       }
                     : undefined
             }

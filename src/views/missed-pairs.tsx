@@ -14,9 +14,9 @@ import {
     TrainingPairRepresentation
 } from '../types';
 
-type FailedPairsProps = {
-    failedTrainingPairs: TrainingPairRepresentation[];
+type MissedPairsProps = {
     gameConfig: GameConfig;
+    missedTrainingPairs: TrainingPairRepresentation[];
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
@@ -24,7 +24,7 @@ type FailedPairsProps = {
     trainingHands: TrainingHands;
 };
 
-export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
+export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
     return (
         <OnBoardingSection
             onBoardingStep={props.onBoardingStep}
@@ -39,7 +39,7 @@ export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
                     textAlign: 'center'
                 }}
             >
-                Failed pairs
+                Missed pairs
             </Text>
             <ScrollView
                 style={{
@@ -47,15 +47,15 @@ export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
                 }}
                 contentContainerStyle={{ flex: 1 }}
             >
-                {props.failedTrainingPairs.length === 0 ? (
+                {props.missedTrainingPairs.length === 0 ? (
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
                         <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                            No failed pairs so far. Nice job!
+                            No missed pairs so far. Nice job!
                         </Text>
                     </View>
                 ) : (
-                    Object.values(props.failedTrainingPairs).map((failedTrainingPair) => {
-                        const handName = props.trainingHands[failedTrainingPair.handCode].name;
+                    Object.values(props.missedTrainingPairs).map((missedTrainingPair) => {
+                        const handName = props.trainingHands[missedTrainingPair.handCode].name;
 
                         return (
                             <View key={handName} style={{ marginBottom: 16, width: '100%' }}>
@@ -102,7 +102,7 @@ export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            {failedTrainingPair.dealerSymbol}
+                                            {missedTrainingPair.dealerSymbol}
                                         </Text>
                                     </View>
                                     <View
@@ -117,8 +117,8 @@ export const FailedPairs: React.FC<FailedPairsProps> = (props) => {
                                                     ? undefined
                                                     : () => {
                                                           const trainingPair = getSpecificTrainingPair(
-                                                              failedTrainingPair.handCode,
-                                                              failedTrainingPair.dealerSymbol,
+                                                              missedTrainingPair.handCode,
+                                                              missedTrainingPair.dealerSymbol,
                                                               props.gameConfig.casinoRules
                                                           );
                                                           props.startTrainingRound(

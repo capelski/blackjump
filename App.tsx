@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Audio } from 'expo-av';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
-import failureSoundMp3 from './assets/failure.mp3';
-import successSoundMp3 from './assets/success.mp3';
+import hitSoundMp3 from './assets/hit.mp3';
+import missSoundMp3 from './assets/miss.mp3';
 import {
     getGameConfig,
     getHasCompletedOnboarding,
@@ -72,10 +72,10 @@ import { playSound } from './src/utils';
 import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
-import { FailedPairs } from './src/views/failed-pairs';
 import { GoldHandsInfo } from './src/views/gold-hands-info';
 import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
+import { MissedPairs } from './src/views/missed-pairs';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
 import { TrainingCompleted } from './src/views/training-completed';
@@ -85,13 +85,10 @@ const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
 
 const initializeSounds = () =>
-    Promise.all([
-        Audio.Sound.createAsync(failureSoundMp3),
-        Audio.Sound.createAsync(successSoundMp3)
-    ])
+    Promise.all([Audio.Sound.createAsync(hitSoundMp3), Audio.Sound.createAsync(missSoundMp3)])
         .then((results) => ({
-            failure: results[0].sound,
-            success: results[1].sound
+            hit: results[0].sound,
+            miss: results[1].sound
         }))
         .catch((errors) => {
             console.log(errors);
@@ -111,7 +108,7 @@ export default function App() {
     const [phase, setPhase] = useState<Phases>(Phases.finished);
     const [player, setPlayer] = useState<Player>(createPlayer());
     const [trainingHands, setTrainingHands] = useState(getDefaultTrainingHands());
-    const [sounds, setSounds] = useState<{ failure: Audio.Sound; success: Audio.Sound }>();
+    const [sounds, setSounds] = useState<{ hit: Audio.Sound; miss: Audio.Sound }>();
     const [trainingStatus, setTrainingStatus] = useState(getDefaultTrainingStatus());
 
     const navigationRef = useRef<NavigationContainerRef>(null);
@@ -285,7 +282,7 @@ export default function App() {
         );
 
         if (gameConfig.isSoundEnabled && sounds) {
-            playSound(nextDecisionEvaluation.isHit ? sounds.success : sounds.failure);
+            playSound(nextDecisionEvaluation.isHit ? sounds.hit : sounds.miss);
         }
 
         setDecisionEvaluation(nextDecisionEvaluation);
@@ -463,19 +460,6 @@ export default function App() {
                         />
                     )}
                 </Stack.Screen>
-                <Stack.Screen name={RouteNames.failedPairs}>
-                    {(props) => (
-                        <FailedPairs
-                            failedTrainingPairs={trainingStatus.failedTrainingPairs}
-                            gameConfig={gameConfig}
-                            navigation={props.navigation}
-                            onBoardingStep={onBoardingStep}
-                            phase={phase}
-                            startTrainingRound={startTrainingRound}
-                            trainingHands={trainingHands}
-                        />
-                    )}
-                </Stack.Screen>
                 <Stack.Screen name={RouteNames.goldHandsInfo} component={GoldHandsInfo} />
                 <Stack.Screen name={RouteNames.goldHandsLevelsInfo}>
                     {() => <GoldHandsLevelsInfo gameConfig={gameConfig} />}
@@ -483,6 +467,19 @@ export default function App() {
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => (
                         <HandDecisions casinoRules={gameConfig.casinoRules} route={props.route} />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name={RouteNames.missedPairs}>
+                    {(props) => (
+                        <MissedPairs
+                            gameConfig={gameConfig}
+                            missedTrainingPairs={trainingStatus.missedTrainingPairs}
+                            navigation={props.navigation}
+                            onBoardingStep={onBoardingStep}
+                            phase={phase}
+                            startTrainingRound={startTrainingRound}
+                            trainingHands={trainingHands}
+                        />
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.onboarding}>
