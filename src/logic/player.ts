@@ -19,14 +19,14 @@ export const createPlayer = (cash = 0): Player => ({
 
 export const hitCurrentHand = (
     player: Player,
-    useBlueCards: boolean,
+    untrainedPairsPriority: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress
 ) => {
     const currentHand = getCurrentHand(player);
     player.lastActionHand = handToHandCode(currentHand);
-    const nextCard = useBlueCards
+    const nextCard = untrainedPairsPriority
         ? getCardForUntrainedHand(currentHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(currentHand, nextCard);
@@ -70,7 +70,7 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
 
 export const splitCurrentHand = (
     player: Player,
-    useBlueCards: boolean,
+    untrainedPairsPriority: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress
@@ -80,7 +80,7 @@ export const splitCurrentHand = (
     const firstHand = createHand([currentHand.cards[0]]);
     const secondHand = createHand([currentHand.cards[1]]);
     player.cash -= secondHand.bet;
-    const nextCard = useBlueCards
+    const nextCard = untrainedPairsPriority
         ? getCardForUntrainedHand(firstHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(firstHand, nextCard);
@@ -89,14 +89,14 @@ export const splitCurrentHand = (
 
 export const startNextHand = (
     player: Player,
-    useBlueCards: boolean,
+    untrainedPairsPriority: boolean,
     dealerSymbol: SimpleCardSymbol,
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress
 ) => {
     player.handIndex++;
     const nextHand = player.hands[player.handIndex];
-    const nextCard = useBlueCards
+    const nextCard = untrainedPairsPriority
         ? getCardForUntrainedHand(nextHand, dealerSymbol, trainingHands, trainingProgress)
         : getRandomCard();
     dealCard(nextHand, nextCard);

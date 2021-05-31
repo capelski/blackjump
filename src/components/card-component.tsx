@@ -66,13 +66,11 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
         }
     }, [props.card]);
 
-    const cardColor = props.card.isBlueCard
-        ? '#346fa1'
-        : props.card.isGoldCard
-        ? '#e5c100'
-        : props.card.suit === '♦' || props.card.suit === '♥'
-        ? 'red'
-        : 'black';
+    const cardColor = props.card.isRandom
+        ? props.card.suit === '♦' || props.card.suit === '♥'
+            ? 'red'
+            : 'black'
+        : '#e5c100';
 
     const backgroundColor = props.card.isHoleCard ? 'lightgrey' : 'white';
 
@@ -92,30 +90,14 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
             {!props.card.isHoleCard && (
                 <TouchableOpacity
                     onPress={
-                        props.navigation
+                        props.navigation && !props.card.isRandom
                             ? () => {
-                                  if (props.card.isBlueCard) {
-                                      props.navigation!.navigate(RouteNames.blueCardsInfo);
-                                  } else if (props.card.isGoldCard) {
-                                      props.navigation!.navigate(RouteNames.goldHandsInfo);
-                                  }
+                                  props.navigation!.navigate(RouteNames.untrainedPairsPriority);
                               }
                             : undefined
                     }
                 >
-                    {props.card.isBlueCard || props.card.isGoldCard ? (
-                        <View
-                            style={{
-                                backgroundColor: cardColor,
-                                borderRadius: props.card.isBlueCard ? 12 : undefined,
-                                height: 12,
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                                width: 12
-                            }}
-                        />
-                    ) : (
+                    {props.card.isRandom ? (
                         <Text
                             style={{
                                 color: cardColor,
@@ -127,6 +109,17 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
                         >
                             {props.card.suit}
                         </Text>
+                    ) : (
+                        <View
+                            style={{
+                                backgroundColor: cardColor,
+                                height: 12,
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                width: 12
+                            }}
+                        />
                     )}
                     <Text
                         style={{

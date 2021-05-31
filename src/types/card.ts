@@ -1,9 +1,8 @@
 import { Dictionary } from './dictionary';
 
 export interface Card {
-    isBlueCard: boolean;
-    isGoldCard: boolean;
     isHoleCard?: boolean;
+    isRandom: boolean;
     suit: CardSuit;
     symbol: CardSymbol;
 }

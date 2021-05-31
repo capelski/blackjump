@@ -4,8 +4,8 @@ import Svg, { Path } from 'react-native-svg';
 import { AppNavigation, initialRouteName, RouteNames } from '../../types';
 
 export interface ConfigButtonProps {
-    areGoldHandsBlockingProgress: boolean;
     isEnabled: boolean;
+    isProgressBlocked: boolean;
     navigation: AppNavigation;
     progress: number;
     routeName?: string;
@@ -46,7 +46,7 @@ export const ConfigButton: React.FC<ConfigButtonProps> = (props) => {
 	S533.667,250.25,533.667,280S509.75,333.666,480,333.666z"
                         />
                     </Svg>
-                    {props.areGoldHandsBlockingProgress && props.progress < 100 && (
+                    {props.isProgressBlocked && props.progress < 100 && (
                         <View
                             style={{
                                 position: 'absolute',

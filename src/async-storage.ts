@@ -67,10 +67,6 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                                       : currentGameConfig.casinoRules[CasinoRulesKeys.surrender]
                           }
                         : currentGameConfig.casinoRules,
-                goldHandsLevels:
-                    storedGameConfig && storedGameConfig.goldHandsLevels !== undefined
-                        ? storedGameConfig.goldHandsLevels
-                        : currentGameConfig.goldHandsLevels,
                 isDealerAnimationEnabled:
                     storedGameConfig && storedGameConfig.isDealerAnimationEnabled !== undefined
                         ? storedGameConfig.isDealerAnimationEnabled
@@ -79,14 +75,14 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                     storedGameConfig && storedGameConfig.isSoundEnabled !== undefined
                         ? storedGameConfig.isSoundEnabled
                         : currentGameConfig.isSoundEnabled,
-                useBlueCards:
-                    storedGameConfig && storedGameConfig.useBlueCards !== undefined
-                        ? storedGameConfig.useBlueCards
-                        : currentGameConfig.useBlueCards,
-                useGoldHands:
-                    storedGameConfig && storedGameConfig.useGoldHands !== undefined
-                        ? storedGameConfig.useGoldHands
-                        : currentGameConfig.useGoldHands
+                untrainedPairsHandLevels:
+                    storedGameConfig && storedGameConfig.untrainedPairsHandLevels !== undefined
+                        ? storedGameConfig.untrainedPairsHandLevels
+                        : currentGameConfig.untrainedPairsHandLevels,
+                untrainedPairsPriority:
+                    storedGameConfig && storedGameConfig.untrainedPairsPriority !== undefined
+                        ? storedGameConfig.untrainedPairsPriority
+                        : currentGameConfig.untrainedPairsPriority
             };
         })
         .catch(() => currentGameConfig);

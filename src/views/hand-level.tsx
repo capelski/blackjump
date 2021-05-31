@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { SplitsNumberPicker } from '../components/casino-rules/splits-number-picker';
@@ -8,6 +8,7 @@ import { HandDecisionsTable } from '../components/hand-decisions-table';
 import { getTrainingHands } from '../logic/training-hand';
 
 import {
+    AppNavigation,
     CardSuit,
     CasinoRulesKeys,
     Dictionary,
@@ -15,12 +16,14 @@ import {
     GameConfig,
     Hand,
     HandCode,
+    RouteNames,
     SimpleCardSymbol,
     SplitsNumber
 } from '../types';
 
-type GoldHandsLevelsInfoProps = {
+type HandLevelProps = {
     gameConfig: GameConfig;
+    navigation: AppNavigation;
 };
 
 const levelsColor: Dictionary<string, number> = {
@@ -30,7 +33,7 @@ const levelsColor: Dictionary<string, number> = {
     4: '#1a3750'
 };
 
-export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) => {
+export const HandLevel: React.FC<HandLevelProps> = (props) => {
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
 
     const trainingHands = getTrainingHands(casinoRules);
@@ -39,14 +42,12 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
         bet: 1,
         cards: [
             {
-                isBlueCard: false,
-                isGoldCard: false,
+                isRandom: true,
                 suit: CardSuit.clubs,
                 symbol: SimpleCardSymbol.Five
             },
             {
-                isBlueCard: false,
-                isGoldCard: false,
+                isRandom: true,
                 suit: CardSuit.hearts,
                 symbol: SimpleCardSymbol.Three
             }
@@ -57,14 +58,12 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
         bet: 1,
         cards: [
             {
-                isBlueCard: false,
-                isGoldCard: false,
+                isRandom: true,
                 suit: CardSuit.spades,
                 symbol: SimpleCardSymbol.Nine
             },
             {
-                isBlueCard: false,
-                isGoldCard: false,
+                isRandom: true,
                 suit: CardSuit.diamonds,
                 symbol: SimpleCardSymbol.Nine
             }
@@ -83,7 +82,7 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     textAlign: 'center'
                 }}
             >
-                Hand levels
+                Hand level
             </Text>
 
             <ScrollView
@@ -91,14 +90,13 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                     margin: 16
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    The level of a hand tells how many different actions must be memorized for that
-                    hand depending on the dealer's up card.
+                <Text style={{ color: 'white', fontSize: 20 }}>
+                    The level of a hand tells how many different action ranges the hand has
+                    depending on the dealer's up card:
                 </Text>
 
-                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    For example, a Hard 8 has a single optimal action, regardless the dealer's up
-                    card, thus it is level 1.
+                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
+                    • Hard 8 has a single action range, Hit (Dealer's 2-A), thus it's level 1
                 </Text>
 
                 <HandComponent
@@ -111,9 +109,8 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 <HandDecisionsTable handDecisionSet={trainingHands[HandCode.Hard8].decisionSet} />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
-                    The more optimal actions you need to memorize for a hand, the higher the hand
-                    level is. For a 9,9 for example 4 different actions must be memorized depending
-                    on the dealer's up card, so it's level 4.
+                    • 9,9 has four action ranges (when splitting is enabled), Split (2-6)/Stand{' '}
+                    (7)/Split (8-9)/Stand (10-A), thus it's level 4
                 </Text>
 
                 <HandComponent
@@ -125,58 +122,69 @@ export const GoldHandsLevelsInfo: React.FC<GoldHandsLevelsInfoProps> = (props) =
                 />
                 <HandDecisionsTable handDecisionSet={trainingHands[HandCode.Split9s].decisionSet} />
 
-                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 32 }}>
-                    When disabling a level, the hands on that level will never be dealt as initial
-                    hands if Gold hands are enabled. For example, disabling level 1 will prevent
-                    Hard 8 from being dealt as initial hand while disabling level 4 will prevent
-                    9,9.
+                <Text style={{ color: 'white', fontSize: 20, marginTop: 32 }}>
+                    When using Untrained pairs priority, the Initial hand levels will restrict the
+                    initial hands being dealt. For example:
                 </Text>
 
-                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16 }}>
-                    Notice that the casino rules modify the level of some hands. For example, Hard
-                    16 is level 2 when Surrender is disabled but it becomes level 3 when Surrender
-                    is enabled. Here is a list of each hand level:
+                <Text style={{ color: 'white', fontSize: 20, marginTop: 16 }}>
+                    • Disabling level 1 will prevent Hard 8 initial hand, as well as all other level
+                    1 hands
                 </Text>
 
-                <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-                    {Object.keys(props.gameConfig.goldHandsLevels).map((level) => (
-                        <View
+                <Text style={{ color: 'white', fontSize: 20, marginTop: 16 }}>
+                    • Disabling level 4 will prevent 9,9 initial hand, as well as all other level 4
+                    hands
+                </Text>
+
+                <Text style={{ color: 'white', fontSize: 20, marginTop: 32 }}>
+                    P.D: Casino rules modify the level of some hands (e.g. Hard 16 is level 2 when
+                    Surrender is disabled but it becomes level 3 when enabling Surrender):
+                </Text>
+
+                <View style={{ flexDirection: 'row', marginTop: 24 }}>
+                    {Object.keys(props.gameConfig.untrainedPairsHandLevels).map((level) => (
+                        <Text
                             key={level}
                             style={{
-                                alignItems: 'center',
-                                flexDirection: 'row',
-                                width: '25%'
+                                backgroundColor: levelsColor[parseInt(level)],
+                                color: 'white',
+                                flexGrow: 1,
+                                fontSize: 20,
+                                textAlign: 'center'
                             }}
                         >
-                            <Text style={{ color: 'white', fontSize: 20 }}>{level}</Text>
-                            <View
-                                style={{
-                                    marginLeft: 8,
-                                    backgroundColor: levelsColor[parseInt(level)],
-                                    height: 20,
-                                    width: 40
-                                }}
-                            />
-                        </View>
+                            {level}
+                        </Text>
                     ))}
                 </View>
 
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 16 }}>
                     {Object.values(trainingHands).map((trainingHand) => (
-                        <Text
+                        <TouchableOpacity
                             key={trainingHand.name}
+                            onPress={() => {
+                                props.navigation.navigate(RouteNames.handDecisions, {
+                                    trainingHand
+                                });
+                            }}
                             style={{
+                                alignItems: 'center',
                                 backgroundColor: levelsColor[trainingHand.level],
-                                color: 'white',
-                                fontSize: 20,
-                                marginHorizontal: '1.5%',
-                                marginVertical: 4,
-                                textAlign: 'center',
-                                width: '30%'
+                                marginBottom: '1%',
+                                marginRight: '1%',
+                                width: '32.33%'
                             }}
                         >
-                            {trainingHand.name}
-                        </Text>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                {trainingHand.name}
+                            </Text>
+                        </TouchableOpacity>
                     ))}
                 </View>
 

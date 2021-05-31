@@ -4,7 +4,7 @@ import { colors } from '../constants';
 import { getRandomCard } from '../logic/card';
 import { createDealerHand, createHand } from '../logic/hand';
 import { onBoardingSteps } from '../logic/onboarding';
-import { getRandomTrainingPair } from '../logic/training-pair';
+import { getUntrainedTrainingPair } from '../logic/training-pair';
 import {
     BaseDecisions,
     CardSuit,
@@ -67,8 +67,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     /* Prevent dealing a Blackjack as initial hand when onboarding is active */
                     playerHand = createHand([
                         {
-                            isBlueCard: false,
-                            isGoldCard: true,
+                            isRandom: false,
                             suit: CardSuit.clubs,
                             symbol: SimpleCardSymbol.Seven
                         },
@@ -78,8 +77,8 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         props.gameConfig.casinoRules,
                         SimpleCardSymbol.Six
                     );
-                } else if (props.gameConfig.useGoldHands) {
-                    const trainingPair = getRandomTrainingPair(
+                } else if (props.gameConfig.untrainedPairsPriority) {
+                    const trainingPair = getUntrainedTrainingPair(
                         props.trainingHands,
                         props.trainingProgress,
                         props.gameConfig

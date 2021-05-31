@@ -9,18 +9,16 @@ import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { dangerColor, doubleColor, hitColor, splitColor, warningColor } from '../constants';
-import { getGoldHandsNumber, getTrainingHands } from '../logic/training-hand';
-import {
-    getAreGoldHandsBlockingProgress,
-    getDefaultTrainingStatus
-} from '../logic/training-status';
+import { getTrainingHands } from '../logic/training-hand';
+import { getTrainingPairsNumber } from '../logic/training-pair';
+import { getDefaultTrainingStatus, getIsProgressBlocked } from '../logic/training-status';
 import {
     AppNavigation,
     CasinoRules,
     CasinoRulesKeys,
     Doubling,
     GameConfig,
-    GoldHandsLevels,
+    HandLevels,
     OnBoardingSections,
     Phases,
     RouteNames,
@@ -30,8 +28,8 @@ import {
 } from '../types';
 
 type ConfigMenuProps = {
-    areGoldHandsBlockingProgress: boolean;
     gameConfig: GameConfig;
+    isProgressBlocked: boolean;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
@@ -48,45 +46,45 @@ const textStyle = {
 };
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
-    const [areGoldHandsBlockingProgress, setAreGoldHandsBlockingProgress] = useState(
-        props.progress < 100 && props.areGoldHandsBlockingProgress
-    );
     const [casinoRules, setCasinoRules] = useState(props.gameConfig.casinoRules);
-    const [goldHandsLevels, setGoldHandsLevels] = useState(props.gameConfig.goldHandsLevels);
-    const [goldHandsNumber, setGoldHandsNumber] = useState(
-        getGoldHandsNumber(props.trainingHands, props.gameConfig.goldHandsLevels)
-    );
     const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
         props.gameConfig.isDealerAnimationEnabled
     );
+    const [isProgressBlocked, setIsProgressBlocked] = useState(props.isProgressBlocked);
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
     const [trainingHands, setTrainingHands] = useState(props.trainingHands);
-    const [useBlueCards, setUseBlueCards] = useState(props.gameConfig.useBlueCards);
-    const [useGoldHands, setUseGoldHands] = useState(props.gameConfig.useGoldHands);
+    const [trainingPairsNumber, setTrainingPairsNumber] = useState(
+        getTrainingPairsNumber(props.trainingHands, props.gameConfig.untrainedPairsHandLevels)
+    );
+    const [untrainedPairsHandLevels, setUntrainedPairsHandLevels] = useState(
+        props.gameConfig.untrainedPairsHandLevels
+    );
+    const [untrainedPairsPriority, setUntrainedPairsPriority] = useState(
+        props.gameConfig.untrainedPairsPriority
+    );
 
-    const isSomeLevelSelected = (_goldHandsLevels: GoldHandsLevels) =>
-        _goldHandsLevels[1] || _goldHandsLevels[2] || _goldHandsLevels[3] || _goldHandsLevels[4];
+    const isSomeLevelSelected = (handLevels: HandLevels) =>
+        handLevels[1] || handLevels[2] || handLevels[3] || handLevels[4];
 
-    const areGoldHandsBlockingProgressHandler = (options?: {
+    const isProgressBlockedHandler = (options?: {
         nextCasinoRules?: CasinoRules;
-        nextGoldHandsLevels?: GoldHandsLevels;
+        nextHandLevels?: HandLevels;
         nextTrainingHands?: TrainingHands;
-        nextUseGoldHands?: boolean;
+        nextUntrainedPairsPriority?: boolean;
     }) => {
-        setAreGoldHandsBlockingProgress(
-            isSomeLevelSelected((options && options.nextGoldHandsLevels) || goldHandsLevels) &&
-                getAreGoldHandsBlockingProgress(
+        setIsProgressBlocked(
+            isSomeLevelSelected((options && options.nextHandLevels) || untrainedPairsHandLevels) &&
+                getIsProgressBlocked(
                     {
                         casinoRules: (options && options.nextCasinoRules) || casinoRules,
-                        goldHandsLevels:
-                            (options && options.nextGoldHandsLevels) || goldHandsLevels,
                         isDealerAnimationEnabled,
                         isSoundEnabled,
-                        useBlueCards,
-                        useGoldHands:
-                            options && options.nextUseGoldHands !== undefined
-                                ? options.nextUseGoldHands
-                                : useGoldHands
+                        untrainedPairsHandLevels:
+                            (options && options.nextHandLevels) || untrainedPairsHandLevels,
+                        untrainedPairsPriority:
+                            options && options.nextUntrainedPairsPriority !== undefined
+                                ? options.nextUntrainedPairsPriority
+                                : untrainedPairsPriority
                     },
                     (options && options.nextTrainingHands) || trainingHands,
                     props.trainingStatus.trainingProgress,
@@ -97,21 +95,23 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
     const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
         const nextTrainingHands = getTrainingHands(nextCasinoRules);
-        const nextGoldHandsNumber = getGoldHandsNumber(nextTrainingHands, goldHandsLevels);
+        const nextTrainingPairsNumber = getTrainingPairsNumber(
+            nextTrainingHands,
+            untrainedPairsHandLevels
+        );
 
-        setGoldHandsNumber(nextGoldHandsNumber);
+        setTrainingPairsNumber(nextTrainingPairsNumber);
         setTrainingHands(nextTrainingHands);
-        areGoldHandsBlockingProgressHandler({ nextCasinoRules, nextTrainingHands });
+        isProgressBlockedHandler({ nextCasinoRules, nextTrainingHands });
     };
 
     const saveHandler = () => {
         const nextGameConfig: GameConfig = {
             casinoRules,
-            goldHandsLevels,
             isDealerAnimationEnabled,
             isSoundEnabled,
-            useBlueCards,
-            useGoldHands
+            untrainedPairsHandLevels,
+            untrainedPairsPriority
         };
         props.setGameConfig(nextGameConfig);
         updateGameConfig(nextGameConfig);
@@ -135,15 +135,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 casinoRules[CasinoRulesKeys.splitsNumber] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
                 casinoRules[CasinoRulesKeys.surrender] ||
-            props.gameConfig.goldHandsLevels[1] !== goldHandsLevels[1] ||
-            props.gameConfig.goldHandsLevels[2] !== goldHandsLevels[2] ||
-            props.gameConfig.goldHandsLevels[3] !== goldHandsLevels[3] ||
-            props.gameConfig.goldHandsLevels[4] !== goldHandsLevels[4] ||
             props.gameConfig.isDealerAnimationEnabled !== isDealerAnimationEnabled ||
             props.gameConfig.isSoundEnabled !== isSoundEnabled ||
-            props.gameConfig.useBlueCards !== useBlueCards ||
-            props.gameConfig.useGoldHands !== useGoldHands) &&
-        isSomeLevelSelected(goldHandsLevels);
+            props.gameConfig.untrainedPairsHandLevels[1] !== untrainedPairsHandLevels[1] ||
+            props.gameConfig.untrainedPairsHandLevels[2] !== untrainedPairsHandLevels[2] ||
+            props.gameConfig.untrainedPairsHandLevels[3] !== untrainedPairsHandLevels[3] ||
+            props.gameConfig.untrainedPairsHandLevels[4] !== untrainedPairsHandLevels[4] ||
+            props.gameConfig.untrainedPairsPriority !== untrainedPairsPriority) &&
+        isSomeLevelSelected(untrainedPairsHandLevels);
 
     return (
         <ScrollView
@@ -182,7 +181,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     paddingHorizontal: 16
                 }}
             >
-                {areGoldHandsBlockingProgress && (
+                {isProgressBlocked && (
                     <Text
                         style={{
                             color: warningColor,
@@ -191,8 +190,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             paddingTop: 16
                         }}
                     >
-                        ⚠️ The selected Gold hands levels are blocking untrained hands. Modify the
-                        selected levels or disable Gold Hands to train the missing hands
+                        ⚠️ Initial hand levels are blocking untrained pairs. Modify the levels or
+                        disable Untrained pairs priority to train the missing pairs
                     </Text>
                 )}
             </OnBoardingSection>
@@ -319,10 +318,10 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
-                        onValueChange={setUseBlueCards}
+                        onValueChange={setIsDealerAnimationEnabled}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
-                        value={useBlueCards}
+                        value={isDealerAnimationEnabled}
                     />
                     <Text
                         style={{
@@ -330,28 +329,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             fontSize: 20
                         }}
                     >
-                        Blue cards
+                        Dealer cards animation
                     </Text>
-                    <HelpIcon
-                        onPress={() => {
-                            props.navigation.navigate(RouteNames.blueCardsInfo);
-                        }}
-                    />
                 </View>
-
-                {props.progress === 100 && useBlueCards && (
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20,
-                            fontStyle: 'italic',
-                            paddingVertical: 16
-                        }}
-                    >
-                        Blue cards don't have any effect on 100% progress. Reset the training if you
-                        want to see them again
-                    </Text>
-                )}
 
                 <View
                     style={{
@@ -363,27 +343,29 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 >
                     <Switch
                         onValueChange={(value) => {
-                            setUseGoldHands(value);
-                            areGoldHandsBlockingProgressHandler({ nextUseGoldHands: value });
+                            setUntrainedPairsPriority(value);
+                            isProgressBlockedHandler({
+                                nextUntrainedPairsPriority: value
+                            });
                         }}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
-                        value={useGoldHands}
+                        value={untrainedPairsPriority}
                     />
 
                     <View>
                         <View style={{ flexDirection: 'row' }}>
                             <Text
                                 style={{
-                                    color: areGoldHandsBlockingProgress ? warningColor : 'white',
+                                    color: isProgressBlocked ? warningColor : 'white',
                                     fontSize: 20
                                 }}
                             >
-                                Gold hands
+                                Untrained pairs priority
                             </Text>
                             <HelpIcon
                                 onPress={() => {
-                                    props.navigation.navigate(RouteNames.goldHandsInfo);
+                                    props.navigation.navigate(RouteNames.untrainedPairsPriority);
                                 }}
                             />
                         </View>
@@ -391,21 +373,21 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         <View
                             style={{
                                 marginTop: 16,
-                                opacity: useGoldHands ? undefined : 0.3
+                                opacity: untrainedPairsPriority ? undefined : 0.3
                             }}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <Text
                                     style={{
                                         ...textStyle,
-                                        color: areGoldHandsBlockingProgress ? warningColor : 'white'
+                                        color: isProgressBlocked ? warningColor : 'white'
                                     }}
                                 >
-                                    Hand levels
+                                    Initial hand levels
                                 </Text>
                                 <HelpIcon
                                     onPress={() => {
-                                        props.navigation.navigate(RouteNames.goldHandsLevelsInfo);
+                                        props.navigation.navigate(RouteNames.handLevel);
                                     }}
                                 />
                             </View>
@@ -416,36 +398,36 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                     flexWrap: 'wrap'
                                 }}
                             >
-                                {Object.keys(goldHandsLevels).map((numberKey) => {
+                                {Object.keys(untrainedPairsHandLevels).map((numberKey) => {
                                     const number = parseInt(numberKey, 10);
                                     return (
                                         <React.Fragment key={numberKey}>
                                             <Switch
-                                                disabled={!useGoldHands}
+                                                disabled={!untrainedPairsPriority}
                                                 onValueChange={(newValue) => {
-                                                    const nextGoldHandsLevels = {
-                                                        ...goldHandsLevels,
+                                                    const nextHandLevels = {
+                                                        ...untrainedPairsHandLevels,
                                                         [number]: newValue
                                                     };
-                                                    setGoldHandsLevels(nextGoldHandsLevels);
-                                                    setGoldHandsNumber(
-                                                        getGoldHandsNumber(
+                                                    setUntrainedPairsHandLevels(nextHandLevels);
+                                                    setTrainingPairsNumber(
+                                                        getTrainingPairsNumber(
                                                             trainingHands,
-                                                            nextGoldHandsLevels
+                                                            nextHandLevels
                                                         )
                                                     );
-                                                    areGoldHandsBlockingProgressHandler({
-                                                        nextGoldHandsLevels
+                                                    isProgressBlockedHandler({
+                                                        nextHandLevels
                                                     });
                                                 }}
                                                 style={{ marginTop: 16 }}
                                                 trackColor={{ true: hitColor, false: 'white' }}
-                                                value={goldHandsLevels[number] || false}
+                                                value={untrainedPairsHandLevels[number] || false}
                                             />
                                             <Text
                                                 style={{
                                                     ...textStyle,
-                                                    color: areGoldHandsBlockingProgress
+                                                    color: isProgressBlocked
                                                         ? warningColor
                                                         : 'white',
                                                     marginTop: 16,
@@ -459,26 +441,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 })}
                             </View>
                             <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
-                                ({goldHandsNumber} gold hands)
+                                ({trainingPairsNumber} training pairs)
                             </Text>
                         </View>
                     </View>
                 </View>
-            </OnBoardingSection>
-
-            <OnBoardingSection onBoardingStep={props.onBoardingStep} style={{ padding: 16 }}>
-                <Text
-                    style={{
-                        color: 'white',
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        marginBottom: 8,
-                        width: '100%'
-                    }}
-                >
-                    Animations
-                </Text>
-                <Divider />
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -494,23 +461,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                         }}
                     >
                         Sound effects 🔊
-                    </Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={setIsDealerAnimationEnabled}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={isDealerAnimationEnabled}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Dealer cards delay
                     </Text>
                 </View>
             </OnBoardingSection>

@@ -13,18 +13,6 @@ import { allDealerSymbols } from './dealer-symbols';
 import { getUntrainedTrainingHands } from './training-hand';
 import { allTrainingPairsNumber } from './training-pair';
 
-export const getAreGoldHandsBlockingProgress = (
-    gameConfig: GameConfig,
-    trainingHands: TrainingHands,
-    trainingProgress: TrainingProgress,
-    progress: number
-) =>
-    gameConfig.useGoldHands
-        ? progress < 100 &&
-          getUntrainedTrainingHands(trainingHands, trainingProgress, gameConfig.goldHandsLevels)
-              .length === 0
-        : false;
-
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     attemptedTrainingPairs: 0,
     isCompleted: false,
@@ -44,6 +32,21 @@ export const getDefaultTrainingStatus = (): TrainingStatus => ({
         {} as TrainingProgress
     )
 });
+
+export const getIsProgressBlocked = (
+    gameConfig: GameConfig,
+    trainingHands: TrainingHands,
+    trainingProgress: TrainingProgress,
+    progress: number
+) =>
+    gameConfig.untrainedPairsPriority
+        ? progress < 100 &&
+          getUntrainedTrainingHands(
+              trainingHands,
+              trainingProgress,
+              gameConfig.untrainedPairsHandLevels
+          ).length === 0
+        : false;
 
 export const isTrainingCompleted = (passedTrainingPairs: number) =>
     passedTrainingPairs === allTrainingPairsNumber;

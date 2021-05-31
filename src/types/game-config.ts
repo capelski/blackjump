@@ -3,11 +3,10 @@ import { NumericDictionary } from './dictionary';
 
 export interface GameConfig {
     casinoRules: CasinoRules;
-    goldHandsLevels: GoldHandsLevels;
     isDealerAnimationEnabled: boolean;
     isSoundEnabled: boolean;
-    useBlueCards: boolean;
-    useGoldHands: boolean;
+    untrainedPairsHandLevels: HandLevels;
+    untrainedPairsPriority: boolean;
 }
 
-export type GoldHandsLevels = NumericDictionary<boolean>;
+export type HandLevels = NumericDictionary<boolean>;

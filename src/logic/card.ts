@@ -32,7 +32,7 @@ const symbols = getObjectKeys(cardsValue);
 const deck = cartesianProduct(
     suits,
     symbols,
-    (suit, symbol): Card => ({ isBlueCard: false, isGoldCard: false, suit, symbol })
+    (suit, symbol): Card => ({ isRandom: true, suit, symbol })
 );
 
 export const getCardEffectiveValue = (card: Card): number => {

@@ -76,8 +76,7 @@ export const createDealerHand = (casinoRules: CasinoRules, dealerSymbol?: CardSy
     const dealerCards: Card[] = [
         dealerSymbol
             ? {
-                  isBlueCard: false,
-                  isGoldCard: true,
+                  isRandom: false,
                   suit: getRandomSuit(),
                   symbol: dealerSymbol
               }
@@ -169,8 +168,7 @@ export const getCardForUntrainedHand = (
     const nextCard: Card =
         valuesToUntrainedHands.length > 0
             ? {
-                  isBlueCard: true,
-                  isGoldCard: false,
+                  isRandom: false,
                   suit: getRandomSuit(),
                   symbol: valueToSymbol(getRandomItem(valuesToUntrainedHands))
               }
@@ -201,8 +199,7 @@ export const handCodeToHand = (handCode: HandCode): Hand => {
     return createHand(
         handSymbols.map(
             (symbol): Card => ({
-                isBlueCard: false,
-                isGoldCard: true,
+                isRandom: false,
                 suit: getRandomSuit(),
                 symbol
             })

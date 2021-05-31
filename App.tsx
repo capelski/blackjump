@@ -47,8 +47,8 @@ import {
 import { getDefaultTrainingHands, getTrainingHands } from './src/logic/training-hand';
 import { allTrainingPairsNumber } from './src/logic/training-pair';
 import {
-    getAreGoldHandsBlockingProgress,
     getDefaultTrainingStatus,
+    getIsProgressBlocked,
     retrieveTrainingStatus
 } from './src/logic/training-status';
 import {
@@ -70,16 +70,15 @@ import {
 } from './src/types';
 import { playSound } from './src/utils';
 import { BasicStrategyTable } from './src/views/basic-strategy-table';
-import { BlueCardsInfo } from './src/views/blue-cards-info';
 import { ConfigMenu } from './src/views/config-menu';
-import { GoldHandsInfo } from './src/views/gold-hands-info';
-import { GoldHandsLevelsInfo } from './src/views/gold-hands-levels-info';
 import { HandDecisions } from './src/views/hand-decisions';
+import { HandLevel } from './src/views/hand-level';
 import { MissedPairs } from './src/views/missed-pairs';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
 import { TrainingCompleted } from './src/views/training-completed';
 import { TrainingPairs } from './src/views/training-pairs';
+import { UntrainedPairsPriority } from './src/views/untrained-pairs-priority';
 
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
@@ -97,12 +96,12 @@ const initializeSounds = () =>
         });
 
 export default function App() {
-    const [areGoldHandsBlockingProgress, setAreGoldHandsBlockingProgress] = useState(false);
     const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);
     const [dealerHand, setDealerHand] = useState<Hand>();
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
+    const [isProgressBlocked, setIsProgressBlocked] = useState(false);
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [peeking, setPeeking] = useState(false);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
@@ -139,8 +138,8 @@ export default function App() {
                 const nextTrainingStatus = retrieveTrainingStatus(results[3]);
 
                 setTrainingStatus(nextTrainingStatus);
-                setAreGoldHandsBlockingProgress(
-                    getAreGoldHandsBlockingProgress(
+                setIsProgressBlocked(
+                    getIsProgressBlocked(
                         results[0],
                         nextTrainingHands,
                         results[3],
@@ -256,7 +255,7 @@ export default function App() {
             const nextPlayer = { ...player };
             startNextHand(
                 nextPlayer,
-                gameConfig.useBlueCards,
+                gameConfig.untrainedPairsPriority,
                 currentDealerSymbol!,
                 trainingHands,
                 trainingStatus.trainingProgress
@@ -327,8 +326,8 @@ export default function App() {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
         }
 
-        setAreGoldHandsBlockingProgress(
-            getAreGoldHandsBlockingProgress(
+        setIsProgressBlocked(
+            getIsProgressBlocked(
                 gameConfig,
                 trainingHands,
                 nextTrainingStatus.trainingProgress,
@@ -350,7 +349,7 @@ export default function App() {
         evaluatePlayerDecision(BaseDecisions.hit, currentHand);
         hitCurrentHand(
             nextPlayer,
-            gameConfig.useBlueCards,
+            gameConfig.untrainedPairsPriority,
             currentDealerSymbol!,
             trainingHands,
             trainingStatus.trainingProgress
@@ -375,7 +374,7 @@ export default function App() {
         evaluatePlayerDecision(PlayerDecisions.split, currentHand);
         splitCurrentHand(
             nextPlayer,
-            gameConfig.useBlueCards,
+            gameConfig.untrainedPairsPriority,
             currentDealerSymbol!,
             trainingHands,
             trainingStatus.trainingProgress
@@ -399,8 +398,8 @@ export default function App() {
         <NavigationContainer ref={navigationRef}>
             <StatusBar hidden={true} />
             <NavBar
-                areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
                 attemptedTrainingPairs={trainingStatus.attemptedTrainingPairs}
+                isProgressBlocked={isProgressBlocked}
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
                 passedTrainingPairs={trainingStatus.passedTrainingPairs}
@@ -420,20 +419,19 @@ export default function App() {
                 <Stack.Screen name={RouteNames.basicStrategyTable}>
                     {() => <BasicStrategyTable casinoRules={gameConfig.casinoRules} />}
                 </Stack.Screen>
-                <Stack.Screen name={RouteNames.blueCardsInfo} component={BlueCardsInfo} />
                 <Stack.Screen name={RouteNames.configMenu}>
                     {(props) => (
                         <ConfigMenu
-                            areGoldHandsBlockingProgress={areGoldHandsBlockingProgress}
                             gameConfig={gameConfig}
+                            isProgressBlocked={isProgressBlocked}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
                             progress={progress}
                             setGameConfig={(_gameConfig) => {
                                 const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
-                                setAreGoldHandsBlockingProgress(
-                                    getAreGoldHandsBlockingProgress(
+                                setIsProgressBlocked(
+                                    getIsProgressBlocked(
                                         _gameConfig,
                                         nextTrainingHands,
                                         trainingStatus.trainingProgress,
@@ -445,8 +443,8 @@ export default function App() {
                             }}
                             setTrainingStatus={(_trainingStatus) => {
                                 setTrainingStatus(_trainingStatus);
-                                setAreGoldHandsBlockingProgress(
-                                    getAreGoldHandsBlockingProgress(
+                                setIsProgressBlocked(
+                                    getIsProgressBlocked(
                                         gameConfig,
                                         trainingHands,
                                         _trainingStatus.trainingProgress,
@@ -460,14 +458,13 @@ export default function App() {
                         />
                     )}
                 </Stack.Screen>
-                <Stack.Screen name={RouteNames.goldHandsInfo} component={GoldHandsInfo} />
-                <Stack.Screen name={RouteNames.goldHandsLevelsInfo}>
-                    {() => <GoldHandsLevelsInfo gameConfig={gameConfig} />}
-                </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => (
                         <HandDecisions casinoRules={gameConfig.casinoRules} route={props.route} />
                     )}
+                </Stack.Screen>
+                <Stack.Screen name={RouteNames.handLevel}>
+                    {(props) => <HandLevel gameConfig={gameConfig} navigation={props.navigation} />}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.missedPairs}>
                     {(props) => (
@@ -532,6 +529,10 @@ export default function App() {
                         />
                     )}
                 </Stack.Screen>
+                <Stack.Screen
+                    name={RouteNames.untrainedPairsPriority}
+                    component={UntrainedPairsPriority}
+                />
             </Stack.Navigator>
 
             {onBoardingStep > -1 && (

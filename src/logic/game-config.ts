@@ -3,14 +3,13 @@ import { getDefaultCasinoRules } from './casino-rules';
 
 export const getDefaultGameConfig = (): GameConfig => ({
     casinoRules: getDefaultCasinoRules(),
-    goldHandsLevels: {
+    isDealerAnimationEnabled: true,
+    isSoundEnabled: true,
+    untrainedPairsHandLevels: {
         1: true,
         2: true,
         3: true,
         4: true
     },
-    isDealerAnimationEnabled: true,
-    isSoundEnabled: true,
-    useBlueCards: false,
-    useGoldHands: false
+    untrainedPairsPriority: false
 });

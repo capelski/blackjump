@@ -2,6 +2,7 @@ import {
     CasinoRules,
     GameConfig,
     HandCode,
+    HandLevels,
     SimpleCardSymbol,
     TrainingHands,
     TrainingPair,
@@ -14,7 +15,21 @@ import { getActiveTrainingHands, getUntrainedTrainingHands } from './training-ha
 
 export const allTrainingPairsNumber = allDealerSymbols.length * Object.keys(HandCode).length;
 
-export const getRandomTrainingPair = (
+export const getSpecificTrainingPair = (
+    handCode: HandCode,
+    dealerSymbol: SimpleCardSymbol,
+    casinoRules: CasinoRules
+): TrainingPair => {
+    return {
+        dealer: createDealerHand(casinoRules, dealerSymbol),
+        player: handCodeToHand(handCode)
+    };
+};
+
+export const getTrainingPairsNumber = (trainingHands: TrainingHands, handLevels: HandLevels) =>
+    allDealerSymbols.length * getActiveTrainingHands(trainingHands, handLevels).length;
+
+export const getUntrainedTrainingPair = (
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress,
     gameConfig: GameConfig
@@ -22,13 +37,15 @@ export const getRandomTrainingPair = (
     const untrainedTrainingHands = getUntrainedTrainingHands(
         trainingHands,
         trainingProgress,
-        gameConfig.goldHandsLevels
+        gameConfig.untrainedPairsHandLevels
     );
 
     const randomTrainingHand =
         untrainedTrainingHands.length > 0
             ? getRandomItem(untrainedTrainingHands)
-            : getRandomItem(getActiveTrainingHands(trainingHands, gameConfig.goldHandsLevels)); // In case all hands have been passed
+            : getRandomItem(
+                  getActiveTrainingHands(trainingHands, gameConfig.untrainedPairsHandLevels)
+              ); // In case all hands have been passed
 
     const trainingHandStatus = trainingProgress[randomTrainingHand.code];
     const untrainedDealerSymbols = getUntrainedDealerSymbols(trainingHandStatus);
@@ -41,16 +58,5 @@ export const getRandomTrainingPair = (
     return {
         dealer: createDealerHand(gameConfig.casinoRules, randomDealerSymbol),
         player: handCodeToHand(randomTrainingHand.code)
-    };
-};
-
-export const getSpecificTrainingPair = (
-    handCode: HandCode,
-    dealerSymbol: SimpleCardSymbol,
-    casinoRules: CasinoRules
-): TrainingPair => {
-    return {
-        dealer: createDealerHand(casinoRules, dealerSymbol),
-        player: handCodeToHand(handCode)
     };
 };

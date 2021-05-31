@@ -8,32 +8,30 @@ export type AppRoute<T extends RouteNames> = Route<T, RouteParams[T]>;
 
 export enum RouteNames {
     basicStrategyTable = 'basicStrategyTable',
-    blueCardsInfo = 'blueCardsInfo',
     configMenu = 'configMenu',
-    goldHandsInfo = 'goldHandsInfo',
-    goldHandsLevelsInfo = 'goldHandsLevelsInfo',
     handDecisions = 'handDecisions',
+    handLevel = 'handLevel',
     missedPairs = 'missedPairs',
     onboarding = 'onboarding',
     table = 'table',
     trainingCompleted = 'trainingCompleted',
-    trainingPairs = 'trainingPairs'
+    trainingPairs = 'trainingPairs',
+    untrainedPairsPriority = 'untrainedPairsPriority'
 }
 
 export const initialRouteName = RouteNames.table;
 
 export type RouteParams = {
     [RouteNames.basicStrategyTable]: undefined;
-    [RouteNames.blueCardsInfo]: undefined;
     [RouteNames.configMenu]: undefined;
-    [RouteNames.goldHandsInfo]: undefined;
-    [RouteNames.goldHandsLevelsInfo]: undefined;
     [RouteNames.handDecisions]: {
         trainingHand: TrainingHand;
     };
+    [RouteNames.handLevel]: undefined;
     [RouteNames.missedPairs]: undefined;
     [RouteNames.onboarding]: undefined;
     [RouteNames.table]: undefined;
     [RouteNames.trainingCompleted]: undefined;
     [RouteNames.trainingPairs]: undefined;
+    [RouteNames.untrainedPairsPriority]: undefined;
 };
