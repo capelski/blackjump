@@ -22,8 +22,10 @@ import {
     AppNavigation,
     CasinoRules,
     CasinoRulesKeys,
+    Dictionary,
     Doubling,
     GameConfig,
+    HandCode,
     OnBoardingSections,
     Phases,
     RouteNames,
@@ -381,6 +383,66 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             marginTop: 16
                         }}
                     >
+                        <TouchableOpacity
+                            onPress={() => {
+                                const nextSelectedHands = Object.values(HandCode).reduce(
+                                    (hands, handCode) => ({ ...hands, [handCode]: true }),
+                                    {}
+                                ) as Dictionary<boolean, HandCode>;
+                                setSelectedHands(nextSelectedHands);
+                                isProgressBlockedHandler({
+                                    nextSelectedHands
+                                });
+                            }}
+                            style={{
+                                alignItems: 'center',
+                                backgroundColor: doubleColor,
+                                marginBottom: 8,
+                                marginLeft: '2%',
+                                paddingVertical: 4,
+                                width: '48%'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                Select all
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                const nextSelectedHands = Object.values(HandCode).reduce(
+                                    (hands, handCode) => ({ ...hands, [handCode]: false }),
+                                    {}
+                                ) as Dictionary<boolean, HandCode>;
+                                setSelectedHands(nextSelectedHands);
+                                isProgressBlockedHandler({
+                                    nextSelectedHands
+                                });
+                            }}
+                            style={{
+                                alignItems: 'center',
+                                backgroundColor: doubleColor,
+                                marginBottom: 8,
+                                marginLeft: '2%',
+                                paddingVertical: 4,
+                                width: '48%'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                Unselect all
+                            </Text>
+                        </TouchableOpacity>
+
                         {Object.values(trainingHands).map((trainingHand) => (
                             <TouchableOpacity
                                 key={trainingHand.name}
