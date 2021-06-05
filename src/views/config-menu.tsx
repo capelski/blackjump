@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { updateGameConfig, updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
@@ -557,28 +557,37 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     isEnabled={true}
                     marginTop={8}
                     onPress={() => {
-                        Alert.alert(
-                            'Reset training',
+                        const title = 'Reset training';
+                        const body =
                             'Resetting the training will mark all hands as untrained, ' +
-                                'setting the progress and precision indicators to 0%, ' +
-                                'and set the player earnings to 0$ as well. ' +
-                                'Are you sure you want to reset the training?',
-                            [
+                            'setting the progress and precision indicators to 0%, ' +
+                            'and set the player earnings to 0$ as well. ' +
+                            'Are you sure you want to reset the training?';
+
+                        const resetTraining = () => {
+                            const nextTrainingStatus = getDefaultTrainingStatus();
+                            props.setTrainingStatus(nextTrainingStatus);
+                            updateTrainingProgress(nextTrainingStatus.trainingProgress);
+                            updatePlayerEarnings(0);
+                        };
+
+                        if (Platform.OS === 'web') {
+                            const response = window.confirm(body);
+                            if (response) {
+                                resetTraining();
+                            }
+                        } else {
+                            Alert.alert(title, body, [
                                 {
                                     text: 'Cancel',
                                     style: 'cancel'
                                 },
                                 {
                                     text: 'Reset',
-                                    onPress: () => {
-                                        const nextTrainingStatus = getDefaultTrainingStatus();
-                                        props.setTrainingStatus(nextTrainingStatus);
-                                        updateTrainingProgress(nextTrainingStatus.trainingProgress);
-                                        updatePlayerEarnings(0);
-                                    }
+                                    onPress: resetTraining
                                 }
-                            ]
-                        );
+                            ]);
+                        }
                     }}
                     text="Reset training"
                     width="100%"
