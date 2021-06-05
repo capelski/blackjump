@@ -25,15 +25,18 @@ const cardsValue: CardValues = {
     [SpecialCardSymbol.King]: [10]
 };
 
+export const createCard = (symbol: CardSymbol, suit?: CardSuit, isHoleCard?: boolean): Card => ({
+    isHoleCard,
+    isRandom: suit !== undefined,
+    suit: suit || getRandomSuit(),
+    symbol
+});
+
 const suits = [CardSuit.clubs, CardSuit.diamonds, CardSuit.hearts, CardSuit.spades];
 
 const symbols = getObjectKeys(cardsValue);
 
-const deck = cartesianProduct(
-    suits,
-    symbols,
-    (suit, symbol): Card => ({ isRandom: true, suit, symbol })
-);
+const deck = cartesianProduct(symbols, suits, createCard);
 
 export const getCardEffectiveValue = (card: Card): number => {
     const values = getCardValues(card);

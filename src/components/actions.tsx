@@ -1,13 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { colors } from '../constants';
-import { getRandomCard } from '../logic/card';
+import { createCard, getRandomCard, getRandomSuit } from '../logic/card';
 import { createDealerHand, createHand } from '../logic/hand';
 import { onBoardingSteps } from '../logic/onboarding';
 import { getUntrainedTrainingPair } from '../logic/training-pair';
 import {
     BaseDecisions,
-    CardSuit,
     CasinoRulesKeys,
     Doubling,
     GameConfig,
@@ -66,16 +65,13 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                 ) {
                     /* Prevent dealing a Blackjack as initial hand when onboarding is active */
                     playerHand = createHand([
-                        {
-                            isRandom: false,
-                            suit: CardSuit.clubs,
-                            symbol: SimpleCardSymbol.Seven
-                        },
+                        createCard(SimpleCardSymbol.Seven, getRandomSuit()),
                         getRandomCard()
                     ]);
                     dealerHand = createDealerHand(
                         props.gameConfig.casinoRules,
-                        SimpleCardSymbol.Six
+                        SimpleCardSymbol.Six,
+                        getRandomSuit()
                     );
                 } else if (
                     props.gameConfig.untrainedPairsPriority ||

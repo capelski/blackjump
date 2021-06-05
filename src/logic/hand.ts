@@ -1,5 +1,6 @@
 import {
     Card,
+    CardSuit,
     CardSymbol,
     CasinoRules,
     CasinoRulesKeys,
@@ -14,10 +15,10 @@ import {
 } from '../types';
 import { getRandomItem } from '../utils';
 import {
+    createCard,
     getCardEffectiveValue,
     getCardsValues,
     getRandomCard,
-    getRandomSuit,
     revealHoleCard,
     symbolToSimpleSymbol,
     valueToSymbol
@@ -72,15 +73,13 @@ export const canSplit = (hand: Hand, handsNumber: number, casinoRules: CasinoRul
 export const canSurrender = (hand: Hand, handsNumber: number, casinoRules: CasinoRules) =>
     handsNumber === 1 && hand.cards.length === 2 && casinoRules[CasinoRulesKeys.surrender];
 
-export const createDealerHand = (casinoRules: CasinoRules, dealerSymbol?: CardSymbol) => {
+export const createDealerHand = (
+    casinoRules: CasinoRules,
+    dealerSymbol?: CardSymbol,
+    dealerSuit?: CardSuit
+) => {
     const dealerCards: Card[] = [
-        dealerSymbol
-            ? {
-                  isRandom: false,
-                  suit: getRandomSuit(),
-                  symbol: dealerSymbol
-              }
-            : getRandomCard()
+        dealerSymbol ? createCard(dealerSymbol, dealerSuit) : getRandomCard()
     ];
 
     if (casinoRules[CasinoRulesKeys.holeCard]) {
@@ -167,11 +166,7 @@ export const getCardForUntrainedHand = (
 
     const nextCard: Card =
         valuesToUntrainedHands.length > 0
-            ? {
-                  isRandom: false,
-                  suit: getRandomSuit(),
-                  symbol: valueToSymbol(getRandomItem(valuesToUntrainedHands))
-              }
+            ? createCard(valueToSymbol(getRandomItem(valuesToUntrainedHands)))
             : getRandomCard();
 
     return nextCard;
@@ -196,15 +191,7 @@ export const handCodeToHand = (handCode: HandCode): Hand => {
         ? getSoftHandSymbols(handCode)
         : getHardHandSymbols(handCode);
 
-    return createHand(
-        handSymbols.map(
-            (symbol): Card => ({
-                isRandom: false,
-                suit: getRandomSuit(),
-                symbol
-            })
-        )
-    );
+    return createHand(handSymbols.map((symbol) => createCard(symbol)));
 };
 
 export const handToHandCode = (hand: Hand): HandCode => {

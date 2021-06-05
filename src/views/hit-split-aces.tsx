@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { HandComponent } from '../components/hand-component';
+import { createCard } from '../logic/card';
 import { CardSuit, SimpleCardSymbol, SpecialCardSymbol } from '../types';
 
 export const HitSplitAces: React.FC = () => {
@@ -37,16 +38,8 @@ export const HitSplitAces: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isRandom: true,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Ace
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Ace, CardSuit.diamonds)
                         ],
                         values: [2, 12]
                     }}
@@ -59,13 +52,7 @@ export const HitSplitAces: React.FC = () => {
                 <HandComponent
                     hand={{
                         bet: 1,
-                        cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Ace
-                            }
-                        ],
+                        cards: [createCard(SimpleCardSymbol.Ace, CardSuit.hearts)],
                         values: [1, 11]
                     }}
                     handsNumber={1}
@@ -85,16 +72,8 @@ export const HitSplitAces: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isRandom: true,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Ten
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Ten, CardSuit.spades)
                         ],
                         values: [21]
                     }}
@@ -108,16 +87,8 @@ export const HitSplitAces: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.hearts,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isRandom: true,
-                                suit: CardSuit.diamonds,
-                                symbol: SpecialCardSymbol.King
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.hearts),
+                            createCard(SpecialCardSymbol.King, CardSuit.diamonds)
                         ],
                         values: [21]
                     }}

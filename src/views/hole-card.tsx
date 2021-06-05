@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { HandComponent } from '../components/hand-component';
-import { CardSuit, SimpleCardSymbol, SpecialCardSymbol } from '../types';
+import { createCard } from '../logic/card';
+import { CardSuit, SimpleCardSymbol } from '../types';
 
 export const HoleCard: React.FC = () => {
     return (
@@ -31,17 +32,8 @@ export const HoleCard: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isHoleCard: true,
-                                isRandom: true,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Ten
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Ten, CardSuit.diamonds, true)
                         ],
                         values: [1, 11]
                     }}
@@ -61,17 +53,8 @@ export const HoleCard: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isHoleCard: true,
-                                isRandom: true,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Ten
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Ten, CardSuit.diamonds, true)
                         ],
                         values: [1, 11]
                     }}
@@ -86,16 +69,8 @@ export const HoleCard: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.clubs,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isRandom: true,
-                                suit: CardSuit.diamonds,
-                                symbol: SimpleCardSymbol.Ten
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Ten, CardSuit.diamonds)
                         ],
                         values: [11, 21]
                     }}

@@ -2,23 +2,13 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { CardComponent } from '../components/card-component';
 import { HandComponent } from '../components/hand-component';
+import { createCard } from '../logic/card';
 import { CardSuit, Hand, SimpleCardSymbol, SpecialCardSymbol } from '../types';
 
 export const UntrainedPairsPriority: React.FC = () => {
     const hardFourteen: Hand = {
         bet: 1,
-        cards: [
-            {
-                isRandom: false,
-                suit: CardSuit.clubs,
-                symbol: SimpleCardSymbol.Five
-            },
-            {
-                isRandom: false,
-                suit: CardSuit.diamonds,
-                symbol: SimpleCardSymbol.Nine
-            }
-        ],
+        cards: [createCard(SimpleCardSymbol.Five), createCard(SimpleCardSymbol.Nine)],
         values: [14]
     };
 
@@ -53,11 +43,7 @@ export const UntrainedPairsPriority: React.FC = () => {
 
                 <View style={{ alignItems: 'center', marginTop: 16 }}>
                     <CardComponent
-                        card={{
-                            isRandom: false,
-                            suit: CardSuit.spades,
-                            symbol: SimpleCardSymbol.Eight
-                        }}
+                        card={createCard(SimpleCardSymbol.Eight)}
                         isSoundEnabled={false}
                         skipAnimation={true}
                     />
@@ -88,14 +74,7 @@ export const UntrainedPairsPriority: React.FC = () => {
                 <HandComponent
                     hand={{
                         bet: 1,
-                        cards: [
-                            ...hardFourteen.cards,
-                            {
-                                isRandom: false,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Ace
-                            }
-                        ],
+                        cards: [...hardFourteen.cards, createCard(SimpleCardSymbol.Ace)],
                         values: [15]
                     }}
                     handsNumber={1}
@@ -111,14 +90,7 @@ export const UntrainedPairsPriority: React.FC = () => {
                 <HandComponent
                     hand={{
                         bet: 1,
-                        cards: [
-                            ...hardFourteen.cards,
-                            {
-                                isRandom: false,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Six
-                            }
-                        ],
+                        cards: [...hardFourteen.cards, createCard(SimpleCardSymbol.Six)],
                         values: [20]
                     }}
                     handsNumber={1}
@@ -146,16 +118,8 @@ export const UntrainedPairsPriority: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            {
-                                isRandom: true,
-                                suit: CardSuit.spades,
-                                symbol: SimpleCardSymbol.Ace
-                            },
-                            {
-                                isRandom: true,
-                                suit: CardSuit.hearts,
-                                symbol: SpecialCardSymbol.Jack
-                            }
+                            createCard(SimpleCardSymbol.Ace, CardSuit.spades),
+                            createCard(SpecialCardSymbol.Jack, CardSuit.hearts)
                         ],
                         values: [11, 21]
                     }}
