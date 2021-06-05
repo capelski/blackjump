@@ -77,7 +77,10 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                         props.gameConfig.casinoRules,
                         SimpleCardSymbol.Six
                     );
-                } else if (props.gameConfig.untrainedPairsPriority) {
+                } else if (
+                    props.gameConfig.untrainedPairsPriority ||
+                    props.gameConfig.selectedHandsOnly
+                ) {
                     const trainingPair = getUntrainedTrainingPair(
                         props.trainingHands,
                         props.trainingProgress,

@@ -17,7 +17,6 @@ import {
     warningColor
 } from '../constants';
 import { getTrainingHands } from '../logic/training-hand';
-import { getTrainingPairsNumber } from '../logic/training-pair';
 import { getDefaultTrainingStatus, getIsProgressBlocked } from '../logic/training-status';
 import {
     AppNavigation,
@@ -60,40 +59,33 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     );
     const [isProgressBlocked, setIsProgressBlocked] = useState(props.isProgressBlocked);
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
+    const [selectedHands, setSelectedHands] = useState(props.gameConfig.selectedHands);
+    const [selectedHandsOnly, setSelectedHandsOnly] = useState(props.gameConfig.selectedHandsOnly);
     const [trainingHands, setTrainingHands] = useState(props.trainingHands);
-    const [trainingPairsNumber, setTrainingPairsNumber] = useState(
-        getTrainingPairsNumber(props.trainingHands, props.gameConfig.untrainedPairsHands)
-    );
-    const [untrainedPairsHands, setUntrainedPairsHands] = useState(
-        props.gameConfig.untrainedPairsHands
-    );
     const [untrainedPairsPriority, setUntrainedPairsPriority] = useState(
         props.gameConfig.untrainedPairsPriority
     );
 
-    const isSomeHandSelected = (selectedHands: SelectedHands) =>
-        Object.values(selectedHands).some((x) => x);
+    const isSomeHandSelected = (_selectedHandsOnly: boolean, _selectedHands: SelectedHands) =>
+        !_selectedHandsOnly || Object.values(_selectedHands).some((x) => x);
 
-    const isProgressBlockedHandler = (options?: {
-        nextCasinoRules?: CasinoRules;
-        nextHands?: SelectedHands;
+    const isProgressBlockedHandler = (options: {
+        nextSelectedHands?: SelectedHands;
+        nextSelectedHandsOnly?: boolean;
         nextTrainingHands?: TrainingHands;
-        nextUntrainedPairsPriority?: boolean;
     }) => {
+        const _selectedHandsOnly =
+            options.nextSelectedHandsOnly !== undefined
+                ? options.nextSelectedHandsOnly
+                : selectedHandsOnly;
+        const _selectedHands = options.nextSelectedHands || selectedHands;
+
         setIsProgressBlocked(
-            isSomeHandSelected((options && options.nextHands) || untrainedPairsHands) &&
+            _selectedHandsOnly &&
+                isSomeHandSelected(_selectedHandsOnly, _selectedHands) &&
                 getIsProgressBlocked(
-                    {
-                        casinoRules: (options && options.nextCasinoRules) || casinoRules,
-                        isDealerAnimationEnabled,
-                        isSoundEnabled,
-                        untrainedPairsHands: (options && options.nextHands) || untrainedPairsHands,
-                        untrainedPairsPriority:
-                            options && options.nextUntrainedPairsPriority !== undefined
-                                ? options.nextUntrainedPairsPriority
-                                : untrainedPairsPriority
-                    },
-                    (options && options.nextTrainingHands) || trainingHands,
+                    _selectedHands,
+                    options.nextTrainingHands || trainingHands,
                     props.trainingStatus.trainingProgress,
                     props.progress
                 )
@@ -102,14 +94,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
     const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
         const nextTrainingHands = getTrainingHands(nextCasinoRules);
-        const nextTrainingPairsNumber = getTrainingPairsNumber(
-            nextTrainingHands,
-            untrainedPairsHands
-        );
-
-        setTrainingPairsNumber(nextTrainingPairsNumber);
         setTrainingHands(nextTrainingHands);
-        isProgressBlockedHandler({ nextCasinoRules, nextTrainingHands });
     };
 
     const saveHandler = () => {
@@ -117,7 +102,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
             casinoRules,
             isDealerAnimationEnabled,
             isSoundEnabled,
-            untrainedPairsHands,
+            selectedHands,
+            selectedHandsOnly,
             untrainedPairsPriority
         };
         props.setGameConfig(nextGameConfig);
@@ -126,6 +112,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const isSaveButtonEnabled =
+        isSomeHandSelected(selectedHandsOnly, selectedHands) &&
         (props.gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] !==
             casinoRules[CasinoRulesKeys.blackjackPeek] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.dealerHitsSoft17] !==
@@ -144,11 +131,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 casinoRules[CasinoRulesKeys.surrender] ||
             props.gameConfig.isDealerAnimationEnabled !== isDealerAnimationEnabled ||
             props.gameConfig.isSoundEnabled !== isSoundEnabled ||
-            getObjectKeys(props.gameConfig.untrainedPairsHands).some(
-                (key) => props.gameConfig.untrainedPairsHands[key] !== untrainedPairsHands[key]
+            getObjectKeys(props.gameConfig.selectedHands).some(
+                (key) => props.gameConfig.selectedHands[key] !== selectedHands[key]
             ) ||
-            props.gameConfig.untrainedPairsPriority !== untrainedPairsPriority) &&
-        isSomeHandSelected(untrainedPairsHands);
+            props.gameConfig.selectedHandsOnly !== selectedHandsOnly ||
+            props.gameConfig.untrainedPairsPriority !== untrainedPairsPriority);
 
     return (
         <ScrollView
@@ -196,8 +183,8 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             paddingTop: 16
                         }}
                     >
-                        ⚠️ Selected hands are blocking untrained pairs. Modify the selection or
-                        disable Untrained pairs priority to train the missing pairs
+                        ⚠️ Selected hands are blocking progress. Modify the selection or disable
+                        Selected hands to complete your training
                     </Text>
                 )}
             </OnBoardingSection>
@@ -339,106 +326,95 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     </Text>
                 </View>
 
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        paddingTop: 16,
-                        width: '100%'
-                    }}
-                >
-                    <View style={{ width: '15%' }}>
-                        <Switch
-                            onValueChange={(value) => {
-                                setUntrainedPairsPriority(value);
-                                isProgressBlockedHandler({
-                                    nextUntrainedPairsPriority: value
-                                });
-                            }}
-                            style={{ marginRight: 8 }}
-                            trackColor={{ true: hitColor, false: 'white' }}
-                            value={untrainedPairsPriority}
-                        />
-                    </View>
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={setUntrainedPairsPriority}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={untrainedPairsPriority}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
+                        }}
+                    >
+                        Untrained pairs priority
+                    </Text>
+                    <HelpIcon
+                        onPress={() => {
+                            props.navigation.navigate(RouteNames.untrainedPairsPriority);
+                        }}
+                    />
+                </View>
 
-                    <View style={{ width: '85%' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text
-                                style={{
-                                    color: isProgressBlocked ? warningColor : 'white',
-                                    fontSize: 20
-                                }}
-                            >
-                                Untrained pairs priority
-                            </Text>
-                            <HelpIcon
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <Switch
+                        onValueChange={(value) => {
+                            setSelectedHandsOnly(value);
+                            isProgressBlockedHandler({
+                                nextSelectedHandsOnly: value
+                            });
+                        }}
+                        style={{ marginRight: 8 }}
+                        trackColor={{ true: hitColor, false: 'white' }}
+                        value={selectedHandsOnly}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: 20
+                        }}
+                    >
+                        Selected hands only
+                    </Text>
+                </View>
+
+                {selectedHandsOnly && (
+                    <View
+                        style={{
+                            borderLeftColor: 'white',
+                            borderLeftWidth: 2,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            marginLeft: 16,
+                            marginTop: 16
+                        }}
+                    >
+                        {Object.values(trainingHands).map((trainingHand) => (
+                            <TouchableOpacity
+                                key={trainingHand.name}
                                 onPress={() => {
-                                    props.navigation.navigate(RouteNames.untrainedPairsPriority);
+                                    const nextSelectedHands = {
+                                        ...selectedHands,
+                                        [trainingHand.code]: !selectedHands[trainingHand.code]
+                                    };
+                                    setSelectedHands(nextSelectedHands);
+                                    isProgressBlockedHandler({
+                                        nextSelectedHands
+                                    });
                                 }}
-                            />
-                        </View>
-
-                        {untrainedPairsPriority && (
-                            <View
                                 style={{
-                                    marginTop: 16
+                                    alignItems: 'center',
+                                    backgroundColor: selectedHands[trainingHand.code]
+                                        ? standColor
+                                        : undefined,
+                                    paddingVertical: 4,
+                                    width: '33.33%'
                                 }}
                             >
-                                <View
+                                <Text
                                     style={{
-                                        flexBasis: '100%',
-                                        flexDirection: 'row',
-                                        flexWrap: 'wrap',
-                                        marginTop: 16
+                                        color: 'white',
+                                        fontSize: 20
                                     }}
                                 >
-                                    {Object.values(trainingHands).map((trainingHand) => (
-                                        <TouchableOpacity
-                                            key={trainingHand.name}
-                                            onPress={() => {
-                                                const nextHands = {
-                                                    ...untrainedPairsHands,
-                                                    [trainingHand.code]: !untrainedPairsHands[
-                                                        trainingHand.code
-                                                    ]
-                                                };
-                                                setUntrainedPairsHands(nextHands);
-                                                setTrainingPairsNumber(
-                                                    getTrainingPairsNumber(trainingHands, nextHands)
-                                                );
-                                                isProgressBlockedHandler({
-                                                    nextHands
-                                                });
-                                            }}
-                                            style={{
-                                                alignItems: 'center',
-                                                backgroundColor: untrainedPairsHands[
-                                                    trainingHand.code
-                                                ]
-                                                    ? standColor
-                                                    : undefined,
-                                                paddingVertical: 4,
-                                                width: '32.33%'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: 20
-                                                }}
-                                            >
-                                                {trainingHand.name}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-
-                                <Text style={{ ...textStyle, marginTop: 16, textAlign: 'center' }}>
-                                    ({trainingPairsNumber} training pairs)
+                                    {trainingHand.name}
                                 </Text>
-                            </View>
-                        )}
+                            </TouchableOpacity>
+                        ))}
                     </View>
-                </View>
+                )}
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
@@ -466,6 +442,19 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     paddingTop: 24
                 }}
             >
+                {!isSomeHandSelected(selectedHandsOnly, selectedHands) && (
+                    <Text
+                        style={{
+                            color: warningColor,
+                            fontSize: 20,
+                            fontStyle: 'italic',
+                            paddingBottom: 16
+                        }}
+                    >
+                        Some hand must be selected to save the changes
+                    </Text>
+                )}
+
                 <Button
                     height={56}
                     backgroundColor={hitColor}

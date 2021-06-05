@@ -1,6 +1,6 @@
 import {
-    GameConfig,
     HandCode,
+    SelectedHands,
     SimpleCardSymbol,
     TrainingHands,
     TrainingHandStatus,
@@ -34,16 +34,13 @@ export const getDefaultTrainingStatus = (): TrainingStatus => ({
 });
 
 export const getIsProgressBlocked = (
-    gameConfig: GameConfig,
+    selectedHands: SelectedHands,
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress,
     progress: number
 ) =>
-    gameConfig.untrainedPairsPriority
-        ? progress < 100 &&
-          getUntrainedTrainingHands(trainingHands, trainingProgress, gameConfig.untrainedPairsHands)
-              .length === 0
-        : false;
+    progress < 100 &&
+    getUntrainedTrainingHands(trainingHands, trainingProgress, selectedHands).length === 0;
 
 export const isTrainingCompleted = (passedTrainingPairs: number) =>
     passedTrainingPairs === allTrainingPairsNumber;

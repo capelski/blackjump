@@ -6,7 +6,8 @@ export interface GameConfig {
     casinoRules: CasinoRules;
     isDealerAnimationEnabled: boolean;
     isSoundEnabled: boolean;
-    untrainedPairsHands: SelectedHands;
+    selectedHands: SelectedHands;
+    selectedHandsOnly: boolean;
     untrainedPairsPriority: boolean;
 }
 

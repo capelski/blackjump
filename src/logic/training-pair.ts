@@ -2,7 +2,6 @@ import {
     CasinoRules,
     GameConfig,
     HandCode,
-    SelectedHands,
     SimpleCardSymbol,
     TrainingHands,
     TrainingPair,
@@ -11,7 +10,7 @@ import {
 import { getObjectKeys, getRandomItem } from '../utils';
 import { allDealerSymbols, getUntrainedDealerSymbols } from './dealer-symbols';
 import { createDealerHand, handCodeToHand } from './hand';
-import { getActiveTrainingHands, getUntrainedTrainingHands } from './training-hand';
+import { getSelectedTrainingHands, getUntrainedTrainingHands } from './training-hand';
 
 export const allTrainingPairsNumber = allDealerSymbols.length * Object.keys(HandCode).length;
 
@@ -26,11 +25,6 @@ export const getSpecificTrainingPair = (
     };
 };
 
-export const getTrainingPairsNumber = (
-    trainingHands: TrainingHands,
-    selectedHands: SelectedHands
-) => allDealerSymbols.length * getActiveTrainingHands(trainingHands, selectedHands).length;
-
 export const getUntrainedTrainingPair = (
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress,
@@ -39,13 +33,18 @@ export const getUntrainedTrainingPair = (
     const untrainedTrainingHands = getUntrainedTrainingHands(
         trainingHands,
         trainingProgress,
-        gameConfig.untrainedPairsHands
+        gameConfig.selectedHandsOnly ? gameConfig.selectedHands : undefined
     );
 
     const randomTrainingHand =
         untrainedTrainingHands.length > 0
             ? getRandomItem(untrainedTrainingHands)
-            : getRandomItem(getActiveTrainingHands(trainingHands, gameConfig.untrainedPairsHands)); // In case all hands have been passed
+            : getRandomItem(
+                  getSelectedTrainingHands(
+                      trainingHands,
+                      gameConfig.selectedHandsOnly ? gameConfig.selectedHands : undefined
+                  )
+              ); // In case all hands have been passed
 
     const trainingHandStatus = trainingProgress[randomTrainingHand.code];
     const untrainedDealerSymbols = getUntrainedDealerSymbols(trainingHandStatus);

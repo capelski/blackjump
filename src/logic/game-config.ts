@@ -5,9 +5,10 @@ export const getDefaultGameConfig = (): GameConfig => ({
     casinoRules: getDefaultCasinoRules(),
     isDealerAnimationEnabled: true,
     isSoundEnabled: true,
-    untrainedPairsHands: Object.values(HandCode).reduce(
+    selectedHands: Object.values(HandCode).reduce(
         (hands, handCode) => ({ ...hands, [handCode]: true }),
         {}
     ) as Dictionary<boolean, HandCode>,
+    selectedHandsOnly: false,
     untrainedPairsPriority: false
 });

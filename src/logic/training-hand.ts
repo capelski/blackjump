@@ -10,12 +10,15 @@ import { getDefaultCasinoRules } from './casino-rules';
 import { getUntrainedDealerSymbols } from './dealer-symbols';
 import { handDecisionSetGetters } from './hand-decision-set';
 
-export const getActiveTrainingHands = (
-    trainingHands: TrainingHands,
-    selectedHands: SelectedHands
-) => Object.values(trainingHands).filter((hand) => selectedHands[hand.code]);
-
 export const getDefaultTrainingHands = () => getTrainingHands(getDefaultCasinoRules());
+
+export const getSelectedTrainingHands = (
+    trainingHands: TrainingHands,
+    selectedHands?: SelectedHands
+) =>
+    selectedHands
+        ? Object.values(trainingHands).filter((hand) => selectedHands[hand.code])
+        : Object.values(trainingHands);
 
 export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
     [HandCode.Split2s]: {
@@ -267,8 +270,8 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
 export const getUntrainedTrainingHands = (
     trainingHands: TrainingHands,
     trainingProgress: TrainingProgress,
-    selectedHands: SelectedHands
+    selectedHands?: SelectedHands
 ) =>
-    getActiveTrainingHands(trainingHands, selectedHands).filter(
+    getSelectedTrainingHands(trainingHands, selectedHands).filter(
         (trainingHand) => getUntrainedDealerSymbols(trainingProgress[trainingHand.code]).length > 0
     );

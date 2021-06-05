@@ -119,35 +119,42 @@ export default function App() {
             getTrainingProgress(),
             initializeSounds()
         ]).then((results) => {
-            setGameConfig(results[0]);
-            const nextTrainingHands = getTrainingHands(results[0].casinoRules);
+            const _gameConfig = results[0];
+            const hasCompletedOnboarding = results[1];
+            const playerEarnings = results[2];
+            const trainingProgress = results[3];
+            const _sounds = results[4];
+
+            setGameConfig(_gameConfig);
+            const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
             setTrainingHands(nextTrainingHands);
 
-            if (!results[1]) {
+            if (!hasCompletedOnboarding) {
                 ((navigationRef.current as unknown) as AppNavigation).navigate(
                     RouteNames.onboarding
                 );
             }
 
-            if (results[2]) {
-                setPlayer({ ...player, cash: results[2] });
+            if (playerEarnings) {
+                setPlayer({ ...player, cash: playerEarnings });
             }
 
-            if (results[3]) {
-                const nextTrainingStatus = retrieveTrainingStatus(results[3]);
+            if (trainingProgress) {
+                const nextTrainingStatus = retrieveTrainingStatus(trainingProgress);
 
                 setTrainingStatus(nextTrainingStatus);
                 setIsProgressBlocked(
-                    getIsProgressBlocked(
-                        results[0],
-                        nextTrainingHands,
-                        results[3],
-                        getProgress(nextTrainingStatus)
-                    )
+                    _gameConfig.selectedHandsOnly &&
+                        getIsProgressBlocked(
+                            _gameConfig.selectedHands,
+                            nextTrainingHands,
+                            trainingProgress,
+                            getProgress(nextTrainingStatus)
+                        )
                 );
             }
 
-            setSounds(results[4]);
+            setSounds(_sounds);
         });
     }, []);
 
@@ -326,12 +333,13 @@ export default function App() {
         }
 
         setIsProgressBlocked(
-            getIsProgressBlocked(
-                gameConfig,
-                trainingHands,
-                nextTrainingStatus.trainingProgress,
-                getProgress(nextTrainingStatus)
-            )
+            gameConfig.selectedHandsOnly &&
+                getIsProgressBlocked(
+                    gameConfig.selectedHands,
+                    trainingHands,
+                    nextTrainingStatus.trainingProgress,
+                    getProgress(nextTrainingStatus)
+                )
         );
     };
 
@@ -430,12 +438,13 @@ export default function App() {
                             setGameConfig={(_gameConfig) => {
                                 const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
                                 setIsProgressBlocked(
-                                    getIsProgressBlocked(
-                                        _gameConfig,
-                                        nextTrainingHands,
-                                        trainingStatus.trainingProgress,
-                                        progress
-                                    )
+                                    _gameConfig.selectedHandsOnly &&
+                                        getIsProgressBlocked(
+                                            _gameConfig.selectedHands,
+                                            nextTrainingHands,
+                                            trainingStatus.trainingProgress,
+                                            progress
+                                        )
                                 );
                                 setGameConfig(_gameConfig);
                                 setTrainingHands(nextTrainingHands);
@@ -443,12 +452,13 @@ export default function App() {
                             setTrainingStatus={(_trainingStatus) => {
                                 setTrainingStatus(_trainingStatus);
                                 setIsProgressBlocked(
-                                    getIsProgressBlocked(
-                                        gameConfig,
-                                        trainingHands,
-                                        _trainingStatus.trainingProgress,
-                                        getProgress(_trainingStatus)
-                                    )
+                                    gameConfig.selectedHandsOnly &&
+                                        getIsProgressBlocked(
+                                            gameConfig.selectedHands,
+                                            trainingHands,
+                                            _trainingStatus.trainingProgress,
+                                            getProgress(_trainingStatus)
+                                        )
                                 );
                                 setPlayer({ ...player, cash: 0 });
                             }}
