@@ -1,12 +1,13 @@
 import { CasinoRules } from './casino-rules';
-import { NumericDictionary } from './dictionary';
+import { Dictionary } from './dictionary';
+import { HandCode } from './hand';
 
 export interface GameConfig {
     casinoRules: CasinoRules;
     isDealerAnimationEnabled: boolean;
     isSoundEnabled: boolean;
-    untrainedPairsHandLevels: HandLevels;
+    untrainedPairsHands: SelectedHands;
     untrainedPairsPriority: boolean;
 }
 
-export type HandLevels = NumericDictionary<boolean>;
+export type SelectedHands = Dictionary<boolean, HandCode>;

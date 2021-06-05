@@ -10,7 +10,6 @@ export enum RouteNames {
     basicStrategyTable = 'basicStrategyTable',
     configMenu = 'configMenu',
     handDecisions = 'handDecisions',
-    handLevel = 'handLevel',
     missedPairs = 'missedPairs',
     onboarding = 'onboarding',
     table = 'table',
@@ -27,7 +26,6 @@ export type RouteParams = {
     [RouteNames.handDecisions]: {
         trainingHand: TrainingHand;
     };
-    [RouteNames.handLevel]: undefined;
     [RouteNames.missedPairs]: undefined;
     [RouteNames.onboarding]: undefined;
     [RouteNames.table]: undefined;

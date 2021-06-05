@@ -41,11 +41,8 @@ export const getIsProgressBlocked = (
 ) =>
     gameConfig.untrainedPairsPriority
         ? progress < 100 &&
-          getUntrainedTrainingHands(
-              trainingHands,
-              trainingProgress,
-              gameConfig.untrainedPairsHandLevels
-          ).length === 0
+          getUntrainedTrainingHands(trainingHands, trainingProgress, gameConfig.untrainedPairsHands)
+              .length === 0
         : false;
 
 export const isTrainingCompleted = (passedTrainingPairs: number) =>

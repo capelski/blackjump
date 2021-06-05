@@ -2,7 +2,7 @@ import {
     CasinoRules,
     GameConfig,
     HandCode,
-    HandLevels,
+    SelectedHands,
     SimpleCardSymbol,
     TrainingHands,
     TrainingPair,
@@ -26,8 +26,10 @@ export const getSpecificTrainingPair = (
     };
 };
 
-export const getTrainingPairsNumber = (trainingHands: TrainingHands, handLevels: HandLevels) =>
-    allDealerSymbols.length * getActiveTrainingHands(trainingHands, handLevels).length;
+export const getTrainingPairsNumber = (
+    trainingHands: TrainingHands,
+    selectedHands: SelectedHands
+) => allDealerSymbols.length * getActiveTrainingHands(trainingHands, selectedHands).length;
 
 export const getUntrainedTrainingPair = (
     trainingHands: TrainingHands,
@@ -37,15 +39,13 @@ export const getUntrainedTrainingPair = (
     const untrainedTrainingHands = getUntrainedTrainingHands(
         trainingHands,
         trainingProgress,
-        gameConfig.untrainedPairsHandLevels
+        gameConfig.untrainedPairsHands
     );
 
     const randomTrainingHand =
         untrainedTrainingHands.length > 0
             ? getRandomItem(untrainedTrainingHands)
-            : getRandomItem(
-                  getActiveTrainingHands(trainingHands, gameConfig.untrainedPairsHandLevels)
-              ); // In case all hands have been passed
+            : getRandomItem(getActiveTrainingHands(trainingHands, gameConfig.untrainedPairsHands)); // In case all hands have been passed
 
     const trainingHandStatus = trainingProgress[randomTrainingHand.code];
     const untrainedDealerSymbols = getUntrainedDealerSymbols(trainingHandStatus);

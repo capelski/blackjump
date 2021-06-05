@@ -9,7 +9,6 @@ export interface TrainingHand {
     code: HandCode;
     decisionSet: HandDecisionSet;
     dependencies: CasinoRulesKeys[];
-    level: number;
     name: string;
 }
 

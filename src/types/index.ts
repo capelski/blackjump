@@ -17,8 +17,8 @@ export {
     PlayerDecision,
     PlayerDecisions
 } from './decisions';
-export { Dictionary, NumericDictionary } from './dictionary';
-export { GameConfig, HandLevels } from './game-config';
+export { Dictionary } from './dictionary';
+export { GameConfig, SelectedHands } from './game-config';
 export { Hand, HandCode, HandOutcome } from './hand';
 export { HandDecisionSet, HandDecisionSetGetters } from './hand-decision-set';
 export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';

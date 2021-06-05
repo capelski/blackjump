@@ -4,7 +4,7 @@ import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
 import { SplitsNumberPicker } from '../components/casino-rules/splits-number-picker';
 import { HandDecisionsTable } from '../components/hand-decisions-table';
-import { getHandDecisionSetLevel, handDecisionSetGetters } from '../logic/hand-decision-set';
+import { getHandRangesNumber, handDecisionSetGetters } from '../logic/hand-decision-set';
 import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames } from '../types';
 
 type HandDecisionsProps = {
@@ -41,11 +41,10 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
                 <Text
                     style={{
                         color: 'white',
-                        fontSize: 20,
-                        fontStyle: 'italic'
+                        fontSize: 20
                     }}
                 >
-                    Level {getHandDecisionSetLevel(handDecisionSet)}
+                    Ranges: {getHandRangesNumber(handDecisionSet)}
                 </Text>
             </View>
 

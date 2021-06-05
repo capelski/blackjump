@@ -75,10 +75,10 @@ export const getGameConfig = (currentGameConfig: GameConfig) =>
                     storedGameConfig && storedGameConfig.isSoundEnabled !== undefined
                         ? storedGameConfig.isSoundEnabled
                         : currentGameConfig.isSoundEnabled,
-                untrainedPairsHandLevels:
-                    storedGameConfig && storedGameConfig.untrainedPairsHandLevels !== undefined
-                        ? storedGameConfig.untrainedPairsHandLevels
-                        : currentGameConfig.untrainedPairsHandLevels,
+                untrainedPairsHands:
+                    storedGameConfig && storedGameConfig.untrainedPairsHands !== undefined
+                        ? storedGameConfig.untrainedPairsHands
+                        : currentGameConfig.untrainedPairsHands,
                 untrainedPairsPriority:
                     storedGameConfig && storedGameConfig.untrainedPairsPriority !== undefined
                         ? storedGameConfig.untrainedPairsPriority

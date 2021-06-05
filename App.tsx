@@ -72,7 +72,6 @@ import { playSound } from './src/utils';
 import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { ConfigMenu } from './src/views/config-menu';
 import { HandDecisions } from './src/views/hand-decisions';
-import { HandLevel } from './src/views/hand-level';
 import { MissedPairs } from './src/views/missed-pairs';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
@@ -462,9 +461,6 @@ export default function App() {
                     {(props) => (
                         <HandDecisions casinoRules={gameConfig.casinoRules} route={props.route} />
                     )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.handLevel}>
-                    {(props) => <HandLevel gameConfig={gameConfig} navigation={props.navigation} />}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.missedPairs}>
                     {(props) => (

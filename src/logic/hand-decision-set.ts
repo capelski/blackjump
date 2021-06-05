@@ -36,21 +36,21 @@ const alwaysStand: HandDecisionSet = {
     [SimpleCardSymbol.Ace]: BaseDecisions.stand
 };
 
-export const getHandDecisionSetLevel = (decisionSet: HandDecisionSet) =>
+export const getHandRangesNumber = (decisionSet: HandDecisionSet) =>
     Object.values(decisionSet).reduce<{
         previousValue: string;
-        level: number;
+        ranges: number;
     }>(
         (reduced, next) => {
             return reduced.previousValue === next
                 ? reduced
-                : { previousValue: next, level: reduced.level + 1 };
+                : { previousValue: next, ranges: reduced.ranges + 1 };
         },
         {
             previousValue: '',
-            level: 0
+            ranges: 0
         }
-    ).level;
+    ).ranges;
 
 export const handDecisionSetGetters: HandDecisionSetGetters = {
     [HandCode.Split2s]: (casinoRules) => ({
