@@ -267,15 +267,22 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     />
 
                     <View>
-                        {/* TODO Create a help icon on Hole card */}
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontSize: 20
-                            }}
-                        >
-                            {CasinoRulesKeys.holeCard}
-                        </Text>
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 20
+                                }}
+                            >
+                                {CasinoRulesKeys.holeCard}
+                            </Text>
+
+                            <HelpIcon
+                                onPress={() => {
+                                    props.navigation.navigate(RouteNames.holeCard);
+                                }}
+                            />
+                        </View>
 
                         <RuleSwitcher
                             casinoRules={casinoRules}

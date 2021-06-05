@@ -73,6 +73,7 @@ import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { ConfigMenu } from './src/views/config-menu';
 import { HandDecisions } from './src/views/hand-decisions';
 import { HitSplitAces } from './src/views/hit-split-aces';
+import { HoleCard } from './src/views/hole-card';
 import { MissedPairs } from './src/views/missed-pairs';
 import { Onboarding } from './src/views/onboarding';
 import { Table } from './src/views/table';
@@ -474,6 +475,7 @@ export default function App() {
                     )}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.hitSplitAces} component={HitSplitAces} />
+                <Stack.Screen name={RouteNames.holeCard} component={HoleCard} />
                 <Stack.Screen name={RouteNames.missedPairs}>
                     {(props) => (
                         <MissedPairs
