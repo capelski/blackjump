@@ -5,8 +5,10 @@ import { CasinoRules, CasinoRulesKeys } from '../../types';
 
 interface RuleSwitcherProps {
     casinoRules: CasinoRules;
+    fullWidth?: boolean;
     hideLabel?: boolean;
     isDisabled?: boolean;
+    paddingTop?: number;
     onValueChange?: (nextCasinoRules: CasinoRules) => void;
     ruleName:
         | CasinoRulesKeys.blackjackPeek
@@ -49,8 +51,8 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
             style={{
                 flexDirection: 'row',
                 opacity: props.isDisabled ? 0.3 : undefined,
-                paddingTop: 16,
-                width: '100%'
+                paddingTop: props.paddingTop !== undefined ? props.paddingTop : 16,
+                width: props.fullWidth === undefined || props.fullWidth ? '100%' : undefined
             }}
         >
             {SwitchCore}

@@ -10,6 +10,7 @@ export enum RouteNames {
     basicStrategyTable = 'basicStrategyTable',
     configMenu = 'configMenu',
     handDecisions = 'handDecisions',
+    hitSplitAces = 'hitSplitAces',
     missedPairs = 'missedPairs',
     onboarding = 'onboarding',
     table = 'table',
@@ -23,6 +24,7 @@ export const initialRouteName = RouteNames.table;
 export type RouteParams = {
     [RouteNames.basicStrategyTable]: undefined;
     [RouteNames.configMenu]: undefined;
+    [RouteNames.hitSplitAces]: undefined;
     [RouteNames.handDecisions]: {
         trainingHand: TrainingHand;
     };

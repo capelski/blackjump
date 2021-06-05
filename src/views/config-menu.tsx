@@ -233,14 +233,22 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     setCasinoRules={setCasinoRules}
                 />
 
-                {/* TODO Create a help icon on Hit split aces */}
-                <RuleSwitcher
-                    casinoRules={casinoRules}
-                    isDisabled={casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none}
-                    onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.hitSplitAces}
-                    setCasinoRules={setCasinoRules}
-                />
+                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
+                    <RuleSwitcher
+                        casinoRules={casinoRules}
+                        fullWidth={false}
+                        isDisabled={casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none}
+                        onValueChange={casinoRuleChangeHandler}
+                        paddingTop={0}
+                        ruleName={CasinoRulesKeys.hitSplitAces}
+                        setCasinoRules={setCasinoRules}
+                    />
+                    <HelpIcon
+                        onPress={() => {
+                            props.navigation.navigate(RouteNames.hitSplitAces);
+                        }}
+                    />
+                </View>
 
                 <View
                     style={{
