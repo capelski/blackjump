@@ -16,7 +16,7 @@ import {
 import { NavBar } from './src/components/nav-bar';
 import { OnboardingBar } from './src/components/onboarding-bar';
 import { tableColor } from './src/constants';
-import { getNextTrainingStatus, handleDealerTurn } from './src/logic/app-state';
+import { handleDealerTurn } from './src/logic/app-state';
 import { evaluateDecision } from './src/logic/basic-strategy';
 import { getRandomCard, symbolToSimpleSymbol } from './src/logic/card';
 import { getDefaultGameConfig } from './src/logic/game-config';
@@ -48,6 +48,7 @@ import { getDefaultTrainingHands, getTrainingHands } from './src/logic/training-
 import {
     getDefaultTrainingStatus,
     getIsProgressBlocked,
+    getNextTrainingStatus,
     retrieveTrainingStatus
 } from './src/logic/training-status';
 import {
