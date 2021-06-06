@@ -8,6 +8,7 @@ import {
     Phases,
     Player,
     SimpleCardSymbol,
+    TrainingHands,
     TrainingPairRepresentation,
     TrainingPairStatus,
     TrainingStatus
@@ -21,7 +22,7 @@ import {
     revealDealerHoleCard
 } from './hand';
 import { resolveHands } from './player';
-import { isTrainingCompleted } from './training-status';
+import { getIsProgressBlocked, isTrainingCompleted } from './training-status';
 
 export const handleDealerTurn = (
     dealerHand: Hand,
@@ -88,6 +89,8 @@ const getNextMissedTrainingPairs = (
 
 export const getNextTrainingStatus = (
     trainingStatus: TrainingStatus,
+    trainingHands: TrainingHands,
+    gameConfig: GameConfig,
     isHit: boolean,
     currentHandCode: HandCode,
     currentDealerSymbol: SimpleCardSymbol
@@ -120,13 +123,23 @@ export const getNextTrainingStatus = (
             ? -1
             : 0);
 
-    return {
+    const nextTrainingStatus = {
         attemptedTrainingPairs: nextAttemptedTrainingPairs,
         isCompleted: isTrainingCompleted(nextPassedTrainingHands),
+        isProgressBlocked: false,
         missedTrainingPairs: nextMissedTrainingPairs,
         passedTrainingPairs: nextPassedTrainingHands,
         trainingProgress: trainingStatus.trainingProgress
     };
+
+    nextTrainingStatus.isProgressBlocked = getIsProgressBlocked(
+        nextTrainingStatus,
+        trainingHands,
+        gameConfig.selectedHandsOnly,
+        gameConfig.selectedHands
+    );
+
+    return nextTrainingStatus;
 };
 
 const mustDealerDraw = (dealerHand: Hand, casinoRules: CasinoRules) => {

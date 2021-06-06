@@ -45,7 +45,6 @@ import {
     surrenderCurrentHand
 } from './src/logic/player';
 import { getDefaultTrainingHands, getTrainingHands } from './src/logic/training-hand';
-import { allTrainingPairsNumber } from './src/logic/training-pair';
 import {
     getDefaultTrainingStatus,
     getIsProgressBlocked,
@@ -102,7 +101,6 @@ export default function App() {
     const [decisionEvaluation, setDecisionEvaluation] = useState<DecisionEvaluation>();
     const [decisionEvaluationTimeout, setDecisionEvaluationTimeout] = useState(0);
     const [gameConfig, setGameConfig] = useState(getDefaultGameConfig());
-    const [isProgressBlocked, setIsProgressBlocked] = useState(false);
     const [onBoardingStep, setOnBoardingStep] = useState(-1);
     const [peeking, setPeeking] = useState(false);
     const [phase, setPhase] = useState<Phases>(Phases.finished);
@@ -142,18 +140,12 @@ export default function App() {
             }
 
             if (trainingProgress) {
-                const nextTrainingStatus = retrieveTrainingStatus(trainingProgress);
-
-                setTrainingStatus(nextTrainingStatus);
-                setIsProgressBlocked(
-                    _gameConfig.selectedHandsOnly &&
-                        getIsProgressBlocked(
-                            _gameConfig.selectedHands,
-                            nextTrainingHands,
-                            trainingProgress,
-                            getProgress(nextTrainingStatus)
-                        )
+                const nextTrainingStatus = retrieveTrainingStatus(
+                    trainingProgress,
+                    nextTrainingHands,
+                    _gameConfig
                 );
+                setTrainingStatus(nextTrainingStatus);
             }
 
             setSounds(_sounds);
@@ -193,10 +185,6 @@ export default function App() {
         updateHasCompletedOnboarding(true);
         ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
     };
-
-    const getProgress = (_trainingStatus: TrainingStatus) =>
-        Math.floor((_trainingStatus.attemptedTrainingPairs * 1000) / allTrainingPairsNumber) / 10;
-    const progress = getProgress(trainingStatus);
 
     useEffect(() => {
         if (decisionEvaluationTimeout) {
@@ -297,6 +285,8 @@ export default function App() {
         const handCode = handToHandCode(currentHand);
         let nextTrainingStatus = getNextTrainingStatus(
             trainingStatus,
+            trainingHands,
+            gameConfig,
             nextDecisionEvaluation.isHit,
             handCode,
             currentDealerSymbol!
@@ -306,6 +296,8 @@ export default function App() {
             // A 5,5 must also set the corresponding state for Hard 10
             nextTrainingStatus = getNextTrainingStatus(
                 nextTrainingStatus,
+                trainingHands,
+                gameConfig,
                 nextDecisionEvaluation.isHit,
                 HandCode.Hard10,
                 currentDealerSymbol!
@@ -314,6 +306,8 @@ export default function App() {
             // A 10,10 must also set the corresponding state for Hard 20
             nextTrainingStatus = getNextTrainingStatus(
                 nextTrainingStatus,
+                trainingHands,
+                gameConfig,
                 nextDecisionEvaluation.isHit,
                 HandCode.Hard20,
                 currentDealerSymbol!
@@ -333,16 +327,6 @@ export default function App() {
         if (nextTrainingStatus.isCompleted && !trainingStatus.isCompleted) {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
         }
-
-        setIsProgressBlocked(
-            gameConfig.selectedHandsOnly &&
-                getIsProgressBlocked(
-                    gameConfig.selectedHands,
-                    trainingHands,
-                    nextTrainingStatus.trainingProgress,
-                    getProgress(nextTrainingStatus)
-                )
-        );
     };
 
     const doubleHandler = () => {
@@ -407,14 +391,11 @@ export default function App() {
         <NavigationContainer ref={navigationRef}>
             <StatusBar hidden={true} />
             <NavBar
-                attemptedTrainingPairs={trainingStatus.attemptedTrainingPairs}
-                isProgressBlocked={isProgressBlocked}
                 navigation={(navigationRef.current as unknown) as AppNavigation}
                 onBoardingStep={onBoardingStep}
-                passedTrainingPairs={trainingStatus.passedTrainingPairs}
                 player={player}
-                progress={progress}
                 routeName={currentRoute}
+                trainingStatus={trainingStatus}
             />
             <Stack.Navigator
                 initialRouteName={initialRouteName}
@@ -432,36 +413,27 @@ export default function App() {
                     {(props) => (
                         <ConfigMenu
                             gameConfig={gameConfig}
-                            isProgressBlocked={isProgressBlocked}
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
-                            progress={progress}
                             setGameConfig={(_gameConfig) => {
                                 const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
-                                setIsProgressBlocked(
-                                    _gameConfig.selectedHandsOnly &&
-                                        getIsProgressBlocked(
-                                            _gameConfig.selectedHands,
-                                            nextTrainingHands,
-                                            trainingStatus.trainingProgress,
-                                            progress
-                                        )
-                                );
+                                const nextTrainingStatus: TrainingStatus = {
+                                    ...trainingStatus,
+                                    isProgressBlocked: getIsProgressBlocked(
+                                        trainingStatus,
+                                        trainingHands,
+                                        _gameConfig.selectedHandsOnly,
+                                        _gameConfig.selectedHands
+                                    )
+                                };
+
                                 setGameConfig(_gameConfig);
                                 setTrainingHands(nextTrainingHands);
+                                setTrainingStatus(nextTrainingStatus);
                             }}
                             setTrainingStatus={(_trainingStatus) => {
                                 setTrainingStatus(_trainingStatus);
-                                setIsProgressBlocked(
-                                    gameConfig.selectedHandsOnly &&
-                                        getIsProgressBlocked(
-                                            gameConfig.selectedHands,
-                                            trainingHands,
-                                            _trainingStatus.trainingProgress,
-                                            getProgress(_trainingStatus)
-                                        )
-                                );
                                 setPlayer({ ...player, cash: 0 });
                             }}
                             trainingHands={trainingHands}

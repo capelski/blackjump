@@ -38,20 +38,13 @@ import { getObjectKeys } from '../utils';
 
 type ConfigMenuProps = {
     gameConfig: GameConfig;
-    isProgressBlocked: boolean;
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
-    progress: number;
     setGameConfig: (gameConfig: GameConfig) => void;
     setTrainingStatus: (trainingStatus: TrainingStatus) => void;
     trainingHands: TrainingHands;
     trainingStatus: TrainingStatus;
-};
-
-const textStyle = {
-    color: 'white',
-    fontSize: 20
 };
 
 export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
@@ -59,7 +52,9 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     const [isDealerAnimationEnabled, setIsDealerAnimationEnabled] = useState(
         props.gameConfig.isDealerAnimationEnabled
     );
-    const [isProgressBlocked, setIsProgressBlocked] = useState(props.isProgressBlocked);
+    const [isProgressBlocked, setIsProgressBlocked] = useState(
+        props.trainingStatus.isProgressBlocked
+    );
     const [isSoundEnabled, setIsSoundEnabled] = useState(props.gameConfig.isSoundEnabled);
     const [selectedHands, setSelectedHands] = useState(props.gameConfig.selectedHands);
     const [selectedHandsOnly, setSelectedHandsOnly] = useState(props.gameConfig.selectedHandsOnly);
@@ -83,13 +78,12 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
         const _selectedHands = options.nextSelectedHands || selectedHands;
 
         setIsProgressBlocked(
-            _selectedHandsOnly &&
-                isSomeHandSelected(_selectedHandsOnly, _selectedHands) &&
+            isSomeHandSelected(_selectedHandsOnly, _selectedHands) &&
                 getIsProgressBlocked(
-                    _selectedHands,
+                    props.trainingStatus,
                     options.nextTrainingHands || trainingHands,
-                    props.trainingStatus.trainingProgress,
-                    props.progress
+                    _selectedHandsOnly,
+                    _selectedHands
                 )
         );
     };

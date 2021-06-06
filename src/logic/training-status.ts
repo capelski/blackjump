@@ -1,4 +1,5 @@
 import {
+    GameConfig,
     HandCode,
     SelectedHands,
     SimpleCardSymbol,
@@ -16,6 +17,7 @@ import { allTrainingPairsNumber } from './training-pair';
 export const getDefaultTrainingStatus = (): TrainingStatus => ({
     attemptedTrainingPairs: 0,
     isCompleted: false,
+    isProgressBlocked: false,
     missedTrainingPairs: [],
     passedTrainingPairs: 0,
     trainingProgress: Object.values(HandCode).reduce<TrainingProgress>(
@@ -34,13 +36,18 @@ export const getDefaultTrainingStatus = (): TrainingStatus => ({
 });
 
 export const getIsProgressBlocked = (
-    selectedHands: SelectedHands,
+    trainingStatus: TrainingStatus,
     trainingHands: TrainingHands,
-    trainingProgress: TrainingProgress,
-    progress: number
+    selectedHandsOnly: boolean,
+    selectedHands: SelectedHands
 ) =>
-    progress < 100 &&
-    getUntrainedTrainingHands(trainingHands, trainingProgress, selectedHands).length === 0;
+    selectedHandsOnly &&
+    getProgressPercentage(trainingStatus.attemptedTrainingPairs) < 100 &&
+    getUntrainedTrainingHands(trainingHands, trainingStatus.trainingProgress, selectedHands)
+        .length === 0;
+
+export const getProgressPercentage = (attemptedTrainingPairs: number) =>
+    Math.floor((attemptedTrainingPairs * 1000) / allTrainingPairsNumber) / 10;
 
 export const isTrainingCompleted = (passedTrainingPairs: number) =>
     passedTrainingPairs === allTrainingPairsNumber;
@@ -71,7 +78,8 @@ const reduceTrainingPairProgress = (
         attemptedTrainingPairs:
             reducedTrainingStatus.attemptedTrainingPairs +
             (trainingPairStatus !== TrainingPairStatus.untrained ? 1 : 0),
-        isCompleted: reducedTrainingStatus.isCompleted,
+        isCompleted: false,
+        isProgressBlocked: false,
         missedTrainingPairs:
             trainingPairStatus === TrainingPairStatus.missed
                 ? reducedTrainingStatus.missedTrainingPairs.concat([
@@ -88,13 +96,18 @@ const reduceTrainingPairProgress = (
     };
 };
 
-export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): TrainingStatus => {
+export const retrieveTrainingStatus = (
+    trainingProgress: TrainingProgress,
+    trainingHands: TrainingHands,
+    gameConfig: GameConfig
+): TrainingStatus => {
     const trainingStatus = getObjectKeys(trainingProgress).reduce<TrainingStatus>(
         (reducedTrainingStatus, handCode) =>
             reduceTrainingHandProgress(handCode, trainingProgress[handCode], reducedTrainingStatus),
         {
             attemptedTrainingPairs: 0,
             isCompleted: false,
+            isProgressBlocked: false,
             missedTrainingPairs: [],
             passedTrainingPairs: 0,
             trainingProgress: trainingProgress
@@ -102,6 +115,12 @@ export const retrieveTrainingStatus = (trainingProgress: TrainingProgress): Trai
     );
 
     trainingStatus.isCompleted = isTrainingCompleted(trainingStatus.passedTrainingPairs);
+    trainingStatus.isProgressBlocked = getIsProgressBlocked(
+        trainingStatus,
+        trainingHands,
+        gameConfig.selectedHandsOnly,
+        gameConfig.selectedHands
+    );
 
     return trainingStatus;
 };

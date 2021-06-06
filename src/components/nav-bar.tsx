@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import { tableColor } from '../constants';
-import { AppNavigation, OnBoardingSections, Player } from '../types';
+import { getProgressPercentage } from '../logic/training-status';
+import { AppNavigation, OnBoardingSections, Player, TrainingStatus } from '../types';
 import { ConfigButton } from './nav-bar-items/config-button';
 import { EarningsIndicator } from './nav-bar-items/earnings-indicator';
 import { PrecisionIndicator } from './nav-bar-items/precision-indicator';
@@ -9,14 +10,11 @@ import { ProgressIndicator } from './nav-bar-items/progress-indicator';
 import { OnBoardingSection } from './onboarding-section';
 
 export interface NavBarProps {
-    attemptedTrainingPairs: number;
-    isProgressBlocked: boolean;
     navigation: AppNavigation;
     onBoardingStep: number;
     player: Player;
-    passedTrainingPairs: number;
-    progress: number;
     routeName?: string;
+    trainingStatus: TrainingStatus;
 }
 
 const shakeAmplitude = 6;
@@ -70,13 +68,15 @@ const animateIndicator = (position: Animated.Value) => {
 
 export const NavBar: React.FC<NavBarProps> = (props) => {
     const precision =
-        props.attemptedTrainingPairs > 0
-            ? props.passedTrainingPairs / props.attemptedTrainingPairs
+        props.trainingStatus.attemptedTrainingPairs > 0
+            ? props.trainingStatus.passedTrainingPairs / props.trainingStatus.attemptedTrainingPairs
             : 0;
 
     const earningsPosition = useMemo(() => new Animated.Value(0), []);
     const precisionPosition = useMemo(() => new Animated.Value(0), []);
     const progressPosition = useMemo(() => new Animated.Value(0), []);
+
+    const progressPercentage = getProgressPercentage(props.trainingStatus.attemptedTrainingPairs);
 
     useEffect(() => {
         animateIndicator(earningsPosition);
@@ -88,7 +88,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
 
     useEffect(() => {
         animateIndicator(progressPosition);
-    }, [props.progress]);
+    }, [progressPercentage]);
 
     return (
         <View
@@ -163,7 +163,7 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
                     <ProgressIndicator
                         isEnabled={props.onBoardingStep === -1}
                         navigation={props.navigation}
-                        progress={props.progress}
+                        progress={progressPercentage}
                     />
                 </Animated.View>
             </OnBoardingSection>
@@ -181,9 +181,9 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
             >
                 <ConfigButton
                     isEnabled={props.onBoardingStep === -1}
-                    isProgressBlocked={props.isProgressBlocked}
+                    isProgressBlocked={props.trainingStatus.isProgressBlocked}
                     navigation={props.navigation}
-                    progress={props.progress}
+                    progress={progressPercentage}
                     routeName={props.routeName}
                 />
             </OnBoardingSection>
