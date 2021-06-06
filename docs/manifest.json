@@ -2,8 +2,8 @@
   "background_color": "#ffffff",
   "display": "standalone",
   "lang": "en",
-  "name": "BlackJump",
-  "short_name": "BlackJump",
+  "name": "Blackjump",
+  "short_name": "Blackjump",
   "start_url": "/?utm_source=web_app_manifest",
   "orientation": "portrait",
   "related_applications": [
