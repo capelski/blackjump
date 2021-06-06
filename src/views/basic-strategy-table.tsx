@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
@@ -84,6 +85,24 @@ export const BasicStrategyTable: React.FC<BasicStrategyTableProps> = (props) => 
 
     return (
         <ScrollView style={{ width: '100%' }}>
+            <Text
+                onPress={() => {
+                    Linking.openURL(
+                        'https://wizardofodds.com/games/blackjack/strategy/calculator/'
+                    );
+                }}
+                style={{
+                    color: 'white',
+                    fontSize: 20,
+                    fontStyle: 'italic',
+                    marginVertical: 16,
+                    paddingHorizontal: 16
+                }}
+            >
+                This basic strategy table is based on the data available at the Wizard of Odds basic
+                strategy calculator
+            </Text>
+
             <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
                 <RuleSwitcher
                     casinoRules={casinoRules}
