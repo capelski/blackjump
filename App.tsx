@@ -10,6 +10,7 @@ import {
     getHasCompletedOnboarding,
     getPlayerEarnings,
     getTrainingProgress,
+    updateGameConfig,
     updateHasCompletedOnboarding,
     updateTrainingProgress
 } from './src/async-storage';
@@ -56,6 +57,7 @@ import {
     BaseDecisions,
     CasinoRulesKeys,
     DecisionEvaluation,
+    GameConfig,
     Hand,
     HandCode,
     initialRouteName,
@@ -205,6 +207,11 @@ export default function App() {
         }
     }, [phase, dealerHand]);
 
+    const saveGameConfig = (nextGameConfig: GameConfig) => {
+        setGameConfig(nextGameConfig);
+        updateGameConfig(nextGameConfig);
+    };
+
     const startTrainingRound = (playerHand: Hand, dealerHand: Hand) => {
         const nextPlayer = { ...player };
         initializeHands(nextPlayer, playerHand);
@@ -327,6 +334,7 @@ export default function App() {
 
         if (nextTrainingStatus.isCompleted && !trainingStatus.isCompleted) {
             navigationRef.current?.navigate(RouteNames.trainingCompleted);
+            saveGameConfig({ ...gameConfig, untrainedPairsPriority: false });
         }
     };
 
@@ -429,7 +437,7 @@ export default function App() {
                                     )
                                 };
 
-                                setGameConfig(_gameConfig);
+                                saveGameConfig(_gameConfig);
                                 setTrainingHands(nextTrainingHands);
                                 setTrainingStatus(nextTrainingStatus);
                             }}

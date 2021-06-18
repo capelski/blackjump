@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, Platform, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { updateGameConfig, updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
+import { updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
@@ -94,16 +94,14 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const saveHandler = () => {
-        const nextGameConfig: GameConfig = {
+        props.setGameConfig({
             casinoRules,
             isDealerAnimationEnabled,
             isSoundEnabled,
             selectedHands,
             selectedHandsOnly,
             untrainedPairsPriority
-        };
-        props.setGameConfig(nextGameConfig);
-        updateGameConfig(nextGameConfig);
+        });
         props.navigation.navigate(RouteNames.table);
     };
 
@@ -339,10 +337,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
 
                 <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
                     <Switch
+                        disabled={props.trainingStatus.isCompleted}
                         onValueChange={setUntrainedPairsPriority}
                         style={{ marginRight: 8 }}
                         trackColor={{ true: hitColor, false: 'white' }}
-                        value={untrainedPairsPriority}
+                        value={!props.trainingStatus.isCompleted && untrainedPairsPriority}
                     />
                     <Text
                         style={{
@@ -578,6 +577,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             props.setTrainingStatus(nextTrainingStatus);
                             updateTrainingProgress(nextTrainingStatus.trainingProgress);
                             updatePlayerEarnings(0);
+                            props.navigation.navigate(RouteNames.table);
                         };
 
                         if (Platform.OS === 'web') {

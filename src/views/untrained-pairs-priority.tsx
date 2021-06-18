@@ -128,6 +128,11 @@ export const UntrainedPairsPriority: React.FC = () => {
                     isSoundEnabled={false}
                     skipAnimation={true}
                 />
+
+                <Text style={{ color: 'white', fontSize: 20, marginTop: 24 }}>
+                    • When you complete the training (i.e. reach 100% progress), Untrained pairs
+                    priority will be automatically disabled
+                </Text>
             </ScrollView>
         </React.Fragment>
     );
