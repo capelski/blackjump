@@ -63,6 +63,19 @@ export const onBoardingSteps: OnBoardingStep[] = [
         text: "Click on it to see the pairs you've missed"
     },
     {
+        activeSection: [OnBoardingSections.earningsIndicator],
+        load: (navigation) => {
+            navigation.navigate(RouteNames.table);
+        },
+        text: 'This indicator shows your cash status'
+    },
+    {
+        load: (navigation) => {
+            navigation.navigate(RouteNames.earningsChart);
+        },
+        text: 'Click on it to see your earnings historical'
+    },
+    {
         activeSection: [OnBoardingSections.configMenuButton],
         load: (navigation) => {
             navigation.navigate(RouteNames.table);

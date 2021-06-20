@@ -99,13 +99,14 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
             }}
         >
             <OnBoardingSection
+                isHighlighted={OnBoardingSections.earningsIndicator}
                 onBoardingStep={props.onBoardingStep}
-                style={{
-                    backgroundColor: 'black',
+                style={(isHighlighted) => ({
+                    backgroundColor: isHighlighted ? tableColor : 'black',
                     height: '100%',
                     justifyContent: 'center',
                     width: '25%'
-                }}
+                })}
             >
                 <Animated.View
                     style={{

@@ -5,6 +5,7 @@ export enum OnBoardingSections {
     basicStrategyTable = 'basicStrategyTable',
     casinoRules = 'casinoRules',
     configMenuButton = 'configMenuButton',
+    earningsIndicator = 'earningsIndicator',
     missedPairs = 'missedPairs',
     precisionIndicator = 'precisionIndicator',
     progressIndicator = 'progressIndicator',
