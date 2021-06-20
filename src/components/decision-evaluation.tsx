@@ -10,8 +10,12 @@ interface DecisionEvaluationProps {
 
 const textProperties: StyleProp<TextStyle> = {
     color: 'white',
-    fontSize: 20,
-    textAlign: 'center'
+    fontSize: 20
+};
+
+const boldTextProperties: StyleProp<TextStyle> = {
+    ...textProperties,
+    fontWeight: 'bold'
 };
 
 export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (props) => (
@@ -36,33 +40,12 @@ export const DecisionEvaluationComponent: React.FC<DecisionEvaluationProps> = (p
                     paddingHorizontal: 8
                 }}
             >
-                <Text
-                    style={{
-                        ...textProperties,
-                        fontWeight: 'bold'
-                    }}
-                >
-                    {props.decisionEvaluation.handName}
-                </Text>
-                <Text style={textProperties}> must </Text>
-                <Text
-                    style={{
-                        ...textProperties,
-                        fontWeight: 'bold'
-                    }}
-                >
-                    {props.decisionEvaluation.dynamicDecision}
-                </Text>
-                <Text style={textProperties}> vs dealer's </Text>
-                <Text
-                    style={{
-                        ...textProperties,
-                        fontWeight: 'bold',
-                        marginRight: 8
-                    }}
-                >
-                    {props.decisionEvaluation.dealerSymbol}
-                </Text>
+                <Text style={boldTextProperties}>{props.decisionEvaluation.handName}</Text>
+                <Text style={textProperties}> vs </Text>
+                <Text style={boldTextProperties}>{props.decisionEvaluation.dealerSymbol}</Text>
+                <Text style={textProperties}> = </Text>
+                <Text style={boldTextProperties}>{props.decisionEvaluation.dynamicDecision}</Text>
+
                 <TouchableOpacity onPress={props.showDecisionsHandler} style={{ marginTop: 8 }}>
                     <Text
                         style={{

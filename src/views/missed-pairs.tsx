@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleProp, Text, TextStyle, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
 import { doubleColor } from '../constants';
@@ -22,6 +22,16 @@ type MissedPairsProps = {
     phase: Phases;
     startTrainingRound: (playerHand: Hand, dealerHand: Hand) => void;
     trainingHands: TrainingHands;
+};
+
+const textProperties: StyleProp<TextStyle> = {
+    color: 'white',
+    fontSize: 20
+};
+
+const boldTextProperties: StyleProp<TextStyle> = {
+    ...textProperties,
+    fontWeight: 'bold'
 };
 
 export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
@@ -68,40 +78,13 @@ export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
                                 >
                                     <View
                                         style={{
-                                            flexDirection: 'row'
+                                            flexDirection: 'row',
+                                            marginBottom: 16
                                         }}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 20,
-                                                fontWeight: 'bold',
-                                                marginBottom: 16,
-                                                textAlign: 'center'
-                                            }}
-                                        >
-                                            {handName}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 20,
-                                                marginBottom: 16,
-                                                textAlign: 'center'
-                                            }}
-                                        >
-                                            {' '}
-                                            vs dealer's{' '}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 20,
-                                                fontWeight: 'bold',
-                                                marginBottom: 16,
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={boldTextProperties}>{handName}</Text>
+                                        <Text style={textProperties}> vs </Text>
+                                        <Text style={boldTextProperties}>
                                             {missedTrainingPair.dealerSymbol}
                                         </Text>
                                     </View>

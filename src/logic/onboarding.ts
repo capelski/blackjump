@@ -11,17 +11,17 @@ export const onBoardingSteps: OnBoardingStep[] = [
         text: 'Click Random to start training a random pair'
     },
     {
-        activeSection: [OnBoardingSections.tableDealerHand, OnBoardingSections.tablePlayerHands],
-        hidePreviousButton: true,
-        text: 'training pair = player hand + dealer up card'
-    },
-    {
         activeSection: [OnBoardingSections.tablePlayerHands],
+        hidePreviousButton: true,
         text: 'This is your hand'
     },
     {
         activeSection: [OnBoardingSections.tableDealerHand],
         text: "This is the dealer's hand"
+    },
+    {
+        activeSection: [OnBoardingSections.tableDealerHand, OnBoardingSections.tablePlayerHands],
+        text: 'training pair = player hand vs dealer up card'
     },
     {
         activeSection: [OnBoardingSections.tableActions],
