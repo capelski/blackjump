@@ -209,7 +209,16 @@ export default function App() {
 
     useEffect(() => {
         if (phase === 'dealer') {
-            handleDealerTurn(dealerHand!, gameConfig, player, setDealerHand, setPhase, setPlayer);
+            handleDealerTurn(
+                dealerHand!,
+                gameConfig,
+                decisionEvaluation === undefined || decisionEvaluation.isHit,
+                gameConfig.selectedHandsOnly || gameConfig.untrainedPairsPriority,
+                player,
+                setDealerHand,
+                setPhase,
+                setPlayer
+            );
         }
     }, [phase, dealerHand]);
 
