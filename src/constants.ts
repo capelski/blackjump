@@ -7,6 +7,8 @@ export const standColor = '#46b8da';
 export const surrenderColor = '#8f6088';
 
 export const dangerColor = '#dc3545';
+export const nonRandomColor = '#e5c100';
+export const untrainedColor = '#333';
 export const warningColor = '#ffc107';
 
 export const tableColor = '#088446';

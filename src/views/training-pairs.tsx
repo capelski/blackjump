@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Divider } from '../components/divider';
 import { OnBoardingSection } from '../components/onboarding-section';
-import { doubleColor } from '../constants';
+import { doubleColor, untrainedColor } from '../constants';
 import { getSpecificTrainingPair } from '../logic/training-pair';
 import {
     AppNavigation,
@@ -96,7 +96,7 @@ export const TrainingPairs: React.FC<TrainingPairsProps> = (props) => {
                                             const backgroundColor =
                                                 trainingHandStatus[dealerSymbol] ===
                                                 TrainingPairStatus.untrained
-                                                    ? '#333'
+                                                    ? untrainedColor
                                                     : trainingHandStatus[dealerSymbol] ===
                                                       TrainingPairStatus.passed
                                                     ? 'lightgreen'

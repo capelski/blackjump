@@ -2,6 +2,7 @@ import { Audio } from 'expo-av';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
 import cardSlideSoundMp3 from '../../assets/card-slide.mp3';
+import { nonRandomColor } from '../constants';
 import { createSoundQueue, pushSound } from '../logic/sound-queue';
 import { AppNavigation, Card, RouteNames, SimpleCardSymbol } from '../types';
 
@@ -70,7 +71,7 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
         ? props.card.suit === '♦' || props.card.suit === '♥'
             ? 'red'
             : 'black'
-        : '#e5c100';
+        : nonRandomColor;
 
     const backgroundColor = props.card.isHoleCard ? 'lightgrey' : 'white';
 
