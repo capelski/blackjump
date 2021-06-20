@@ -52,8 +52,8 @@ export const initializeHands = (player: Player, initialHand: Hand) => {
 
 export const isLastHand = (player: Player) => player.hands.length - 1 <= player.handIndex;
 
-export const resolveHands = (player: Player, dealerHand: Hand) => {
-    const earnings = player.hands.reduce((earnings, hand) => {
+export const resolvePlayerEarnings = (player: Player, dealerHand: Hand) =>
+    player.hands.reduce((earnings, hand) => {
         const handOutcome = resolveHand(hand, player.hands.length, dealerHand);
         return (
             earnings +
@@ -66,9 +66,6 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
                 : 0)
         );
     }, 0);
-    player.cash += earnings;
-    player.earningsHistorical = player.earningsHistorical.concat([player.cash]);
-};
 
 export const splitCurrentHand = (
     player: Player,

@@ -8,7 +8,7 @@ import {
     hasHoleCard,
     revealDealerHoleCard
 } from './hand';
-import { resolveHands } from './player';
+import { resolvePlayerEarnings } from './player';
 
 export const handleDealerTurn = (
     dealerHand: Hand,
@@ -45,11 +45,20 @@ export const handleDealerTurn = (
             setDealerHand(nextDealerHand);
         }
 
-        resolveHands(player, nextDealerHand);
-        setPlayer({ ...player });
-        updatePlayerEarnings(player.cash);
-        updatePlayerEarningsHistorical(player.earningsHistorical);
+        const playerEarnings = resolvePlayerEarnings(player, nextDealerHand);
+        const nextCash = player.cash + playerEarnings;
+        const nextEarningsHistorical = player.earningsHistorical.concat([nextCash]);
+        const nextPlayer: Player = {
+            ...player,
+            cash: nextCash,
+            earningsHistorical: nextEarningsHistorical
+        };
+
+        setPlayer(nextPlayer);
         setPhase(Phases.finished);
+
+        updatePlayerEarnings(nextCash);
+        updatePlayerEarningsHistorical(nextEarningsHistorical);
     }
 };
 
