@@ -8,6 +8,7 @@ import {
     AppNavigation,
     GameConfig,
     Hand,
+    OnBoardingSections,
     Phases,
     RouteNames,
     TrainingHands,
@@ -37,6 +38,7 @@ const boldTextProperties: StyleProp<TextStyle> = {
 export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
     return (
         <OnBoardingSection
+            isHighlighted={OnBoardingSections.missedPairs}
             onBoardingStep={props.onBoardingStep}
             style={{ alignItems: undefined, flex: 1 }}
         >
@@ -103,6 +105,7 @@ export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
                                     >
                                         <TouchableOpacity
                                             onPress={
+                                                props.onBoardingStep > -1 ||
                                                 props.phase !== Phases.finished
                                                     ? undefined
                                                     : () => {

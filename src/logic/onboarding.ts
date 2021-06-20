@@ -43,7 +43,6 @@ export const onBoardingSteps: OnBoardingStep[] = [
         text: 'This indicator shows the % of trained pairs'
     },
     {
-        activeSection: [OnBoardingSections.progressIndicator],
         load: (navigation) => {
             navigation.navigate(RouteNames.trainingPairs);
         },
@@ -57,7 +56,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         text: 'This indicator shows the % of passed pairs'
     },
     {
-        activeSection: [OnBoardingSections.precisionIndicator],
+        activeSection: [OnBoardingSections.missedPairs],
         load: (navigation) => {
             navigation.navigate(RouteNames.missedPairs);
         },
