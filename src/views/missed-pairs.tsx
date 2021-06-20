@@ -55,7 +55,7 @@ export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
                 style={{
                     margin: 16
                 }}
-                contentContainerStyle={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
             >
                 {props.missedTrainingPairs.length === 0 ? (
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
@@ -68,7 +68,14 @@ export const MissedPairs: React.FC<MissedPairsProps> = (props) => {
                         const handName = props.trainingHands[missedTrainingPair.handCode].name;
 
                         return (
-                            <View key={handName} style={{ marginBottom: 16, width: '100%' }}>
+                            <View
+                                key={
+                                    missedTrainingPair.handCode +
+                                    '-' +
+                                    missedTrainingPair.dealerSymbol
+                                }
+                                style={{ marginBottom: 16, width: '100%' }}
+                            >
                                 <View
                                     style={{
                                         alignItems: 'center',
