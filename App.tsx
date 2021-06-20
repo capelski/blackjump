@@ -9,6 +9,7 @@ import {
     getGameConfig,
     getHasCompletedOnboarding,
     getPlayerEarnings,
+    getPlayerEarningsHistorical,
     getTrainingProgress,
     updateGameConfig,
     updateHasCompletedOnboarding,
@@ -73,6 +74,7 @@ import {
 import { playSound } from './src/utils';
 import { BasicStrategyTable } from './src/views/basic-strategy-table';
 import { ConfigMenu } from './src/views/config-menu';
+import { EarningsChart } from './src/views/earnings-chart';
 import { HandDecisions } from './src/views/hand-decisions';
 import { HitSplitAces } from './src/views/hit-split-aces';
 import { HoleCard } from './src/views/hole-card';
@@ -119,14 +121,16 @@ export default function App() {
             getGameConfig(gameConfig),
             getHasCompletedOnboarding(),
             getPlayerEarnings(),
+            getPlayerEarningsHistorical(),
             getTrainingProgress(),
             initializeSounds()
         ]).then((results) => {
             const _gameConfig = results[0];
             const hasCompletedOnboarding = results[1];
             const playerEarnings = results[2];
-            const trainingProgress = results[3];
-            const _sounds = results[4];
+            const playerEarningsHistorical = results[3];
+            const trainingProgress = results[4];
+            const _sounds = results[5];
 
             setGameConfig(_gameConfig);
             const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
@@ -138,9 +142,11 @@ export default function App() {
                 );
             }
 
-            if (playerEarnings) {
-                setPlayer({ ...player, cash: playerEarnings });
-            }
+            setPlayer({
+                ...player,
+                cash: playerEarnings,
+                earningsHistorical: playerEarningsHistorical
+            });
 
             if (trainingProgress) {
                 const nextTrainingStatus = retrieveTrainingStatus(
@@ -449,6 +455,9 @@ export default function App() {
                             trainingStatus={trainingStatus}
                         />
                     )}
+                </Stack.Screen>
+                <Stack.Screen name={RouteNames.earningsChart}>
+                    {() => <EarningsChart earningsHistorical={player.earningsHistorical} />}
                 </Stack.Screen>
                 <Stack.Screen name={RouteNames.handDecisions}>
                     {(props) => (

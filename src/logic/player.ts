@@ -10,8 +10,9 @@ import {
 import { getRandomCard } from './card';
 import { createHand, dealCard, getCardForUntrainedHand, handToHandCode, resolveHand } from './hand';
 
-export const createPlayer = (cash = 0): Player => ({
-    cash,
+export const createPlayer = (): Player => ({
+    cash: 0,
+    earningsHistorical: [],
     handIndex: 0,
     hands: [],
     lastActionHand: undefined
@@ -66,6 +67,7 @@ export const resolveHands = (player: Player, dealerHand: Hand) => {
         );
     }, 0);
     player.cash += earnings;
+    player.earningsHistorical = player.earningsHistorical.concat([player.cash]);
 };
 
 export const splitCurrentHand = (

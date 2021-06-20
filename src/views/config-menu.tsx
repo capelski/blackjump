@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, Platform, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { updatePlayerEarnings, updateTrainingProgress } from '../async-storage';
+import {
+    updatePlayerEarnings,
+    updatePlayerEarningsHistorical,
+    updateTrainingProgress
+} from '../async-storage';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
@@ -577,6 +581,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             props.setTrainingStatus(nextTrainingStatus);
                             updateTrainingProgress(nextTrainingStatus.trainingProgress);
                             updatePlayerEarnings(0);
+                            updatePlayerEarningsHistorical([]);
                             props.navigation.navigate(RouteNames.table);
                         };
 

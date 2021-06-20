@@ -23,8 +23,7 @@ export const PrecisionIndicator: React.FC<PrecisionIndicatorProps> = (props) => 
             style={{
                 alignItems: 'center',
                 flexGrow: 1,
-                justifyContent: 'center',
-                width: '100%'
+                justifyContent: 'center'
             }}
         >
             <View style={{ flexDirection: 'row' }}>

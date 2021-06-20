@@ -22,8 +22,7 @@ export const ProgressIndicator: React.FC<NavBarProps> = (props) => {
             style={{
                 alignItems: 'center',
                 flexGrow: 1,
-                justifyContent: 'center',
-                width: '100%'
+                justifyContent: 'center'
             }}
         >
             <View style={{ flexDirection: 'row' }}>

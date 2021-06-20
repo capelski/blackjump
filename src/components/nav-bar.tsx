@@ -109,12 +109,15 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
             >
                 <Animated.View
                     style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
+                        flexGrow: 1,
                         transform: [{ translateX: earningsPosition }]
                     }}
                 >
-                    <EarningsIndicator earnings={props.player.cash} />
+                    <EarningsIndicator
+                        earnings={props.player.cash}
+                        isEnabled={props.onBoardingStep === -1}
+                        navigation={props.navigation}
+                    />
                 </Animated.View>
             </OnBoardingSection>
 
@@ -130,7 +133,6 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
             >
                 <Animated.View
                     style={{
-                        alignItems: 'center',
                         flexGrow: 1,
                         transform: [{ translateX: precisionPosition }]
                     }}
@@ -155,7 +157,6 @@ export const NavBar: React.FC<NavBarProps> = (props) => {
             >
                 <Animated.View
                     style={{
-                        alignItems: 'center',
                         flexGrow: 1,
                         transform: [{ translateX: progressPosition }]
                     }}

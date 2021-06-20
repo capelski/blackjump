@@ -9,6 +9,7 @@ export type AppRoute<T extends RouteNames> = Route<T, RouteParams[T]>;
 export enum RouteNames {
     basicStrategyTable = 'basicStrategyTable',
     configMenu = 'configMenu',
+    earningsChart = 'earningsChart',
     handDecisions = 'handDecisions',
     hitSplitAces = 'hitSplitAces',
     holeCard = 'holeCard',
@@ -25,6 +26,7 @@ export const initialRouteName = RouteNames.table;
 export type RouteParams = {
     [RouteNames.basicStrategyTable]: undefined;
     [RouteNames.configMenu]: undefined;
+    [RouteNames.earningsChart]: undefined;
     [RouteNames.handDecisions]: {
         trainingHand: TrainingHand;
     };

@@ -4,6 +4,7 @@ import { CasinoRulesKeys, GameConfig, TrainingProgress } from './types';
 const gameConfigKey = 'gameConfig';
 const hasCompletedOnboardingKey = 'hasCompletedOnboarding';
 const playerEarningsKey = 'playerEarnings';
+const playerEarningsHistoricalKey = 'playerEarningsHistorical';
 const trainingProgressKey = 'trainedHands';
 
 export const getGameConfig = (currentGameConfig: GameConfig) =>
@@ -101,6 +102,11 @@ export const getPlayerEarnings = () =>
         .then<number>((value) => (value ? parseInt(value) : 0))
         .catch(() => 0);
 
+export const getPlayerEarningsHistorical = () =>
+    AsyncStorage.getItem(playerEarningsHistoricalKey)
+        .then<number[]>((value) => (value ? JSON.parse(value) : []))
+        .catch(() => []);
+
 export const getTrainingProgress = () =>
     AsyncStorage.getItem(trainingProgressKey)
         .then<TrainingProgress>((value) => (value ? JSON.parse(value) : undefined))
@@ -119,6 +125,13 @@ export const updateHasCompletedOnboarding = (hasCompletedOnboarding: boolean) =>
 
 export const updatePlayerEarnings = (playerEarnings: number) => {
     AsyncStorage.setItem(playerEarningsKey, JSON.stringify(playerEarnings)).catch(() => {});
+};
+
+export const updatePlayerEarningsHistorical = (playerEarningsHistorical: number[]) => {
+    AsyncStorage.setItem(
+        playerEarningsHistoricalKey,
+        JSON.stringify(playerEarningsHistorical)
+    ).catch(() => {});
 };
 
 export const updateTrainingProgress = (TrainingProgress: TrainingProgress) => {

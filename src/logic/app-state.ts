@@ -1,4 +1,4 @@
-import { updatePlayerEarnings } from '../async-storage';
+import { updatePlayerEarnings, updatePlayerEarningsHistorical } from '../async-storage';
 import { CasinoRules, CasinoRulesKeys, GameConfig, Hand, Phases, Player } from '../types';
 import { getRandomCard } from './card';
 import {
@@ -48,6 +48,7 @@ export const handleDealerTurn = (
         resolveHands(player, nextDealerHand);
         setPlayer({ ...player });
         updatePlayerEarnings(player.cash);
+        updatePlayerEarningsHistorical(player.earningsHistorical);
         setPhase(Phases.finished);
     }
 };
