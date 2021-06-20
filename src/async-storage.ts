@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { CasinoRulesKeys, GameConfig, TrainingProgress } from './types';
+import { CasinoRulesKeys, GameConfig, Player, TrainingProgress } from './types';
 
 const gameConfigKey = 'gameConfig';
 const hasCompletedOnboardingKey = 'hasCompletedOnboarding';
@@ -99,12 +99,12 @@ export const getHasCompletedOnboarding = () =>
 
 export const getPlayerEarnings = () =>
     AsyncStorage.getItem(playerEarningsKey)
-        .then<number>((value) => (value ? parseInt(value) : 0))
+        .then<Player['cash']>((value) => (value ? parseInt(value) : 0))
         .catch(() => 0);
 
 export const getPlayerEarningsHistorical = () =>
     AsyncStorage.getItem(playerEarningsHistoricalKey)
-        .then<number[]>((value) => (value ? JSON.parse(value) : []))
+        .then<Player['earningsHistorical']>((value) => (value ? JSON.parse(value) : []))
         .catch(() => []);
 
 export const getTrainingProgress = () =>
@@ -123,11 +123,13 @@ export const updateHasCompletedOnboarding = (hasCompletedOnboarding: boolean) =>
     ).catch(() => {});
 };
 
-export const updatePlayerEarnings = (playerEarnings: number) => {
+export const updatePlayerEarnings = (playerEarnings: Player['cash']) => {
     AsyncStorage.setItem(playerEarningsKey, JSON.stringify(playerEarnings)).catch(() => {});
 };
 
-export const updatePlayerEarningsHistorical = (playerEarningsHistorical: number[]) => {
+export const updatePlayerEarningsHistorical = (
+    playerEarningsHistorical: Player['earningsHistorical']
+) => {
     AsyncStorage.setItem(
         playerEarningsHistoricalKey,
         JSON.stringify(playerEarningsHistorical)
