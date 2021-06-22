@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { Alert, Platform, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
-import {
-    updatePlayerEarnings,
-    updatePlayerEarningsHistorical,
-    updateTrainingProgress
-} from '../async-storage';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
@@ -21,7 +16,7 @@ import {
     warningColor
 } from '../constants';
 import { getTrainingHands } from '../logic/training-hand';
-import { getDefaultTrainingStatus, getIsProgressBlocked } from '../logic/training-status';
+import { getIsProgressBlocked } from '../logic/training-status';
 import {
     AppNavigation,
     CasinoRules,
@@ -45,8 +40,8 @@ type ConfigMenuProps = {
     navigation: AppNavigation;
     onBoardingStep: number;
     phase: Phases;
+    resetTrainingStatus: () => void;
     setGameConfig: (gameConfig: GameConfig) => void;
-    setTrainingStatus: (trainingStatus: TrainingStatus) => void;
     trainingHands: TrainingHands;
     trainingStatus: TrainingStatus;
 };
@@ -576,19 +571,10 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                             'and set the player earnings to 0$ as well. ' +
                             'Are you sure you want to reset the training?';
 
-                        const resetTraining = () => {
-                            const nextTrainingStatus = getDefaultTrainingStatus();
-                            props.setTrainingStatus(nextTrainingStatus);
-                            updateTrainingProgress(nextTrainingStatus.trainingProgress);
-                            updatePlayerEarnings(0);
-                            updatePlayerEarningsHistorical([]);
-                            props.navigation.navigate(RouteNames.table);
-                        };
-
                         if (Platform.OS === 'web') {
                             const response = window.confirm(body);
                             if (response) {
-                                resetTraining();
+                                props.resetTrainingStatus();
                             }
                         } else {
                             Alert.alert(title, body, [
@@ -598,7 +584,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                                 },
                                 {
                                     text: 'Reset',
-                                    onPress: resetTraining
+                                    onPress: props.resetTrainingStatus
                                 }
                             ]);
                         }

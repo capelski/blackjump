@@ -13,6 +13,8 @@ import {
     getTrainingProgress,
     updateGameConfig,
     updateHasCompletedOnboarding,
+    updatePlayerEarnings,
+    updatePlayerEarningsHistorical,
     updateTrainingProgress
 } from './src/async-storage';
 import { NavBar } from './src/components/nav-bar';
@@ -440,6 +442,23 @@ export default function App() {
                             navigation={props.navigation}
                             onBoardingStep={onBoardingStep}
                             phase={phase}
+                            resetTrainingStatus={() => {
+                                const nextTrainingStatus = getDefaultTrainingStatus();
+                                const nextPlayer: Player = {
+                                    ...player,
+                                    cash: 0,
+                                    earningsHistorical: []
+                                };
+
+                                updateTrainingProgress(nextTrainingStatus.trainingProgress);
+                                updatePlayerEarnings(nextPlayer.cash);
+                                updatePlayerEarningsHistorical(nextPlayer.earningsHistorical);
+
+                                setPlayer(nextPlayer);
+                                setTrainingStatus(nextTrainingStatus);
+
+                                props.navigation.navigate(RouteNames.table);
+                            }}
                             setGameConfig={(_gameConfig) => {
                                 const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
                                 const nextTrainingStatus: TrainingStatus = {
@@ -455,10 +474,6 @@ export default function App() {
                                 saveGameConfig(_gameConfig);
                                 setTrainingHands(nextTrainingHands);
                                 setTrainingStatus(nextTrainingStatus);
-                            }}
-                            setTrainingStatus={(_trainingStatus) => {
-                                setTrainingStatus(_trainingStatus);
-                                setPlayer({ ...player, cash: 0 });
                             }}
                             trainingHands={trainingHands}
                             trainingStatus={trainingStatus}
