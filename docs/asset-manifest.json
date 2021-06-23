@@ -1,25 +1,25 @@
 {
   "files": {
-    "app.js": "/blackjump/static/js/app.64b33be2.chunk.js",
-    "app.js.map": "/blackjump/static/js/app.64b33be2.chunk.js.map",
+    "app.js": "/blackjump/static/js/app.e6ec303c.chunk.js",
+    "app.js.map": "/blackjump/static/js/app.e6ec303c.chunk.js.map",
     "runtime~app.js": "/blackjump/static/js/runtime~app.84c3dbeb.js",
     "runtime~app.js.map": "/blackjump/static/js/runtime~app.84c3dbeb.js.map",
-    "static/js/2.dfd3f768.chunk.js": "/blackjump/static/js/2.dfd3f768.chunk.js",
-    "static/js/2.dfd3f768.chunk.js.map": "/blackjump/static/js/2.dfd3f768.chunk.js.map",
+    "static/js/2.4d97af0b.chunk.js": "/blackjump/static/js/2.4d97af0b.chunk.js",
+    "static/js/2.4d97af0b.chunk.js.map": "/blackjump/static/js/2.4d97af0b.chunk.js.map",
     "favicon-16.png": "/blackjump/favicon-16.png",
     "favicon-32.png": "/blackjump/favicon-32.png",
     "favicon.ico": "/blackjump/favicon.ico",
     "index.html": "/blackjump/index.html",
     "manifest.json": "/blackjump/manifest.json",
     "serve.json": "/blackjump/serve.json",
-    "static/js/2.dfd3f768.chunk.js.LICENSE.txt": "/blackjump/static/js/2.dfd3f768.chunk.js.LICENSE.txt",
+    "static/js/2.4d97af0b.chunk.js.LICENSE.txt": "/blackjump/static/js/2.4d97af0b.chunk.js.LICENSE.txt",
     "static/media/card-slide.mp3": "/blackjump/static/media/card-slide.d80ce25b.mp3",
     "static/media/hit.mp3": "/blackjump/static/media/hit.dc863917.mp3",
     "static/media/miss.mp3": "/blackjump/static/media/miss.497d59f1.mp3"
   },
   "entrypoints": [
     "static/js/runtime~app.84c3dbeb.js",
-    "static/js/2.dfd3f768.chunk.js",
-    "static/js/app.64b33be2.chunk.js"
+    "static/js/2.4d97af0b.chunk.js",
+    "static/js/app.e6ec303c.chunk.js"
   ]
 }
