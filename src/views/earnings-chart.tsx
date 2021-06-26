@@ -1,7 +1,7 @@
 import React from 'react';
-import { Dimensions, ScrollView, StyleProp, Text, TextStyle, View } from 'react-native';
+import { Dimensions, ScrollView, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { dangerColor, nonRandomColor, splitColor, tableColor } from '../constants';
+import { tableColor } from '../constants';
 import { Player } from '../types';
 
 interface EarningsChartProps {
@@ -9,14 +9,6 @@ interface EarningsChartProps {
 }
 
 const screenHorizontalMargin = 16;
-
-const textProperties: StyleProp<TextStyle> = {
-    color: 'white',
-    fontSize: 20,
-    marginBottom: 8,
-    padding: 8,
-    width: '100%'
-};
 
 const getPrimeFactors = (number: number) => {
     const factors: number[] = [];
@@ -36,7 +28,7 @@ const getPrimeFactors = (number: number) => {
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
     const absoluteMax = Math.ceil(
         props.earningsHistorical.reduce(
-            (reduced, next) => Math.max(reduced, Math.abs(next.resultingCash)),
+            (reduced, next) => Math.max(reduced, Math.abs(next)),
             Number.MIN_VALUE
         )
     );
@@ -46,13 +38,11 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
     const windowWidth = Dimensions.get('window').width;
     const data =
         props.earningsHistorical.length > 0
-            ? props.earningsHistorical
-                  .map((x) => x.resultingCash)
-                  .concat([
-                      props.earningsHistorical[props.earningsHistorical.length - 1].resultingCash,
-                      absoluteMax,
-                      -absoluteMax
-                  ])
+            ? props.earningsHistorical.concat([
+                  props.earningsHistorical[props.earningsHistorical.length - 1],
+                  absoluteMax,
+                  -absoluteMax
+              ])
             : [0];
 
     const dotSpacing = Math.max(windowWidth / data.length, 30);
@@ -94,21 +84,6 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
                             ],
                             labels: []
                         }}
-                        getDotProps={(_, dataPointIndex) => {
-                            const cashOperation = props.earningsHistorical[dataPointIndex];
-                            return cashOperation
-                                ? {
-                                      fill: cashOperation.isBasicStrategyHit
-                                          ? splitColor
-                                          : dangerColor,
-                                      r: 5,
-                                      stroke: cashOperation.isNonRandomHand
-                                          ? nonRandomColor
-                                          : undefined,
-                                      strokeWidth: cashOperation.isNonRandomHand ? 3 : undefined
-                                  }
-                                : { undefined };
-                        }}
                         height={300}
                         segments={scale}
                         style={{ marginLeft: -24, paddingHorizontal: 8 }}
@@ -117,18 +92,6 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
                     />
                 </View>
             </ScrollView>
-
-            <View>
-                <Text style={{ ...textProperties, backgroundColor: nonRandomColor }}>
-                    Non random hand
-                </Text>
-                <Text style={{ ...textProperties, backgroundColor: splitColor }}>
-                    Basic strategy hit
-                </Text>
-                <Text style={{ ...textProperties, backgroundColor: dangerColor }}>
-                    Basic strategy miss
-                </Text>
-            </View>
         </View>
     );
 };

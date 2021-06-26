@@ -211,16 +211,7 @@ export default function App() {
 
     useEffect(() => {
         if (phase === 'dealer') {
-            handleDealerTurn(
-                dealerHand!,
-                gameConfig,
-                decisionEvaluation === undefined || decisionEvaluation.isHit,
-                gameConfig.selectedHandsOnly || gameConfig.untrainedPairsPriority,
-                player,
-                setDealerHand,
-                setPhase,
-                setPlayer
-            );
+            handleDealerTurn(dealerHand!, gameConfig, player, setDealerHand, setPhase, setPlayer);
         }
     }, [phase, dealerHand]);
 
@@ -447,7 +438,7 @@ export default function App() {
                                 const nextPlayer: Player = {
                                     ...player,
                                     cash: 0,
-                                    earningsHistorical: []
+                                    earningsHistorical: [0]
                                 };
 
                                 updateTrainingProgress(nextTrainingStatus.trainingProgress);

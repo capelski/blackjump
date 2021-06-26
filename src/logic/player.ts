@@ -12,7 +12,7 @@ import { createHand, dealCard, getCardForUntrainedHand, handToHandCode, resolveH
 
 export const createPlayer = (): Player => ({
     cash: 0,
-    earningsHistorical: [],
+    earningsHistorical: [0],
     handIndex: 0,
     hands: [],
     lastActionHand: undefined

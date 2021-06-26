@@ -13,8 +13,6 @@ import { resolvePlayerEarnings } from './player';
 export const handleDealerTurn = (
     dealerHand: Hand,
     gameConfig: GameConfig,
-    isBasicStrategyHit: boolean,
-    isNonRandomHand: boolean,
     player: Player,
     setDealerHand: (dealerHand: Hand) => void,
     setPhase: (phase: Phases) => void,
@@ -49,13 +47,7 @@ export const handleDealerTurn = (
 
         const playerEarnings = resolvePlayerEarnings(player, nextDealerHand);
         const nextCash = player.cash + playerEarnings;
-        const nextEarningsHistorical = player.earningsHistorical.concat([
-            {
-                isBasicStrategyHit,
-                isNonRandomHand,
-                resultingCash: nextCash
-            }
-        ]);
+        const nextEarningsHistorical = player.earningsHistorical.concat([nextCash]);
         const nextPlayer: Player = {
             ...player,
             cash: nextCash,
