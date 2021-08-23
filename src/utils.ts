@@ -11,8 +11,28 @@ export const cartesianProduct = <T, U, R>(
     }, []);
 };
 
+export const getAbsoluteMax = (numbers: number[]) =>
+    Math.ceil(
+        numbers.reduce((reduced, next) => Math.max(reduced, Math.abs(next)), Number.MIN_VALUE)
+    );
+
 export const getObjectKeys = <T extends string | number | symbol>(object: { [key in T]: any }) =>
     Object.keys(object) as T[];
+
+export const getPrimeFactors = (number: number) => {
+    const factors: number[] = [];
+    let divisor = 2;
+
+    while (number >= 2) {
+        if (number % divisor == 0) {
+            factors.push(divisor);
+            number = number / divisor;
+        } else {
+            divisor++;
+        }
+    }
+    return factors.reverse();
+};
 
 export const getRandomItem = <T>(items: T[]) =>
     items[Math.round(Math.random() * (items.length - 1))];
