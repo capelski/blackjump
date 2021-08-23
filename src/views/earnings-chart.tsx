@@ -21,6 +21,7 @@ interface EarningsChartProps {
     earningsHistorical: Player['earningsHistorical'];
 }
 
+const chartDeadSpace = 16;
 const pageSize = 20;
 const screenHorizontalMargin = 8;
 
@@ -41,7 +42,7 @@ const getCurrentPage = (data: number[], nextIndex: number | undefined): ChartPag
     nextIndex = nextIndex === undefined ? (data.length > 0 ? data.length - 1 : 0) : nextIndex;
     const nextData = data.slice(
         Math.max(0, nextIndex - pageSize),
-        Math.min(Math.max(0, nextIndex + 1), data.length - 1)
+        Math.min(Math.max(0, nextIndex + 1), data.length)
     );
 
     return {
@@ -60,7 +61,7 @@ const getFormattedData = (data: number[], dimensions: ChartDimensions) => {
     const boundaryDotsWidth = dotWidth * boundaryDots.length;
 
     return {
-        chartWidth: dimensions.width + boundaryDotsWidth,
+        chartWidth: dimensions.width + boundaryDotsWidth + chartDeadSpace,
         source: data.length > 0 ? data.concat(boundaryDots) : [0]
     };
 };
@@ -105,6 +106,7 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
                 }}
                 height={300}
                 segments={dimensions.scale}
+                style={{ marginLeft: -chartDeadSpace }}
                 width={formattedData.chartWidth}
                 withVerticalLines={false}
             />
