@@ -308,28 +308,6 @@ export default function App() {
             currentDealerSymbol!
         );
 
-        if (handCode === HandCode.Split5s) {
-            // A 5,5 must also set the corresponding state for Hard 10
-            nextTrainingStatus = getNextTrainingStatus(
-                nextTrainingStatus,
-                trainingHands,
-                gameConfig,
-                nextDecisionEvaluation.isHit,
-                HandCode.Hard10,
-                currentDealerSymbol!
-            );
-        } else if (handCode === HandCode.Split10s) {
-            // A 10,10 must also set the corresponding state for Hard 20
-            nextTrainingStatus = getNextTrainingStatus(
-                nextTrainingStatus,
-                trainingHands,
-                gameConfig,
-                nextDecisionEvaluation.isHit,
-                HandCode.Hard20,
-                currentDealerSymbol!
-            );
-        }
-
         setTrainingStatus(nextTrainingStatus);
         updateTrainingProgress(nextTrainingStatus.trainingProgress);
 
