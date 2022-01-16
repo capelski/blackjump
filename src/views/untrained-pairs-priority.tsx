@@ -6,10 +6,13 @@ import { createCard } from '../logic/card';
 import { CardSuit, Hand, SimpleCardSymbol, SpecialCardSymbol } from '../types';
 
 export const UntrainedPairsPriority: React.FC = () => {
-    const hardFourteen: Hand = {
+    const hardNine: Hand = {
         bet: 1,
-        cards: [createCard(SimpleCardSymbol.Five), createCard(SimpleCardSymbol.Nine)],
-        values: [14]
+        cards: [
+            createCard(SimpleCardSymbol.Five, CardSuit.clubs),
+            createCard(SimpleCardSymbol.Four, CardSuit.hearts)
+        ],
+        values: [9]
     };
 
     return (
@@ -55,12 +58,12 @@ export const UntrainedPairsPriority: React.FC = () => {
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 24 }}>
-                    • Each time you Hit or Split a hand you will be dealt a card that turns your
+                    • Each time you Hit or Split a hand you might be dealt a card that turns your
                     current hand into an untrained/missed pair
                 </Text>
 
                 <HandComponent
-                    hand={hardFourteen}
+                    hand={hardNine}
                     handsNumber={1}
                     isCurrentHand={false}
                     isSoundEnabled={false}
@@ -74,8 +77,8 @@ export const UntrainedPairsPriority: React.FC = () => {
                 <HandComponent
                     hand={{
                         bet: 1,
-                        cards: [...hardFourteen.cards, createCard(SimpleCardSymbol.Ace)],
-                        values: [15]
+                        cards: [...hardNine.cards, createCard(SimpleCardSymbol.Ace)],
+                        values: [10, 20]
                     }}
                     handsNumber={1}
                     isCurrentHand={false}
@@ -90,7 +93,7 @@ export const UntrainedPairsPriority: React.FC = () => {
                 <HandComponent
                     hand={{
                         bet: 1,
-                        cards: [...hardFourteen.cards, createCard(SimpleCardSymbol.Six)],
+                        cards: [...hardNine.cards, createCard(SimpleCardSymbol.Ten)],
                         values: [20]
                     }}
                     handsNumber={1}
@@ -99,14 +102,17 @@ export const UntrainedPairsPriority: React.FC = () => {
                     skipAnimation={true}
                 />
 
-                <Text style={{ color: 'white', fontSize: 20, marginTop: 24 }}>
-                    (In case you have already trained all pairs reachable from the current hand, you
-                    will be dealt a random card)
-                </Text>
-
-                <Text style={{ color: 'white', fontSize: 20, marginTop: 24 }}>
-                    • Your are likely to win more, since you will be dealt infrequent hands and you
-                    won't get as busted as you would when being dealt random cards
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 20,
+                        fontStyle: 'italic',
+                        marginTop: 24
+                    }}
+                >
+                    You still will be dealt a random card when no untrained/missed pairs can be
+                    reached from your current hand or when the risk of busting your current hand is
+                    greater than 0
                 </Text>
 
                 <Text style={{ color: 'white', fontSize: 20, marginTop: 24 }}>
