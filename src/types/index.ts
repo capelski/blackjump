@@ -1,30 +1,27 @@
-export {
-    Card,
-    CardSuit,
-    CardSymbol,
-    CardValues,
-    SimpleCardSymbol,
-    SpecialCardSymbol,
-    TenPointsCardSymbol
-} from './card';
-export { CasinoRules, CasinoRulesKeys, Doubling, SplitsNumber } from './casino-rules';
-export {
-    BaseDecisions,
+export { CardSuit, SimpleCardSymbol, SpecialCardSymbol } from './card';
+export type { Card, CardSymbol, CardValues, TenPointsCardSymbol } from './card';
+export { CasinoRulesKeys, Doubling, SplitsNumber } from './casino-rules';
+export type { CasinoRules } from './casino-rules';
+export { BaseDecisions, DynamicDecisions, PlayerDecisions } from './decisions';
+export type {
     DecisionEvaluation,
     DynamicConditions,
     DynamicDecision,
-    DynamicDecisions,
-    PlayerDecision,
-    PlayerDecisions
+    PlayerDecision
 } from './decisions';
-export { Dictionary } from './dictionary';
-export { GameConfig, SelectedHands } from './game-config';
-export { Hand, HandCode, HandOutcome } from './hand';
-export { HandDecisionSet, HandDecisionSetGetters } from './hand-decision-set';
-export { AppNavigation, AppRoute, initialRouteName, RouteNames, RouteParams } from './navigation';
-export { OnBoardingSections, OnBoardingStep, OnBoardingStepEvent } from './onboarding';
+export type { Dictionary } from './dictionary';
+export type { GameConfig, SelectedHands } from './game-config';
+export { HandCode, HandOutcome } from './hand';
+export type { Hand } from './hand';
+export type { HandDecisionSet, HandDecisionSetGetters } from './hand-decision-set';
+export { RouteNames } from './navigation';
+export { initialRouteName } from './navigation';
+export type { AppNavigation, AppRoute, RouteParams } from './navigation';
+export { OnBoardingSections, OnBoardingStepEvent } from './onboarding';
+export type { OnBoardingStep } from './onboarding';
 export { Phases } from './phases';
-export { Player } from './player';
-export { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
-export { TrainingPair, TrainingPairRepresentation, TrainingPairStatus } from './training-pair';
-export { TrainingProgress, TrainingStatus } from './training-status';
+export type { Player } from './player';
+export type { TrainingHand, TrainingHands, TrainingHandStatus } from './training-hand';
+export { TrainingPairStatus } from './training-pair';
+export type { TrainingPair, TrainingPairRepresentation } from './training-pair';
+export type { TrainingProgress, TrainingStatus } from './training-status';
