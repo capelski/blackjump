@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Audio } from 'expo-av';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import hitSoundMp3 from './assets/hit.mp3';
 import missSoundMp3 from './assets/miss.mp3';
 import {
@@ -116,7 +117,7 @@ export default function App() {
     const [sounds, setSounds] = useState<{ hit: Audio.Sound; miss: Audio.Sound }>();
     const [trainingStatus, setTrainingStatus] = useState(getDefaultTrainingStatus());
 
-    const navigationRef = useRef<NavigationContainerRef>(null);
+    const navigationRef = useRef<NavigationContainerRef<RouteParams>>(null);
 
     useEffect(() => {
         Promise.all([
@@ -139,9 +140,7 @@ export default function App() {
             setTrainingHands(nextTrainingHands);
 
             if (!hasCompletedOnboarding) {
-                ((navigationRef.current as unknown) as AppNavigation).navigate(
-                    RouteNames.onboarding
-                );
+                navigationRef.current?.navigate(RouteNames.onboarding);
             }
 
             setPlayer({
@@ -187,14 +186,14 @@ export default function App() {
         const nextStep = onBoardingStep + (direction === 'forward' ? 1 : -1);
         onBoardingSteps[nextStep] &&
             onBoardingSteps[nextStep].load &&
-            onBoardingSteps[nextStep].load!((navigationRef.current as unknown) as AppNavigation);
+            onBoardingSteps[nextStep].load!(navigationRef.current as unknown as AppNavigation);
         setOnBoardingStep(nextStep);
     };
 
     const exitOnboarding = () => {
         setOnBoardingStep(-1);
         updateHasCompletedOnboarding(true);
-        ((navigationRef.current as unknown) as AppNavigation).navigate(RouteNames.table);
+        navigationRef.current?.navigate(RouteNames.table);
     };
 
     useEffect(() => {
@@ -205,7 +204,7 @@ export default function App() {
             const nextTimeout = setTimeout(() => {
                 setDecisionEvaluation(undefined);
             }, 1000);
-            setDecisionEvaluationTimeout(nextTimeout);
+            setDecisionEvaluationTimeout(nextTimeout as unknown as number);
         }
     }, [decisionEvaluation]);
 
@@ -383,159 +382,169 @@ export default function App() {
     };
 
     return (
-        <NavigationContainer ref={navigationRef}>
-            <StatusBar hidden={true} />
-            <NavBar
-                navigation={(navigationRef.current as unknown) as AppNavigation}
-                onBoardingStep={onBoardingStep}
-                player={player}
-                routeName={currentRoute}
-                trainingStatus={trainingStatus}
-            />
-            <Stack.Navigator
-                initialRouteName={initialRouteName}
-                screenOptions={{
-                    headerShown: false,
-                    cardStyle: {
-                        backgroundColor: tableColor
-                    }
-                }}
-            >
-                <Stack.Screen name={RouteNames.basicStrategyTable}>
-                    {() => <BasicStrategyTable casinoRules={gameConfig.casinoRules} />}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.configMenu}>
-                    {(props) => (
-                        <ConfigMenu
-                            gameConfig={gameConfig}
-                            navigation={props.navigation}
-                            onBoardingStep={onBoardingStep}
-                            phase={phase}
-                            resetTrainingStatus={() => {
-                                const nextTrainingStatus = getDefaultTrainingStatus();
-                                const nextPlayer: Player = {
-                                    ...player,
-                                    cash: 0,
-                                    earningsHistorical: [0]
-                                };
-
-                                updateTrainingProgress(nextTrainingStatus.trainingProgress);
-                                updatePlayerEarnings(nextPlayer.cash);
-                                updatePlayerEarningsHistorical(nextPlayer.earningsHistorical);
-
-                                setPlayer(nextPlayer);
-                                setTrainingStatus(nextTrainingStatus);
-
-                                props.navigation.navigate(RouteNames.table);
-                            }}
-                            setGameConfig={(_gameConfig) => {
-                                const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
-                                const nextTrainingStatus: TrainingStatus = {
-                                    ...trainingStatus,
-                                    isProgressBlocked: getIsProgressBlocked(
-                                        trainingStatus,
-                                        trainingHands,
-                                        _gameConfig.selectedHandsOnly,
-                                        _gameConfig.selectedHands
-                                    )
-                                };
-
-                                saveGameConfig(_gameConfig);
-                                setTrainingHands(nextTrainingHands);
-                                setTrainingStatus(nextTrainingStatus);
-                            }}
-                            trainingHands={trainingHands}
-                            trainingStatus={trainingStatus}
-                        />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.earningsChart}>
-                    {() => <EarningsChart earningsHistorical={player.earningsHistorical} />}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.handDecisions}>
-                    {(props) => (
-                        <HandDecisions casinoRules={gameConfig.casinoRules} route={props.route} />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.hitSplitAces} component={HitSplitAces} />
-                <Stack.Screen name={RouteNames.holeCard} component={HoleCard} />
-                <Stack.Screen name={RouteNames.missedPairs}>
-                    {(props) => (
-                        <MissedPairs
-                            gameConfig={gameConfig}
-                            missedTrainingPairs={trainingStatus.missedTrainingPairs}
-                            navigation={props.navigation}
-                            onBoardingStep={onBoardingStep}
-                            phase={phase}
-                            startTrainingRound={startTrainingRound}
-                            trainingHands={trainingHands}
-                        />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.onboarding}>
-                    {() => (
-                        <Onboarding
-                            skipOnboardingHandler={exitOnboarding}
-                            startOnboardingHandler={() => updateOnBoardingStep('forward')}
-                        />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.table}>
-                    {(props) => (
-                        <Table
-                            dealerHand={dealerHand}
-                            decisionEvaluation={decisionEvaluation}
-                            gameConfig={gameConfig}
-                            handlers={{
-                                double: doubleHandler,
-                                hit: hitHandler,
-                                split: splitHandler,
-                                stand: standHandler,
-                                surrender: surrenderHandler
-                            }}
-                            isDoubleEnabled={isDoubleEnabled}
-                            isHitEnabled={isHitEnabled}
-                            isSplitEnabled={isSplitEnabled}
-                            isSurrenderEnabled={isSurrenderEnabled}
-                            navigation={props.navigation}
-                            onBoardingStep={onBoardingStep}
-                            peeking={peeking}
-                            phase={phase}
-                            player={player}
-                            startTrainingRound={startTrainingRound}
-                            trainingHands={trainingHands}
-                            trainingProgress={trainingStatus.trainingProgress}
-                        />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen name={RouteNames.trainingCompleted} component={TrainingCompleted} />
-                <Stack.Screen name={RouteNames.trainingPairs}>
-                    {(props) => (
-                        <TrainingPairs
-                            gameConfig={gameConfig}
-                            navigation={props.navigation}
-                            onBoardingStep={onBoardingStep}
-                            phase={phase}
-                            startTrainingRound={startTrainingRound}
-                            trainingHands={trainingHands}
-                            trainingProgress={trainingStatus.trainingProgress}
-                        />
-                    )}
-                </Stack.Screen>
-                <Stack.Screen
-                    name={RouteNames.untrainedPairsPriority}
-                    component={UntrainedPairsPriority}
-                />
-            </Stack.Navigator>
-
-            {onBoardingStep > -1 && (
-                <OnboardingBar
-                    exitOnboarding={exitOnboarding}
-                    nextStepHandler={() => updateOnBoardingStep('forward')}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <NavigationContainer ref={navigationRef}>
+                <StatusBar hidden={true} />
+                <NavBar
+                    navigation={navigationRef.current as unknown as AppNavigation}
                     onBoardingStep={onBoardingStep}
-                    previousStepHandler={() => updateOnBoardingStep('backward')}
+                    player={player}
+                    routeName={currentRoute}
+                    trainingStatus={trainingStatus}
                 />
-            )}
-        </NavigationContainer>
+                <Stack.Navigator
+                    initialRouteName={initialRouteName}
+                    screenOptions={{
+                        headerShown: false,
+                        cardStyle: {
+                            backgroundColor: tableColor
+                        }
+                    }}
+                >
+                    <Stack.Screen name={RouteNames.basicStrategyTable}>
+                        {() => <BasicStrategyTable casinoRules={gameConfig.casinoRules} />}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.configMenu}>
+                        {(props) => (
+                            <ConfigMenu
+                                gameConfig={gameConfig}
+                                navigation={props.navigation}
+                                onBoardingStep={onBoardingStep}
+                                phase={phase}
+                                resetTrainingStatus={() => {
+                                    const nextTrainingStatus = getDefaultTrainingStatus();
+                                    const nextPlayer: Player = {
+                                        ...player,
+                                        cash: 0,
+                                        earningsHistorical: [0]
+                                    };
+
+                                    updateTrainingProgress(nextTrainingStatus.trainingProgress);
+                                    updatePlayerEarnings(nextPlayer.cash);
+                                    updatePlayerEarningsHistorical(nextPlayer.earningsHistorical);
+
+                                    setPlayer(nextPlayer);
+                                    setTrainingStatus(nextTrainingStatus);
+
+                                    props.navigation.navigate(RouteNames.table);
+                                }}
+                                setGameConfig={(_gameConfig) => {
+                                    const nextTrainingHands = getTrainingHands(
+                                        _gameConfig.casinoRules
+                                    );
+                                    const nextTrainingStatus: TrainingStatus = {
+                                        ...trainingStatus,
+                                        isProgressBlocked: getIsProgressBlocked(
+                                            trainingStatus,
+                                            trainingHands,
+                                            _gameConfig.selectedHandsOnly,
+                                            _gameConfig.selectedHands
+                                        )
+                                    };
+
+                                    saveGameConfig(_gameConfig);
+                                    setTrainingHands(nextTrainingHands);
+                                    setTrainingStatus(nextTrainingStatus);
+                                }}
+                                trainingHands={trainingHands}
+                                trainingStatus={trainingStatus}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.earningsChart}>
+                        {() => <EarningsChart earningsHistorical={player.earningsHistorical} />}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.handDecisions}>
+                        {(props) => (
+                            <HandDecisions
+                                casinoRules={gameConfig.casinoRules}
+                                route={props.route}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.hitSplitAces} component={HitSplitAces} />
+                    <Stack.Screen name={RouteNames.holeCard} component={HoleCard} />
+                    <Stack.Screen name={RouteNames.missedPairs}>
+                        {(props) => (
+                            <MissedPairs
+                                gameConfig={gameConfig}
+                                missedTrainingPairs={trainingStatus.missedTrainingPairs}
+                                navigation={props.navigation}
+                                onBoardingStep={onBoardingStep}
+                                phase={phase}
+                                startTrainingRound={startTrainingRound}
+                                trainingHands={trainingHands}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.onboarding}>
+                        {() => (
+                            <Onboarding
+                                skipOnboardingHandler={exitOnboarding}
+                                startOnboardingHandler={() => updateOnBoardingStep('forward')}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name={RouteNames.table}>
+                        {(props) => (
+                            <Table
+                                dealerHand={dealerHand}
+                                decisionEvaluation={decisionEvaluation}
+                                gameConfig={gameConfig}
+                                handlers={{
+                                    double: doubleHandler,
+                                    hit: hitHandler,
+                                    split: splitHandler,
+                                    stand: standHandler,
+                                    surrender: surrenderHandler
+                                }}
+                                isDoubleEnabled={isDoubleEnabled}
+                                isHitEnabled={isHitEnabled}
+                                isSplitEnabled={isSplitEnabled}
+                                isSurrenderEnabled={isSurrenderEnabled}
+                                navigation={props.navigation}
+                                onBoardingStep={onBoardingStep}
+                                peeking={peeking}
+                                phase={phase}
+                                player={player}
+                                startTrainingRound={startTrainingRound}
+                                trainingHands={trainingHands}
+                                trainingProgress={trainingStatus.trainingProgress}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen
+                        name={RouteNames.trainingCompleted}
+                        component={TrainingCompleted}
+                    />
+                    <Stack.Screen name={RouteNames.trainingPairs}>
+                        {(props) => (
+                            <TrainingPairs
+                                gameConfig={gameConfig}
+                                navigation={props.navigation}
+                                onBoardingStep={onBoardingStep}
+                                phase={phase}
+                                startTrainingRound={startTrainingRound}
+                                trainingHands={trainingHands}
+                                trainingProgress={trainingStatus.trainingProgress}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen
+                        name={RouteNames.untrainedPairsPriority}
+                        component={UntrainedPairsPriority}
+                    />
+                </Stack.Navigator>
+
+                {onBoardingStep > -1 && (
+                    <OnboardingBar
+                        exitOnboarding={exitOnboarding}
+                        nextStepHandler={() => updateOnBoardingStep('forward')}
+                        onBoardingStep={onBoardingStep}
+                        previousStepHandler={() => updateOnBoardingStep('backward')}
+                    />
+                )}
+            </NavigationContainer>
+        </GestureHandlerRootView>
     );
 }
