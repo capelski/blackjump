@@ -23,14 +23,12 @@ import {
     CasinoRules,
     CasinoRulesKeys,
     Dictionary,
-    Doubling,
     GameConfig,
     HandCode,
     OnBoardingSections,
     Phases,
     RouteNames,
     SelectedHands,
-    SplitsNumber,
     TrainingHands,
     TrainingStatus
 } from '../types';
@@ -89,6 +87,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
     };
 
     const casinoRuleChangeHandler = (nextCasinoRules: CasinoRules) => {
+        setCasinoRules(nextCasinoRules);
         const nextTrainingHands = getTrainingHands(nextCasinoRules);
         setTrainingHands(nextTrainingHands);
     };
@@ -204,32 +203,27 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 <RuleSwitcher
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.dealerHitsSoft17}
-                    setCasinoRules={setCasinoRules}
-                />
-
-                <DoublingPicker
-                    casinoRules={casinoRules}
-                    onValueChange={casinoRuleChangeHandler}
-                    setCasinoRules={setCasinoRules}
+                    ruleName={CasinoRulesKeys.blackjackPeek}
                 />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
-                    isDisabled={
-                        casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
-                        casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
-                    }
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.dealerHitsSoft17}
+                />
+
+                <DoublingPicker casinoRules={casinoRules} onValueChange={casinoRuleChangeHandler} />
+
+                <RuleSwitcher
+                    casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.doublingAfterSplit}
-                    setCasinoRules={setCasinoRules}
                 />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.hitSplitAces}
-                    setCasinoRules={setCasinoRules}
                 >
                     <HelpIcon
                         onPress={() => {
@@ -242,7 +236,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.holeCard}
-                    setCasinoRules={setCasinoRules}
                 >
                     <HelpIcon
                         onPress={() => {
@@ -251,26 +244,15 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     />
                 </RuleSwitcher>
 
-                {/* TODO Put first thing */}
-                <RuleSwitcher
-                    casinoRules={casinoRules}
-                    isDisabled={!casinoRules[CasinoRulesKeys.holeCard]}
-                    onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.blackjackPeek}
-                    setCasinoRules={setCasinoRules}
-                />
-
                 <SplitsNumberPicker
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
-                    setCasinoRules={setCasinoRules}
                 />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.surrender}
-                    setCasinoRules={setCasinoRules}
                 />
             </OnBoardingSection>
 

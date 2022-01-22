@@ -1,10 +1,9 @@
 import React from 'react';
-import { CasinoRules, CasinoRulesKeys } from '../../types';
+import { CasinoRules, CasinoRulesKeys, Doubling, SplitsNumber } from '../../types';
 import { Switcher } from '../switcher';
 
 interface RuleSwitcherProps {
     casinoRules: CasinoRules;
-    isDisabled?: boolean;
     onValueChange: (nextCasinoRules: CasinoRules) => void;
     ruleName:
         | CasinoRulesKeys.blackjackPeek
@@ -13,13 +12,21 @@ interface RuleSwitcherProps {
         | CasinoRulesKeys.hitSplitAces
         | CasinoRulesKeys.holeCard
         | CasinoRulesKeys.surrender;
-    setCasinoRules: (casinoRules: CasinoRules) => void;
 }
 
 export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
+    const disabled =
+        (props.ruleName === CasinoRulesKeys.blackjackPeek &&
+            !props.casinoRules[CasinoRulesKeys.holeCard]) ||
+        (props.ruleName === CasinoRulesKeys.doublingAfterSplit &&
+            (props.casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
+                props.casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none)) ||
+        (props.ruleName === CasinoRulesKeys.hitSplitAces &&
+            props.casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none);
+
     return (
         <Switcher
-            disabled={props.isDisabled}
+            disabled={disabled}
             label={props.ruleName}
             onValueChange={(newValue) => {
                 const nextCasinoRules = {
@@ -29,8 +36,7 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
                 if (props.ruleName === CasinoRulesKeys.holeCard && !newValue) {
                     nextCasinoRules[CasinoRulesKeys.blackjackPeek] = false;
                 }
-                props.setCasinoRules(nextCasinoRules);
-                props.onValueChange && props.onValueChange(nextCasinoRules);
+                props.onValueChange(nextCasinoRules);
             }}
             value={props.casinoRules[props.ruleName]}
         >

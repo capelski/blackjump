@@ -5,8 +5,7 @@ import { CasinoRules, CasinoRulesKeys, SplitsNumber } from '../../types';
 
 interface SplitsNumberPickerProps {
     casinoRules: CasinoRules;
-    onValueChange?: (nextCasinoRules: CasinoRules) => void;
-    setCasinoRules: (casinoRules: CasinoRules) => void;
+    onValueChange: (nextCasinoRules: CasinoRules) => void;
 }
 
 export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => {
@@ -49,8 +48,7 @@ export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => 
                                 nextSplitsNumber > 0,
                             [CasinoRulesKeys.splitsNumber]: nextSplitsNumber
                         };
-                        props.setCasinoRules(nextCasinoRules);
-                        props.onValueChange && props.onValueChange(nextCasinoRules);
+                        props.onValueChange(nextCasinoRules);
                     }}
                 >
                     <Picker.Item label="None" value={SplitsNumber.none} />

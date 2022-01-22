@@ -106,34 +106,30 @@ export const BasicStrategyTable: React.FC<BasicStrategyTableProps> = (props) => 
             <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
                 <RuleSwitcher
                     casinoRules={casinoRules}
+                    onValueChange={setCasinoRules}
                     ruleName={CasinoRulesKeys.blackjackPeek}
-                    setCasinoRules={setCasinoRules}
                 />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
+                    onValueChange={setCasinoRules}
                     ruleName={CasinoRulesKeys.dealerHitsSoft17}
-                    setCasinoRules={setCasinoRules}
                 />
 
-                <DoublingPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
+                <DoublingPicker casinoRules={casinoRules} onValueChange={setCasinoRules} />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
-                    isDisabled={
-                        props.casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
-                        props.casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none
-                    }
+                    onValueChange={setCasinoRules}
                     ruleName={CasinoRulesKeys.doublingAfterSplit}
-                    setCasinoRules={setCasinoRules}
                 />
 
-                <SplitsNumberPicker casinoRules={casinoRules} setCasinoRules={setCasinoRules} />
+                <SplitsNumberPicker casinoRules={casinoRules} onValueChange={setCasinoRules} />
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
+                    onValueChange={setCasinoRules}
                     ruleName={CasinoRulesKeys.surrender}
-                    setCasinoRules={setCasinoRules}
                 />
             </View>
 

@@ -55,20 +55,20 @@ export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
                     <DoublingPicker
                         casinoRules={casinoRules}
                         key={dependency}
-                        setCasinoRules={setCasinoRules}
+                        onValueChange={setCasinoRules}
                     />
                 ) : dependency === CasinoRulesKeys.splitsNumber ? (
                     <SplitsNumberPicker
                         casinoRules={casinoRules}
                         key={dependency}
-                        setCasinoRules={setCasinoRules}
+                        onValueChange={setCasinoRules}
                     />
                 ) : (
                     <RuleSwitcher
                         casinoRules={casinoRules}
                         key={dependency}
+                        onValueChange={setCasinoRules}
                         ruleName={dependency}
-                        setCasinoRules={setCasinoRules}
                     />
                 );
             })}

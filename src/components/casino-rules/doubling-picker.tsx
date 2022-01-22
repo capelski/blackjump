@@ -5,8 +5,7 @@ import { CasinoRules, CasinoRulesKeys, Doubling } from '../../types';
 
 interface DoublingPickerProps {
     casinoRules: CasinoRules;
-    onValueChange?: (nextCasinoRules: CasinoRules) => void;
-    setCasinoRules: (casinoRules: CasinoRules) => void;
+    onValueChange: (nextCasinoRules: CasinoRules) => void;
 }
 
 export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
@@ -46,8 +45,7 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
                                 nextDoubling > 0,
                             [CasinoRulesKeys.doubling]: nextDoubling
                         };
-                        props.setCasinoRules(nextCasinoRules);
-                        props.onValueChange && props.onValueChange(nextCasinoRules);
+                        props.onValueChange(nextCasinoRules);
                     }}
                 >
                     <Picker.Item label="Any pair" value={Doubling.anyPair} />
