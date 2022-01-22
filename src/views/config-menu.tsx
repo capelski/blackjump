@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Platform, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Button } from '../components/button';
 import { DoublingPicker } from '../components/casino-rules/doubling-picker';
 import { RuleSwitcher } from '../components/casino-rules/rule-switcher';
@@ -7,6 +7,7 @@ import { SplitsNumberPicker } from '../components/casino-rules/splits-number-pic
 import { Divider } from '../components/divider';
 import { HelpIcon } from '../components/help-icon';
 import { OnBoardingSection } from '../components/onboarding-section';
+import { Switcher } from '../components/switcher';
 import {
     dangerColor,
     doubleColor,
@@ -224,66 +225,40 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     setCasinoRules={setCasinoRules}
                 />
 
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <RuleSwitcher
-                        casinoRules={casinoRules}
-                        fullWidth={false}
-                        isDisabled={casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none}
-                        onValueChange={casinoRuleChangeHandler}
-                        paddingTop={0}
-                        ruleName={CasinoRulesKeys.hitSplitAces}
-                        setCasinoRules={setCasinoRules}
-                    />
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.hitSplitAces}
+                    setCasinoRules={setCasinoRules}
+                >
                     <HelpIcon
                         onPress={() => {
                             props.navigation.navigate(RouteNames.hitSplitAces);
                         }}
                     />
-                </View>
+                </RuleSwitcher>
 
-                <View
-                    style={{
-                        alignItems: 'flex-start',
-                        flexDirection: 'row',
-                        paddingTop: 16,
-                        width: '100%'
-                    }}
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.holeCard}
+                    setCasinoRules={setCasinoRules}
                 >
-                    <RuleSwitcher
-                        casinoRules={casinoRules}
-                        hideLabel={true}
-                        onValueChange={casinoRuleChangeHandler}
-                        ruleName={CasinoRulesKeys.holeCard}
-                        setCasinoRules={setCasinoRules}
+                    <HelpIcon
+                        onPress={() => {
+                            props.navigation.navigate(RouteNames.holeCard);
+                        }}
                     />
+                </RuleSwitcher>
 
-                    <View>
-                        <View style={{ flexDirection: 'row', width: '100%' }}>
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    fontSize: 20
-                                }}
-                            >
-                                {CasinoRulesKeys.holeCard}
-                            </Text>
-
-                            <HelpIcon
-                                onPress={() => {
-                                    props.navigation.navigate(RouteNames.holeCard);
-                                }}
-                            />
-                        </View>
-
-                        <RuleSwitcher
-                            casinoRules={casinoRules}
-                            isDisabled={!casinoRules[CasinoRulesKeys.holeCard]}
-                            onValueChange={casinoRuleChangeHandler}
-                            ruleName={CasinoRulesKeys.blackjackPeek}
-                            setCasinoRules={setCasinoRules}
-                        />
-                    </View>
-                </View>
+                {/* TODO Put first thing */}
+                <RuleSwitcher
+                    casinoRules={casinoRules}
+                    isDisabled={!casinoRules[CasinoRulesKeys.holeCard]}
+                    onValueChange={casinoRuleChangeHandler}
+                    ruleName={CasinoRulesKeys.blackjackPeek}
+                    setCasinoRules={setCasinoRules}
+                />
 
                 <SplitsNumberPicker
                     casinoRules={casinoRules}
@@ -317,67 +292,35 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 </Text>
                 <Divider />
 
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={setIsDealerAnimationEnabled}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={isDealerAnimationEnabled}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Dealer cards animation
-                    </Text>
-                </View>
+                <Switcher
+                    label="Dealer cards animation"
+                    onValueChange={setIsDealerAnimationEnabled}
+                    value={isDealerAnimationEnabled}
+                />
 
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        disabled={props.trainingStatus.isCompleted}
-                        onValueChange={setUntrainedPairsPriority}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={!props.trainingStatus.isCompleted && untrainedPairsPriority}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Untrained pairs priority
-                    </Text>
+                <Switcher
+                    disabled={props.trainingStatus.isCompleted}
+                    label="Untrained pairs priority"
+                    onValueChange={setUntrainedPairsPriority}
+                    value={!props.trainingStatus.isCompleted && untrainedPairsPriority}
+                >
                     <HelpIcon
                         onPress={() => {
                             props.navigation.navigate(RouteNames.untrainedPairsPriority);
                         }}
                     />
-                </View>
+                </Switcher>
 
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={(value) => {
-                            setSelectedHandsOnly(value);
-                            isProgressBlockedHandler({
-                                nextSelectedHandsOnly: value
-                            });
-                        }}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={selectedHandsOnly}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Selected hands only
-                    </Text>
-                </View>
+                <Switcher
+                    label="Selected hands only"
+                    onValueChange={(value) => {
+                        setSelectedHandsOnly(value);
+                        isProgressBlockedHandler({
+                            nextSelectedHandsOnly: value
+                        });
+                    }}
+                    value={selectedHandsOnly}
+                />
 
                 {selectedHandsOnly && (
                     <View
@@ -485,22 +428,11 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     </View>
                 )}
 
-                <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%' }}>
-                    <Switch
-                        onValueChange={setIsSoundEnabled}
-                        style={{ marginRight: 8 }}
-                        trackColor={{ true: hitColor, false: 'white' }}
-                        value={isSoundEnabled}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20
-                        }}
-                    >
-                        Sound effects 🔊
-                    </Text>
-                </View>
+                <Switcher
+                    label="Sound effects 🔊"
+                    onValueChange={setIsSoundEnabled}
+                    value={isSoundEnabled}
+                />
             </OnBoardingSection>
 
             <OnBoardingSection
