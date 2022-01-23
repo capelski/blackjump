@@ -1,5 +1,6 @@
+import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { Picker, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { tableColor } from '../../constants';
 import { CasinoRules, CasinoRulesKeys, SplitsNumber } from '../../types';
 
@@ -29,7 +30,7 @@ export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => 
 
             <View style={{ backgroundColor: 'white', flex: 1, marginLeft: 8 }}>
                 <Picker
-                    selectedValue={props.casinoRules[CasinoRulesKeys.splitsNumber]}
+                    selectedValue={String(props.casinoRules[CasinoRulesKeys.splitsNumber])}
                     style={{
                         backgroundColor: 'transparent',
                         color: tableColor,
@@ -51,10 +52,10 @@ export const SplitsNumberPicker: React.FC<SplitsNumberPickerProps> = (props) => 
                         props.onValueChange(nextCasinoRules);
                     }}
                 >
-                    <Picker.Item label="None" value={SplitsNumber.none} />
-                    <Picker.Item label="1" value={SplitsNumber.one} />
-                    <Picker.Item label="2" value={SplitsNumber.two} />
-                    <Picker.Item label="3" value={SplitsNumber.three} />
+                    <Picker.Item label="None" value={String(SplitsNumber.none)} />
+                    <Picker.Item label="1" value={String(SplitsNumber.one)} />
+                    <Picker.Item label="2" value={String(SplitsNumber.two)} />
+                    <Picker.Item label="3" value={String(SplitsNumber.three)} />
                 </Picker>
             </View>
         </View>

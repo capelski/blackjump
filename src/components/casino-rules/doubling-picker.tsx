@@ -1,5 +1,6 @@
+import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { Picker, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { tableColor } from '../../constants';
 import { CasinoRules, CasinoRulesKeys, Doubling } from '../../types';
 
@@ -29,7 +30,7 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
 
             <View style={{ backgroundColor: 'white', flex: 1, marginLeft: 8 }}>
                 <Picker
-                    selectedValue={props.casinoRules[CasinoRulesKeys.doubling]}
+                    selectedValue={String(props.casinoRules[CasinoRulesKeys.doubling])}
                     style={{
                         backgroundColor: 'transparent',
                         color: tableColor,
@@ -48,11 +49,14 @@ export const DoublingPicker: React.FC<DoublingPickerProps> = (props) => {
                         props.onValueChange(nextCasinoRules);
                     }}
                 >
-                    <Picker.Item label="Any pair" value={Doubling.anyPair} />
-                    <Picker.Item label="9, 10, 11, S19, S20" value={Doubling.nineToElevenSoft} />
-                    <Picker.Item label="9, 10, 11" value={Doubling.nineToEleven} />
-                    <Picker.Item label="10, 11" value={Doubling.tenToEleven} />
-                    <Picker.Item label="None" value={Doubling.none} />
+                    <Picker.Item label="Any pair" value={String(Doubling.anyPair)} />
+                    <Picker.Item
+                        label="9, 10, 11, S19, S20"
+                        value={String(Doubling.nineToElevenSoft)}
+                    />
+                    <Picker.Item label="9, 10, 11" value={String(Doubling.nineToEleven)} />
+                    <Picker.Item label="10, 11" value={String(Doubling.tenToEleven)} />
+                    <Picker.Item label="None" value={String(Doubling.none)} />
                 </Picker>
             </View>
         </View>
