@@ -45,7 +45,7 @@ export const HandComponent: React.FC<HandComponentProps> = (props) => {
             ))}
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
                 {props.peeking ? (
-                    <Text style={{ color: 'black', fontSize: 32, height: '100%' }}>👁️</Text>
+                    <Text style={{ color: 'black', fontSize: 32 }}>👁️</Text>
                 ) : (
                     <React.Fragment>
                         <Text style={{ color: 'white', fontSize: 25 }}> {displayValues}</Text>
