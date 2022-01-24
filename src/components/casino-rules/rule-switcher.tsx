@@ -10,14 +10,11 @@ interface RuleSwitcherProps {
         | CasinoRulesKeys.dealerHitsSoft17
         | CasinoRulesKeys.doublingAfterSplit
         | CasinoRulesKeys.hitSplitAces
-        | CasinoRulesKeys.holeCard
         | CasinoRulesKeys.surrender;
 }
 
 export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
     const disabled =
-        (props.ruleName === CasinoRulesKeys.blackjackPeek &&
-            !props.casinoRules[CasinoRulesKeys.holeCard]) ||
         (props.ruleName === CasinoRulesKeys.doublingAfterSplit &&
             (props.casinoRules[CasinoRulesKeys.doubling] === Doubling.none ||
                 props.casinoRules[CasinoRulesKeys.splitsNumber] === SplitsNumber.none)) ||
@@ -29,14 +26,10 @@ export const RuleSwitcher: React.FC<RuleSwitcherProps> = (props) => {
             disabled={disabled}
             label={props.ruleName}
             onValueChange={(newValue) => {
-                const nextCasinoRules = {
+                props.onValueChange({
                     ...props.casinoRules,
                     [props.ruleName]: newValue
-                };
-                if (props.ruleName === CasinoRulesKeys.holeCard && !newValue) {
-                    nextCasinoRules[CasinoRulesKeys.blackjackPeek] = false;
-                }
-                props.onValueChange(nextCasinoRules);
+                });
             }}
             value={props.casinoRules[props.ruleName]}
         >

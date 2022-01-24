@@ -6,7 +6,6 @@ export const getDefaultCasinoRules = (): CasinoRules => ({
     [CasinoRulesKeys.doubling]: Doubling.nineToElevenSoft,
     [CasinoRulesKeys.doublingAfterSplit]: true,
     [CasinoRulesKeys.hitSplitAces]: false,
-    [CasinoRulesKeys.holeCard]: false,
     [CasinoRulesKeys.splitsNumber]: SplitsNumber.three,
     [CasinoRulesKeys.surrender]: false
 });

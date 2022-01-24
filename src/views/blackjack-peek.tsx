@@ -4,7 +4,7 @@ import { HandComponent } from '../components/hand-component';
 import { createCard } from '../logic/card';
 import { CardSuit, SimpleCardSymbol } from '../types';
 
-export const HoleCard: React.FC = () => {
+export const BlackjackPeek: React.FC = () => {
     return (
         <React.Fragment>
             <Text
@@ -16,7 +16,7 @@ export const HoleCard: React.FC = () => {
                     textAlign: 'center'
                 }}
             >
-                Hole card
+                Blackjack Peek
             </Text>
             <ScrollView
                 style={{
@@ -32,10 +32,10 @@ export const HoleCard: React.FC = () => {
                     hand={{
                         bet: 1,
                         cards: [
-                            createCard(SimpleCardSymbol.Ace, CardSuit.clubs),
+                            createCard(SimpleCardSymbol.Eight, CardSuit.clubs),
                             createCard(SimpleCardSymbol.Ten, CardSuit.diamonds, true)
                         ],
-                        values: [1, 11]
+                        values: [8]
                     }}
                     handsNumber={1}
                     isCurrentHand={false}
@@ -44,9 +44,9 @@ export const HoleCard: React.FC = () => {
                 />
 
                 <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 16 }}>
-                    Additionally, when Blackjack Peek is enabled, the dealer peeks at the hole card
-                    and reveals it if it makes the dealer's hand a blackjack, winning over all
-                    players' non blackjack hands.
+                    When Blackjack Peek is enabled and the dealer's hand could be a blackjack (e.g.
+                    the first card is an ace or a ten value card), the dealer peeks at the hole
+                    card.
                 </Text>
 
                 <HandComponent
@@ -64,6 +64,11 @@ export const HoleCard: React.FC = () => {
                     peeking={true}
                     skipAnimation={true}
                 />
+
+                <Text style={{ color: 'white', fontSize: 20, marginBottom: 16, marginTop: 16 }}>
+                    If the hole card makes the dealer's hand a blackjack, the dealer reveals the
+                    hole card winning over all players' non blackjack hands.
+                </Text>
 
                 <HandComponent
                     hand={{

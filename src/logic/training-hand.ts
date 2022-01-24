@@ -28,7 +28,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
             CasinoRulesKeys.splitsNumber,
             CasinoRulesKeys.doublingAfterSplit,
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek,
             CasinoRulesKeys.dealerHitsSoft17
         ],
@@ -41,7 +41,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
             CasinoRulesKeys.splitsNumber,
             CasinoRulesKeys.doublingAfterSplit,
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek
         ],
         name: '3,3'
@@ -65,7 +65,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
             CasinoRulesKeys.splitsNumber,
             CasinoRulesKeys.doublingAfterSplit,
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek
         ],
         name: '6,6'
@@ -76,7 +76,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
         dependencies: [
             CasinoRulesKeys.splitsNumber,
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek
         ],
         name: '7,7'
@@ -86,7 +86,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
         decisionSet: handDecisionSetGetters[HandCode.Split8s](casinoRules),
         dependencies: [
             CasinoRulesKeys.splitsNumber,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek,
             CasinoRulesKeys.surrender,
             CasinoRulesKeys.dealerHitsSoft17
@@ -108,11 +108,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
     [HandCode.SplitAs]: {
         code: HandCode.SplitAs,
         decisionSet: handDecisionSetGetters[HandCode.SplitAs](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.splitsNumber,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.splitsNumber, CasinoRulesKeys.blackjackPeek],
         name: 'A,A'
     },
     [HandCode.Soft13]: {
@@ -168,31 +164,19 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
     [HandCode.Hard5]: {
         code: HandCode.Hard5,
         decisionSet: handDecisionSetGetters[HandCode.Hard5](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 5'
     },
     [HandCode.Hard6]: {
         code: HandCode.Hard6,
         decisionSet: handDecisionSetGetters[HandCode.Hard6](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 6'
     },
     [HandCode.Hard7]: {
         code: HandCode.Hard7,
         decisionSet: handDecisionSetGetters[HandCode.Hard7](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 7'
     },
     [HandCode.Hard8]: {
@@ -218,7 +202,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
         decisionSet: handDecisionSetGetters[HandCode.Hard11](casinoRules),
         dependencies: [
             CasinoRulesKeys.doubling,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek,
             CasinoRulesKeys.dealerHitsSoft17
         ],
@@ -227,31 +211,19 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
     [HandCode.Hard12]: {
         code: HandCode.Hard12,
         decisionSet: handDecisionSetGetters[HandCode.Hard12](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 12'
     },
     [HandCode.Hard13]: {
         code: HandCode.Hard13,
         decisionSet: handDecisionSetGetters[HandCode.Hard13](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 13'
     },
     [HandCode.Hard14]: {
         code: HandCode.Hard14,
         decisionSet: handDecisionSetGetters[HandCode.Hard14](casinoRules),
-        dependencies: [
-            CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
-            CasinoRulesKeys.blackjackPeek
-        ],
+        dependencies: [CasinoRulesKeys.surrender, CasinoRulesKeys.blackjackPeek],
         name: 'Hard 14'
     },
     [HandCode.Hard15]: {
@@ -259,7 +231,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
         decisionSet: handDecisionSetGetters[HandCode.Hard15](casinoRules),
         dependencies: [
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek,
             CasinoRulesKeys.dealerHitsSoft17
         ],
@@ -276,7 +248,7 @@ export const getTrainingHands = (casinoRules: CasinoRules): TrainingHands => ({
         decisionSet: handDecisionSetGetters[HandCode.Hard17](casinoRules),
         dependencies: [
             CasinoRulesKeys.surrender,
-            CasinoRulesKeys.holeCard,
+
             CasinoRulesKeys.blackjackPeek,
             CasinoRulesKeys.dealerHitsSoft17
         ],

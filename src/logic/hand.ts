@@ -86,7 +86,7 @@ export const createDealerHand = (
         dealerSymbol ? createCard(dealerSymbol, dealerSuit) : getRandomCard()
     ];
 
-    if (casinoRules[CasinoRulesKeys.holeCard]) {
+    if (casinoRules[CasinoRulesKeys.blackjackPeek]) {
         dealerCards.push(getRandomCard({ isHoleCard: true }));
     }
 

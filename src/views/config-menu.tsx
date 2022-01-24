@@ -116,8 +116,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 casinoRules[CasinoRulesKeys.doubling] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.hitSplitAces] !==
                 casinoRules[CasinoRulesKeys.hitSplitAces] ||
-            props.gameConfig.casinoRules[CasinoRulesKeys.holeCard] !==
-                casinoRules[CasinoRulesKeys.holeCard] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.splitsNumber] !==
                 casinoRules[CasinoRulesKeys.splitsNumber] ||
             props.gameConfig.casinoRules[CasinoRulesKeys.surrender] !==
@@ -204,7 +202,13 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     casinoRules={casinoRules}
                     onValueChange={casinoRuleChangeHandler}
                     ruleName={CasinoRulesKeys.blackjackPeek}
-                />
+                >
+                    <HelpIcon
+                        onPress={() => {
+                            props.navigation.navigate(RouteNames.blackjackPeek);
+                        }}
+                    />
+                </RuleSwitcher>
 
                 <RuleSwitcher
                     casinoRules={casinoRules}
@@ -228,18 +232,6 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                     <HelpIcon
                         onPress={() => {
                             props.navigation.navigate(RouteNames.hitSplitAces);
-                        }}
-                    />
-                </RuleSwitcher>
-
-                <RuleSwitcher
-                    casinoRules={casinoRules}
-                    onValueChange={casinoRuleChangeHandler}
-                    ruleName={CasinoRulesKeys.holeCard}
-                >
-                    <HelpIcon
-                        onPress={() => {
-                            props.navigation.navigate(RouteNames.holeCard);
                         }}
                     />
                 </RuleSwitcher>

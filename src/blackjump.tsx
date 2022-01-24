@@ -75,11 +75,11 @@ import {
 } from './types';
 import { playSound } from './utils';
 import { BasicStrategyTable } from './views/basic-strategy-table';
+import { BlackjackPeek } from './views/blackjack-peek';
 import { ConfigMenu } from './views/config-menu';
 import { EarningsChart } from './views/earnings-chart';
 import { HandDecisions } from './views/hand-decisions';
 import { HitSplitAces } from './views/hit-split-aces';
-import { HoleCard } from './views/hole-card';
 import { MissedPairs } from './views/missed-pairs';
 import { Onboarding } from './views/onboarding';
 import { Table } from './views/table';
@@ -223,7 +223,6 @@ export const BlackJump: React.FC = () => {
         initializeHands(nextPlayer, playerHand);
 
         if (
-            gameConfig.casinoRules[CasinoRulesKeys.holeCard] &&
             gameConfig.casinoRules[CasinoRulesKeys.blackjackPeek] &&
             canBeDealerBlackjack(dealerHand)
         ) {
@@ -403,6 +402,7 @@ export const BlackJump: React.FC = () => {
                     <Stack.Screen name={RouteNames.basicStrategyTable}>
                         {() => <BasicStrategyTable casinoRules={gameConfig.casinoRules} />}
                     </Stack.Screen>
+                    <Stack.Screen name={RouteNames.blackjackPeek} component={BlackjackPeek} />
                     <Stack.Screen name={RouteNames.configMenu}>
                         {(props) => (
                             <ConfigMenu
@@ -462,7 +462,6 @@ export const BlackJump: React.FC = () => {
                         )}
                     </Stack.Screen>
                     <Stack.Screen name={RouteNames.hitSplitAces} component={HitSplitAces} />
-                    <Stack.Screen name={RouteNames.holeCard} component={HoleCard} />
                     <Stack.Screen name={RouteNames.missedPairs}>
                         {(props) => (
                             <MissedPairs
