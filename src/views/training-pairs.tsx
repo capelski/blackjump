@@ -63,11 +63,15 @@ export const TrainingPairs: React.FC<TrainingPairsProps> = (props) => {
                             style={{ paddingVertical: 8, paddingHorizontal: 16, width: '100%' }}
                         >
                             <TouchableOpacity
-                                onPress={() => {
-                                    setUnfoldedHand(
-                                        unfoldedHand !== handCode ? handCode : undefined
-                                    );
-                                }}
+                                onPress={
+                                    props.onBoardingStep > -1
+                                        ? undefined
+                                        : () => {
+                                            setUnfoldedHand(
+                                                unfoldedHand !== handCode ? handCode : undefined
+                                            );
+                                        }
+                                }
                                 style={{ width: '100%' }}
                             >
                                 <Text
