@@ -63,6 +63,7 @@ import {
     DecisionEvaluation,
     GameConfig,
     Hand,
+    HandCode,
     initialRouteName,
     OnBoardingStepEvent,
     Phases,
@@ -304,6 +305,19 @@ export const BlackJump: React.FC = () => {
             handCode,
             currentDealerSymbol!
         );
+
+        if (handCode === HandCode.Split10s) {
+            // Because the only possible initial-hand for a Hard 20 is a 10,10,
+            // Split10s must also set the corresponding state for Hard 20
+            nextTrainingStatus = getNextTrainingStatus(
+                nextTrainingStatus,
+                trainingHands,
+                gameConfig,
+                nextDecisionEvaluation.isHit,
+                HandCode.Hard20,
+                currentDealerSymbol!
+            );
+        }
 
         setTrainingStatus(nextTrainingStatus);
         updateTrainingProgress(nextTrainingStatus.trainingProgress);
