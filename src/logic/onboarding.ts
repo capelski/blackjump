@@ -33,7 +33,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
     {
         activeSection: [OnBoardingSections.tableFeedback],
         hidePreviousButton: true,
-        text: 'Confirm whether you chose the right action'
+        text: 'Check whether you chose the right action'
     },
     {
         activeSection: [OnBoardingSections.progressIndicator],
@@ -73,7 +73,7 @@ export const onBoardingSteps: OnBoardingStep[] = [
         load: (navigation) => {
             navigation.navigate(RouteNames.earningsChart);
         },
-        text: 'Click on it to see your earnings historical'
+        text: 'Click on it to see your historical of earnings'
     },
     {
         activeSection: [OnBoardingSections.configMenuButton],
