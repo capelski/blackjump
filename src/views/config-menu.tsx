@@ -149,7 +149,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 <Button
                     height={56}
                     backgroundColor={splitColor}
-                    isEnabled={true}
+                    isEnabled={props.onBoardingStep === -1}
                     onPress={() => {
                         props.navigation.navigate(RouteNames.basicStrategyTable);
                     }}
@@ -467,7 +467,7 @@ export const ConfigMenu: React.FC<ConfigMenuProps> = (props) => {
                 <Button
                     height={56}
                     backgroundColor={dangerColor}
-                    isEnabled={true}
+                    isEnabled={props.onBoardingStep === -1}
                     marginTop={8}
                     onPress={() => {
                         const title = 'Reset training';
