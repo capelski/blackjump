@@ -6,10 +6,10 @@ import { HandDecisionSet } from './hand-decision-set';
 import { TrainingPairStatus } from './training-pair';
 
 export interface TrainingHand {
-    code: HandCode;
-    decisionSet: HandDecisionSet;
-    dependencies: CasinoRulesKeys[];
-    name: string;
+  code: HandCode;
+  decisionSet: HandDecisionSet;
+  dependencies: CasinoRulesKeys[];
+  name: string;
 }
 
 export type TrainingHands = Dictionary<TrainingHand, HandCode>;

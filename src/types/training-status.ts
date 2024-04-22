@@ -6,10 +6,10 @@ import { TrainingPairRepresentation } from './training-pair';
 export type TrainingProgress = Dictionary<TrainingHandStatus, HandCode>;
 
 export interface TrainingStatus {
-    attemptedTrainingPairs: number;
-    isCompleted: boolean;
-    isProgressBlocked: boolean;
-    missedTrainingPairs: TrainingPairRepresentation[];
-    passedTrainingPairs: number;
-    trainingProgress: TrainingProgress;
+  attemptedTrainingPairs: number;
+  isCompleted: boolean;
+  isProgressBlocked: boolean;
+  missedTrainingPairs: TrainingPairRepresentation[];
+  passedTrainingPairs: number;
+  trainingProgress: TrainingProgress;
 }

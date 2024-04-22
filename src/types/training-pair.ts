@@ -2,17 +2,17 @@ import { SimpleCardSymbol } from './card';
 import { Hand, HandCode } from './hand';
 
 export interface TrainingPair {
-    dealer: Hand;
-    player: Hand;
+  dealer: Hand;
+  player: Hand;
 }
 
 export interface TrainingPairRepresentation {
-    dealerSymbol: SimpleCardSymbol;
-    handCode: HandCode;
+  dealerSymbol: SimpleCardSymbol;
+  handCode: HandCode;
 }
 
 export enum TrainingPairStatus {
-    untrained = 0,
-    passed = 1,
-    missed = 2
+  untrained = 0,
+  passed = 1,
+  missed = 2,
 }

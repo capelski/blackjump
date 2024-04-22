@@ -1,5 +1,5 @@
 export enum Phases {
-    dealer = 'dealer',
-    finished = 'finished',
-    player = 'player'
+  dealer = 'dealer',
+  finished = 'finished',
+  player = 'player',
 }

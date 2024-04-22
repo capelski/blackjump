@@ -8,70 +8,70 @@ import { getHandRangesNumber, handDecisionSetGetters } from '../logic/hand-decis
 import { AppRoute, CasinoRules, CasinoRulesKeys, RouteNames } from '../types';
 
 type HandDecisionsProps = {
-    casinoRules: CasinoRules;
-    route: AppRoute<RouteNames.handDecisions>;
+  casinoRules: CasinoRules;
+  route: AppRoute<RouteNames.handDecisions>;
 };
 
 export const HandDecisions: React.FC<HandDecisionsProps> = (props) => {
-    const [casinoRules, setCasinoRules] = useState(props.casinoRules);
+  const [casinoRules, setCasinoRules] = useState(props.casinoRules);
 
-    const trainingHand = props.route.params['trainingHand'];
-    const handDecisionSet = handDecisionSetGetters[trainingHand.code](casinoRules);
+  const trainingHand = props.route.params['trainingHand'];
+  const handDecisionSet = handDecisionSetGetters[trainingHand.code](casinoRules);
 
-    return (
-        <ScrollView
-            style={{
-                flex: 1,
-                paddingHorizontal: 16,
-                marginVertical: 16,
-                width: '100%'
-            }}
-            contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+  return (
+    <ScrollView
+      style={{
+        flex: 1,
+        paddingHorizontal: 16,
+        marginVertical: 16,
+        width: '100%',
+      }}
+      contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+    >
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingBottom: 16,
+          width: '100%',
+        }}
+      >
+        <Text style={{ color: 'white', fontSize: 24 }}>{trainingHand.name} decisions</Text>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+          }}
         >
-            <View
-                style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingBottom: 16,
-                    width: '100%'
-                }}
-            >
-                <Text style={{ color: 'white', fontSize: 24 }}>{trainingHand.name} decisions</Text>
-                <Text
-                    style={{
-                        color: 'white',
-                        fontSize: 20
-                    }}
-                >
-                    Ranges: {getHandRangesNumber(handDecisionSet)}
-                </Text>
-            </View>
+          Ranges: {getHandRangesNumber(handDecisionSet)}
+        </Text>
+      </View>
 
-            <HandDecisionsTable handDecisionSet={handDecisionSet} />
+      <HandDecisionsTable handDecisionSet={handDecisionSet} />
 
-            {trainingHand.dependencies.map((dependency) => {
-                return dependency === CasinoRulesKeys.doubling ? (
-                    <DoublingPicker
-                        casinoRules={casinoRules}
-                        key={dependency}
-                        onValueChange={setCasinoRules}
-                    />
-                ) : dependency === CasinoRulesKeys.splitsNumber ? (
-                    <SplitsNumberPicker
-                        casinoRules={casinoRules}
-                        key={dependency}
-                        onValueChange={setCasinoRules}
-                    />
-                ) : (
-                    <RuleSwitcher
-                        casinoRules={casinoRules}
-                        key={dependency}
-                        onValueChange={setCasinoRules}
-                        ruleName={dependency}
-                    />
-                );
-            })}
-        </ScrollView>
-    );
+      {trainingHand.dependencies.map((dependency) => {
+        return dependency === CasinoRulesKeys.doubling ? (
+          <DoublingPicker
+            casinoRules={casinoRules}
+            key={dependency}
+            onValueChange={setCasinoRules}
+          />
+        ) : dependency === CasinoRulesKeys.splitsNumber ? (
+          <SplitsNumberPicker
+            casinoRules={casinoRules}
+            key={dependency}
+            onValueChange={setCasinoRules}
+          />
+        ) : (
+          <RuleSwitcher
+            casinoRules={casinoRules}
+            key={dependency}
+            onValueChange={setCasinoRules}
+            ruleName={dependency}
+          />
+        );
+      })}
+    </ScrollView>
+  );
 };

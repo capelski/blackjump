@@ -1,43 +1,43 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { dangerColor, splitColor } from '../../constants';
 import { AppNavigation, RouteNames } from '../../types';
 
 export interface EarningsIndicatorProps {
-    earnings: number;
-    isEnabled: boolean;
-    navigation: AppNavigation;
+  earnings: number;
+  isEnabled: boolean;
+  navigation: AppNavigation;
 }
 
 export const EarningsIndicator: React.FC<EarningsIndicatorProps> = (props) => {
-    const earningsColor =
-        props.earnings > 0 ? splitColor : props.earnings < 0 ? dangerColor : 'white';
+  const earningsColor =
+    props.earnings > 0 ? splitColor : props.earnings < 0 ? dangerColor : 'white';
 
-    return (
-        <TouchableOpacity
-            onPress={
-                props.isEnabled
-                    ? () => {
-                          props.navigation.navigate(RouteNames.earningsChart);
-                      }
-                    : undefined
+  return (
+    <Pressable
+      onPress={
+        props.isEnabled
+          ? () => {
+              props.navigation.navigate(RouteNames.earningsChart);
             }
-            style={{
-                alignItems: 'center',
-                flexGrow: 1,
-                justifyContent: 'center'
-            }}
-        >
-            <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: earningsColor, fontSize: 20 }}>
-                    {`${props.earnings > 0 ? '+' : ''}${props.earnings}`}
-                </Text>
-                <Svg height={24} viewBox="0 0 468 468" width={24} style={{ marginTop: 2 }}>
-                    <G transform="translate(0,468) scale(0.078000,-0.078000)">
-                        <Path
-                            fill={earningsColor}
-                            d="M2600 5595 c0 -237 -3 -305 -12 -305 -7 0 -63 -5 -125 -10 -140 -12
+          : undefined
+      }
+      style={{
+        alignItems: 'center',
+        flexGrow: 1,
+        justifyContent: 'center',
+      }}
+    >
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={{ color: earningsColor, fontSize: 20 }}>
+          {`${props.earnings > 0 ? '+' : ''}${props.earnings}`}
+        </Text>
+        <Svg height={24} viewBox="0 0 468 468" width={24} style={{ marginTop: 2 }}>
+          <G transform="translate(0,468) scale(0.078000,-0.078000)">
+            <Path
+              fill={earningsColor}
+              d="M2600 5595 c0 -237 -3 -305 -12 -305 -7 0 -63 -5 -125 -10 -140 -12
                     -299 -49 -398 -91 -11 -4 -49 -20 -85 -35 -304 -124 -635 -421 -789 -706 -33
                     -63 -80 -169 -88 -202 -35 -143 -41 -258 -23 -421 37 -323 180 -591 420 -785
                     77 -62 83 -66 116 -87 28 -18 244 -126 279 -140 27 -10 103 -36 115 -38 19 -5
@@ -60,10 +60,10 @@ export const EarningsIndicator: React.FC<EarningsIndicatorProps> = (props) => {
                     69 6 111 20 154 56 167 269 281 528 285 l87 1 0 -450z m975 -1485 c219 -17
                     399 -118 472 -266 46 -93 48 -281 3 -367 -80 -153 -329 -259 -612 -261 l-88
                     -1 0 448 c0 247 3 452 7 456 4 4 37 4 73 2 36 -3 101 -8 145 -11z"
-                        />
-                    </G>
-                </Svg>
-            </View>
-        </TouchableOpacity>
-    );
+            />
+          </G>
+        </Svg>
+      </View>
+    </Pressable>
+  );
 };
