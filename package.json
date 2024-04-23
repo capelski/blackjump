@@ -12,8 +12,8 @@
     "build:web": "npm run build:web:clear && npm run build:web:bundle && npm run build:web:patch && npm run build:web:move",
     "build:web:clear": "rm -rf docs && rm -rf dist",
     "build:web:bundle": "npx expo export -p web",
-    "build:web:patch": "sed -i '' -e s/_expo/blackjump\\\\/\\\\_expo/ dist/index.html && sed -i '' -e s/assets\\\\/assets/blackjump\\\\/assets\\\\/assets/g dist/_expo/static/js/web/AppEntry-*",
-    "build:web:move": "mv dist docs"
+    "build:web:patch": "sed -i '' -e s/_expo/blackjump/ dist/index.html && sed -i '' -e s/assets\\\\/assets/blackjump\\\\/assets\\\\/assets/g dist/_expo/static/js/web/AppEntry-*",
+    "build:web:move": "mv dist docs && mv docs/_expo/static docs/static && rm -rf docs/_expo"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.1.3",
