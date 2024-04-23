@@ -9,7 +9,9 @@
     "web": "expo start --web",
     "build:android": "npx eas-cli@latest build --platform android",
     "build:android:apk": "npx eas-cli@latest build --platform android --profile preview",
-    "build:web": "rm -rf docs && rm -rf dist && npx expo export -p web && mv dist docs"
+    "build:web": "npm run build:web:pre && npx expo export -p web && npm run build:web:post",
+    "build:web:pre": "rm -rf docs && rm -rf dist",
+    "build:web:post": "mv dist docs && sed -i '' -e s/_expo/blackjump/ docs/index.html && mv docs/_expo/static docs/static"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.1.3",
