@@ -1,9 +1,8 @@
-import React, { useMemo, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { Dimensions, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { Button } from '../components/button';
-import { colors, tableColor } from '../constants';
-import { BaseDecisions, Player } from '../types';
+import { tableColor } from '../constants';
+import { Player } from '../types';
 import { getAbsoluteMax, getPrimeFactors } from '../utils';
 
 type ChartDimensions = {
@@ -12,9 +11,14 @@ type ChartDimensions = {
   width: number;
 };
 
-type ChartPage = {
-  index: number;
-  data: number[];
+type MaxMinValues = {
+  max: number;
+  min: number;
+};
+
+type ClustersData = {
+  clusters: number[];
+  clusterSize: number;
 };
 
 interface EarningsChartProps {
@@ -22,7 +26,7 @@ interface EarningsChartProps {
 }
 
 const chartDeadSpace = 16;
-const pageSize = 20;
+const chartMaxValues = 20;
 const screenHorizontalMargin = 8;
 
 const getChartDimensions = (data: number[]): ChartDimensions => {
@@ -38,16 +42,55 @@ const getChartDimensions = (data: number[]): ChartDimensions => {
   };
 };
 
-const getCurrentPage = (data: number[], nextIndex: number | undefined): ChartPage => {
-  nextIndex = nextIndex === undefined ? (data.length > 0 ? data.length - 1 : 0) : nextIndex;
-  const nextData = data.slice(
-    Math.max(0, nextIndex - pageSize),
-    Math.min(Math.max(0, nextIndex + 1), data.length),
+const getClusters = (data: number[]): ClustersData => {
+  /* If less than a data point per cluster, no need to do anything */
+  if (data.length < chartMaxValues) {
+    return { clusters: data, clusterSize: 1 };
+  }
+
+  /* Assign each data point to a cluster */
+  const averageClusterSize = Math.floor(data.length / chartMaxValues);
+  const remaining = data.length % chartMaxValues;
+  const clusterIndexes = [...new Array(chartMaxValues)].reduce((reduced, _, clusterIndex) => {
+    const clusterSize = averageClusterSize + (clusterIndex < remaining ? 1 : 0);
+    return reduced.concat(...[...new Array(clusterSize)].map(() => clusterIndex));
+  }, []);
+
+  /* Split the data points into clusters */
+  const clusters = data.reduce<number[][]>((reduced, dataPoint, index) => {
+    const clusterIndex = clusterIndexes[index];
+    reduced[clusterIndex] = (reduced[clusterIndex] || []).concat(dataPoint);
+    return reduced;
+  }, []);
+
+  /* Max and min values will be cluster representatives */
+  const maxMinValues = data.reduce<MaxMinValues>(
+    (reduced, dataPoint) => {
+      return {
+        max: dataPoint > reduced.max ? dataPoint : reduced.max,
+        min: dataPoint < reduced.min ? dataPoint : reduced.min,
+      };
+    },
+    {
+      max: 0,
+      min: 0,
+    },
   );
 
+  /* Pick a representative for each cluster */
+  const aggregatedClusters = clusters.reduce((reduced, cluster, clusterIndex) => {
+    const aggregatedCluster =
+      clusterIndex === clusters.length - 1
+        ? cluster.slice(-1)[0]
+        : cluster.find((x) => x === maxMinValues.max) ||
+          cluster.find((x) => x === maxMinValues.min) ||
+          cluster.reduce((x, y) => x + y, 0) / cluster.length;
+    return reduced.concat(aggregatedCluster);
+  }, []);
+
   return {
-    data: nextData,
-    index: nextIndex,
+    clusters: aggregatedClusters,
+    clusterSize: averageClusterSize,
   };
 };
 
@@ -65,12 +108,18 @@ const getFormattedData = (data: number[], dimensions: ChartDimensions) => {
 };
 
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
-  const dimensions = useMemo(
-    () => getChartDimensions(props.earningsHistorical),
-    [props.earningsHistorical],
-  );
-  const [page, setPage] = useState(() => getCurrentPage(props.earningsHistorical, undefined));
-  const formattedData = useMemo(() => getFormattedData(page.data, dimensions), [dimensions, page]);
+  const { chartScale, chartWidth, clusterSize, data } = useMemo(() => {
+    const { clusters, clusterSize } = getClusters(props.earningsHistorical);
+    const dimensions = getChartDimensions(props.earningsHistorical);
+    const { chartWidth, source } = getFormattedData(clusters, dimensions);
+
+    return {
+      chartScale: dimensions.scale,
+      chartWidth,
+      clusterSize,
+      data: source,
+    };
+  }, [props.earningsHistorical]);
 
   return (
     <View
@@ -95,43 +144,29 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
         data={{
           datasets: [
             {
-              data: formattedData.source,
+              data,
             },
           ],
           labels: [],
         }}
         height={300}
-        segments={dimensions.scale}
+        segments={chartScale}
         style={{ marginLeft: -chartDeadSpace }}
-        width={formattedData.chartWidth}
+        width={chartWidth}
         withVerticalLines={false}
       />
-      <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
-        <Button
-          height={56}
-          backgroundColor={colors[BaseDecisions.hit]}
-          isEnabled={page.index >= pageSize}
-          onPress={() => {
-            if (page.index >= pageSize) {
-              setPage(getCurrentPage(props.earningsHistorical, page.index - pageSize));
-            }
-          }}
-          text="Previous"
-          width="50%"
-        />
-        <Button
-          height={56}
-          backgroundColor={colors[BaseDecisions.stand]}
-          isEnabled={page.index < props.earningsHistorical.length - 1}
-          onPress={() => {
-            if (page.index < props.earningsHistorical.length - 1) {
-              setPage(getCurrentPage(props.earningsHistorical, page.index + pageSize));
-            }
-          }}
-          text="Next"
-          width="50%"
-        />
-      </View>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 20,
+          fontStyle: 'italic',
+          paddingHorizontal: 8,
+          paddingTop: 8,
+          textAlign: 'center',
+        }}
+      >
+        Each point in the chart represents the pot average for every ~{clusterSize} rounds
+      </Text>
     </View>
   );
 };
