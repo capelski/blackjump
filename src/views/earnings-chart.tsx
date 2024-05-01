@@ -5,20 +5,28 @@ import { tableColor } from '../constants';
 import { Player } from '../types';
 import { getAbsoluteMax, getPrimeFactors } from '../utils';
 
-type ChartDimensions = {
-  boundaries: number;
-  scale: number;
+type AggregatedData = (
+  | {
+      clusterSize?: undefined;
+      isClustered: false;
+    }
+  | {
+      clusterSize: number;
+      isClustered: true;
+    }
+) & {
+  values: number[];
+};
+
+type ChartProperties = {
+  formattedValues: number[];
+  segments: number;
   width: number;
 };
 
 type MaxMinValues = {
   max: number;
   min: number;
-};
-
-type ClustersData = {
-  clusters: number[];
-  clusterSize: number;
 };
 
 interface EarningsChartProps {
@@ -29,42 +37,29 @@ const chartDeadSpace = 16;
 const chartMaxValues = 20;
 const screenHorizontalMargin = 8;
 
-const getChartDimensions = (data: number[]): ChartDimensions => {
-  const absoluteMax = getAbsoluteMax(data);
-  const primeFactors = data.length > 0 ? getPrimeFactors(absoluteMax) : [2];
-  const scale = 2 * Math.min(primeFactors[0], 6);
-  const windowWidth = Dimensions.get('window').width;
-
-  return {
-    boundaries: absoluteMax,
-    scale,
-    width: windowWidth - screenHorizontalMargin * 2,
-  };
-};
-
-const getClusters = (data: number[]): ClustersData => {
+const getAggregatedData = (earningsHistorical: number[]): AggregatedData => {
   /* If less than a data point per cluster, no need to do anything */
-  if (data.length < chartMaxValues) {
-    return { clusters: data, clusterSize: 1 };
+  if (earningsHistorical.length < chartMaxValues) {
+    return { isClustered: false, values: earningsHistorical };
   }
 
   /* Assign each data point to a cluster */
-  const averageClusterSize = Math.floor(data.length / chartMaxValues);
-  const remaining = data.length % chartMaxValues;
+  const averageClusterSize = Math.floor(earningsHistorical.length / chartMaxValues);
+  const remaining = earningsHistorical.length % chartMaxValues;
   const clusterIndexes = [...new Array(chartMaxValues)].reduce((reduced, _, clusterIndex) => {
     const clusterSize = averageClusterSize + (clusterIndex < remaining ? 1 : 0);
     return reduced.concat(...[...new Array(clusterSize)].map(() => clusterIndex));
   }, []);
 
   /* Split the data points into clusters */
-  const clusters = data.reduce<number[][]>((reduced, dataPoint, index) => {
+  const clusters = earningsHistorical.reduce<number[][]>((reduced, dataPoint, index) => {
     const clusterIndex = clusterIndexes[index];
     reduced[clusterIndex] = (reduced[clusterIndex] || []).concat(dataPoint);
     return reduced;
   }, []);
 
   /* Max and min values will be cluster representatives */
-  const maxMinValues = data.reduce<MaxMinValues>(
+  const maxMinValues = earningsHistorical.reduce<MaxMinValues>(
     (reduced, dataPoint) => {
       return {
         max: dataPoint > reduced.max ? dataPoint : reduced.max,
@@ -89,35 +84,47 @@ const getClusters = (data: number[]): ClustersData => {
   }, []);
 
   return {
-    clusters: aggregatedClusters,
     clusterSize: averageClusterSize,
+    isClustered: true,
+    values: aggregatedClusters,
   };
 };
 
-const getFormattedData = (data: number[], dimensions: ChartDimensions) => {
-  const boundaryDots =
-    data.length > 0 ? [data[data.length - 1], dimensions.boundaries, -dimensions.boundaries] : [];
+const getChartProperties = (allValues: number[], aggregatedValues: number[]): ChartProperties => {
+  const availableWidth = Dimensions.get('window').width - screenHorizontalMargin * 2;
+  const dotWidth =
+    aggregatedValues.length > 0 ? availableWidth / aggregatedValues.length : availableWidth;
 
-  const dotWidth = data.length > 0 ? dimensions.width / data.length : dimensions.width;
+  const boundaries = getAbsoluteMax(allValues);
+  const boundaryDots =
+    aggregatedValues.length > 0
+      ? [aggregatedValues[aggregatedValues.length - 1], boundaries, -boundaries]
+      : [];
   const boundaryDotsWidth = dotWidth * boundaryDots.length;
 
+  const primeFactors = allValues.length > 0 ? getPrimeFactors(boundaries) : [2];
+
   return {
-    chartWidth: dimensions.width + boundaryDotsWidth + chartDeadSpace,
-    source: data.length > 0 ? data.concat(boundaryDots) : [0],
+    formattedValues: aggregatedValues.length > 0 ? aggregatedValues.concat(boundaryDots) : [0],
+    segments: 2 * Math.min(primeFactors[0], 6),
+    width: availableWidth + boundaryDotsWidth + chartDeadSpace,
   };
 };
 
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
-  const { chartScale, chartWidth, clusterSize, data } = useMemo(() => {
-    const { clusters, clusterSize } = getClusters(props.earningsHistorical);
-    const dimensions = getChartDimensions(props.earningsHistorical);
-    const { chartWidth, source } = getFormattedData(clusters, dimensions);
+  const { chartSegments, chartWidth, clusterSize, formattedValues, isClustered } = useMemo(() => {
+    const { clusterSize, isClustered, values } = getAggregatedData(props.earningsHistorical);
+    const { formattedValues, segments, width } = getChartProperties(
+      props.earningsHistorical,
+      values,
+    );
 
     return {
-      chartScale: dimensions.scale,
-      chartWidth,
+      chartSegments: segments,
+      chartWidth: width,
       clusterSize,
-      data: source,
+      formattedValues,
+      isClustered,
     };
   }, [props.earningsHistorical]);
 
@@ -144,29 +151,31 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
         data={{
           datasets: [
             {
-              data,
+              data: formattedValues,
             },
           ],
           labels: [],
         }}
         height={300}
-        segments={chartScale}
+        segments={chartSegments}
         style={{ marginLeft: -chartDeadSpace }}
         width={chartWidth}
         withVerticalLines={false}
       />
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 20,
-          fontStyle: 'italic',
-          paddingHorizontal: 8,
-          paddingTop: 8,
-          textAlign: 'center',
-        }}
-      >
-        Each point in the chart represents the pot average for every ~{clusterSize} rounds
-      </Text>
+      {isClustered && (
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+            fontStyle: 'italic',
+            paddingHorizontal: 8,
+            paddingTop: 8,
+            textAlign: 'center',
+          }}
+        >
+          Each point in the chart represents the pot average for every ~{clusterSize} rounds
+        </Text>
+      )}
     </View>
   );
 };
