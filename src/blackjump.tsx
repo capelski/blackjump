@@ -406,6 +406,7 @@ export const BlackJump: React.FC = () => {
             headerShown: false,
             cardStyle: {
               backgroundColor: tableColor,
+              paddingBottom: 48, // Dirty fix to account for views inset
             },
           }}
         >
