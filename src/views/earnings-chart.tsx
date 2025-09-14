@@ -1,20 +1,13 @@
-import React, { useMemo } from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Dimensions, StyleProp, Text, TextStyle, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { tableColor } from '../constants';
+import { Button } from '../components/button';
+import { hitColor, tableColor } from '../constants';
 import { Player } from '../types';
 import { getAbsoluteMax, getPrimeFactors } from '../utils';
 
-type AggregatedData = (
-  | {
-      clusterSize?: undefined;
-      isClustered: false;
-    }
-  | {
-      clusterSize: number;
-      isClustered: true;
-    }
-) & {
+type AggregatedData = {
+  clusterSize: number | undefined;
   values: number[];
 };
 
@@ -24,68 +17,68 @@ type ChartProperties = {
   width: number;
 };
 
-type MaxMinValues = {
-  max: number;
-  min: number;
-};
-
 interface EarningsChartProps {
   earningsHistorical: Player['earningsHistorical'];
 }
 
-const chartDeadSpace = 16;
+/** The chart library reserves some space for the axes and labels, which turns out
+ * to be too much for the earnings chart */
+const chartExcessivePadding = 8;
 const chartMaxValues = 20;
+const chartMinValues = 3;
 const screenHorizontalMargin = 8;
 
-const getAggregatedData = (earningsHistorical: number[]): AggregatedData => {
-  /* If less than a data point per cluster, no need to do anything */
-  if (earningsHistorical.length < chartMaxValues) {
-    return { isClustered: false, values: earningsHistorical };
+const getSubsetForZoomSequence = (data: number[], zoomSequence: number[]): number[] => {
+  if (zoomSequence.length === 0) {
+    return data;
   }
 
+  const zoomIndex = zoomSequence[0];
+  const clusterSize = Math.ceil(data.length / chartMaxValues);
+  const start = zoomIndex * clusterSize;
+  const end = Math.min(start + clusterSize, data.length);
+
+  return getSubsetForZoomSequence(data.slice(start, end), zoomSequence.slice(1));
+};
+
+const getAggregatedData = (
+  earningsHistorical: number[],
+  zoomSequence: number[],
+): AggregatedData => {
+  /* If less than a data point per cluster, no need to do anything */
+  if (earningsHistorical.length < chartMaxValues) {
+    return { clusterSize: undefined, values: earningsHistorical };
+  }
+
+  /* Limit the data to the corresponding zoom level */
+  const zoomedData = getSubsetForZoomSequence(earningsHistorical, zoomSequence);
+
   /* Assign each data point to a cluster */
-  const averageClusterSize = Math.floor(earningsHistorical.length / chartMaxValues);
-  const remaining = earningsHistorical.length % chartMaxValues;
+  const averageClusterSize = Math.floor(zoomedData.length / chartMaxValues);
+  const remaining = zoomedData.length % chartMaxValues;
   const clusterIndexes = [...new Array(chartMaxValues)].reduce((reduced, _, clusterIndex) => {
     const clusterSize = averageClusterSize + (clusterIndex < remaining ? 1 : 0);
     return reduced.concat(...[...new Array(clusterSize)].map(() => clusterIndex));
   }, []);
 
   /* Split the data points into clusters */
-  const clusters = earningsHistorical.reduce<number[][]>((reduced, dataPoint, index) => {
+  const clusters = zoomedData.reduce<number[][]>((reduced, dataPoint, index) => {
     const clusterIndex = clusterIndexes[index];
     reduced[clusterIndex] = (reduced[clusterIndex] || []).concat(dataPoint);
     return reduced;
   }, []);
-
-  /* Max and min values will be cluster representatives */
-  const maxMinValues = earningsHistorical.reduce<MaxMinValues>(
-    (reduced, dataPoint) => {
-      return {
-        max: dataPoint > reduced.max ? dataPoint : reduced.max,
-        min: dataPoint < reduced.min ? dataPoint : reduced.min,
-      };
-    },
-    {
-      max: 0,
-      min: 0,
-    },
-  );
 
   /* Pick a representative for each cluster */
   const aggregatedClusters = clusters.reduce((reduced, cluster, clusterIndex) => {
     const aggregatedCluster =
       clusterIndex === clusters.length - 1
         ? cluster.slice(-1)[0]
-        : cluster.find((x) => x === maxMinValues.max) ||
-          cluster.find((x) => x === maxMinValues.min) ||
-          cluster.reduce((x, y) => x + y, 0) / cluster.length;
+        : cluster.reduce((x, y) => x + y, 0) / cluster.length;
     return reduced.concat(aggregatedCluster);
   }, []);
 
   return {
     clusterSize: averageClusterSize,
-    isClustered: true,
     values: aggregatedClusters,
   };
 };
@@ -106,27 +99,44 @@ const getChartProperties = (allValues: number[], aggregatedValues: number[]): Ch
 
   return {
     formattedValues: aggregatedValues.length > 0 ? aggregatedValues.concat(boundaryDots) : [0],
-    segments: 2 * Math.min(primeFactors[0], 6),
-    width: availableWidth + boundaryDotsWidth + chartDeadSpace,
+    segments: 2 * Math.min(primeFactors[0], 4),
+    width: availableWidth + boundaryDotsWidth + chartExcessivePadding,
   };
 };
 
+// const randomData = Array.from({ length: 20000 }, () => 1).reduce<number[]>((reduced, _, index) => {
+//   const previous = reduced[index - 1] || 0;
+//   const next = previous + (Math.random() > 0.5 ? 1 : -1);
+//   reduced.push(next);
+//   return reduced;
+// }, []);
+
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
-  const { chartSegments, chartWidth, clusterSize, formattedValues, isClustered } = useMemo(() => {
-    const { clusterSize, isClustered, values } = getAggregatedData(props.earningsHistorical);
-    const { formattedValues, segments, width } = getChartProperties(
-      props.earningsHistorical,
-      values,
-    );
+  const [zoomSequence, setZoomSequence] = useState<number[]>([]);
+
+  const { chartSegments, chartWidth, clusterSize, formattedValues } = useMemo(() => {
+    const data = props.earningsHistorical; // randomData;
+    const { clusterSize, values } = getAggregatedData(data, zoomSequence);
+    const { formattedValues, segments, width } = getChartProperties(data, values);
 
     return {
       chartSegments: segments,
       chartWidth: width,
       clusterSize,
       formattedValues,
-      isClustered,
     };
-  }, [props.earningsHistorical]);
+  }, [props.earningsHistorical, zoomSequence]);
+
+  const canZoom = clusterSize !== undefined && clusterSize >= chartMinValues;
+
+  const textProperties: StyleProp<TextStyle> = {
+    color: 'white',
+    fontSize: 20,
+    fontStyle: 'italic',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    textAlign: 'center',
+  };
 
   return (
     <View
@@ -137,12 +147,34 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
         overflow: 'hidden',
       }}
     >
+      <View
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginBottom: 8,
+        }}
+      >
+        <Text style={textProperties}>Zoom: {zoomSequence.length}</Text>
+        <Button
+          height={48}
+          backgroundColor={hitColor}
+          isEnabled={zoomSequence.length > 0}
+          onPress={() => {
+            setZoomSequence(zoomSequence.slice(0, -1));
+          }}
+          text="-"
+          width={48}
+        />
+      </View>
+
       <LineChart
         chartConfig={{
           backgroundGradientFrom: tableColor,
           backgroundGradientTo: tableColor,
           color: () => `rgb(255, 255, 255)`,
-          decimalPlaces: 1,
+          decimalPlaces: 0,
           linejoinType: 'bevel',
           propsForLabels: {
             fontSize: 16,
@@ -158,24 +190,22 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
         }}
         height={300}
         segments={chartSegments}
-        style={{ marginLeft: -chartDeadSpace }}
+        style={{ marginLeft: -chartExcessivePadding }}
         width={chartWidth}
         withVerticalLines={false}
+        onDataPointClick={(point) => {
+          if (canZoom) {
+            setZoomSequence([...zoomSequence, point.index]);
+          }
+        }}
       />
-      {isClustered && (
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 20,
-            fontStyle: 'italic',
-            paddingHorizontal: 8,
-            paddingTop: 8,
-            textAlign: 'center',
-          }}
-        >
-          Each point in the chart represents the pot average for every ~{clusterSize} rounds
-        </Text>
-      )}
+      <Text style={textProperties}>
+        Each point in the chart represents the pot average for every{' '}
+        {clusterSize && clusterSize > 1 ? `~${clusterSize}` : 1} round(s).
+      </Text>
+      <Text style={{ ...textProperties, opacity: canZoom ? 1 : 0 }}>
+        Click on them to zoom into that range.
+      </Text>
     </View>
   );
 };
