@@ -1,6 +1,6 @@
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Audio } from 'expo-av';
+import { useAudioPlayer } from 'expo-audio';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -91,18 +91,6 @@ import { UntrainedPairsPriority } from './views/untrained-pairs-priority';
 const Stack = createStackNavigator<RouteParams>();
 let navigationListener: Function | undefined;
 
-const initializeSounds = () =>
-  Promise.all([Audio.Sound.createAsync(hitSoundMp3), Audio.Sound.createAsync(missSoundMp3)])
-    .then((results) => ({
-      hit: results[0].sound,
-      miss: results[1].sound,
-    }))
-    .catch((errors) => {
-      console.log(errors);
-      /* Failing to load audio is not a critical issue */
-      return undefined;
-    });
-
 export const BlackJump: React.FC = () => {
   const [currentRoute, setCurrentRoute] = useState<string>(initialRouteName);
   const [dealerHand, setDealerHand] = useState<Hand>();
@@ -114,10 +102,11 @@ export const BlackJump: React.FC = () => {
   const [phase, setPhase] = useState<Phases>(Phases.finished);
   const [player, setPlayer] = useState<Player>(createPlayer());
   const [trainingHands, setTrainingHands] = useState(getDefaultTrainingHands());
-  const [sounds, setSounds] = useState<{ hit: Audio.Sound; miss: Audio.Sound }>();
   const [trainingStatus, setTrainingStatus] = useState(getDefaultTrainingStatus());
 
   const navigationRef = useRef<NavigationContainerRef<RouteParams>>(null);
+  const hitAudio = useAudioPlayer(hitSoundMp3);
+  const missAudio = useAudioPlayer(missSoundMp3);
 
   useEffect(() => {
     Promise.all([
@@ -126,40 +115,38 @@ export const BlackJump: React.FC = () => {
       getPlayerEarnings(),
       getPlayerEarningsHistorical(),
       getTrainingProgress(),
-      initializeSounds(),
-    ]).then((results) => {
-      const _gameConfig = results[0];
-      const hasCompletedOnboarding = results[1];
-      const playerEarnings = results[2];
-      const playerEarningsHistorical = results[3];
-      const trainingProgress = results[4];
-      const _sounds = results[5];
+    ]).then(
+      ([
+        _gameConfig,
+        hasCompletedOnboarding,
+        playerEarnings,
+        playerEarningsHistorical,
+        trainingProgress,
+      ]) => {
+        setGameConfig(_gameConfig);
+        const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
+        setTrainingHands(nextTrainingHands);
 
-      setGameConfig(_gameConfig);
-      const nextTrainingHands = getTrainingHands(_gameConfig.casinoRules);
-      setTrainingHands(nextTrainingHands);
+        if (!hasCompletedOnboarding) {
+          navigationRef.current?.navigate(RouteNames.onboarding);
+        }
 
-      if (!hasCompletedOnboarding) {
-        navigationRef.current?.navigate(RouteNames.onboarding);
-      }
+        setPlayer({
+          ...player,
+          cash: playerEarnings,
+          earningsHistorical: playerEarningsHistorical,
+        });
 
-      setPlayer({
-        ...player,
-        cash: playerEarnings,
-        earningsHistorical: playerEarningsHistorical,
-      });
-
-      if (trainingProgress) {
-        const nextTrainingStatus = retrieveTrainingStatus(
-          trainingProgress,
-          nextTrainingHands,
-          _gameConfig,
-        );
-        setTrainingStatus(nextTrainingStatus);
-      }
-
-      setSounds(_sounds);
-    });
+        if (trainingProgress) {
+          const nextTrainingStatus = retrieveTrainingStatus(
+            trainingProgress,
+            nextTrainingHands,
+            _gameConfig,
+          );
+          setTrainingStatus(nextTrainingStatus);
+        }
+      },
+    );
   }, []);
 
   useEffect(() => {
@@ -286,8 +273,8 @@ export const BlackJump: React.FC = () => {
       playerDecision,
     );
 
-    if (gameConfig.isSoundEnabled && sounds) {
-      playSound(nextDecisionEvaluation.isHit ? sounds.hit : sounds.miss);
+    if (gameConfig.isSoundEnabled) {
+      playSound(nextDecisionEvaluation.isHit ? hitAudio : missAudio);
     }
 
     setDecisionEvaluation(nextDecisionEvaluation);

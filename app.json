@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "package": "capelski.blackjump",
       "permissions": [],
@@ -33,6 +35,9 @@
       "eas": {
         "projectId": "34e123f1-b52c-4ae2-b68a-c78a8146c87b"
       }
-    }
+    },
+    "plugins": [
+      "expo-audio"
+    ]
   }
 }

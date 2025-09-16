@@ -1,26 +1,31 @@
-import { Audio } from 'expo-av';
+import { AudioPlayer } from 'expo-audio';
 import { playSound } from '../utils';
 
-type SoundQueue = { isActive: boolean; sounds: Audio.Sound[] };
+type SoundQueue = {
+  isActive: boolean;
+  items: {
+    audio: AudioPlayer;
+    timeout: number;
+  }[];
+};
 
 export const createSoundQueue = (): SoundQueue => ({
   isActive: false,
-  sounds: [],
+  items: [],
 });
 
 const playNextSound = (soundQueue: SoundQueue) => {
-  const nextSound = soundQueue.sounds.pop();
+  const nextSound = soundQueue.items.pop();
   if (nextSound) {
-    playSound(nextSound).then(() => {
-      setTimeout(() => playNextSound(soundQueue), 250);
-    });
+    playSound(nextSound.audio);
+    setTimeout(() => playNextSound(soundQueue), nextSound.timeout);
   } else {
     soundQueue.isActive = false;
   }
 };
 
-export const pushSound = (soundQueue: SoundQueue, sound: Audio.Sound) => {
-  soundQueue.sounds.push(sound);
+export const pushSound = (soundQueue: SoundQueue, audio: AudioPlayer, timeout: number) => {
+  soundQueue.items.push({ audio, timeout });
   if (!soundQueue.isActive) {
     soundQueue.isActive = true;
     playNextSound(soundQueue);

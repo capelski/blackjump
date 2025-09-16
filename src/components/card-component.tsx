@@ -1,5 +1,5 @@
-import { Audio } from 'expo-av';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useAudioPlayer } from 'expo-audio';
+import React, { useEffect, useMemo } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import cardSlideSoundMp3 from '../../assets/card-slide.mp3';
 import { nonRandomColor } from '../constants';
@@ -22,9 +22,9 @@ const soundQueue = createSoundQueue();
 export const CardComponent: React.FC<CardComponentProps> = (props) => {
   const opacity = useMemo(() => new Animated.Value(initialOpacity), []);
   const position = useMemo(() => new Animated.Value(initialPosition), []);
-  const [cardSlideSound, setCardSlideSound] = useState<Audio.Sound | false>();
+  const cardSlideAudio = useAudioPlayer(cardSlideSoundMp3);
 
-  const animateCard = (sound?: Audio.Sound | false) => {
+  const animateCard = () => {
     if (!props.skipAnimation) {
       Animated.parallel([
         Animated.timing(opacity, {
@@ -40,31 +40,18 @@ export const CardComponent: React.FC<CardComponentProps> = (props) => {
       ]).start();
     }
 
-    if (props.isSoundEnabled && sound) {
-      pushSound(soundQueue, sound);
+    if (props.isSoundEnabled) {
+      pushSound(soundQueue, cardSlideAudio, animationsDuration);
     }
   };
 
   useEffect(() => {
-    if (cardSlideSound === undefined) {
-      Audio.Sound.createAsync(cardSlideSoundMp3, { volume: 0.5 })
-        .then((result) => {
-          animateCard(result.sound);
-          setCardSlideSound(result.sound);
-        })
-        .catch(() => {
-          /* Failing to load audio is not a critical issue */
-          animateCard();
-          setCardSlideSound(false);
-        });
-    } else {
-      if (!props.skipAnimation) {
-        opacity.setValue(initialOpacity);
-        position.setValue(initialPosition);
-      }
-
-      animateCard(cardSlideSound);
+    if (!props.skipAnimation) {
+      opacity.setValue(initialOpacity);
+      position.setValue(initialPosition);
     }
+
+    animateCard();
   }, [props.card]);
 
   const cardColor = props.card.isRandom

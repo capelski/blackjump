@@ -1,4 +1,4 @@
-import { Audio } from 'expo-av';
+import { AudioPlayer } from 'expo-audio';
 import { Dictionary } from './types';
 
 export const cartesianProduct = <T, U, R>(
@@ -35,12 +35,10 @@ export const getPrimeFactors = (number: number) => {
 export const getRandomItem = <T>(items: T[]) =>
   items[Math.round(Math.random() * (items.length - 1))];
 
-export const playSound = (sound: Audio.Sound) =>
-  sound
-    .stopAsync() // In case is already playing and it hasn't finished yet
-    .catch(/* Failing to stop audio is not a critical issue */)
-    .then(() => sound.playAsync())
-    .catch(/* Failing to play audio is not a critical issue */);
+export const playSound = (audio: AudioPlayer) => {
+  audio.seekTo(0);
+  audio.play();
+};
 
 export const removeDuplicates = (numbers: number[]): number[] => {
   const numbersDictionary = numbers.reduce<Dictionary<number>>(
