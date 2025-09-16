@@ -2,7 +2,7 @@
   "expo": {
     "name": "Blackjump",
     "slug": "blackjump",
-    "version": "1.25.0",
+    "version": "1.25.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,13 +14,11 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "capelski.blackjump",
       "permissions": [],
-      "versionCode": 38
+      "versionCode": 39
     },
     "ios": {
       "bundleIdentifier": "capelski.blackjump",
@@ -36,8 +34,6 @@
         "projectId": "34e123f1-b52c-4ae2-b68a-c78a8146c87b"
       }
     },
-    "plugins": [
-      "expo-audio"
-    ]
+    "plugins": ["expo-audio"]
   }
 }
