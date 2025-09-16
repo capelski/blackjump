@@ -104,7 +104,7 @@ const getChartProperties = (allValues: number[], aggregatedValues: number[]): Ch
   };
 };
 
-// const randomData = Array.from({ length: 20000 }, () => 1).reduce<number[]>((reduced, _, index) => {
+// const data = Array.from({ length: 20000 }, () => 1).reduce<number[]>((reduced, _, index) => {
 //   const previous = reduced[index - 1] || 0;
 //   const next = previous + (Math.random() > 0.5 ? 1 : -1);
 //   reduced.push(next);
@@ -115,7 +115,7 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
   const [zoomSequence, setZoomSequence] = useState<number[]>([]);
 
   const { chartSegments, chartWidth, clusterSize, formattedValues } = useMemo(() => {
-    const data = props.earningsHistorical; // randomData;
+    const data = props.earningsHistorical;
     const { clusterSize, values } = getAggregatedData(data, zoomSequence);
     const { formattedValues, segments, width } = getChartProperties(data, values);
 
@@ -176,6 +176,9 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
           color: () => `rgb(255, 255, 255)`,
           decimalPlaces: 0,
           linejoinType: 'bevel',
+          propsForDots: {
+            r: 5,
+          },
           propsForLabels: {
             fontSize: 16,
           },

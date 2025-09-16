@@ -13,7 +13,9 @@
     "build:web:clear": "rm -rf docs && rm -rf dist",
     "build:web:bundle": "npx expo export -p web",
     "build:web:patch": "sed -i '' -e s/_expo/blackjump/ dist/index.html && sed -i '' -e s/assets\\\\/assets/blackjump\\\\/assets\\\\/assets/g dist/_expo/static/js/web/AppEntry-*",
-    "build:web:move": "mv dist docs && mv docs/_expo/static docs/static && rm -rf docs/_expo"
+    "build:web:move": "mv dist docs && mv docs/_expo/static docs/static && rm -rf docs/_expo",
+    "postinstall": "./patch-line-chart-kit.sh",
+    "eas-build-post-install": "./patch-line-chart-kit.sh"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
