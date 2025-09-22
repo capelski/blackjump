@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Dimensions, StyleProp, Text, TextStyle, View } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
+import { CartesianChart, Line } from 'victory-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Button } from '../components/button';
 import { hitColor, tableColor } from '../constants';
 import { Player } from '../types';
@@ -114,20 +115,41 @@ const getChartProperties = (allValues: number[], aggregatedValues: number[]): Ch
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
   const [zoomSequence, setZoomSequence] = useState<number[]>([]);
 
-  const { chartSegments, chartWidth, clusterSize, formattedValues } = useMemo(() => {
+  const { chartSegments, chartWidth, clusterSize, formattedValues, chartData } = useMemo(() => {
     const data = props.earningsHistorical;
     const { clusterSize, values } = getAggregatedData(data, zoomSequence);
     const { formattedValues, segments, width } = getChartProperties(data, values);
+
+    // Convert data format for victory-native
+    const chartData = formattedValues.map((value, index) => ({ x: index, y: value }));
 
     return {
       chartSegments: segments,
       chartWidth: width,
       clusterSize,
       formattedValues,
+      chartData,
     };
   }, [props.earningsHistorical, zoomSequence]);
 
   const canZoom = clusterSize !== undefined && clusterSize >= chartMinValues;
+
+  // Handle tap gestures for zooming
+  const handleChartTap = (x: number) => {
+    if (!canZoom) return;
+    
+    // Calculate which data point was tapped based on x position
+    const chartInnerWidth = chartWidth - 60; // Account for padding
+    const pointIndex = Math.round((x / chartInnerWidth) * (chartData.length - 1));
+    const validIndex = Math.max(0, Math.min(pointIndex, chartData.length - 1));
+    
+    setZoomSequence([...zoomSequence, validIndex]);
+  };
+
+  const tapGesture = Gesture.Tap()
+    .onEnd((event) => {
+      handleChartTap(event.x);
+    });
 
   const textProperties: StyleProp<TextStyle> = {
     color: 'white',
@@ -169,39 +191,27 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
         />
       </View>
 
-      <LineChart
-        chartConfig={{
-          backgroundGradientFrom: tableColor,
-          backgroundGradientTo: tableColor,
-          color: () => `rgb(255, 255, 255)`,
-          decimalPlaces: 0,
-          linejoinType: 'bevel',
-          propsForDots: {
-            r: 5,
-          },
-          propsForLabels: {
-            fontSize: 16,
-          },
-        }}
-        data={{
-          datasets: [
-            {
-              data: formattedValues,
-            },
-          ],
-          labels: [],
-        }}
-        height={300}
-        segments={chartSegments}
-        style={{ marginLeft: -chartExcessivePadding }}
-        width={chartWidth}
-        withVerticalLines={false}
-        onDataPointClick={(point) => {
-          if (canZoom) {
-            setZoomSequence([...zoomSequence, point.index]);
-          }
-        }}
-      />
+      <GestureDetector gesture={tapGesture}>
+        <View style={{ height: 300, width: chartWidth, backgroundColor: tableColor, marginLeft: -chartExcessivePadding }}>
+          <CartesianChart
+            data={chartData}
+            xKey="x"
+            yKeys={["y"]}
+            domain={{ x: [0, chartData.length - 1] }}
+            padding={{ left: 40, right: 20, top: 20, bottom: 40 }}
+            renderOutside={() => null}
+          >
+            {({ points, chartBounds }) => (
+              <Line
+                points={points.y}
+                color="white"
+                strokeWidth={2}
+                animate={{ type: "timing", duration: 300 }}
+              />
+            )}
+          </CartesianChart>
+        </View>
+      </GestureDetector>
       <Text style={textProperties}>
         Each point in the chart represents the pot average for every{' '}
         {clusterSize && clusterSize > 1 ? `~${clusterSize}` : 1} round(s).
