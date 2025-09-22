@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Dimensions, StyleProp, Text, TextStyle, View } from 'react-native';
-import { CartesianChart, Line } from 'victory-native';
+import { Svg, Polyline, Circle } from 'react-native-svg';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Button } from '../components/button';
 import { hitColor, tableColor } from '../constants';
@@ -115,13 +115,31 @@ const getChartProperties = (allValues: number[], aggregatedValues: number[]): Ch
 export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
   const [zoomSequence, setZoomSequence] = useState<number[]>([]);
 
-  const { chartSegments, chartWidth, clusterSize, formattedValues, chartData } = useMemo(() => {
+  const { chartSegments, chartWidth, clusterSize, formattedValues, chartData, svgPoints } = useMemo(() => {
     const data = props.earningsHistorical;
     const { clusterSize, values } = getAggregatedData(data, zoomSequence);
     const { formattedValues, segments, width } = getChartProperties(data, values);
 
-    // Convert data format for victory-native
+    // Convert data format for SVG line chart
     const chartData = formattedValues.map((value, index) => ({ x: index, y: value }));
+    
+    // Calculate SVG coordinates
+    const chartHeight = 260; // Leave room for padding
+    const chartPadding = { left: 40, right: 20, top: 20, bottom: 20 };
+    const innerWidth = width - chartPadding.left - chartPadding.right;
+    const innerHeight = chartHeight - chartPadding.top - chartPadding.bottom;
+    
+    const minValue = Math.min(...formattedValues);
+    const maxValue = Math.max(...formattedValues);
+    const valueRange = maxValue - minValue || 1;
+    
+    const svgPoints = formattedValues
+      .map((value, index) => {
+        const x = chartPadding.left + (index / (formattedValues.length - 1 || 1)) * innerWidth;
+        const y = chartPadding.top + (1 - (value - minValue) / valueRange) * innerHeight;
+        return `${x},${y}`;
+      })
+      .join(' ');
 
     return {
       chartSegments: segments,
@@ -129,6 +147,7 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
       clusterSize,
       formattedValues,
       chartData,
+      svgPoints,
     };
   }, [props.earningsHistorical, zoomSequence]);
 
@@ -140,8 +159,8 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
     
     // Calculate which data point was tapped based on x position
     const chartInnerWidth = chartWidth - 60; // Account for padding
-    const pointIndex = Math.round((x / chartInnerWidth) * (chartData.length - 1));
-    const validIndex = Math.max(0, Math.min(pointIndex, chartData.length - 1));
+    const pointIndex = Math.round((x / chartInnerWidth) * (formattedValues.length - 1));
+    const validIndex = Math.max(0, Math.min(pointIndex, formattedValues.length - 1));
     
     setZoomSequence([...zoomSequence, validIndex]);
   };
@@ -150,6 +169,21 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
     .onEnd((event) => {
       handleChartTap(event.x);
     });
+
+  const minValue = Math.min(...formattedValues);
+  const maxValue = Math.max(...formattedValues);
+  const valueRange = maxValue - minValue || 1;
+  const chartHeight = 300;
+  const chartPadding = { left: 40, right: 20, top: 20, bottom: 20 };
+  const innerWidth = chartWidth - chartPadding.left - chartPadding.right;
+  const innerHeight = chartHeight - chartPadding.top - chartPadding.bottom;
+
+  // Generate circles for data points
+  const dataPoints = formattedValues.map((value, index) => {
+    const x = chartPadding.left + (index / (formattedValues.length - 1 || 1)) * innerWidth;
+    const y = chartPadding.top + (1 - (value - minValue) / valueRange) * innerHeight;
+    return { x, y, index };
+  });
 
   const textProperties: StyleProp<TextStyle> = {
     color: 'white',
@@ -192,24 +226,29 @@ export const EarningsChart: React.FC<EarningsChartProps> = (props) => {
       </View>
 
       <GestureDetector gesture={tapGesture}>
-        <View style={{ height: 300, width: chartWidth, backgroundColor: tableColor, marginLeft: -chartExcessivePadding }}>
-          <CartesianChart
-            data={chartData}
-            xKey="x"
-            yKeys={["y"]}
-            domain={{ x: [0, chartData.length - 1] }}
-            padding={{ left: 40, right: 20, top: 20, bottom: 40 }}
-            renderOutside={() => null}
-          >
-            {({ points, chartBounds }) => (
-              <Line
-                points={points.y}
-                color="white"
-                strokeWidth={2}
-                animate={{ type: "timing", duration: 300 }}
+        <View style={{ height: chartHeight, width: chartWidth, backgroundColor: tableColor, marginLeft: -chartExcessivePadding }}>
+          <Svg width={chartWidth} height={chartHeight}>
+            {/* Line chart */}
+            <Polyline
+              points={svgPoints}
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
+            {/* Data points */}
+            {dataPoints.map((point) => (
+              <Circle
+                key={point.index}
+                cx={point.x}
+                cy={point.y}
+                r="5"
+                fill="white"
+                stroke="white"
+                strokeWidth="1"
               />
-            )}
-          </CartesianChart>
+            ))}
+          </Svg>
         </View>
       </GestureDetector>
       <Text style={textProperties}>
